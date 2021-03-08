@@ -66,7 +66,7 @@ export const ApplicationCard = ({
   }
 
   let result;
-  if (!data || data?.length === 0) {
+  if (data?.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
         {t("CS_MYAPPLICATIONS_NO_APPLICATION")
