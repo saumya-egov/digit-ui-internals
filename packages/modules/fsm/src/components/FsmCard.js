@@ -88,9 +88,9 @@ const FSMCard = () => {
               <div className="employeeCard-info-box" style={{}}>
                 {Object.keys(info).map((key, index) => {
                   return (
-                    <div key={index} style={{ display: "flex", flexDirection: "column" }}>
+                    <div key={index} style={{ display: "flex", flexDirection: "row" }}>
                       <span>{t(key)}</span>
-                      <span>{t(info[key])}</span>
+                      <span style={{ whiteSpace: "pre" }}>{t(info[key])}</span>
                     </div>
                   );
                 })}
