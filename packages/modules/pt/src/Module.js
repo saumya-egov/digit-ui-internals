@@ -14,9 +14,5 @@ export const PTModule = ({ userType }) => {
 };
 
 export const PTLinks = () => {
-  return (
-    <React.Fragment>
-      <HomeLink></HomeLink>
-    </React.Fragment>
-  );
+  return <React.Fragment></React.Fragment>;
 };
