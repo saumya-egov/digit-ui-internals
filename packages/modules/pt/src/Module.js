@@ -1,3 +1,4 @@
+import { HomeLink } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import CitizenApp from "./pages/citizen";
 
@@ -13,5 +14,9 @@ export const PTModule = ({ userType }) => {
 };
 
 export const PTLinks = () => {
-  return <React.Fragment></React.Fragment>;
+  return (
+    <React.Fragment>
+      <HomeLink></HomeLink>
+    </React.Fragment>
+  );
 };

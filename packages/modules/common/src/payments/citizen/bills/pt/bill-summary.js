@@ -20,7 +20,7 @@ const BillSumary = ({ billAccountDetails }) => {
           return (
             <div key={index} style={{ padding: "5px", display: "flex", marginBottom: "16px" }}>
               <div style={{ width: "50%", fontWeight: "bold" }}>{t(amountDetails.taxHeadCode)}</div>
-              <div style={{ width: "50%", textAlign: "right" }}>{amountDetails.amount?.toFixed(2)}</div>
+              <div style={{ width: "50%", textAlign: "right" }}>{"₹" + amountDetails.amount?.toFixed(2)}</div>
             </div>
           );
         })}

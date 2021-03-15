@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 
 const PropertySearchResults = ({ template, header, actionButtonLabel, t }) => {
   const { mobileNumber, propertyIds, oldpropertyids } = Digit.Hooks.useQueryParams();
-  console.log({ mobileNumber });
   const result = Digit.Hooks.pt.usePropertySearch({ tenantId: "pb", filters: { mobileNumber, propertyIds, oldpropertyids } });
   console.log({ property: result });
   const consumerCodes = result?.data?.Properties?.map((a) => a.propertyId).join(",");
@@ -20,7 +19,8 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, t }) => {
 
   const onSubmit = (data) => {
     console.log("data from composer", data);
-    if (parseFloat(data?.total_due)) history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: "pb" });
+    // if (parseFloat(data?.total_due))
+    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: "pb" });
   };
 
   const payment = {};
@@ -32,6 +32,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, t }) => {
       };
     }
   });
+
   const searchResults = result?.data?.Properties?.map((property) => {
     let addr = property?.address || {};
 
