@@ -369,6 +369,68 @@ const transformResponse = (type, MdmsRes, moduleCode) => {
   }
 };
 
+const mergedData = {};
+const mergedPromises = {};
+const callAllPromises = (success, promises = [], resData) => {
+  promises.forEach((promise) => {
+    if (success) {
+      promise.resolve(resData);
+    } else {
+      promise.reject(resData);
+    }
+  });
+};
+const mergeMDMSData = (data, tenantId) => {
+  if (!mergedData[tenantId] || Object.keys(mergedData[tenantId]).length === 0) {
+    mergedData[tenantId] = data;
+  } else {
+    data.MdmsCriteria.moduleDetails.forEach((dataModuleDetails) => {
+      const moduleName = dataModuleDetails.moduleName;
+      const masterDetails = dataModuleDetails.masterDetails;
+      let found = false;
+      mergedData[tenantId].MdmsCriteria.moduleDetails.forEach((moduleDetail) => {
+        if (moduleDetail.moduleName === moduleName) {
+          found = true;
+          moduleDetail.masterDetails = [...moduleDetail.masterDetails, ...masterDetails];
+        }
+      });
+      if (!found) {
+        mergedData[tenantId].MdmsCriteria.moduleDetails.push(dataModuleDetails);
+      }
+    });
+  }
+};
+const debouncedCall = ({ serviceName, url, data, useCache, params }, resolve, reject) => {
+  if (!mergedPromises[params.tenantId] || mergedPromises[params.tenantId].length === 0) {
+    setTimeout(() => {
+      let callData = JSON.parse(JSON.stringify(mergedData[params.tenantId]));
+      mergedData[params.tenantId] = {};
+      let callPromises = [...mergedPromises[params.tenantId]];
+      mergedPromises[params.tenantId] = [];
+      // console.log("calling merged mdms service", callData);
+      ServiceRequest({
+        serviceName,
+        url,
+        data: callData,
+        useCache,
+        params,
+      })
+        .then((data) => {
+          callAllPromises(true, callPromises, data);
+        })
+        .catch((err) => {
+          callAllPromises(false, callPromises, err);
+        });
+    }, 500);
+  }
+  mergeMDMSData(data, params.tenantId);
+  if (!mergedPromises[params.tenantId]) {
+    mergedPromises[params.tenantId] = [];
+  }
+  mergedPromises[params.tenantId].push({ resolve, reject });
+  // console.log("debouncing mdms", JSON.stringify(data, null, 2), JSON.stringify(mergedData[params.tenantId], null, 2));
+};
+
 export const MdmsService = {
   init: (stateCode) =>
     ServiceRequest({
@@ -378,14 +440,21 @@ export const MdmsService = {
       useCache: true,
       params: { tenantId: stateCode },
     }),
-  call: (tenantId, details) =>
-    ServiceRequest({
-      serviceName: "mdmsCall",
-      url: Urls.MDMS,
-      data: getCriteria(tenantId, details),
-      useCache: true,
-      params: { tenantId },
-    }),
+  call: (tenantId, details) => {
+    return new Promise((resolve, reject) =>
+      debouncedCall(
+        {
+          serviceName: "mdmsCall",
+          url: Urls.MDMS,
+          data: getCriteria(tenantId, details),
+          useCache: true,
+          params: { tenantId },
+        },
+        resolve,
+        reject
+      )
+    );
+  },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
     console.log("mdms request details ---->", mdmsDetails, moduleCode);
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
