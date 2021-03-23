@@ -33,6 +33,9 @@ import IsAnyPartOfThisFloorUnOccupied from "./pageComponents/IsAnyPartOfThisFloo
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
 import Area from "./pageComponents/Area";
 
+import EmployeeApp from "./pages/employee";
+import PTCard from "./components/PTCard";
+
 const componentsToRegister = {
   PropertyTax,
   PTSelectPincode,
@@ -74,12 +77,11 @@ export const PTModule = ({ userType, tenants }) => {
   addComponentsToRegistry();
   console.log(moduleCode, "module integrated");
 
-  Digit.SessionStorage.set("PT_TENANTS", tenants);
-  if (userType === "citizen") {
-    return <CitizenApp />;
-  } else {
-    return null;
-  }
+  const { path, url } = useRouteMatch();
+
+  if (userType === "employee") {
+    return <EmployeeApp path={path} url={url} userType={userType} />;
+  } else return <CitizenApp />;
 };
 
 export const PTLinks = ({ matchPath, userType }) => {
@@ -100,4 +102,10 @@ export const PTLinks = ({ matchPath, userType }) => {
       </div>
     </React.Fragment>
   );
+};
+
+export const PTComponents = {
+  PTCard,
+  PTModule,
+  PTLinks,
 };

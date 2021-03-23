@@ -196,7 +196,7 @@ const SortDown = (style) => (
   <svg
     style={{ display: "inline-block", height: "16px", ...style }}
     xmlns="http://www.w3.org/2000/svg"
-    enable-background="new 0 0 24 24"
+    enableBackground="new 0 0 24 24"
     height="24"
     viewBox="0 0 24 24"
     width="24"
@@ -210,7 +210,7 @@ const SortUp = (style) => (
   <svg
     style={{ display: "inline-block", height: "16px", ...style }}
     xmlns="http://www.w3.org/2000/svg"
-    enable-background="new 0 0 24 24"
+    enableBackground="new 0 0 24 24"
     height="24"
     viewBox="0 0 24 24"
     width="24"
@@ -253,6 +253,25 @@ function CloseSvg() {
   );
 }
 
+function PropertyHouse(style) {
+  return (
+    <svg
+      style={{ display: "inline-block", fontSize: "16px", ...style }}
+      width="24"
+      height="24"
+      viewBox="0 0 40 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M13.6167 9.5L1.66667 17.4667V35H10V21.6667H16.6667V35H25V17.0833L13.6167 9.5Z" fill="white" />
+      <path
+        d="M16.6667 5V7.51667L20 9.73333L22.8833 11.6667H25V13.0833L28.3333 15.3167V18.3333H31.6667V21.6667H28.3333V25H31.6667V28.3333H28.3333V35H38.3333V5H16.6667ZM31.6667 15H28.3333V11.6667H31.6667V15Z"
+        fill="white"
+      />
+    </svg>
+  );
+}
+
 export {
   ArrowLeft,
   ArrowDown,
@@ -280,4 +299,5 @@ export {
   ShippingTruck,
   CloseSvg,
   CalendarIcon,
+  PropertyHouse,
 };
