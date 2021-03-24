@@ -1,24 +1,11 @@
+import { Card, CardHeader, CardSubHeader, CardText, LinkButton, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import {
-  Card,
-  CardCaption,
-  CardHeader,
-  CardLabel,
-  CardSubHeader,
-  StatusTable,
-  Row,
-  ActionLinks,
-  LinkButton,
-  SubmitBar,
-  CardText,
-} from "@egovernments/digit-ui-react-components";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 
 const ActionButton = ({ jumpTo }) => {
   const { t } = useTranslation();
   const history = useHistory();
-
   function routeTo() {
     history.push(jumpTo);
   }
