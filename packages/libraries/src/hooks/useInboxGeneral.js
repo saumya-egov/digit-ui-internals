@@ -78,4 +78,5 @@ const useInboxGeneral = ({
     { ...workFlowConfig, select: (data) => data.ProcessInstances }
   );
 };
+
 export default useInboxGeneral;
