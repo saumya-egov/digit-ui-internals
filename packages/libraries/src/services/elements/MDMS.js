@@ -165,6 +165,60 @@ const getPropertyUsageCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getCommonFieldsCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "CommonFieldsConfig",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
+});
+
+const getPreFieldsCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "PreFieldsConfig",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
+});
+
+const getPostFieldsCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "PostFieldsConfig",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const getConfig = (tenantId, moduleCode) => ({
   type: "Config",
   details: {
@@ -233,6 +287,59 @@ const getSlumLocalityCriteria = (tenantId, moduleCode, type) => ({
     ],
   },
 });
+const getPropertyOwnerTypeCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "OwnerType" }],
+      },
+    ],
+  },
+});
+
+const getSubPropertyOwnerShipCategoryCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "SubOwnerShipCategory" }],
+      },
+    ],
+  },
+});
+const getPropertyOwnerShipCategoryCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "OwnerShipCategory" }],
+      },
+    ],
+  },
+});
+
+const getDocumentRequiredScreenCategory = (tenantId, moduleCode) => ({
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "Documents",
+          },
+        ],
+      },
+    ],
+  },
+});
 
 const getReasonCriteria = (tenantId, moduleCode, type, payload) => ({
   type,
@@ -256,6 +363,24 @@ const getBillingServiceForBusinessServiceCriteria = () => ({
       masterDetails: [{ name: "BusinessService" }],
     },
   ],
+});
+
+const getRoleStatusCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "RoleStatusMapping",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
 });
 
 const GetEgovLocations = (MdmsRes) => {
@@ -327,6 +452,41 @@ const GetSlumLocalityMapping = (MdmsRes) =>
         };
   }, {});
 
+const GetPropertyOwnerShipCategory = (MdmsRes) =>
+  MdmsRes["PropertyTax"].OwnerShipCategory.filter((ownerShip) => ownerShip.active).map((ownerShipDetails) => {
+    return {
+      ...ownerShipDetails,
+      i18nKey: `COMMON_MASTER_OWNER_TYPE_${ownerShipDetails.code}`,
+    };
+  });
+
+const GetPropertyOwnerType = (MdmsRes) =>
+  MdmsRes["PropertyTax"].OwnerType.filter((owner) => owner.active).map((ownerDetails) => {
+    return {
+      ...ownerDetails,
+      i18nKey: `PROPERTYTAX_OWNERTYPE_${ownerDetails.code}`,
+    };
+  });
+
+const getSubPropertyOwnerShipCategory = (MdmsRes) => {
+  MdmsRes["PropertyTax"].SubOwnerShipCategory.filter((category) => category.active).map((subOwnerShipDetails) => {
+    return {
+      ...subOwnerShipDetails,
+      i18nKey: `PROPERTYTAX_BILLING_SLAB_${subOwnerShipDetails.code}`,
+    };
+  });
+  sessionStorage.setItem("getSubPropertyOwnerShipCategory", JSON.stringify(MdmsRes));
+};
+
+const getDocumentRequiredScreen = (MdmsRes) => {
+  MdmsRes["PropertyTax"].Documents.filter((Documents) => Documents.active).map((dropdownData) => {
+    return {
+      ...Documents,
+      i18nKey: `${dropdownData.code}`,
+    };
+  });
+};
+
 const GetReasonType = (MdmsRes, type, moduleCode) =>
   Object.assign(
     {},
@@ -339,6 +499,13 @@ const GetReasonType = (MdmsRes, type, moduleCode) =>
         })),
     }))
   );
+
+const GetRoleStatusMapping = (MdmsRes) => MdmsRes["DIGIT-UI"].RoleStatusMapping;
+const GetCommonFields = (MdmsRes) => MdmsRes["FSM"].CommonFieldsConfig;
+
+const GetPreFields = (MdmsRes) => MdmsRes["FSM"].PreFieldsConfig;
+
+const GetPostFields = (MdmsRes) => MdmsRes["FSM"].PostFieldsConfig;
 
 const transformResponse = (type, MdmsRes, moduleCode) => {
   switch (type) {
@@ -362,8 +529,24 @@ const transformResponse = (type, MdmsRes, moduleCode) => {
       return GetVehicleType(MdmsRes);
     case "Slum":
       return GetSlumLocalityMapping(MdmsRes);
+    case "OwnerShipCategory":
+      return GetPropertyOwnerShipCategory(MdmsRes);
+    case "OwnerType":
+      return GetPropertyOwnerType(MdmsRes);
+    case "SubOwnerShipCategory":
+      return getSubPropertyOwnerShipCategory(MdmsRes);
+    case "Documents":
+      return getDocumentRequiredScreen(MdmsRes);
     case "Reason":
       return GetReasonType(MdmsRes, type, moduleCode);
+    case "RoleStatusMapping":
+      return GetRoleStatusMapping(MdmsRes);
+    case "CommonFieldsConfig":
+      return GetCommonFields(MdmsRes);
+    case "PreFieldsConfig":
+      return GetPreFields(MdmsRes);
+    case "PostFieldsConfig":
+      return GetPostFields(MdmsRes);
     default:
       return MdmsRes;
   }
@@ -499,4 +682,29 @@ export const MdmsService = {
 
   getReason: (tenantId, moduleCode, type, payload) =>
     MdmsService.getDataByCriteria(tenantId, getReasonCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
+  getRoleStatus: (tenantId, moduleCode, type) =>
+    MdmsService.getDataByCriteria(tenantId, getRoleStatusCriteria(tenantId, moduleCode, type), moduleCode),
+
+  getCommonFieldsConfig: (tenantId, moduleCode, type, payload) =>
+    MdmsService.getDataByCriteria(tenantId, getCommonFieldsCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
+  getPreFieldsConfig: (tenantId, moduleCode, type, payload) =>
+    MdmsService.getDataByCriteria(tenantId, getPreFieldsCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
+  getPostFieldsConfig: (tenantId, moduleCode, type, payload) =>
+    MdmsService.getDataByCriteria(tenantId, getPostFieldsCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
+  getPropertyOwnerShipCategory: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getPropertyOwnerShipCategoryCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getPropertyOwnerType: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getPropertyOwnerTypeCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getPropertySubOwnerShipCategory: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getSubPropertyOwnerShipCategoryCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getDocumentRequiredScreen: (tenantId, moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getDocumentRequiredScreenCategory(tenantId, moduleCode), moduleCode);
+  },
 };

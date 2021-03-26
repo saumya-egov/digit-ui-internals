@@ -41,6 +41,7 @@ const TextField = (props) => {
       onFocus={broadcastToOpen}
       onBlur={broadcastToClose}
       readOnly={props.disable}
+      autoFocus={props.autoFocus}
     />
   );
 };
@@ -122,7 +123,10 @@ const Dropdown = (props) => {
   }
 
   return (
-    <div className={user_type === "employee" ? "employee-select-wrap" : "select-wrap"} style={{ ...props.style }}>
+    <div
+      className={`${user_type === "employee" ? "employee-select-wrap" : "select-wrap"} ${props?.className ? props?.className : ""}`}
+      style={{ ...props.style }}
+    >
       {/* <div className={userType === "employee" ? "select-wrap-emp" : "select-wrap"} style={{ ...props.style }}> */}
       {hasCustomSelector && (
         <div className={props.showArrow ? "cp flex-right column-gap-5" : "cp"} onClick={dropdownSwitch}>
@@ -151,6 +155,7 @@ const Dropdown = (props) => {
             dropdownDisplay={dropdownOn}
             disable={props.disable}
             freeze={props.freeze ? true : false}
+            autoFocus={props.autoFocus}
             // setOutsideClicked={setOutsideClicked}
           />
           <ArrowDown onClick={dropdownSwitch} className="cp" disable={props.disable} />
@@ -159,7 +164,7 @@ const Dropdown = (props) => {
       {/* {console.log("dropdownStatus::::::::::::::>", dropdownStatus)} */}
       {dropdownStatus ? (
         props.optionKey ? (
-          <div className={`${hasCustomSelector ? "margin-top-10" : ""} options-card`} style={{ ...props.style }} ref={optionRef}>
+          <div className={`${hasCustomSelector ? "margin-top-10 display: table" : ""} options-card`} style={{ ...props.style }} ref={optionRef}>
             {props.option &&
               props.option
                 .filter((option) => t(option[props.optionKey]).toUpperCase().indexOf(filterVal.toUpperCase()) > -1)
@@ -168,7 +173,7 @@ const Dropdown = (props) => {
                     // console.log(props.t(option[props.optionKey]));
                   }
                   return (
-                    <div className="cp profile-dropdown--item" key={index} onClick={() => onSelect(option)}>
+                    <div className="cp profile-dropdown--item display: flex" key={index} onClick={() => onSelect(option)}>
                       {option.icon && <span className="icon"> {option.icon} </span>}
                       {<span> {props.t ? props.t(option[props.optionKey]) : option[props.optionKey]}</span>}
                     </div>

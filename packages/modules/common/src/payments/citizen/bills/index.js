@@ -1,12 +1,19 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import PTRoutes from "./pt";
+import { useParams, useHistory, useRouteMatch } from "react-router-dom";
+import Routes from "./routes";
 // import { myBillMap } from "./myBillsKeysMap";
 
 export const MyBills = ({ ...props }) => {
   const { businessService } = useParams();
+
+  const history = useHistory();
+  const { url } = useRouteMatch();
+
   const { isLoading, data } = Digit.Hooks.useFetchCitizenBillsForBuissnessService({ businessService });
-  const { tenantId } = Digit.UserService.getUser().info;
+  const { tenantId } = Digit.UserService.getUser()?.info || {};
+
+  if (!tenantId) history.push(`/digit-ui/citizen/login`, { from: url });
+
   const { isLoading: mdmsLoading, data: mdmsBillingData } = Digit.Hooks.useGetPaymentRulesForBusinessServices(tenantId);
 
   const billsList = data?.Bill || [];
@@ -23,16 +30,11 @@ export const MyBills = ({ ...props }) => {
       };
   };
 
-  const getProps = () => ({ billsList, paymentRules: getPaymentRestrictionDetails() });
+  const getProps = () => ({ billsList, paymentRules: getPaymentRestrictionDetails(), businessService });
 
-  const ComponentToLoad = () => {
-    switch (businessService) {
-      case "PT":
-        return <PTRoutes {...getProps()} />;
-      default:
-        return <PTRoutes {...getProps()} />;
-    }
-  };
-
-  return <React.Fragment>{ComponentToLoad()}</React.Fragment>;
+  return (
+    <React.Fragment>
+      <Routes {...getProps()} />
+    </React.Fragment>
+  );
 };

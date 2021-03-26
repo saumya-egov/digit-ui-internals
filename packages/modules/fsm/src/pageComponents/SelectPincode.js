@@ -1,9 +1,13 @@
 import { FormStep, TextInput, CardLabel, LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const SelectPincode = ({ t, config, onSelect, formData = {}, userType, register, errors, props }) => {
   const tenants = Digit.Hooks.fsm.useTenants();
   const [pincode, setPincode] = useState(() => formData?.address?.pincode || "");
+
+  const { pathname } = useLocation();
+  const presentInModifyApplication = pathname.includes("modify");
 
   const inputs = [
     {
@@ -55,12 +59,12 @@ const SelectPincode = ({ t, config, onSelect, formData = {}, userType, register,
     return inputs?.map((input) => {
       return (
         <LabelFieldPair>
-          <CardLabel style={{ marginBottom: "revert", width: "30%" }}>
+          <CardLabel className="card-label-smaller">
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
           <div className="field">
-            <TextInput key={input.name} value={pincode} onChange={onChange} {...input.validation} />
+            <TextInput key={input.name} value={pincode} onChange={onChange} {...input.validation} autoFocus={presentInModifyApplication} />
           </div>
         </LabelFieldPair>
       );

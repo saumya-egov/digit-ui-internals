@@ -30,9 +30,9 @@ const Urls = {
     create: "/fsm/v1/_create",
     update: "/fsm/v1/_update",
     vendorSearch: "/vendor/v1/_search",
-    // vehicleSearch: "/vehicle/v1/_search",
+    vehicleSearch: "/vehicle/v1/_search",
     audit: "/fsm/v1/_audit",
-    vehicleSearch: "/vehicle/trip/v1/_search",
+    vehicleTripSearch: "/vehicle/trip/v1/_search",
     billingSlabSearch: "/fsm-calculator/v1/billingSlab/_search",
     vehilceUpdate: "/vehicle/trip/v1/_update",
   },
@@ -50,6 +50,8 @@ const Urls = {
   pt: {
     fectch_property: "/property-services/property/_search",
     fetch_payment_details: "/billing-service/bill/v2/_fetchbill",
+    create: "/property-services/property/_create",
+    search: "/property-services/property/_search",
   },
 };
 

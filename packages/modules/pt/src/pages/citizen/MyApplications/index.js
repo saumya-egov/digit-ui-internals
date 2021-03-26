@@ -1,7 +1,8 @@
-import React from "react";
 import { Header, Loader } from "@egovernments/digit-ui-react-components";
-import MyApplication from "./my-application";
+import React from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import MyApplication from "./my-application";
 
 export const MyApplications = () => {
   const { t } = useTranslation();
@@ -13,7 +14,7 @@ export const MyApplications = () => {
     return <Loader />;
   }
 
-  const { Properties: applicationsList } = data;
+  const { Properties: applicationsList } = data || {};
 
   return (
     <React.Fragment>
@@ -24,6 +25,13 @@ export const MyApplications = () => {
             <MyApplication application={application} />
           </div>
         ))}
+      {!applicationsList?.length > 0 && <p style={{ marginLeft: "16px", marginTop: "16px" }}>{t("PT_NO_APPLICATION_FOUND_MSG")}</p>}
+      <p style={{ marginLeft: "16px", marginTop: "16px" }}>
+        {t("PT_TEXT_NOT_ABLE_TO_FIND_THE_APPLICATION")}{" "}
+        <span className="link">
+          <Link to="/digit-ui/citizen/pt/property/new-application/info">{t("PT_COMMON_CLICK_HERE")}</Link>
+        </span>
+      </p>
     </React.Fragment>
   );
 };

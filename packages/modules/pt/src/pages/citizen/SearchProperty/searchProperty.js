@@ -12,17 +12,19 @@ const SearchProperty = ({ config: propsConfig, t }) => {
       return alert("Provide at least one parameter");
     } else {
       history.push(
-        `/digit-ui/citizen/pt/property/search-results?mobileNumber=${data.mobileNumber}&=propertyIds=${data.propertyId}&oldPropertyIds=${data.oldPropertyId}`
+        `/digit-ui/citizen/pt/property/search-results?mobileNumber=${data.mobileNumber}&propertyIds=${data.propertyId}&oldPropertyIds=${data.oldPropertyId}`
       );
     }
   };
 
   const [mobileNumber, property, oldProperty] = propsConfig.inputs;
+
   const config = [
     {
       body: [
         {
-          label: t(mobileNumber.label),
+          label: mobileNumber.label,
+          description: mobileNumber.description,
           type: mobileNumber.type,
           populators: {
             name: mobileNumber.name,
@@ -30,7 +32,7 @@ const SearchProperty = ({ config: propsConfig, t }) => {
           isMandatory: false,
         },
         {
-          label: t(property.label),
+          label: property.label,
           type: property.type,
           populators: {
             name: property.name,
@@ -38,7 +40,7 @@ const SearchProperty = ({ config: propsConfig, t }) => {
           isMandatory: false,
         },
         {
-          label: t(oldProperty.label),
+          label: oldProperty.label,
           type: oldProperty.type,
           populators: {
             name: oldProperty.name,
@@ -48,6 +50,8 @@ const SearchProperty = ({ config: propsConfig, t }) => {
       ],
     },
   ];
+
+  console.log(config[0].body);
 
   return (
     <FormComposer
@@ -60,6 +64,7 @@ const SearchProperty = ({ config: propsConfig, t }) => {
       heading={propsConfig.texts.header}
       description={propsConfig.texts.description}
       cardStyle={{ margin: "auto" }}
+      headingStyle={{ fontSize: "32px", marginBottom: "16px" }}
     ></FormComposer>
   );
 };

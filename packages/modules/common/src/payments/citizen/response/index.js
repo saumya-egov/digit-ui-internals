@@ -9,8 +9,19 @@ export const SuccessfulPayment = (props) => {
   const queryClient = useQueryClient();
   const { eg_pg_txnid: egId } = Digit.Hooks.useQueryParams();
   const [printing, setPrinting] = useState(false);
-  const { businessService: business_service } = useParams();
+  const [allowFetchBill, setallowFetchBill] = useState(false);
+  const { businessService: business_service, consumerCode, tenantId } = useParams();
+
   const { isLoading, data, isError } = Digit.Hooks.usePaymentUpdate({ egId }, business_service);
+
+  const { label } = Digit.Hooks.useApplicationsForBusinessServiceSearch({ businessService: business_service }, { enabled: false });
+
+  const { data: demand } = Digit.Hooks.useDemandSearch({ consumerCode, businessService: business_service }, { enabled: !isLoading });
+
+  const { data: billData, isLoading: isBillDataLoading } = Digit.Hooks.useFetchPayment(
+    { tenantId, consumerCode, businessService: business_service },
+    { enabled: allowFetchBill }
+  );
 
   const payments = data?.payments;
 
@@ -20,18 +31,39 @@ export const SuccessfulPayment = (props) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (data && data.txnStatus && data.txnStatus !== "FAILURE") {
+      setallowFetchBill(true);
+    }
+  }, [data]);
+
   if (isLoading) {
     return <Loader />;
   }
 
-  if (isError || !payments || !payments.Payments || payments.Payments.length === 0) {
+  const applicationNo = data?.applicationNo;
+
+  const isMobile = window.Digit.Utils.browser.isMobile();
+
+  if (isError || !payments || !payments.Payments || payments.Payments.length === 0 || data.txnStatus === "FAILURE") {
     return (
       <Card>
         <Banner message={t("CITIZEN_FAILURE_COMMON_PAYMENT_MESSAGE")} info="" successful={false} />
-
-        <Link to="/digit-ui/citizen">
-          <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
-        </Link>
+        <CardText>{t("CS_PAYMENT_FAILURE_MESSAGE")}</CardText>
+        {business_service !== "PT" ? (
+          <Link to={`/digit-ui/citizen`}>
+            <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
+          </Link>
+        ) : (
+          <React.Fragment>
+            <Link to={(applicationNo && `/digit-ui/citizen/payment/my-bills/${business_service}/${applicationNo}`) || "/digit-ui/citizen"}>
+              <SubmitBar label={t("CS_PAYMENT_TRY_AGAIN")} />
+            </Link>
+            <div className="link" style={isMobile ? { marginTop: "8px", width: "100%", textAlign: "center" } : { marginTop: "8px" }}>
+              <Link to={`/digit-ui/citizen`}>{t("CORE_COMMON_GO_TO_HOME")}</Link>
+            </div>
+          </React.Fragment>
+        )}
       </Card>
     );
   }
@@ -39,26 +71,42 @@ export const SuccessfulPayment = (props) => {
   const paymentData = data?.payments?.Payments[0];
   const amount = paymentData.totalAmountPaid;
   const transactionDate = paymentData.transactionDate;
-  const applicationNo = data?.applicationNo;
 
   const printReciept = async () => {
     if (printing) return;
     setPrinting(true);
     const tenantId = paymentData?.tenantId;
+    const state = tenantId?.split(".")[0];
     let response = { filestoreIds: [payments.Payments[0]?.fileStoreId] };
     if (!paymentData?.fileStoreId) {
-      response = await Digit.PaymentService.generatePdf(tenantId, { Payments: payments.Payments });
+      response = await Digit.PaymentService.generatePdf(state, { Payments: payments.Payments });
     }
-    const fileStore = await Digit.PaymentService.printReciept(tenantId, { fileStoreIds: response.filestoreIds[0] });
+    const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: response.filestoreIds[0] });
     if (fileStore && fileStore[response.filestoreIds[0]]) {
       window.open(fileStore[response.filestoreIds[0]], "_blank");
     }
     setPrinting(false);
   };
 
+  const getBillingPeriod = (billDetails) => {
+    const { taxPeriodFrom, taxPeriodTo } = billDetails || {};
+    if (taxPeriodFrom && taxPeriodTo) {
+      let from = new Date(taxPeriodFrom).getFullYear().toString();
+      let to = new Date(taxPeriodTo).getFullYear().toString();
+      return "FY " + from + "-" + to;
+    } else return "N/A";
+  };
+
   const bannerText = `CITIZEN_SUCCESS_${paymentData?.paymentDetails[0].businessService.replace(/\./g, "_")}_PAYMENT_MESSAGE`;
 
   // https://dev.digit.org/collection-services/payments/FSM.TRIP_CHARGES/_search?tenantId=pb.amritsar&consumerCodes=107-FSM-2021-02-18-063433
+
+  // if (billDataLoading) return <Loader />;
+
+  const rowContainerStyle = {
+    padding: "4px 0px",
+    justifyContent: "space-between",
+  };
 
   return (
     <Card>
@@ -68,7 +116,7 @@ export const SuccessfulPayment = (props) => {
         applicationNumber={paymentData?.paymentDetails[0].receiptNumber}
         successful={true}
       />
-      <CardText>{t("CS_PAYMENT_SUCCESSFUL_DESCRIPTION")}</CardText>
+      {business_service !== "PT" ? <CardText>{t("CS_PAYMENT_SUCCESSFUL_DESCRIPTION")}</CardText> : <React.Fragment></React.Fragment>}{" "}
       <React.Fragment>
         <div className="primary-label-btn d-grid" onClick={printReciept}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -79,15 +127,34 @@ export const SuccessfulPayment = (props) => {
         </div>
       </React.Fragment>
       <StatusTable>
-        {/* <Row rowContainerStyle={{ padding: "4px 10px" }} last label={t("CS_PAYMENT_APPLICATION_NO")} text={applicationNo} /> */}
-        <Row rowContainerStyle={{ padding: "4px 10px" }} last label={t("CS_PAYMENT_TRANSANCTION_ID")} text={egId} />
-        <Row rowContainerStyle={{ padding: "4px 10px" }} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={amount} />
-        <Row
-          rowContainerStyle={{ padding: "4px 10px" }}
-          last
-          label={t("CS_PAYMENT_TRANSANCTION_DATE")}
-          text={transactionDate && new Date(transactionDate).toLocaleDateString("in")}
-        />
+        <Row rowContainerStyle={rowContainerStyle} last label={t(label)} text={applicationNo} />
+        {/** TODO : move this key and value into the hook based on business Service */}
+        {business_service === "PT" && (
+          <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_BILLING_PERIOD")} text={getBillingPeriod(demand?.Demands?.[0])} />
+        )}
+
+        {business_service === "PT" &&
+          (isBillDataLoading ? (
+            <Loader />
+          ) : (
+            <Row
+              rowContainerStyle={rowContainerStyle}
+              last
+              label={t("CS_PAYMENT_AMOUNT_PENDING")}
+              text={demand?.Demands?.[0]?.isPaymentCompleted ? 0 : billData?.Bill[0]?.totalAmount}
+            />
+          ))}
+
+        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_TRANSANCTION_ID")} text={egId} />
+        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={amount} />
+        {business_service !== "PT" && (
+          <Row
+            rowContainerStyle={rowContainerStyle}
+            last
+            label={t("CS_PAYMENT_TRANSANCTION_DATE")}
+            text={transactionDate && new Date(transactionDate).toLocaleDateString("in")}
+          />
+        )}
       </StatusTable>
       <Link to="/digit-ui/citizen">
         <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />

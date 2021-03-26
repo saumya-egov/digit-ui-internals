@@ -4,8 +4,15 @@ import useSessionStorage from "./useSessionStorage";
 import useQueryParams from "./useQueryParams";
 import useClickOutside from "./useClickOutside";
 import useCoreData from "./useCoreData";
-import { useFetchPayment, usePaymentUpdate, useFetchCitizenBillsForBuissnessService, useGetPaymentRulesForBusinessServices } from "./payment";
+import {
+  useFetchPayment,
+  usePaymentUpdate,
+  useFetchCitizenBillsForBuissnessService,
+  useGetPaymentRulesForBusinessServices,
+  useDemandSearch,
+} from "./payment";
 import { useUserSearch } from "./userSearch";
+import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -38,9 +45,14 @@ import useApplicationDetail from "./fsm/useApplicationDetail";
 import useApplicationActions from "./fsm/useApplicationActions";
 import useApplicationAudit from "./fsm/useApplicationAudit";
 import useSearchForAuditData from "./fsm/useSearchForAudit";
+import useVehiclesSearch from "./fsm/useVehiclesSearch";
 import useConfig from "./fsm/useConfig";
 import useVendorDetail from "./fsm/useVendorDetail";
 import useSlum from "./fsm/useSlum";
+
+import usePropertyMDMS from "./pt/usePropertyMDMS";
+import usePropertyAPI from "./pt/usePropertyAPI";
+import useTenantsPT from "./pt/useTenants";
 
 const pgr = {
   useComplaintDetails,
@@ -55,6 +67,7 @@ const pgr = {
   useServiceDefs,
   useTenants,
   useComplaintSubType,
+  usePropertyMDMS,
 };
 
 const fsm = {
@@ -76,6 +89,7 @@ const fsm = {
   useVehicleSearch,
   useVehicleUpdate,
   useVendorDetail,
+  useVehiclesSearch,
   useConfig,
   useSlum,
 };
@@ -83,6 +97,9 @@ const fsm = {
 const pt = {
   usePropertySearch,
   usePropertyPayment,
+  usePropertyMDMS,
+  usePropertyAPI,
+  useTenants: useTenantsPT,
 };
 
 const Hooks = {
@@ -97,6 +114,8 @@ const Hooks = {
   useClickOutside,
   useCoreData,
   useUserSearch,
+  useApplicationsForBusinessServiceSearch,
+  useDemandSearch,
   pgr,
   fsm,
   pt,

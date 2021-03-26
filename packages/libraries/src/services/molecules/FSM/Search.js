@@ -60,8 +60,8 @@ export const Search = {
 
     const stateId = tenantId?.split(".")[0];
     let slumLabel = "";
-    if (response?.address?.slumName && response?.address?.locality?.code) {
-      const slumData = await MdmsService.getSlumLocalityMapping(tenantId, "FSM", "Slum");
+    if (response?.address?.slumName && response?.address?.locality?.code && response?.tenantId) {
+      const slumData = await MdmsService.getSlumLocalityMapping(response?.tenantId, "FSM", "Slum");
       if (slumData[response?.address?.locality?.code]) {
         slumLabel = slumData[response?.address?.locality?.code].find((slum) => slum?.code === response?.address?.slumName);
       } else {
@@ -185,7 +185,12 @@ export const Search = {
       },
     ];
 
-    if (userType !== "CITIZEN") return employeeResponse;
+    if (userType !== "CITIZEN")
+      return {
+        tenantId: response.tenantId,
+        applicationDetails: employeeResponse,
+        additionalDetails: response?.additionalDetails,
+      };
 
     const citizenResp = employeeResponse.reduce((arr, curr) => {
       return arr.concat(curr.values);
@@ -201,7 +206,7 @@ export const Search = {
     return {
       tenantId: response.tenantId,
       applicationDetails: citizenResponse,
-      pdfData: { ...response, amountPerTrip, totalAmount, vehicleMake, vehicleCapacity, slumName, dsoDetails, },
+      pdfData: { ...response, amountPerTrip, totalAmount, vehicleMake, vehicleCapacity, slumName, dsoDetails },
     };
   },
 

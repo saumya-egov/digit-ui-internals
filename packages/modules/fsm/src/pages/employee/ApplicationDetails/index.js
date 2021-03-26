@@ -16,13 +16,16 @@ import {
   Menu,
   LinkButton,
   Toast,
+  Rating,
+  ActionLinks,
 } from "@egovernments/digit-ui-react-components";
 
 import ActionModal from "./Modal";
+import TLCaption from "../../../components/TLCaption";
 
 import { useQueryClient } from "react-query";
 
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { actions } from "react-table";
 
 const ApplicationDetails = (props) => {
@@ -74,20 +77,7 @@ const ApplicationDetails = (props) => {
     setDisplayMenu(false);
   }
 
-  const TLCaption = ({ data }) => {
-    const { t } = useTranslation();
-    return (
-      <div>
-        {data.date && <p>{data.date}</p>}
-        <p>{data.name}</p>
-        <p>{data.mobileNumber}</p>
-        {data.source && <p>{t("ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_" + data.source.toUpperCase())}</p>}
-      </div>
-    );
-  };
-
   useEffect(() => {
-    console.log("action selected in case", selectedAction);
     switch (selectedAction) {
       case "DSO_ACCEPT":
       case "ACCEPT":
@@ -161,14 +151,48 @@ const ApplicationDetails = (props) => {
 
   const getTimelineCaptions = (checkpoint) => {
     // console.log("tl", checkpoint);
+    const __comment = checkpoint?.comment?.split("~");
+    const reason = __comment ? __comment[0] : null;
+    const reason_comment = __comment ? __comment[1] : null;
     if (checkpoint.status === "CREATED") {
       const caption = {
-        date: Digit.DateUtils.ConvertTimestampToDate(applicationData.auditDetails.createdTime),
+        date: checkpoint?.auditDetails?.created,
         name: applicationData.citizen.name,
         mobileNumber: applicationData.citizen.mobileNumber,
         source: applicationData.source || "",
       };
       return <TLCaption data={caption} />;
+    } else if (
+      checkpoint.status === "PENDING_APPL_FEE_PAYMENT" ||
+      checkpoint.status === "ASSING_DSO" ||
+      checkpoint.status === "PENDING_DSO_APPROVAL" ||
+      checkpoint.status === "DSO_REJECTED" ||
+      checkpoint.status === "CANCELED" ||
+      checkpoint.status === "REJECTED"
+    ) {
+      const caption = {
+        date: checkpoint?.auditDetails?.created,
+        name: checkpoint?.assigner?.name,
+        comment: reason ? t(`ES_ACTION_REASON_${reason}`) : null,
+        otherComment: reason_comment ? reason_comment : null,
+      };
+      return <TLCaption data={caption} />;
+    } else if (checkpoint.status === "DSO_INPROGRESS") {
+      const caption = {
+        name: `${checkpoint?.assigner?.name} (${t("ES_FSM_DSO")})`,
+        mobileNumber: checkpoint?.assigner?.mobileNumber,
+        date: `${t("CS_FSM_EXPECTED_DATE")} ${Digit.DateUtils.ConvertTimestampToDate(applicationData?.possibleServiceDate)}`,
+      };
+      return <TLCaption data={caption} />;
+    } else if (checkpoint.status === "COMPLETED") {
+      return (
+        <div>
+          <Rating withText={true} text={t(`ES_FSM_YOU_RATED`)} currentRating={checkpoint.rating} />
+          <Link to={`/digit-ui/employee/fsm/rate-view/${applicationNumber}`}>
+            <ActionLinks>{t("CS_FSM_RATE_VIEW")}</ActionLinks>
+          </Link>
+        </div>
+      );
     }
   };
 
@@ -190,7 +214,7 @@ const ApplicationDetails = (props) => {
                 }}
               />
             )} */}
-            {applicationDetails.map((detail, index) => (
+            {applicationDetails?.applicationDetails.map((detail, index) => (
               <React.Fragment key={index}>
                 {index === 0 ? (
                   <CardSubHeader style={{ marginBottom: "16px" }}>{t(detail.title)}</CardSubHeader>
@@ -250,7 +274,7 @@ const ApplicationDetails = (props) => {
               </Fragment>
             )}
           </Card>
-          {console.log("above show modal", showModal)}
+          {/* {console.log("above show modal", showModal)} */}
           {showModal ? (
             <ActionModal
               t={t}
@@ -260,6 +284,7 @@ const ApplicationDetails = (props) => {
               id={applicationNumber}
               closeModal={closeModal}
               submitAction={submitAction}
+              actionData={workflowDetails?.data?.timeline}
             />
           ) : null}
           {showToast && (

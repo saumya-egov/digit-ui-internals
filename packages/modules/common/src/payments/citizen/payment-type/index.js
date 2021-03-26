@@ -1,18 +1,28 @@
 import React, { useState } from "react";
-import { Header, Card, RadioButtons, CardSubHeader, SubmitBar, BackButton } from "@egovernments/digit-ui-react-components";
+import {
+  Header,
+  Card,
+  RadioButtons,
+  SubmitBar,
+  BackButton,
+  CardLabel,
+  CardLabelDesc,
+  CardSectionHeader,
+} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useForm, Controller } from "react-hook-form";
 import { useParams, useRouteMatch, useHistory, useLocation } from "react-router-dom";
 
 export const SelectPaymentType = (props) => {
   const { state } = useLocation();
+  const { tenantId: __tenantId } = Digit.Hooks.useQueryParams();
   const paymentAmount = state?.paymentAmount;
   const { t } = useTranslation();
   const history = useHistory();
   const { path: currentPath } = useRouteMatch();
   const menu = ["AXIS"];
   const { consumerCode, businessService } = useParams();
-  const tenantId = state.tenantId || Digit.ULBService.getCurrentTenantId();
+  const tenantId = state?.tenantId || __tenantId || Digit.ULBService.getCurrentTenantId();
   const { control, handleSubmit } = useForm();
   const { data: paymentdetails } = Digit.Hooks.useFetchPayment({ tenantId: tenantId, consumerCode, businessService });
 
@@ -41,7 +51,7 @@ export const SelectPaymentType = (props) => {
           tenantId: tenantId,
         },
         // success
-        callbackUrl: `${window.location.protocol}//${window.location.host}/digit-ui/citizen/payment/success/${businessService}/${consumerCode}`,
+        callbackUrl: `${window.location.protocol}//${window.location.host}/digit-ui/citizen/payment/success/${businessService}/${consumerCode}/${tenantId}`,
         additionalDetails: {
           isWhatsapp: false,
         },
@@ -64,26 +74,11 @@ export const SelectPaymentType = (props) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Header>{t("PAYMENT_CS_HEADER")}</Header>
         <Card>
-          <div
-            className="detail"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontWeight: "bold",
-              alignItems: "center",
-              paddingTop: "10px",
-              paddingBottom: "25px",
-            }}
-          >
-            <span className="label">
-              <h2>{t("PAYMENT_CS_TOTAL_AMOUNT_DUE")}</h2>
-            </span>
-            <span style={{ fontSize: "20px" }} className="name">
-              ₹ {paymentAmount || billDetails.totalAmount}
-            </span>
+          <div className="payment-amount-info">
+            <CardLabelDesc className="dark">{t("PAYMENT_CS_TOTAL_AMOUNT_DUE")}</CardLabelDesc>
+            <CardSectionHeader> ₹ {paymentAmount || billDetails.totalAmount}</CardSectionHeader>
           </div>
-
-          <CardSubHeader>{t("PAYMENT_CS_SELECT_METHOD")}</CardSubHeader>
+          <CardLabel>{t("PAYMENT_CS_SELECT_METHOD")}</CardLabel>
 
           {menu?.length && (
             <Controller

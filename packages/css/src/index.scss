@@ -56,6 +56,12 @@
 @import "./pages/employee/inbox.scss";
 @import "./pages/employee/response.scss";
 
+@import "./pages/citizen/payment/payment-type.scss";
+
+.dark {
+  @apply text-text-primary;
+}
+
 .home-link {
   margin-left: 16px;
   margin-bottom: 16px;
@@ -66,21 +72,21 @@
 }
 
 .clear-search-label {
-  color: "#F47738";
-  cursor: "pointer";
+  color: #f47738;
+  cursor: pointer;
 }
 
 .search-submit-bar {
   margin-top: 32;
-  margin-left: "auto";
+  margin-left: auto;
 }
 
 .application-details-link-button {
   @apply flex justify-between items-center;
 
   .download-button {
-    color: "#f47738";
-    margin-left: "8px";
+    color: #f47738;
+    margin-left: 8px;
   }
 }
 
@@ -88,8 +94,8 @@
   @apply flex mb-sm;
 
   .download-button {
-    color: "#f47738";
-    margin-left: "8px";
+    color: #f47738;
+    margin-left: 8px;
   }
 }
 
@@ -98,14 +104,11 @@
 }
 
 .application-table-container {
-  margin-top: "24px";
-  margin-top: "24px";
-  margin-left: "24px";
-  flex: 1;
+  @apply mt-lg ml-lg flex-1;
 }
 
 .primary-label-btn {
-  display: flex;
+  @apply flex;
   gap: 10px;
 
   svg {
@@ -113,17 +116,22 @@
   }
 
   color: #f47738;
-  &:hover {
-    color: #000;
-
-    svg {
-      fill: #000;
-    }
-  }
 
   cursor: pointer;
   font-weight: 500;
   width: fit-content;
+}
+
+@media (hover: hover) {
+  .primary-label-btn {
+    &:hover {
+      color: #000;
+
+      svg {
+        fill: #000;
+      }
+    }
+  }
 }
 
 .disabled {
@@ -169,4 +177,221 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+/*TODO: multiple device enhacements*/
+.bill-details {
+  height: calc(100vh - 186px);
+
+  &-summary {
+    height: 30vh;
+    overflow: scroll;
+  }
+}
+
+@media (max-width: 375px) {
+  height: calc(100vh - 156px);
+}
+
+@media (max-width: 360px) {
+  .bill-details {
+    &-summary {
+      height: 20vh;
+      overflow: scroll;
+    }
+  }
+}
+
+@media (max-width: 320px) {
+  .bill-details {
+    height: 100%;
+    &-summary {
+      height: 100%;
+    }
+  }
+}
+
+@screen dt {
+  .bill-details {
+    height: 100%;
+
+    &-summary {
+      height: 100%;
+      overflow: auto;
+    }
+  }
+}
+
+.my-bills {
+  @apply flex flex-col;
+  min-height: 85vh;
+
+  &-wrapper {
+    flex: 1;
+    max-height: 75vh;
+    overflow: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.bill-summary {
+  border: #e8e7e6 solid 1px;
+  @apply bg-grey-light w-full;
+
+  .bill-account-details {
+    @apply flex mb-md;
+    padding: 5px;
+
+    .label {
+      @apply w-1/2 font-bold;
+    }
+
+    .value {
+      @apply w-1/2 text-right;
+    }
+  }
+
+  .amount-details {
+    @apply flex mb-md items-center;
+    padding: 5px;
+
+    .label {
+      @apply w-1/2 font-bold;
+    }
+
+    .value {
+      @apply w-1/2 font-bold text-right;
+      font-size: 18px;
+    }
+  }
+}
+
+.bill-payment-amount {
+  @apply sticky bottom-0 bg-white;
+  padding-bottom: 32px;
+
+  .payment-amount-front {
+    @apply absolute z-10 w-10 flex justify-center items-center;
+    background-color: #efefef;
+    padding: 7px 12px;
+    color: #9a9a9a;
+  }
+}
+
+.text-indent-xl input {
+  text-indent: 40px;
+}
+
+.select-payment-type {
+  @apply flex justify-center font-bold items-center;
+  padding-top: 10px;
+  padding-bottom: 25px;
+
+  .value {
+    font-size: 20px;
+  }
+}
+
+.cheque-date {
+  @apply flex items-center mb-lg;
+  border: 2px solid #0b0c0c;
+  border-radius: 2px;
+
+  input {
+    @apply outline-none w-full;
+    border: 0px;
+    background: transparent;
+    text-indent: 5px;
+    padding: 6px 0px;
+  }
+
+  button {
+    @apply outline-none;
+    border: 0px;
+    background: transparent;
+    text-indent: 2px;
+  }
+}
+
+.w-half {
+  @apply w-1/2;
+}
+
+.ifsc-field {
+  @apply flex items-center mb-lg;
+  border: 2px solid #0b0c0c;
+  border-radius: 2px;
+
+  input {
+    @apply outline-none w-full;
+    border: 0px;
+    background: transparent;
+    text-indent: 5px;
+    padding: 6px 0px;
+  }
+  button {
+    @apply outline-none;
+    border: 0px;
+    background: transparent;
+    text-indent: 2px;
+  }
+}
+
+.text-input {
+  @apply relative w-full;
+}
+
+.custom-time-picker {
+  @apply w-full;
+  max-width: 200px;
+}
+
+.sla-cell {
+  @apply text-text-secondary;
+}
+
+.submit-bar-search {
+  margin-top: 32px;
+  margin-left: 96px;
+  max-width: 256px;
+}
+
+.clear-search-container {
+  @apply flex justify-between items-center;
+}
+
+.card-label-smaller {
+  @apply w-1/3;
+  margin-bottom: revert;
+}
+
+.underline {
+  border-color: #e7e6e6;
+  @apply mb-sm;
+}
+
+.box-shadow-none {
+  box-shadow: none;
+}
+
+.component-in-front {
+  @apply flex justify-center items-center;
+}
+
+.subform-composer {
+  @apply flex;
+}
+
+.inbox-search-container {
+  .result {
+    @apply mt-lg;
+  }
+}
+
+.payment-form-text-input-correction {
+  width: 100% !important;
 }

@@ -46,25 +46,9 @@ export const FormComposer = (props) => {
       case "password":
         // if (populators.defaultValue) setTimeout(setValue(populators.name, populators.defaultValue));
         return (
-          <div
-            className="field-container"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
+          <div className="field-container">
             {populators.componentInFront ? (
-              <span
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                className={disable && "disabled"}
-              >
-                {populators.componentInFront}
-              </span>
+              <span className={`component-in-front ${disable && "disabled"}`}>{populators.componentInFront}</span>
             ) : null}
             <TextInput
               className="field"
@@ -132,6 +116,11 @@ export const FormComposer = (props) => {
                         {field.isMandatory ? " * " : null}
                       </CardLabel>
                     )}
+                    {field?.description && (
+                      <CardLabel style={{ marginBottom: props.inline ? "8px" : "revert", fontSize: "16px", fontWeight: "bold", color: "#505A5F" }}>
+                        {t(field.description)}
+                      </CardLabel>
+                    )}
                     {errors && errors[field.populators.name] && Object.keys(errors[field.populators.name]).length ? (
                       <CardLabelError>{field.populators.error}</CardLabelError>
                     ) : null}
@@ -177,7 +166,7 @@ export const FormComposer = (props) => {
         {props.description && <CardLabelDesc> {props.description} </CardLabelDesc>}
         {formFields}
         {props.childrenAtTheBottom && props.children}
-        {props.submitInForm && <SubmitBar label={t(props.label)} submit="submit" style={{ width: "100%" }} />}
+        {props.submitInForm && <SubmitBar label={t(props.label)} submit="submit" className="w-full" />}
         {props.secondaryActionLabel && (
           <div className="primary-label-btn" style={{ margin: "20px auto 0 auto" }} onClick={onSecondayActionClick}>
             {props.secondaryActionLabel}
