@@ -1,5 +1,5 @@
 import Urls from "../../atoms/urls";
-import { Storage } from "../../atoms/Utils/Storage";
+import { PersistantStorage } from "../../atoms/Utils/Storage";
 import i18next from "i18next";
 import { Request } from "../../atoms/Utils/Request";
 
@@ -21,10 +21,10 @@ const getUnique = (arr) => {
 };
 
 const LocalizationStore = {
-  getList: (locale) => Storage.get(LOCALE_LIST(locale)) || [],
-  setList: (locale, namespaces) => Storage.set(LOCALE_LIST(locale), namespaces),
-  getAllList: () => Storage.get(LOCALE_ALL_LIST()) || [],
-  setAllList: (namespaces) => Storage.set(LOCALE_ALL_LIST(), namespaces),
+  getList: (locale) => PersistantStorage.get(LOCALE_LIST(locale)) || [],
+  setList: (locale, namespaces) => PersistantStorage.set(LOCALE_LIST(locale), namespaces),
+  getAllList: () => PersistantStorage.get(LOCALE_ALL_LIST()) || [],
+  setAllList: (namespaces) => PersistantStorage.set(LOCALE_ALL_LIST(), namespaces),
   store: (locale, modules, messages) => {
     const AllNamespaces = LocalizationStore.getAllList();
     const Namespaces = LocalizationStore.getList(locale);
@@ -32,10 +32,10 @@ const LocalizationStore = {
       if (!Namespaces.includes(module)) {
         Namespaces.push(module);
         const moduleMessages = messages.filter((message) => message.module === module);
-        Storage.set(LOCALE_MODULE(locale, module), moduleMessages);
+        PersistantStorage.set(LOCALE_MODULE(locale, module), moduleMessages);
       }
     });
-    Storage.set(LOCALE_LIST(locale), Namespaces);
+    PersistantStorage.set(LOCALE_LIST(locale), Namespaces);
     LocalizationStore.setAllList(getUnique([...AllNamespaces, ...Namespaces]));
   },
   get: (locale, modules) => {
@@ -43,7 +43,7 @@ const LocalizationStore = {
     const newModules = modules.filter((module) => !storedModules.includes(module));
     const messages = [];
     storedModules.forEach((module) => {
-      messages.push(...Storage.get(LOCALE_MODULE(locale, module)));
+      messages.push(...PersistantStorage.get(LOCALE_MODULE(locale, module)));
     });
     return [newModules, messages];
   },

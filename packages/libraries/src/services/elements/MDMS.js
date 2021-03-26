@@ -1,5 +1,6 @@
 import Urls from "../atoms/urls";
 import { Request, ServiceRequest } from "../atoms/Utils/Request";
+import { PersistantStorage } from "../atoms/Utils/Storage";
 
 const SortByName = (na, nb) => {
   if (na < nb) {
@@ -639,9 +640,16 @@ export const MdmsService = {
     );
   },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
+    const key = `${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
+    const inStoreValue = PersistantStorage.get(key);
+    if (inStoreValue) {
+      return inStoreValue;
+    }
     console.log("mdms request details ---->", mdmsDetails, moduleCode);
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
-    return transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase());
+    const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase());
+    PersistantStorage.set(key, responseValue);
+    return responseValue;
   },
   getServiceDefs: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getModuleServiceDefsCriteria(tenantId, moduleCode), moduleCode);
