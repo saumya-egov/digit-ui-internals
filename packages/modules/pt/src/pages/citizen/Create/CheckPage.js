@@ -2,6 +2,7 @@ import { Card, CardHeader, CardSubHeader, CardText, LinkButton, Row, StatusTable
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { getFixedFilename } from "../../../utils";
 
 const ActionButton = ({ jumpTo }) => {
   const { t } = useTranslation();
@@ -19,11 +20,11 @@ const CheckPage = ({ onSubmit, value = {} }) => {
 
   const {
     address,
-    isResidental,
+    isResdential,
     PropertyType,
     noOfFloors,
     noOofBasements,
-    units,
+    units = [{}],
     UnOccupiedArea,
     city_complaint,
     locality_complaint,
@@ -49,7 +50,7 @@ const CheckPage = ({ onSubmit, value = {} }) => {
         />
         <Row
           label={t("PT_PROOF_OF_ADDRESS_SUB_HEADER")}
-          text={`${address?.documents.ProofOfAddress?.name || "na"}`}
+          text={`${(address?.documents?.ProofOfAddress?.name && getFixedFilename(address.documents.ProofOfAddress.name)) || "na"}`}
           actionButton={<ActionButton jumpTo="/digit-ui/citizen/pt/property/createProperty/proof" />}
         />
       </StatusTable>
@@ -62,41 +63,43 @@ const CheckPage = ({ onSubmit, value = {} }) => {
         />
       </StatusTable>
       <div>
-        {owners.map((owners, index) => (
-          <div key={index}>
-            <CardSubHeader>
-              {t("PT_OWNER_SUB_HEADER")} - {index + 1}
-            </CardSubHeader>
-            <StatusTable>
-              <Row
-                label={t("PT_COMMON_APPLICANT_NAME_LABEL")}
-                text={`${t(owners?.name)}`}
-                actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-details/"}${index}`} />}
-              />
-              <Row
-                label={t("PT_COMMON_GENDER_LABEL")}
-                text={`${t(owners?.gender?.code)}`}
-                actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-details/"}${index}`} />}
-              />
-              <Row
-                label={t("PT_FORM3_GUARDIAN_NAME")}
-                text={`${t(owners?.fatherOrHusbandName)}`}
-                actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-details/"}${index}`} />}
-              />
-              <Row
-                label={`${t("COMMON_OWNER")} - ${index + 1} ${t("PT_ADDRESS_LABEL")}`}
-                text={`${t(owners?.permanentAddress)}`}
-                actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-address/"}${index}`} />}
-              />
-            </StatusTable>
-          </div>
-        ))}
+        {owners &&
+          owners.map &&
+          owners.map((owners, index) => (
+            <div key={index}>
+              <CardSubHeader>
+                {t("PT_OWNER_SUB_HEADER")} - {index + 1}
+              </CardSubHeader>
+              <StatusTable>
+                <Row
+                  label={t("PT_COMMON_APPLICANT_NAME_LABEL")}
+                  text={`${t(owners?.name)}`}
+                  actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-details/"}${index}`} />}
+                />
+                <Row
+                  label={t("PT_COMMON_GENDER_LABEL")}
+                  text={`${t(owners?.gender?.code)}`}
+                  actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-details/"}${index}`} />}
+                />
+                <Row
+                  label={t("PT_FORM3_GUARDIAN_NAME")}
+                  text={`${t(owners?.fatherOrHusbandName)}`}
+                  actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-details/"}${index}`} />}
+                />
+                <Row
+                  label={`${t("COMMON_OWNER")} - ${index + 1} ${t("PT_ADDRESS_LABEL")}`}
+                  text={`${t(owners?.permanentAddress)}`}
+                  actionButton={<ActionButton jumpTo={`${"/digit-ui/citizen/pt/property/new-application/owner-address/"}${index}`} />}
+                />
+              </StatusTable>
+            </div>
+          ))}
       </div>
       <CardSubHeader>{t("PT_ASSESMENT_INFO_SUB_HEADER")}</CardSubHeader>
       <StatusTable>
         <Row
           label={t("PT_RESIDENTIAL_PROP_LABEL")}
-          text={`${t(isResidental?.value?.i18nKey)}`}
+          text={`${t(isResdential?.i18nKey)}`}
           actionButton={<ActionButton jumpTo="/digit-ui/citizen/pt/property/new-application/isResidential" />}
         />
         <Row
@@ -129,20 +132,21 @@ const CheckPage = ({ onSubmit, value = {} }) => {
         />
         <Row
           label={t("PT_PROPERTY_RENTED_AREA_LABEL")}
-          text="120 sq.ft"
+          text={`${t(units["s"]?.RentArea)}sq.ft`}
           actionButton={<ActionButton jumpTo="/digit-ui/citizen/pt/property/new-application/rental-details" />}
         />
         <Row
           label={t("PT_PROPERTY_ANNUAL_RENT_LABEL")}
-          text="12000 sq.ft"
+          text={`${t(units["s"]?.AnnualRent)}sq.ft`}
           actionButton={<ActionButton jumpTo="/digit-ui/citizen/pt/property/new-application/rental-details" />}
         />
         <Row
           label={t("PT_PROPERTY_UNOCCUPIED_AREA_LABEL")}
-          text={`${t(UnOccupiedArea?.landmark)}sq.ft`}
+          text={`${t(units["a"]?.UnOccupiedArea)}sq.ft`}
           actionButton={<ActionButton jumpTo="/digit-ui/citizen/pt/property/new-application/un-occupied-area" />}
         />
       </StatusTable>
+
       <SubmitBar label="Submit" onSubmit={onSubmit} />
     </Card>
   );

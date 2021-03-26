@@ -1,35 +1,63 @@
-import React from "react";
-import { FormStep, TextInput, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-react-components";
+import React, { useState } from "react";
+import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
-const RentalDetails = ({ t, config, onSelect, userType, formData }) => {
+const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
+  let index = window.location.href.charAt(window.location.href.length - 1);
   const onSkip = () => onSelect();
-  const onChange = (e) => {
-    const value = e?.target?.value;
-    const key = e?.target?.id;
-    onSelect(config.key, { ...formData[config.key], [key]: value });
-  };
+  const [RentArea, setRentArea] = useState(formData.units && formData.units[index] && formData.units[index].RentArea);
+  const [AnnualRent, setAnnualRent] = useState(formData.units && formData.units[index] && formData.units[index].AnnualRent);
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
+  const { data: Menu, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "RentalDetails");
+
+  if (Menu) {
+    config.texts.cardText = Menu?.PropertyTax?.RentalDetails[0]?.code
+      ? `PT_ASSESSMENT_FLOW_RENTAL_DETAIL_${Menu?.PropertyTax?.RentalDetails[0]?.code}`
+      : "";
+  }
+  function setPropertyRentArea(e) {
+    setRentArea(e.target.value);
+  }
+  function setPropertyAnnualRent(e) {
+    setAnnualRent(e.target.value);
+  }
   const inputs = [
     {
-      label: "Rented Area (Square feet)",
+      label: "Plot Size(sq.yd)*",
       type: "text",
-      name: "street",
+      name: "PlotSize",
       validation: {
-        pattern: "^[\\w\\s]{1,256}$",
+        pattern: "/^[ws]{1,256}$/",
       },
-      error: "CORE_COMMON_STREET_INVALID",
+      error: "CORE_COMMON_PLOTSIZE_INVALID",
     },
     {
-      label: "Annual Rent (₹)*",
+      label: "Built Up Area(sq.yd)*",
       type: "text",
-      name: "doorNo",
+      name: "BuiltUpArea",
       validation: {
-        pattern: "^[\\w]([\\w\\/,\\s])*$",
+        pattern: "/^[w]([w/,s])*$/",
       },
-      error: "CORE_COMMON_DOOR_INVALID",
+      error: "CORE_COMMON_AREA_INVALID",
     },
   ];
+  const goNext = () => {
+    let unit = formData.units && formData.units[index];
+    //units["RentalArea"] = RentArea;
+    //units["AnnualRent"] = AnnualRent;
+    let floordet = { ...unit, RentArea, AnnualRent };
+    onSelect(config.key, floordet, false, index);
+  };
+  //const onSkip = () => onSelect();
 
-  return <FormStep config={{ ...config, inputs }} onSelect={(data) => onSelect(config.key, data)} onSkip={onSkip} t={t} />;
+  return (
+    <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!RentArea || !AnnualRent}>
+      <CardLabel>{`${t("PT_FLOOR_DETAILS_RENTED_AREA_LABEL")}*`}</CardLabel>
+      <TextInput t={t} isMandatory={false} optionKey="i18nKey" name="RentArea" value={RentArea} onChange={setPropertyRentArea} />
+      <CardLabel>{`${t("PT_FLOOR_DETAILS_BUILT_UP_AREA_LABEL")}*`}</CardLabel>
+      <TextInput t={t} isMandatory={false} optionKey="i18nKey" name="AnnualRent" value={AnnualRent} onChange={setPropertyAnnualRent} />
+    </FormStep>
+  );
 };
 
 export default RentalDetails;

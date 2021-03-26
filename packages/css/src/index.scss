@@ -116,17 +116,22 @@
   }
 
   color: #f47738;
-  &:hover {
-    color: #000;
-
-    svg {
-      fill: #000;
-    }
-  }
 
   cursor: pointer;
   font-weight: 500;
   width: fit-content;
+}
+
+@media (hover: hover) {
+  .primary-label-btn {
+    &:hover {
+      color: #000;
+
+      svg {
+        fill: #000;
+      }
+    }
+  }
 }
 
 .disabled {
@@ -224,13 +229,18 @@ input[type="number"] {
     flex: 1;
     max-height: 75vh;
     overflow: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
 .bill-summary {
   border: #e8e7e6 solid 1px;
-  width: 99%;
-  @apply bg-grey-light m-auto mb-md;
+  @apply bg-grey-light w-full;
 
   .bill-account-details {
     @apply flex mb-md;
@@ -361,8 +371,7 @@ input[type="number"] {
 
 .underline {
   border-color: #e7e6e6;
-  width: 90%;
-  margin: 8px auto;
+  @apply mb-sm;
 }
 
 .box-shadow-none {

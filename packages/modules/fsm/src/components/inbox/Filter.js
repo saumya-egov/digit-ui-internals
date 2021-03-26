@@ -1,15 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  Dropdown,
-  CardLabel,
-  RadioButtons,
-  CardCaption,
-  CheckBox,
-  SubmitBar,
-  ActionBar,
-  RemoveableTag,
-  CloseSvg,
-} from "@egovernments/digit-ui-react-components";
+import React from "react";
+import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, Loader } from "@egovernments/digit-ui-react-components";
 import { useSelector } from "react-redux";
 import { ApplyFilterBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
@@ -21,7 +11,27 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]) || false;
   const isFstpOperator = Digit.UserService.hasAccess("FSTP") || false;
 
+  // const hideLocalityFilter = Digit.UserService.hasAccess(["FSM_CREATOR_EMP", "FSM_VIEW_EMP"]);
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const state = tenantId.split(".")[0];
+
+  const { data: roleStatuses, isFetched: isRoleStatusFetched } = Digit.Hooks.fsm.useMDMS(state, "DIGIT-UI", "RoleStatusMapping");
+
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo.info.roles.map((roleData) => roleData.code);
+
+  const userRoleDetails = roleStatuses?.filter((roleDetails) => userRoles.filter((role) => role === roleDetails.userRole)[0]);
+
+  const mergedRoleDetails = userRoleDetails?.reduce(
+    (merged, details) => ({
+      fixed: details?.fixed && merged?.fixed,
+      statuses: [...details?.statuses, ...merged?.statuses],
+      zeroCheck: details?.zeroCheck || merged?.zeroCheck,
+    }),
+    { statuses: [] }
+  );
+
   const localities = useSelector((state) => state.common.revenue_localities[tenantId]);
   const selectLocality = (d) => {
     onFilterChange({ locality: [...searchParams?.locality, d] });
@@ -77,25 +87,31 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
             {/* <Status applications={props.applications} onAssignmentChange={handleAssignmentChange} fsmfilters={searchParams} /> */}
           </div>
 
-          <div>
-            <div className="filter-label">{t("ES_INBOX_LOCALITY")}</div>
-            <Dropdown option={localities} keepNull={true} selected={null} select={selectLocality} optionKey={"name"} />
-            <div className="tag-container">
-              {searchParams?.locality.map((locality, index) => {
-                return (
-                  <RemoveableTag
-                    key={index}
-                    text={locality.name}
-                    onClick={() => {
-                      onFilterChange({ locality: searchParams?.locality.filter((loc) => loc.code !== locality.code) });
-                    }}
-                  />
-                );
-              })}
+          {mergedRoleDetails?.statuses?.length > 0 ? (
+            <div>
+              <div className="filter-label">{t("ES_INBOX_LOCALITY")}</div>
+              <Dropdown option={localities} keepNull={true} selected={null} select={selectLocality} optionKey={"name"} />
+              <div className="tag-container">
+                {searchParams?.locality.map((locality, index) => {
+                  return (
+                    <RemoveableTag
+                      key={index}
+                      text={locality.name}
+                      onClick={() => {
+                        onFilterChange({ locality: searchParams?.locality.filter((loc) => loc.code !== locality.code) });
+                      }}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          ) : null}
           <div>
-            <Status onAssignmentChange={onStatusChange} fsmfilters={searchParams} />
+            {isRoleStatusFetched && mergedRoleDetails ? (
+              <Status onAssignmentChange={onStatusChange} fsmfilters={searchParams} mergedRoleDetails={mergedRoleDetails} />
+            ) : (
+              <Loader />
+            )}
           </div>
         </div>
       </div>
