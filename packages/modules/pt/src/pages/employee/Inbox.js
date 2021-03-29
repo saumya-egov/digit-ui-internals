@@ -11,6 +11,12 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
 
+  const { isLoading: hookLoading, ...rest } = Digit.Hooks.useInboxGeneral({ tenantId, businessService: "FSM", filters: { limit: 100 } });
+
+  useEffect(() => {
+    console.log("data fro the hook", hookLoading, rest);
+  }, [hookLoading, rest]);
+
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [shouldSearch, setShouldSearch] = useState(false);
@@ -45,6 +51,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   //     enabled: isInbox,
   //   }
   // );
+
   const applications = [
     {
       applicationNo: "PB-PT-2019-04-23-898898",
@@ -80,6 +87,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   //   null,
   //   { enabled: shouldSearch && isSearch }
   // );
+
   const data = [
     {
       applicationNo: "PB-PT-2019-04-23-898898",

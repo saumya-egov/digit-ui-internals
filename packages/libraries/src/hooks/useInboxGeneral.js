@@ -1,17 +1,19 @@
-import React from "react";
 import { useQuery, useQueryClient } from "react-query";
+import { FSMService } from "../services/elements/FSM";
+import { PTService } from "../services/elements/PT";
 
-const fetchFilters = (filters) => {
+const fetchFilters = (filtersArg) => {
+  // console.log(filters, "inside fetchFilters");
   let filtersObj = {};
-  const { applicationNos, mobileNumber, limit, offset, sortBy, sortOrder, total } = filters;
-  if (filters.applicationStatus && filters.applicationStatus?.[0]) {
-    filtersObj.applicationStatus = filters.applicationStatus.map((status) => status.code).join(",");
+  const { applicationNos, mobileNumber, limit, offset, sortBy, sortOrder, total } = filtersArg || {};
+  if (filtersArg?.applicationStatus && filtersArg?.applicationStatus?.[0]) {
+    filtersObj.applicationStatus = filtersArg?.applicationStatus.map((status) => status.code).join(",");
   }
-  if (filters.locality) {
-    filtersObj.locality = filters.locality.map((item) => item.code.split("_").pop()).join(",");
+  if (filtersArg?.locality) {
+    filtersObj.locality = filtersArg?.locality.map((item) => item.code.split("_").pop()).join(",");
   }
-  if (filters.uuid && Object.keys(filters.uuid).length > 0) {
-    filtersObj.assignee = filters.uuid.code === "ASSIGNED_TO_ME" ? uuid : "";
+  if (filtersArg?.uuid && Object.keys(filtersArg?.uuid).length > 0) {
+    filtersObj.assignee = filtersArg?.uuid.code === "ASSIGNED_TO_ME" ? uuid : "";
   }
   if (mobileNumber) {
     filtersObj.mobileNumber = mobileNumber;
@@ -29,18 +31,27 @@ const fetchFilters = (filters) => {
   else return { limit: 100000, offset: 0, sortBy, sortOrder, ...filtersObj };
 };
 
-const inboxConfig = () => ({
+const inboxConfig = (tenantId, filters) => ({
   PT: {
-    statusArray: [],
-    inboxFiltersArray: [],
-    searchFields: [],
+    searchResponseKey: "Properties",
+    businessIdsParamForSearch: "propertyIds",
+    businessIdAliasForSearch: "propertyId",
+    _searchFn: () => PTService.search({ tenantId, filters }),
   },
   FSM: {
-    statusArray: [],
-    inboxFiltersArray: [],
-    searchFields: [],
+    searchResponseKey: "fsm",
+    businessIdsParamForSearch: "applicationNos",
+    businessIdAliasForSearch: "applicationNo",
+    _searchFn: () => FSMService.search(tenantId, filters),
   },
 });
+
+/**
+ *
+ * @param {*} data
+ * @param {Array of Objects containing async or pure functions} middlewares
+ * @returns {object}
+ */
 
 const callMiddlewares = async (data, middlewares) => {
   let applyBreak = false;
@@ -65,18 +76,72 @@ const useInboxGeneral = ({
   filters,
   middlewaresWf = [],
   middlewareSearch = [],
-  combineResponse,
+  combineResponse = (d, wf) => ({ searchData: { ...d }, workflowData: { ...wf } }),
   wfConfig = {},
   searchConfig = {},
 }) => {
   const client = useQueryClient();
-  const workflowFilters = fetchFilters(filters).assignee ? { assignee: uuid } : {};
+  const filtersObj = fetchFilters({ ...filters });
 
+  const workflowFilters = filtersObj.assignee ? { assignee: uuid } : {};
   const workFlowInstances = useQuery(
-    ["WORKFLOW", businessService, workflowFilters],
-    () => Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businesssService }),
-    { ...workFlowConfig, select: (data) => data.ProcessInstances }
+    ["WORKFLOW_INBOX", businessService, workflowFilters],
+    () =>
+      Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businessService }).then((data) =>
+        callMiddlewares(data.ProcessInstances, middlewaresWf)
+      ),
+    { ...wfConfig }
   );
+
+  const { data: processInstances, isLoading: workflowLoading, isFetching: wfFetching, isSuccess: wfSuccess } = workFlowInstances;
+  let applicationNos = !wfFetching && wfSuccess ? { applicationNos: processInstances.map((e) => e.businessId).join() } : {};
+  applicationNos = applicationNos?.applicationNos === "" ? { applicationNos: "xyz" } : applicationNos;
+
+  const { searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()[businessService];
+
+  const searchFilters = {
+    ...filtersObj,
+    [businessIdsParamForSearch]: filtersObj.applicationNos ? filtersObj.applicationNos : applicationNos.applicationNos,
+  };
+
+  const { _searchFn } = inboxConfig(tenantId, searchFilters)[businessService];
+
+  /**
+   * Convert Wf Array to Object
+   */
+
+  const processInstanceBuisnessIdMap = processInstances?.reduce((object, item) => {
+    return { ...object, [item["businessId"]]: item };
+  }, {});
+
+  const appList = useQuery(
+    [
+      "SEARCH_INBOX",
+      businessService,
+      { ...filtersObj, applicationNos: filtersObj.applicationNos ? filtersObj.applicationNos : applicationNos.applicationNos },
+    ],
+    () => _searchFn().then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch)),
+    {
+      enabled: !wfFetching && wfSuccess,
+      select: (d) => d.map((e) => combineResponse(e, processInstanceBuisnessIdMap[e[businessIdAliasForSearch]])),
+      ...searchConfig,
+    }
+  );
+
+  const revalidate = () => {
+    client.refetchQueries(["WORKFLOW_INBOX"]);
+    client.refetchQueries(["SEARCH_INBOX"]);
+  };
+
+  client.setQueryData(`FUNCTION_RESET_INBOX_${businessService}`, { revalidate });
+
+  return {
+    ...appList,
+    revalidate,
+    searchResponseKey,
+    businessIdsParamForSearch,
+    businessIdAliasForSearch,
+  };
 };
 
 export default useInboxGeneral;
