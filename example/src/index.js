@@ -6,6 +6,7 @@ import { PGRModule, PGRLinks, PGRReducers } from "@egovernments/digit-ui-module-
 import { PTModule, PTLinks } from "@egovernments/digit-ui-module-pt";
 import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { PaymentModule, PaymentLinks, paymentConfigs } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { PGRModule, PGRLinks } from "@egovernments/digit-ui-module-pgr";
@@ -73,7 +74,7 @@ const userInfo = {
   QACREATOR,
 };
 
-const enabledModules = ["PGR", "FSM", "Payment", "PT"];
+const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -115,6 +116,7 @@ const initDigitUI = () => {
 
   initFSMComponents();
   initPGRComponents();
+  initDSSComponents();
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),
