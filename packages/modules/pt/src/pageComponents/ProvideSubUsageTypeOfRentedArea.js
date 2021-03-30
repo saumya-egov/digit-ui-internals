@@ -28,7 +28,8 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   }
 
   function goNext() {
-    onSelect(config.key, SubUsageTypeOfRentedArea);
+    let index = window.location.href.charAt(window.location.href.length - 1);
+    onSelect(config.key, SubUsageTypeOfRentedArea, "", index);
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageTypeOfRentedArea}>

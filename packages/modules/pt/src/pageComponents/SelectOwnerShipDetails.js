@@ -76,6 +76,8 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
 
   const onSkip = () => onSelect();
   function goNext() {
+    debugger;
+    console.log(ownershipCategory.value);
     let index = window.location.href.charAt(window.location.href.length - 1);
     sessionStorage.setItem("ownershipCategory", ownershipCategory.value);
     onSelect(config.key, ownershipCategory, "", index);

@@ -25,6 +25,7 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function goNext() {
+    sessionStorage.setItem("PropertyType", BuildingType.i18nKey);
     onSelect(config.key, BuildingType);
   }
   return (

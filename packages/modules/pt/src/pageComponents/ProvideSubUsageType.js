@@ -27,7 +27,8 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function goNext() {
-    onSelect(config.key, SubUsageType);
+    let index = window.location.href.charAt(window.location.href.length - 1);
+    onSelect(config.key, SubUsageType, "", index);
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageType}>

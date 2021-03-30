@@ -22,7 +22,8 @@ const IsAnyPartOfThisFloorUnOccupied = ({ t, config, onSelect, userType, formDat
   }
 
   function goNext() {
-    onSelect(config.key, unOccupiedFloorPart);
+    let index = window.location.href.charAt(window.location.href.length - 1);
+    onSelect(config.key, unOccupiedFloorPart, "", index);
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!unOccupiedFloorPart}>

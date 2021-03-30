@@ -23,8 +23,11 @@ const PropertyBasementsDetails = ({ t, config, onSelect, userType, formData }) =
   }
 
   function goNext() {
+    debugger;
     let index = window.location.href.charAt(window.location.href.length - 1);
-    sessionStorage.setItem("noOofBasements", BasementDetails);
+    sessionStorage.setItem("noOofBasements", BasementDetails.i18nKey);
+    console.log(BasementDetails.i18nKey);
+    console.log(sessionStorage.getItem("noOofBasements"));
     onSelect(config.key, BasementDetails, "", index);
   }
 

@@ -52,7 +52,12 @@ export const newConfig = [
           cardText: "",
           submitBarLabel: "PT_COMMONS_NEXT",
         },
-        nextStep: "number-of-floors",
+        //nextStep: "number-of-floors",
+        nextStep: {
+          PROPERTYTAX_BILLING_SLAB_INDEPENDENTPROPERTY: "number-of-floors",
+          PROPERTYTAX_BILLING_SLAB_SHAREDPROPERTY: "is-this-floor-self-occupied",
+          COMMON_PROPTYPE_VACANT: "area",
+        },
         key: "PropertyType",
         withoutLabel: true,
         hideInEmployee: true,
@@ -122,7 +127,12 @@ export const newConfig = [
         },
         key: "IsThisFloorSelfOccupied",
         withoutLabel: true,
-        nextStep: "provide-sub-usage-type",
+        //nextStep: "provide-sub-usage-type",
+        nextStep: {
+          "Yes, It is fully Self Occupied": "provide-sub-usage-type",
+          "Partially rented out": "provide-sub-usage-type-of-rented-area",
+          "Fully rented out": "provide-sub-usage-type-of-rented-area",
+        },
         hideInEmployee: true,
       },
       {
