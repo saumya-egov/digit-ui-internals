@@ -13,142 +13,142 @@ const ApplicationDetails = () => {
   const {
     // isLoading,
     isError,
-    data: applicationDetails,
+    // data: applicationDetails,
     error,
   } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
-  // console.log("%c 👨‍👦: ApplicationDetails -> data ", "font-size:16px;background-color:#89a5a2;color:white;", data);
+  // console.log("%c 🔡: ApplicationDetails -> applicationDetails ", "font-size:16px;background-color:#df73e1;color:white;", applicationDetails);
 
   // TODO: applicationDetails should be fetch
-  // const applicationDetails = [
-  //   {
-  //     title: "ES_TITLE_APPLICATION_DETAILS",
-  //     values: [
-  //       { title: "CS_FILE_DESLUDGING_APPLICATION_NO", value: applicationNumber },
-  //       { title: "ES_APPLICATION_CHANNEL", value: "Online" },
-  //     ],
-  //   },
-  //   {
-  //     title: "ES_APPLICATION_DETAILS_PROPERTY_ADDRESS",
-  //     values: [
-  //       { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: "600001" },
-  //       { title: "ES_APPLICATION_DETAILS_LOCATION_CITY", value: "City A" },
-  //       {
-  //         title: "ES_APPLICATION_DETAILS_LOCATION_LOCALITY",
-  //         value: "Anand Nagar Extension",
-  //       },
-  //       { title: "ES_APPLICATION_DETAILS_LOCATION_STREET_NAME", value: "Gandhi Street" },
-  //       { title: "ES_APPLICATION_DETAILS_LOCATION_BUILDING_NUMBER", value: "25/A" },
-  //     ],
-  //   },
-  //   {
-  //     title: "ES_APPLICATION_DETAILS_PROPERTY_ASSESSMENT_DETAILS",
-  //     values: [
-  //       { title: "ES_APPLICATION_DETAILS_PROPERTY_USAGE_TYPE", value: "Residential" },
-  //       { title: "ES_APPLICATION_DETAILS_PROPERTY_TYPE", value: "Independent Building" },
-  //       { title: "ES_APPLICATION_DETAILS_PROPERTY_PLOT_SIZE", value: "1000" },
-  //       { title: "ES_APPLICATION_DETAILS_PROPERTY_NO_OF_FLOORS", value: "2" },
-  //     ],
-  //     additionalDetails: {
-  //       floors: [
-  //         {
-  //           title: "Ground Floor",
-  //           values: [
-  //             {
-  //               title: "Unit 1",
-  //               values: [
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
-  //                   value: "Residentail",
-  //                 },
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
-  //                   value: "Self Occupied",
-  //                 },
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
-  //                   value: "1000 sq.ft",
-  //                 },
-  //               ],
-  //             },
-  //             {
-  //               title: "Unit 2",
-  //               values: [
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
-  //                   value: "Residentail",
-  //                 },
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
-  //                   value: "Self Occupied",
-  //                 },
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
-  //                   value: "1000 sq.ft",
-  //                 },
-  //               ],
-  //             },
-  //           ],
-  //         },
-  //         {
-  //           title: "First Floor",
-  //           values: [
-  //             {
-  //               title: "Unit 1",
-  //               values: [
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
-  //                   value: "Residentail",
-  //                 },
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
-  //                   value: "Self Occupied",
-  //                 },
-  //                 {
-  //                   title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
-  //                   value: "1000 sq.ft",
-  //                 },
-  //               ],
-  //             },
-  //           ],
-  //         },
-  //       ],
-  //     },
-  //   },
-  //   {
-  //     title: "ES_APPLICATION_DETAILS_PROPERTY_OWNERSHIP_DETAILS",
-  //     values: [
-  //       { title: "ES_APPLICATION_DETAILS_OWNER_NAME", value: "Antriksh" },
-  //       { title: "ES_APPLICATION_DETAILS_GENDER", value: "Male" },
-  //       { title: "ES_APPLICATION_DETAILS_MOBILE_NUMBER", value: "XXXXXXXXXX" },
-  //       { title: "ES_APPLICATION_DETAILS_SPECIAL_CATEGORY", value: "None" },
-  //       { title: "ES_APPLICATION_DETAILS_GUARDIAN_NAME", value: "Antriksh" },
-  //       { title: "ES_APPLICATION_DETAILS_OWNERSHIP_TYPE", value: "Single Owner" },
-  //       { title: "ES_APPLICATION_DETAILS_EMAIL", value: "None" },
-  //       { title: "ES_APPLICATION_DETAILS_CORRESPONDENCE_ADDRESS", value: "ABCD" },
-  //     ],
-  //     additionalDetails: {
-  //       documents: [
-  //         {
-  //           title: "Documents",
-  //           values: [
-  //             {
-  //               title: "Address Proof",
-  //             },
-  //             {
-  //               title: "Address Proof",
-  //             },
-  //             {
-  //               title: "Address Proof",
-  //             },
-  //             {
-  //               title: "Address Proof",
-  //             },
-  //           ],
-  //         },
-  //       ],
-  //     },
-  //   },
-  // ];
+  const applicationDetails = [
+    {
+      title: "ES_TITLE_APPLICATION_DETAILS",
+      values: [
+        { title: "CS_FILE_DESLUDGING_APPLICATION_NO", value: applicationNumber },
+        { title: "ES_APPLICATION_CHANNEL", value: "Online" },
+      ],
+    },
+    {
+      title: "ES_APPLICATION_DETAILS_PROPERTY_ADDRESS",
+      values: [
+        { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: "600001" },
+        { title: "ES_APPLICATION_DETAILS_LOCATION_CITY", value: "City A" },
+        {
+          title: "ES_APPLICATION_DETAILS_LOCATION_LOCALITY",
+          value: "Anand Nagar Extension",
+        },
+        { title: "ES_APPLICATION_DETAILS_LOCATION_STREET_NAME", value: "Gandhi Street" },
+        { title: "ES_APPLICATION_DETAILS_LOCATION_BUILDING_NUMBER", value: "25/A" },
+      ],
+    },
+    {
+      title: "ES_APPLICATION_DETAILS_PROPERTY_ASSESSMENT_DETAILS",
+      values: [
+        { title: "ES_APPLICATION_DETAILS_PROPERTY_USAGE_TYPE", value: "Residential" },
+        { title: "ES_APPLICATION_DETAILS_PROPERTY_TYPE", value: "Independent Building" },
+        { title: "ES_APPLICATION_DETAILS_PROPERTY_PLOT_SIZE", value: "1000" },
+        { title: "ES_APPLICATION_DETAILS_PROPERTY_NO_OF_FLOORS", value: "2" },
+      ],
+      additionalDetails: {
+        floors: [
+          {
+            title: "Ground Floor",
+            values: [
+              {
+                title: "Unit 1",
+                values: [
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
+                    value: "Residentail",
+                  },
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
+                    value: "Self Occupied",
+                  },
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
+                    value: "1000 sq.ft",
+                  },
+                ],
+              },
+              {
+                title: "Unit 2",
+                values: [
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
+                    value: "Residentail",
+                  },
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
+                    value: "Self Occupied",
+                  },
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
+                    value: "1000 sq.ft",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            title: "First Floor",
+            values: [
+              {
+                title: "Unit 1",
+                values: [
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
+                    value: "Residentail",
+                  },
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
+                    value: "Self Occupied",
+                  },
+                  {
+                    title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
+                    value: "1000 sq.ft",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      title: "ES_APPLICATION_DETAILS_PROPERTY_OWNERSHIP_DETAILS",
+      values: [
+        { title: "ES_APPLICATION_DETAILS_OWNER_NAME", value: "Antriksh" },
+        { title: "ES_APPLICATION_DETAILS_GENDER", value: "Male" },
+        { title: "ES_APPLICATION_DETAILS_MOBILE_NUMBER", value: "XXXXXXXXXX" },
+        { title: "ES_APPLICATION_DETAILS_SPECIAL_CATEGORY", value: "None" },
+        { title: "ES_APPLICATION_DETAILS_GUARDIAN_NAME", value: "Antriksh" },
+        { title: "ES_APPLICATION_DETAILS_OWNERSHIP_TYPE", value: "Single Owner" },
+        { title: "ES_APPLICATION_DETAILS_EMAIL", value: "None" },
+        { title: "ES_APPLICATION_DETAILS_CORRESPONDENCE_ADDRESS", value: "ABCD" },
+      ],
+      additionalDetails: {
+        documents: [
+          {
+            title: "Documents",
+            values: [
+              {
+                title: "Address Proof",
+              },
+              {
+                title: "Address Proof",
+              },
+              {
+                title: "Address Proof",
+              },
+              {
+                title: "Address Proof",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ];
 
   const isLoading = false;
   const { isLoading: isDataLoading, isSuccess, data: applicationData } = Digit.Hooks.fsm.useSearch(
