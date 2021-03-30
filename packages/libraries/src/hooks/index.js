@@ -13,6 +13,7 @@ import {
 } from "./payment";
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
+import useInboxGeneral from "./useInboxGeneral";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -116,6 +117,7 @@ const Hooks = {
   useUserSearch,
   useApplicationsForBusinessServiceSearch,
   useDemandSearch,
+  useInboxGeneral,
   pgr,
   fsm,
   pt,
