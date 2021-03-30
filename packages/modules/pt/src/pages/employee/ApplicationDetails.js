@@ -15,7 +15,7 @@ const ApplicationDetails = () => {
     isError,
     data: applicationDetails,
     error,
-  } = Digit.Hooks.pt.usePropertyDetail(t, tenantId, applicationNumber);
+  } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
   // console.log("%c 👨‍👦: ApplicationDetails -> data ", "font-size:16px;background-color:#89a5a2;color:white;", data);
 
   // TODO: applicationDetails should be fetch
