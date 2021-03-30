@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FormStep, TypeSelectCard, RadioButtons } from "@egovernments/digit-ui-react-components";
 import { Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
+import { cardBodyStyle } from "../utils";
 
 const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   const [usageCategoryMajor, setPropertyPurpose] = useState(formData?.usageCategoryMajor);
@@ -37,14 +38,16 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!usageCategoryMajor}>
-      <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        isMandatory={config.isMandatory}
-        options={menu}
-        selectedOption={usageCategoryMajor}
-        onSelect={selectPropertyPurpose}
-      />
+      <div style={cardBodyStyle}>
+        <RadioButtons
+          t={t}
+          optionsKey="i18nKey"
+          isMandatory={config.isMandatory}
+          options={menu}
+          selectedOption={usageCategoryMajor}
+          onSelect={selectPropertyPurpose}
+        />
+      </div>
     </FormStep>
   );
 };

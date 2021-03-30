@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { cardBodyStyle } from "../utils";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
@@ -54,51 +55,53 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       t={t}
       isDisabled={!name || !mobileNumber || !gender || !relationship || !fatherOrHusbandName}
     >
-      <CardLabel>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
-      <TextInput
-        t={t}
-        type={"text"}
-        isMandatory={false}
-        optionKey="i18nKey"
-        name="name"
-        value={name}
-        onChange={setOwnerName}
-        pattern="^[a-zA-Z-.`' ]*$"
-      />
-      <CardLabel>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
-      <RadioButtons t={t} options={options} optionsKey="code" name="gender" value={gender} selectedOption={gender} onSelect={setGenderName} />
-      <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
-      <TextInput
-        type={"text"}
-        t={t}
-        isMandatory={false}
-        optionKey="i18nKey"
-        name="mobileNumber"
-        value={mobileNumber}
-        onChange={setMobileNo}
-        pattern="^([0]|((\+\d{1,2}[-]{0,1})))?\(?[6-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
-      />
-      <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}*`}</CardLabel>
-      <TextInput
-        t={t}
-        type={"text"}
-        isMandatory={false}
-        optionKey="i18nKey"
-        name="fatherOrHusbandName"
-        value={fatherOrHusbandName}
-        onChange={setGuardiansName}
-        pattern="^[a-zA-Z-.`' ]*$"
-      />
-      <CardLabel>{`${t("PT_FORM3_RELATIONSHIP")}*`}</CardLabel>
-      <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        name="relationship"
-        options={GuardianOptions}
-        value={relationship}
-        selectedOption={relationship}
-        onSelect={setGuardianName}
-      />
+      <div style={cardBodyStyle}>
+        <CardLabel>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
+        <TextInput
+          t={t}
+          type={"text"}
+          isMandatory={false}
+          optionKey="i18nKey"
+          name="name"
+          value={name}
+          onChange={setOwnerName}
+          pattern="^[a-zA-Z-.`' ]*$"
+        />
+        <CardLabel>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
+        <RadioButtons t={t} options={options} optionsKey="code" name="gender" value={gender} selectedOption={gender} onSelect={setGenderName} />
+        <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
+        <TextInput
+          type={"text"}
+          t={t}
+          isMandatory={false}
+          optionKey="i18nKey"
+          name="mobileNumber"
+          value={mobileNumber}
+          onChange={setMobileNo}
+          pattern="^([0]|((\+\d{1,2}[-]{0,1})))?\(?[6-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
+        />
+        <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}*`}</CardLabel>
+        <TextInput
+          t={t}
+          type={"text"}
+          isMandatory={false}
+          optionKey="i18nKey"
+          name="fatherOrHusbandName"
+          value={fatherOrHusbandName}
+          onChange={setGuardiansName}
+          pattern="^[a-zA-Z-.`' ]*$"
+        />
+        <CardLabel>{`${t("PT_FORM3_RELATIONSHIP")}*`}</CardLabel>
+        <RadioButtons
+          t={t}
+          optionsKey="i18nKey"
+          name="relationship"
+          options={GuardianOptions}
+          value={relationship}
+          selectedOption={relationship}
+          onSelect={setGuardianName}
+        />
+      </div>
     </FormStep>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { cardBodyStyle } from "../utils";
 
 const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -83,14 +84,16 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
 
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!ownershipCategory}>
-      <RadioButtons
-        isMandatory={config.isMandatory}
-        options={getDropdwonForProperty(ownerShipdropDown) || []}
-        selectedOption={ownershipCategory}
-        optionsKey="i18nKey"
-        onSelect={selectedValue}
-        value={ownershipCategory}
-      />
+      <div style={cardBodyStyle}>
+        <RadioButtons
+          isMandatory={config.isMandatory}
+          options={getDropdwonForProperty(ownerShipdropDown) || []}
+          selectedOption={ownershipCategory}
+          optionsKey="i18nKey"
+          onSelect={selectedValue}
+          value={ownershipCategory}
+        />
+      </div>
     </FormStep>
   );
 };
