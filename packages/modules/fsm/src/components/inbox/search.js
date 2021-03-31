@@ -28,6 +28,8 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
   function clearSearch() {
     const resetValues = searchFields.reduce((acc, field) => ({ ...acc, [field?.name]: "" }), {});
     reset(resetValues);
+    Digit.SessionStorage.del("fsm/search/searchParams");
+    Digit.SessionStorage.del("fsm/inbox/searchParams");
     onSearch({});
   }
 

@@ -116,19 +116,23 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
     }
   };
 
-  useEffect(() => {
-    if (isSearch) {
-      if (Object.values(searchParams).length > 0) {
-        Digit.SessionStorage.set("fsm/search/searchParams", searchParams);
-      } else {
-        const storedSearchParams = Digit.SessionStorage.get("fsm/search/searchParams");
-        if (storedSearchParams) {
-          setSearchParams(storedSearchParams);
-          onSearch(storedSearchParams);
-        }
-      }
+  const search = (condition = false, key, searchParams) => {
+    if (condition) {
+      Digit.SessionStorage.set(key, searchParams);
     } else {
-      Digit.SessionStorage.del("fsm/search/searchParams");
+      const storedSearchParams = Digit.SessionStorage.get(key);
+      if (storedSearchParams) {
+        onSearch(storedSearchParams);
+      }
+    }
+  };
+
+  useEffect(() => {
+    search();
+    if (isSearch) {
+      search(Object.values(searchParams).length > 0, "fsm/search/searchParams", searchParams);
+    } else if (isInbox) {
+      search(searchParams?.applicationNos || searchParams?.mobileNumber, "fsm/inbox/searchParams", searchParams);
     }
   }, [searchParams]);
 
