@@ -29,6 +29,7 @@ const getStorage = (storageClass) => ({
   set: (key, value, ttl = 86400) => {
     const item = {
       value,
+      ttl,
       expiry: Date.now() + ttl * 1000,
     };
     if (localStoreSupport()) {

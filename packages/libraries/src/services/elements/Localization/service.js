@@ -2,6 +2,7 @@ import Urls from "../../atoms/urls";
 import { PersistantStorage } from "../../atoms/Utils/Storage";
 import i18next from "i18next";
 import { Request } from "../../atoms/Utils/Request";
+import { ApiCacheService } from "../../atoms/ApiCacheService";
 
 const LOCALE_LIST = (locale) => `Locale.${locale}.List`;
 const LOCALE_ALL_LIST = () => `Locale.List`;
@@ -21,10 +22,15 @@ const getUnique = (arr) => {
 };
 
 const LocalizationStore = {
-  getList: (locale) => PersistantStorage.get(LOCALE_LIST(locale)) || [],
-  setList: (locale, namespaces) => PersistantStorage.set(LOCALE_LIST(locale), namespaces),
-  getAllList: () => PersistantStorage.get(LOCALE_ALL_LIST()) || [],
-  setAllList: (namespaces) => PersistantStorage.set(LOCALE_ALL_LIST(), namespaces),
+  getCaheData: (key) => PersistantStorage.get(key),
+  setCacheData: (key, value) => {
+    const cacheSetting = ApiCacheService.getSettingByServiceUrl(Urls.localization);
+    PersistantStorage.set(key, value, cacheSetting.cacheTimeInSecs);
+  },
+  getList: (locale) => LocalizationStore.getCaheData(LOCALE_LIST(locale)) || [],
+  setList: (locale, namespaces) => LocalizationStore.setCacheData(LOCALE_LIST(locale), namespaces),
+  getAllList: () => LocalizationStore.getCaheData(LOCALE_ALL_LIST()) || [],
+  setAllList: (namespaces) => LocalizationStore.setCacheData(LOCALE_ALL_LIST(), namespaces),
   store: (locale, modules, messages) => {
     const AllNamespaces = LocalizationStore.getAllList();
     const Namespaces = LocalizationStore.getList(locale);
@@ -32,10 +38,10 @@ const LocalizationStore = {
       if (!Namespaces.includes(module)) {
         Namespaces.push(module);
         const moduleMessages = messages.filter((message) => message.module === module);
-        PersistantStorage.set(LOCALE_MODULE(locale, module), moduleMessages);
+        LocalizationStore.setCacheData(LOCALE_MODULE(locale, module), moduleMessages);
       }
     });
-    PersistantStorage.set(LOCALE_LIST(locale), Namespaces);
+    LocalizationStore.setCacheData(LOCALE_LIST(locale), Namespaces);
     LocalizationStore.setAllList(getUnique([...AllNamespaces, ...Namespaces]));
   },
   get: (locale, modules) => {
@@ -43,7 +49,7 @@ const LocalizationStore = {
     const newModules = modules.filter((module) => !storedModules.includes(module));
     const messages = [];
     storedModules.forEach((module) => {
-      messages.push(...PersistantStorage.get(LOCALE_MODULE(locale, module)));
+      messages.push(...LocalizationStore.getCaheData(LOCALE_MODULE(locale, module)));
     });
     return [newModules, messages];
   },

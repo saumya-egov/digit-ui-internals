@@ -1,3 +1,4 @@
+import { ApiCacheService } from "../atoms/ApiCacheService";
 import Urls from "../atoms/urls";
 import { Request, ServiceRequest } from "../atoms/Utils/Request";
 import { PersistantStorage } from "../atoms/Utils/Storage";
@@ -45,6 +46,10 @@ const initRequestBody = (tenantId) => ({
       {
         moduleName: "tenant",
         masterDetails: [{ name: "tenants" }, { name: "citymodule" }],
+      },
+      {
+        moduleName: "DIGIT-UI",
+        masterDetails: [{ name: "ApiCachingSettings" }],
       },
     ],
   },
@@ -579,6 +584,10 @@ const transformResponse = (type, MdmsRes, moduleCode) => {
   }
 };
 
+const getCacheSetting = (moduleName) => {
+  return ApiCacheService.getSettingByServiceUrl(Urls.MDMS, moduleName);
+};
+
 const mergedData = {};
 const mergedPromises = {};
 const callAllPromises = (success, promises = [], resData) => {
@@ -612,6 +621,7 @@ const mergeMDMSData = (data, tenantId) => {
 };
 const debouncedCall = ({ serviceName, url, data, useCache, params }, resolve, reject) => {
   if (!mergedPromises[params.tenantId] || mergedPromises[params.tenantId].length === 0) {
+    const cacheSetting = getCacheSetting();
     setTimeout(() => {
       let callData = JSON.parse(JSON.stringify(mergedData[params.tenantId]));
       mergedData[params.tenantId] = {};
@@ -631,7 +641,7 @@ const debouncedCall = ({ serviceName, url, data, useCache, params }, resolve, re
         .catch((err) => {
           callAllPromises(false, callPromises, err);
         });
-    }, 500);
+    }, cacheSetting.debounceTimeInMS || 500);
   }
   mergeMDMSData(data, params.tenantId);
   if (!mergedPromises[params.tenantId]) {
@@ -666,7 +676,7 @@ export const MdmsService = {
     );
   },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
-    const key = `${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
+    const key = `MDMS.${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
     const inStoreValue = PersistantStorage.get(key);
     if (inStoreValue) {
       return inStoreValue;
@@ -674,7 +684,8 @@ export const MdmsService = {
     console.log("mdms request details ---->", mdmsDetails, moduleCode);
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
     const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase());
-    PersistantStorage.set(key, responseValue);
+    const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
+    PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
     return responseValue;
   },
   getServiceDefs: (tenantId, moduleCode) => {
