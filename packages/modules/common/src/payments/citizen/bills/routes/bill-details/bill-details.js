@@ -30,7 +30,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
 
   const getBillBreakDown = () => billDetails?.billAccountDetails || [];
 
-  const getTotal = () => billDetails?.amount;
+  const getTotal = () => billDetails?.amount || 0;
 
   const [paymentType, setPaymentType] = useState(t("CS_PAYMENT_FULL_AMOUNT"));
   const [amount, setAmount] = useState(getTotal());
