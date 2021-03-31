@@ -128,7 +128,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
         }
       }
     } else {
-      Digit.SessionStorage.set("fsm/search/searchParams", null);
+      Digit.SessionStorage.del("fsm/search/searchParams");
     }
   }, [searchParams]);
 
