@@ -47,7 +47,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   // );
   const applications = [
     {
-      applicationNo: "PB-AC-2021-03-24-014757",
+      applicationNo: "PB-PT-2021-03-24-015015",
       propertyId: "AM2345DE",
       owner: "Sankar",
       applicationType: "New Property",
@@ -82,7 +82,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   // );
   const data = [
     {
-      applicationNo: "PB-AC-2021-03-24-014757",
+      applicationNo: "PB-PT-2021-03-24-015015",
       propertyId: "AM2345DE",
       owner: "Sankar",
       applicationType: "New Property",

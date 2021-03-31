@@ -19,15 +19,15 @@ export const PTSearch = {
       {
         title: "ES_TITLE_APPLICATION_DETAILS",
         values: [
-          { title: "CS_FILE_DESLUDGING_APPLICATION_NO", value: response?.applicationNo },
-          { title: "ES_APPLICATION_CHANNEL", value: `ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_${response?.source}` },
+          { title: "CS_FILE_DESLUDGING_APPLICATION_NO", value: response?.acknowldgementNumber },
+          { title: "ES_APPLICATION_CHANNEL", value: `ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_${response?.channel}` },
         ],
       },
       {
         title: "ES_APPLICATION_DETAILS_PROPERTY_ADDRESS",
         values: [
           { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: response?.address?.pincode },
-          { title: "ES_APPLICATION_DETAILS_LOCATION_CITY", value: response?.address?.cit },
+          { title: "ES_APPLICATION_DETAILS_LOCATION_CITY", value: response?.address?.city },
           {
             title: "ES_APPLICATION_DETAILS_LOCATION_LOCALITY",
             value: `${response?.tenantId?.toUpperCase()?.split(".")?.join("_")}_REVENUE_${response?.address?.locality?.code}`,
@@ -39,8 +39,8 @@ export const PTSearch = {
       {
         title: "ES_APPLICATION_DETAILS_PROPERTY_ASSESSMENT_DETAILS",
         values: [
-          { title: "ES_APPLICATION_DETAILS_PROPERTY_USAGE_TYPE", value: getPropertyTypeLocale(response?.propertyUsage) },
-          { title: "ES_APPLICATION_DETAILS_PROPERTY_TYPE", value: getPropertySubtypeLocale(response?.propertyUsage) },
+          { title: "ES_APPLICATION_DETAILS_PROPERTY_USAGE_TYPE", value: getPropertyTypeLocale(response?.propertyType) },
+          { title: "ES_APPLICATION_DETAILS_PROPERTY_TYPE", value: getPropertySubtypeLocale(response?.usageCategory) },
           { title: "ES_APPLICATION_DETAILS_PROPERTY_PLOT_SIZE", value: response?.superBuiltUpArea },
           { title: "ES_APPLICATION_DETAILS_PROPERTY_NO_OF_FLOORS", value: response?.noOfFloors },
         ],
@@ -66,11 +66,10 @@ export const PTSearch = {
       },
     ];
 
-    if (userType !== "CITIZEN")
-      return {
-        // tenantId: response.tenantId,
-        applicationDetails: employeeResponse,
-        // additionalDetails: response?.additionalDetails,
-      };
+    return {
+      tenantId: response.tenantId,
+      applicationDetails: employeeResponse,
+      additionalDetails: response?.additionalDetails,
+    };
   },
 };
