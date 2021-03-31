@@ -119,16 +119,16 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   useEffect(() => {
     if (isSearch) {
       if (Object.values(searchParams).length > 0) {
-        localStorage.setItem("fsm/search/searchParams", JSON.stringify(searchParams));
+        Digit.SessionStorage.set("fsm/search/searchParams", searchParams);
       } else {
-        const storedSearchParams = JSON.parse(localStorage.getItem("fsm/search/searchParams"));
+        const storedSearchParams = Digit.SessionStorage.get("fsm/search/searchParams");
         if (storedSearchParams) {
           setSearchParams(storedSearchParams);
           onSearch(storedSearchParams);
         }
       }
     } else {
-      localStorage.setItem("fsm/search/searchParams", null);
+      Digit.SessionStorage.set("fsm/search/searchParams", null);
     }
   }, [searchParams]);
 
