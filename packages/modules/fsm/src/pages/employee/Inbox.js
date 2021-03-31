@@ -128,7 +128,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   };
 
   useEffect(() => {
-    search();
     if (isSearch) {
       search(Object.values(searchParams).length > 0, "fsm/search/searchParams", searchParams);
     } else if (isInbox) {
