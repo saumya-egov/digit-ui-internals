@@ -35,7 +35,7 @@ const TextInput = (props) => {
               }
             }}
             ref={props.inputRef}
-            value={props.value}
+            value={props.value || ""}
             style={{ ...props.style }}
             defaultValue={props.defaultValue}
             minLength={props.minlength}
@@ -64,7 +64,7 @@ const TextInput = (props) => {
               }
             }}
             ref={props.inputRef}
-            value={props.value}
+            value={props.value || ""}
             style={{ ...props.style }}
             defaultValue={props.defaultValue}
             minLength={props.minlength}
