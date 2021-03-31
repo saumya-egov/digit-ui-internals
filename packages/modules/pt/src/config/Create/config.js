@@ -148,7 +148,7 @@ export const newConfig = [
         },
         key: "ProvideSubUsageType",
         withoutLabel: true,
-        nextStep: "rental-details",
+        nextStep: "provide-sub-usage-type-of-rented-area",
         hideInEmployee: true,
       },
       {
@@ -164,7 +164,7 @@ export const newConfig = [
         },
         key: "units",
         withoutLabel: true,
-        nextStep: "provide-sub-usage-type-of-rented-area",
+        nextStep: "is-any-part-of-this-floor-unoccupied",
         hideInEmployee: true,
       },
       {
@@ -180,7 +180,7 @@ export const newConfig = [
         },
         key: "ProvideSubUsageTypeOfRentedArea",
         withoutLabel: true,
-        nextStep: "is-any-part-of-this-floor-unoccupied",
+        nextStep: "rental-details",
         hideInEmployee: true,
       },
       {

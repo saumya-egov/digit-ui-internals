@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, RadioButtons } from "@egovernments/digit-ui-react-components";
 
 const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formData }) => {
@@ -6,6 +6,22 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   const stateId = tenantId.split(".")[0];
   const [SubUsageTypeOfRentedArea, setSelfOccupied] = useState(formData?.ProvideSubUsageTypeOfRentedArea);
   const { data: Menu, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "OwnerType");
+
+  useEffect(() => {
+    if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
+      //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
+      let index = window.location.href.charAt(window.location.href.length - 1);
+      onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
+    }
+  }, [formData?.usageCategoryMajor?.i18nKey]);
+
+  useEffect(() => {
+    if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+      //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
+      let index = window.location.href.charAt(window.location.href.length - 1);
+      onSelect(config.key, {}, true, index);
+    }
+  });
 
   const data = [
     {

@@ -1,10 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
   const onSkip = () => onSelect();
   const [UnOccupiedArea, setUnOccupiedArea] = useState(formData.units && formData.units[index] && formData.units[index].UnOccupiedArea);
+
+  useEffect(() => {
+    let index = window.location.href.charAt(window.location.href.length - 1);
+    if (userType !== "employee" && formData?.IsAnyPartOfThisFloorUnOccupied?.i18nKey === "No") {
+      //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
+      onSelect(config.key, {}, true, index);
+    }
+  });
 
   function setPropertyUnOccupiedArea(e) {
     setUnOccupiedArea(e.target.value);

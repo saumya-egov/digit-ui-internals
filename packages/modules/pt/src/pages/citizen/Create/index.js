@@ -16,18 +16,14 @@ const CreateProperty = ({ parentRoute }) => {
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_PROPERTY", {});
 
   const goNext = (skipStep, index, isAddMultiple, key) => {
-    debugger;
     let currentPath = pathname.split("/").pop(),
       lastchar = currentPath.charAt(currentPath.length - 1),
       isMultiple = false,
       nextPage;
-    console.log(key);
     if (Number(parseInt(currentPath)) || currentPath == "0") {
-      debugger;
       currentPath = pathname.slice(0, -2);
       currentPath = currentPath.split("/").pop();
       isMultiple = true;
-      console.log(currentPath);
     } else {
       isMultiple = false;
     }
@@ -36,29 +32,17 @@ const CreateProperty = ({ parentRoute }) => {
     }
     let { nextStep = {} } = config.find((routeObj) => routeObj.route === currentPath);
     if (typeof nextStep == "object" && nextStep != null && isMultiple != false) {
-      debugger;
-      console.log(nextStep);
       if (nextStep[sessionStorage.getItem("ownershipCategory")]) {
         nextStep = `${nextStep[sessionStorage.getItem("ownershipCategory")]}/${index}`;
       } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
-        console.log("inside condn else if");
-        console.log(sessionStorage.getItem("noOofBasements"));
         nextStep = `${nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]}/${index}`;
       } else {
-        console.log("inside condn else");
-        console.log(sessionStorage.getItem("noOofBasements"));
         nextStep = `${nextStep[sessionStorage.getItem("noOofBasements")]}/${index}`;
         //nextStep = `${"floordetails"}/${index}`;
       }
-      console.log("after condn");
-      console.log(nextStep);
     }
     if (typeof nextStep == "object" && nextStep != null && isMultiple == false) {
-      debugger;
-      console.log("inside propertytype");
       if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
-        console.log("inside condn else if");
-        console.log(sessionStorage.getItem("noOofBasements"));
         nextStep = `${nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]}`;
       } else {
         nextStep = `${nextStep[sessionStorage.getItem("PropertyType")]}`;
@@ -75,8 +59,6 @@ const CreateProperty = ({ parentRoute }) => {
       nextStep = key;
     }
     if (nextStep === null) {
-      console.log(match.path);
-      //console.log(nextStep.length() - 1);
       return redirectWithHistory(`${match.path}/check`);
     }
     if (nextStep.split("/").pop() == "0") {
@@ -84,8 +66,6 @@ const CreateProperty = ({ parentRoute }) => {
     } else {
       nextPage = isMultiple && nextStep !== "map" ? `${match.path}/${nextStep}/${index}` : `${match.path}/${nextStep}`;
     }
-    debugger;
-    console.log(nextPage);
     redirectWithHistory(nextPage);
   };
 
