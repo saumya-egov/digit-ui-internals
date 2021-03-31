@@ -34,7 +34,7 @@ export const FormComposer = (props) => {
           </div>
         );
       case "textarea":
-        return <TextArea className="field" name={""} {...populators} inputRef={register(populators.validation)} />;
+        return <TextArea className="field" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} />;
       default:
         return populators.dependency !== false ? populators : null;
     }

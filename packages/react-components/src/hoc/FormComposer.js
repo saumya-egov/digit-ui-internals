@@ -64,7 +64,9 @@ export const FormComposer = (props) => {
         );
       case "textarea":
         // if (populators.defaultValue) setTimeout(setValue(populators.name, populators.defaultValue));
-        return <TextArea className="field" name={""} {...populators} inputRef={register(populators.validation)} disable={disable} />;
+        return (
+          <TextArea className="field" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} disable={disable} />
+        );
       case "custom":
         return (
           <Controller
