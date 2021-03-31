@@ -116,6 +116,22 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
     }
   };
 
+  useEffect(() => {
+    if (isSearch) {
+      if (Object.values(searchParams).length > 0) {
+        localStorage.setItem("fsm/search/searchParams", JSON.stringify(searchParams));
+      } else {
+        const storedSearchParams = JSON.parse(localStorage.getItem("fsm/search/searchParams"));
+        if (storedSearchParams) {
+          setSearchParams(storedSearchParams);
+          onSearch(storedSearchParams);
+        }
+      }
+    } else {
+      localStorage.setItem("fsm/search/searchParams", null);
+    }
+  }, [searchParams]);
+
   const removeParam = (params = {}) => {
     const _search = { ...searchParams };
     Object.keys(params).forEach((key) => delete _search[key]);
