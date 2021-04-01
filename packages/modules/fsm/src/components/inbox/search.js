@@ -4,11 +4,13 @@ import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker
 import { useTranslation } from "react-i18next";
 
 const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFields, searchParams, isInboxPage }) => {
+  const searchParamsData =
+    searchParams || isInboxPage ? Digit.SessionStorage.get("fsm/inbox/searchParams") : Digit.SessionStorage.get("fsm/search/searchParams");
   const { t } = useTranslation();
   const [applicationNo, setApplicationNo] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const { register, handleSubmit, reset, watch, control } = useForm({
-    defaultValues: searchParams,
+    defaultValues: searchParamsData,
   });
   const mobileView = innerWidth <= 640;
   const FSTP = Digit.UserService.hasAccess("FSM_EMP_FSTPO") || false;
