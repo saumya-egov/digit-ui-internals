@@ -341,6 +341,32 @@ const getDocumentRequiredScreenCategory = (tenantId, moduleCode) => ({
   },
 });
 
+const getUsageCategoryList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "UsageCategory" }],
+      },
+    ],
+  },
+});
+
+const getPTPropertyTypeList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "PropertyType" }],
+      },
+    ],
+  },
+});
+
 const getReasonCriteria = (tenantId, moduleCode, type, payload) => ({
   type,
   details: {
@@ -487,6 +513,21 @@ const getDocumentRequiredScreen = (MdmsRes) => {
   });
 };
 
+const getUsageCategory = (MdmsRes) =>
+  MdmsRes["PropertyTax"].UsageCategory.filter((UsageCategory) => UsageCategory.active).map((UsageCategorylist) => {
+    return {
+      ...UsageCategorylist,
+      i18nKey: `PROPERTYTAX_BILLING_SLAB_${UsageCategorylist.code}`,
+    };
+  });
+
+const getPTPropertyType = (MdmsRes) =>
+  MdmsRes["PropertyTax"].UsageCategory.filter((PropertyType) => PropertyType.active).map((PTPropertyTypelist) => {
+    return {
+      ...UsageCategorylist,
+      i18nKey: `COMMON_PROPTYPE_${PTPropertyTypelist.code.replaceAll(".", "_")}`,
+    };
+  });
 const GetReasonType = (MdmsRes, type, moduleCode) =>
   Object.assign(
     {},
@@ -537,6 +578,10 @@ const transformResponse = (type, MdmsRes, moduleCode) => {
       return getSubPropertyOwnerShipCategory(MdmsRes);
     case "Documents":
       return getDocumentRequiredScreen(MdmsRes);
+    case "UsageCategory":
+      return getUsageCategory(MdmsRes);
+    case "PTPropertyType":
+      return getPTPropertyType(MdmsRes);
     case "Reason":
       return GetReasonType(MdmsRes, type, moduleCode);
     case "RoleStatusMapping":
@@ -637,5 +682,11 @@ export const MdmsService = {
   },
   getDocumentRequiredScreen: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getDocumentRequiredScreenCategory(tenantId, moduleCode), moduleCode);
+  },
+  getUsageCategory: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getUsageCategoryList(tenantId, moduleCode), moduleCode);
+  },
+  getPTPropertyType: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getPTPropertyTypeList(tenantId, moduleCode), moduleCode);
   },
 };

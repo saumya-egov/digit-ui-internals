@@ -54,8 +54,8 @@ export const newConfig = [
         },
         //nextStep: "number-of-floors",
         nextStep: {
-          PROPERTYTAX_BILLING_SLAB_INDEPENDENTPROPERTY: "number-of-floors",
-          PROPERTYTAX_BILLING_SLAB_SHAREDPROPERTY: "is-this-floor-self-occupied",
+          COMMON_PROPTYPE_BUILTUP_INDEPENDENTPROPERTY: "number-of-floors",
+          COMMON_PROPTYPE_BUILTUP_SHAREDPROPERTY: "is-this-floor-self-occupied",
           COMMON_PROPTYPE_VACANT: "area",
         },
         key: "PropertyType",

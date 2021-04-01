@@ -14,6 +14,12 @@ const usePropertyMDMS = (tenantId, moduleCode, type, config = {}) => {
   const useDocumentRequiredScreen = () => {
     return useQuery("PT_DOCUMENT_REQ_SCREEN", () => MdmsService.getDocumentRequiredScreen(tenantId, moduleCode), config);
   };
+  const useUsageCategory = () => {
+    return useQuery("PT_USAGE_CATEGORY", () => MdmsService.getUsageCategory(tenantId, moduleCode, type), config);
+  };
+  const usePTPropertyType = () => {
+    return useQuery("PT_PROPERTY_TYPE", () => MdmsService.getPTPropertyType(tenantId, moduleCode, type), config);
+  };
 
   switch (type) {
     case "OwnerShipCategory":
@@ -24,6 +30,10 @@ const usePropertyMDMS = (tenantId, moduleCode, type, config = {}) => {
       return useSubOwnerShipCategory();
     case "Documents":
       return useDocumentRequiredScreen();
+    case "UsageCategory":
+      return useUsageCategory();
+    case "PTPropertyType":
+      return usePTPropertyType();
   }
 };
 
