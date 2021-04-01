@@ -3,6 +3,7 @@ import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-com
 
 const Area = ({ t, config, onSelect, value, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
+  let validation = {};
   const onSkip = () => onSelect();
   const [floorarea, setfloorarea] = useState(formData.units && formData.units[index] && formData.units[index].floorarea);
 
@@ -36,7 +37,7 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   return (
     <FormStep config={config} onChange={onChange} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!floorarea}>
       <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>
-      <TextInput t={t} isMandatory={false} optionKey="i18nKey" name="floorarea" value={floorarea} onChange={setPropertyfloorarea} />
+      <TextInput t={t} type= {"number"} isMandatory={false} optionKey="i18nKey" name="floorarea" value={floorarea} onChange={setPropertyfloorarea} {...validation={pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_PLOT_SIZE_ERROR_MESSAGE")}}/>
     </FormStep>
   );
 };
