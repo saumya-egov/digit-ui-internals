@@ -79,6 +79,15 @@ const FsmBreadCrumb = ({ location }) => {
 
 const EmployeeApp = ({ path, url, userType }) => {
   const location = useLocation();
+
+  useEffect(() => {
+    if (!location?.pathname?.includes("inbox")) {
+      Digit.SessionStorage.del("fsm/inbox/searchParams");
+    } else if (!location?.pathname?.includes("search")) {
+      Digit.SessionStorage.del("fsm/search/searchParams");
+    }
+  }, [location]);
+
   return (
     <Switch>
       <React.Fragment>
