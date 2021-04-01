@@ -84,7 +84,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
         <div className="bill-details-summary">
           <KeyNote keyValue={t(label)} note={consumerCode} />
           <KeyNote keyValue={t("CS_PAYMENT_BILLING_PERIOD")} note={getBillingPeriod()} />
-          <BillSumary billAccountDetails={getBillBreakDown()} total={getTotal()} />
+          <BillSumary billAccountDetails={getBillBreakDown()} total={getTotal()} businessService={businessService} />
         </div>
         <div className="bill-payment-amount">
           <hr className="underline" />
