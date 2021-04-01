@@ -79,7 +79,7 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
         }}
         message={uploadedFile ? `1 ${t(`PT_ACTION_FILEUPLOADED`)}` : t(`PT_ACTION_NO_FILEUPLOADED`)}
       />
-      <CardLabelDesc> </CardLabelDesc>
+      <div style={{disabled:"true", height: "20px", width: "100%"}}></div>
     </FormStep>
   );
 };
