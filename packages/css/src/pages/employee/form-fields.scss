@@ -6,4 +6,8 @@
     .form-field{
         @apply w-1/2
     }
+
+    .desktop-w-full{
+        @apply w-full !important   
+    }
 }

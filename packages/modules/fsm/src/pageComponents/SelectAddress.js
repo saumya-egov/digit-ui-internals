@@ -13,19 +13,26 @@ const SelectAddress = ({ t, config, onSelect, userType, formData }) => {
       : pincode
       ? allCities.filter((city) => city?.pincode?.some((pin) => pin == pincode))
       : allCities;
-  const allLocalities = useSelector((state) => {
-    // console.log("find redux state here", state)
-    return state.common.revenue_localities;
-  });
-  const localitiesObj = JSON.parse(JSON.stringify(allLocalities));
-
-  if (pincode && city) {
-    const filteredLocalityList = localitiesObj[city?.code].filter((locality) => locality?.pincode?.some((item) => item.toString() == pincode));
-    localitiesObj[city?.code] = filteredLocalityList.length ? filteredLocalityList : allLocalities[city?.code];
-  }
 
   const [selectedCity, setSelectedCity] = useState(() => formData?.address?.city || null);
-  const [localities, setLocalities] = useState(null);
+  // console.log("find selected locality here", selectedCity)
+  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(selectedCity?.code, "revenue", {
+    enabled: !!selectedCity,
+  });
+  // console.log("find fetchedLocalities here", fetchedLocalities)
+  // if (pincode && city) {
+  //   const filteredLocalityList = localitiesObj[city?.code].filter((locality) => locality?.pincode?.some((item) => item.toString() == pincode));
+  //   localitiesObj[city?.code] = filteredLocalityList.length ? filteredLocalityList : allLocalities[city?.code];
+  // }
+  const [localities, setLocalities] = useState();
+  //   () => {
+  //   console.log("find usestate localities here", formData?.address?.pincode, fetchedLocalities)
+  // return formData?.address?.pincode ?
+  // fetchedLocalities.filter((obj) => obj.pincode?.find((item) => item == formData.address.pincode))
+  //  :
+  // fetchedLocalities
+  // }
+  // console.log("find set localities here", localities)
   const [selectedLocality, setSelectedLocality] = useState();
 
   useEffect(() => {
@@ -36,25 +43,30 @@ const SelectAddress = ({ t, config, onSelect, userType, formData }) => {
     }
   }, [cities]);
 
+  // useEffect(()=>{
+  //   console.log("let all know locality is set", selectedLocality)
+  // },[selectedLocality])
+
   useEffect(() => {
-    if (selectedCity) {
-      let __localityList = localitiesObj[selectedCity.code];
+    if (selectedCity && fetchedLocalities) {
+      let __localityList = fetchedLocalities;
       let filteredLocalityList = [];
 
       if (formData?.address?.locality) {
+        // console.log("find formData inside useEffect", formData?.address)
         setSelectedLocality(formData.address.locality);
       }
 
       if (formData?.address?.pincode) {
         filteredLocalityList = __localityList.filter((obj) => obj.pincode?.find((item) => item == formData.address.pincode));
-        setSelectedLocality();
+        if (!formData?.address?.locality) setSelectedLocality();
       }
 
       if (userType === "employee") {
         onSelect(config.key, { ...formData[config.key], city: selectedCity });
       }
-
       setLocalities(() => (filteredLocalityList.length > 0 ? filteredLocalityList : __localityList));
+      // console.log("find set localities here", fetchedLocalities, filteredLocalityList.length > 0 ? filteredLocalityList : __localityList )
       if (filteredLocalityList.length === 1) {
         setSelectedLocality(filteredLocalityList[0]);
         if (userType === "employee") {
@@ -62,7 +74,7 @@ const SelectAddress = ({ t, config, onSelect, userType, formData }) => {
         }
       }
     }
-  }, [selectedCity, formData?.address?.pincode]);
+  }, [selectedCity, formData?.address?.pincode, fetchedLocalities]);
 
   function selectCity(city) {
     setSelectedLocality(null);

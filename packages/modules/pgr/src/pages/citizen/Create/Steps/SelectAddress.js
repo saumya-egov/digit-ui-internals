@@ -6,7 +6,7 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
   const allCities = Digit.Hooks.pgr.useTenants();
   const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
   // console.log("find cities here", cities.filter(city => city.pincode.some( pin => pin == value["pincode"])),value["pincode"], cities );
-  const localitiesObj = useSelector((state) => state.common.localities);
+  // const localitiesObj = useSelector((state) => state.common.localities);
 
   // const city_complaint = Digit.SessionStorage.get("city_complaint");
   // const locality_complaint = Digit.SessionStorage.get("locality_complaint");
@@ -14,6 +14,9 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
     return city_complaint ? city_complaint : null;
+  });
+  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(selectedCity?.code, "admin", {
+    enabled: !!selectedCity,
   });
   const [localities, setLocalities] = useState(null);
   // console.log("find localities here", localities);
@@ -27,21 +30,18 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
   //   const __localities = useLocalities({ city: selectedCity });
 
   useEffect(() => {
-    (async () => {
-      if (selectedCity) {
-        //let response = await Digit.LocationService.getLocalities({ tenantId: selectedCity.code });
-        //let __localityList = Digit.LocalityService.get(response.TenantBoundary[0]);
-        // console.log("find pincode here", pincode, "find localities", localitiesObj[city_complaint.code].filter( city => city["pincode"] == pincode ))
-        const { city_complaint, pincode } = value;
-        let __localityList = pincode
-          ? localitiesObj[city_complaint.code].filter((city) => city["pincode"] == pincode)
-          : localitiesObj[selectedCity.code];
-        // console.log("address __localityList", __localityList);
-        setLocalities(__localityList);
-        // Digit.SessionStorage.set("selected_localities", __localityList);
-      }
-    })();
-  }, [selectedCity]);
+    if (selectedCity && fetchedLocalities) {
+      // console.log("find the selected city data here", selectedCity, value, fetchedLocalities)
+      //let response = await Digit.LocationService.getLocalities({ tenantId: selectedCity.code });
+      //let __localityList = Digit.LocalityService.get(response.TenantBoundary[0]);
+      // console.log("find pincode here", pincode, "find localities", localitiesObj[city_complaint.code].filter( city => city["pincode"] == pincode ))
+      const { pincode } = value;
+      let __localityList = pincode ? fetchedLocalities.filter((city) => city["pincode"] == pincode) : fetchedLocalities;
+      // console.log("address __localityList", __localityList);
+      setLocalities(__localityList);
+      // Digit.SessionStorage.set("selected_localities", __localityList);
+    }
+  }, [selectedCity, fetchedLocalities]);
 
   function selectCity(city) {
     setSelectedLocality(null);

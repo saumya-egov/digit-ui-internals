@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { RatingCard } from "@egovernments/digit-ui-react-components";
 import { useParams, Redirect, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";

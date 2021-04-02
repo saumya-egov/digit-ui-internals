@@ -10,7 +10,7 @@ import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
-  const localitiesObj = useSelector((state) => state.common.localities);
+  // const localitiesObj = useSelector((state) => state.common.localities);
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
 
@@ -19,7 +19,12 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [subType, setSubType] = useState({});
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
-  const [localities, setLocalities] = useState(localitiesObj && cities ? localitiesObj[getCities()[0]?.code] : null);
+
+  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(getCities()[0]?.code, "admin", {
+    enabled: !!getCities()[0],
+  });
+
+  const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
   const [canSubmit, setSubmitValve] = useState(false);
   const [pincodeNotValid, setPincodeNotValid] = useState(false);
@@ -42,17 +47,21 @@ export const CreateComplaint = ({ parentUrl }) => {
   }, [complaintType, subType, selectedCity, selectedLocality]);
 
   useEffect(() => {
+    setLocalities(fetchedLocalities);
+  }, [fetchedLocalities]);
+
+  useEffect(() => {
     const city = cities.find((obj) => obj.pincode?.find((item) => item == pincode));
     if (city?.code === getCities()[0]?.code) {
       setPincodeNotValid(false);
       setSelectedCity(city);
       setSelectedLocality(null);
-      const __localityList = localitiesObj[city.code];
+      const __localityList = fetchedLocalities;
       const __filteredLocalities = __localityList.filter((city) => city["pincode"] == pincode);
       setLocalities(__filteredLocalities);
     } else if (pincode === "" || pincode === null) {
       setPincodeNotValid(false);
-      setLocalities(localitiesObj[getCities()[0]?.code]);
+      setLocalities(fetchedLocalities);
     } else {
       setPincodeNotValid(true);
     }
