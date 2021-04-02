@@ -3,6 +3,7 @@ import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-com
 
 const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
+  let validation = {};
   const onSkip = () => onSelect();
   const [RentArea, setRentArea] = useState(formData.units && formData.units[index] && formData.units[index].RentArea);
   const [AnnualRent, setAnnualRent] = useState(formData.units && formData.units[index] && formData.units[index].AnnualRent);
@@ -51,9 +52,9 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   return (
     <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!RentArea || !AnnualRent}>
       <CardLabel>{`${t("PT_FLOOR_DETAILS_RENTED_AREA_LABEL")}*`}</CardLabel>
-      <TextInput t={t} isMandatory={false} optionKey="i18nKey" name="RentArea" value={RentArea} onChange={setPropertyRentArea} />
+      <TextInput t={t} isMandatory={false} type={"number"} optionKey="i18nKey" name="RentArea" value={RentArea} onChange={setPropertyRentArea} {...validation={pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_RENT_AREA_ERROR_MESSAGE")}}/>
       <CardLabel>{`${t("PT_FLOOR_DETAILS_BUILT_UP_AREA_LABEL")}*`}</CardLabel>
-      <TextInput t={t} isMandatory={false} optionKey="i18nKey" name="AnnualRent" value={AnnualRent} onChange={setPropertyAnnualRent} />
+      <TextInput t={t} isMandatory={false} type={"number"} optionKey="i18nKey" name="AnnualRent" value={AnnualRent} onChange={setPropertyAnnualRent} {...validation={pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_BUILT_AREA_ERROR_MESSAGE")}}/>
     </FormStep>
   );
 };
