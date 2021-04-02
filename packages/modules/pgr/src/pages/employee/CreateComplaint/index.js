@@ -10,6 +10,8 @@ import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
   const cities = Digit.Hooks.pgr.useTenants();
+  const { t } = useTranslation();
+
   // const localitiesObj = useSelector((state) => state.common.localities);
 
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
@@ -20,9 +22,14 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
 
-  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(getCities()[0]?.code, "admin", {
-    enabled: !!getCities()[0],
-  });
+  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
+    getCities()[0]?.code,
+    "admin",
+    {
+      enabled: !!getCities()[0],
+    },
+    t
+  );
 
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [selectedLocality, setSelectedLocality] = useState(null);
@@ -31,7 +38,6 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [params, setParams] = useState({});
   const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId });
-  const { t } = useTranslation();
   const dispatch = useDispatch();
   const match = useRouteMatch();
   const history = useHistory();

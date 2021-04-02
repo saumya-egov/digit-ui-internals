@@ -15,9 +15,14 @@ const SelectAddress = ({ t, config, onSelect, userType, formData }) => {
 
   const [selectedCity, setSelectedCity] = useState(() => formData?.address?.city || null);
   // console.log("find selected locality here", selectedCity)
-  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(selectedCity?.code, "revenue", {
-    enabled: !!selectedCity,
-  });
+  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
+    selectedCity?.code,
+    "revenue",
+    {
+      enabled: !!selectedCity,
+    },
+    t
+  );
   // console.log("find fetchedLocalities here", fetchedLocalities)
   // if (pincode && city) {
   //   const filteredLocalityList = localitiesObj[city?.code].filter((locality) => locality?.pincode?.some((item) => item.toString() == pincode));
