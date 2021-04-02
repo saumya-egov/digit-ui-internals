@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, CardLabel, Dropdown, RadioButtons, LabelFieldPair, RadioOrSelect } from "@egovernments/digit-ui-react-components";
-import { useSelector } from "react-redux";
 
 const SelectAddress = ({ t, config, onSelect, userType, formData }) => {
   const allCities = Digit.Hooks.fsm.useTenants();

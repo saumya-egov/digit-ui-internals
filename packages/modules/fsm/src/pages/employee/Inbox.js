@@ -21,13 +21,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   const [pageSize, setPageSize] = useState(10);
   const [sortParams, setSortParams] = useState([{ id: "createdTime", desc: false }]);
   const [searchParams, setSearchParams] = useState(() => {
-    // console.log("hey find filters here",Digit.SessionStorage.get("digit.fsm.inbox.filter"), isSearch)
-    if (Digit.SessionStorage.get("digit.fsm.inbox.filter") && !isSearch) {
-      return Digit.SessionStorage.get("digit.fsm.inbox.filter");
-    }
-    if (Digit.SessionStorage.get("digit.fsm.search.filter") && isSearch) {
-      return Digit.SessionStorage.get("digit.fsm.search.filter");
-    }
     return isInbox
       ? {
           applicationStatus: [],
@@ -96,9 +89,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
     let _new = { ...searchParams };
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     setSearchParams({ ..._new, ...filterParam });
-    isSearch
-      ? Digit.SessionStorage.set("digit.fsm.search.filter", { ..._new, ...filterParam })
-      : Digit.SessionStorage.set("digit.fsm.inbox.filter", { ..._new, ...filterParam });
   };
 
   const handleSort = useCallback((args) => {
@@ -121,10 +111,8 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
         setShouldSearch(true);
       }
       setSearchParams({ ...params });
-      Digit.SessionStorage.set("digit.fsm.search.filter", { ...params });
     } else {
       setSearchParams(({ applicationStatus, locality, uuid }) => ({ applicationStatus, locality, uuid, ...params }));
-      Digit.SessionStorage.set("digit.fsm.inbox.filter", { applicationStatus, locality, uuid, ...params });
     }
   };
 
@@ -132,7 +120,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
     const _search = { ...searchParams };
     Object.keys(params).forEach((key) => delete _search[key]);
     setSearchParams(_search);
-    isSearch ? Digit.SessionStorage.set("digit.fsm.search.filter", _search) : Digit.SessionStorage.set("digit.fsm.inbox.filter", _search);
   };
 
   const getSearchFields = (userRoles) => {

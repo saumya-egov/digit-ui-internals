@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { CardLabel, Dropdown, FormStep, RadioButtons } from "@egovernments/digit-ui-react-components";
-import { useSelector } from "react-redux";
 
 const SelectAddress = ({ t, config, onSelect, value }) => {
   const allCities = Digit.Hooks.pgr.useTenants();

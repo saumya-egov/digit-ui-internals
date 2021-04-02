@@ -3,9 +3,9 @@ import { Dropdown, Loader } from "@egovernments/digit-ui-react-components";
 
 const Localities = ({ selectLocality, tenantId }) => {
   // console.log("find localities here", tenantId)
-  const { data: tenantlocalties } = Digit.Hooks.useBoundaryLocalities(tenantId, "revenue");
+  const { data: tenantlocalties, isLoading } = Digit.Hooks.useBoundaryLocalities(tenantId, "revenue");
   // console.log("find data here", tenantlocalties)
-  if (!tenantlocalties) {
+  if (isLoading) {
     return <Loader />;
   }
 
