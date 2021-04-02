@@ -1,11 +1,9 @@
 import React from "react";
-import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, Loader } from "@egovernments/digit-ui-react-components";
-import { useSelector } from "react-redux";
+import { ActionBar, RemoveableTag, CloseSvg, Loader, Localities } from "@egovernments/digit-ui-react-components";
 import { ApplyFilterBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import Status from "./Status";
 import AssignedTo from "./AssignedTo";
-import Localities from "../../components/LocalityDropdown/Localities";
 
 const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props }) => {
   const { t } = useTranslation();
@@ -85,7 +83,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
             <div>
               <div className="filter-label">{t("ES_INBOX_LOCALITY")}</div>
               {/* <Dropdown option={localities} keepNull={true} selected={null} select={selectLocality} optionKey={"name"} /> */}
-              <Localities selectLocality={selectLocality} tenantId={tenantId} />
+              <Localities selectLocality={selectLocality} tenantId={tenantId} boundaryType="revenue" />
               <div className="tag-container">
                 {searchParams?.locality.map((locality, index) => {
                   return (
