@@ -9,18 +9,14 @@ import { useQuery } from "react-query";
 export const useApplicationStatusGeneral = ({ businessService, tenantId }, config) => {
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
 
-  console.log("status hook called");
-
   const fetch = async () =>
     await Digit.WorkflowService.init(tenantId, businessService).then((res) => {
       const { BusinessServices: data } = res;
-      console.log("status select called", data);
 
       const { states, businessServiceSla } = data?.[0];
 
       const addRoleToState = (state) => {
         const roles = state.actions?.map((act) => act.roles).flat();
-        console.log({ ...state, roles });
         return { ...state, roles };
       };
 

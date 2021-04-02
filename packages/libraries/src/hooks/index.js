@@ -13,7 +13,7 @@ import {
 } from "./payment";
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
-import useInboxGeneral from "./useInboxGeneral";
+import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import { useApplicationStatusGeneral } from "./useStatusGeneral";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";

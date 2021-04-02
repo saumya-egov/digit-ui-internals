@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "react-query";
-import { FSMService } from "../services/elements/FSM";
-import { PTService } from "../services/elements/PT";
+import { FSMService } from "../../services/elements/FSM";
+import { PTService } from "../../services/elements/PT";
+import { TableConfig } from "./tableConfig";
 
 const fetchFilters = (filtersArg) => {
   // console.log(filters, "inside fetchFilters");
@@ -79,9 +81,12 @@ const useInboxGeneral = ({
   combineResponse = (d, wf) => ({ searchData: { ...d }, workflowData: { ...wf } }),
   wfConfig = {},
   searchConfig = {},
+  isInbox = true,
+  isSeacrh = false,
 }) => {
   const client = useQueryClient();
   const filtersObj = fetchFilters({ ...filters });
+  const { t } = useTranslation();
 
   const workflowFilters = filtersObj.assignee ? { assignee: uuid } : {};
   const workFlowInstances = useQuery(
@@ -90,7 +95,7 @@ const useInboxGeneral = ({
       Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businessService }).then((data) =>
         callMiddlewares(data.ProcessInstances, middlewaresWf)
       ),
-    { ...wfConfig }
+    { enabled: isInbox, ...wfConfig }
   );
 
   const { data: processInstances, isLoading: workflowLoading, isFetching: wfFetching, isSuccess: wfSuccess } = workFlowInstances;
@@ -122,7 +127,7 @@ const useInboxGeneral = ({
     ],
     () => _searchFn().then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch)),
     {
-      enabled: !wfFetching && wfSuccess,
+      enabled: (!wfFetching && wfSuccess) || isSeacrh,
       select: (d) => d.map((e) => combineResponse(e, processInstanceBuisnessIdMap[e[businessIdAliasForSearch]])),
       ...searchConfig,
     }
@@ -141,6 +146,7 @@ const useInboxGeneral = ({
     searchResponseKey,
     businessIdsParamForSearch,
     businessIdAliasForSearch,
+    tableConfig: TableConfig(t)[businessService],
   };
 };
 

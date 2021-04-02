@@ -6,7 +6,7 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
-const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
+const Inbox = ({ parentRoute, isSearch = false, isInbox = true }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
@@ -44,20 +44,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
 
-  // const { data: applications, isLoading, isIdle, refetch, revalidate } = Digit.Hooks.fsm.useInbox(
-  //   tenantId,
-  //   {
-  //     ...searchParams,
-  //     ...paginationParms,
-  //     fromDate: searchParams?.fromDate ? new Date(searchParams?.fromDate).getTime() : undefined,
-  //     toDate: searchParams?.toDate ? new Date(searchParams?.toDate).getTime() : undefined,
-  //   },
-  //   null,
-  //   {
-  //     enabled: isInbox,
-  //   }
-  // );
-
   const applications = [
     {
       applicationNo: "PB-PT-2019-04-23-898898",
@@ -74,25 +60,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   ];
   const isLoading = false;
   const isIdle = false;
-
-  // const {
-  //   isLoading: isSearchLoading,
-  //   isIdle: isSearchIdle,
-  //   isError: isSearchError,
-  //   data: { data, totalCount } = {},
-  //   error,
-  // } = Digit.Hooks.fsm.useSearchAll(
-  //   tenantId,
-  //   {
-  //     limit: pageSize,
-  //     offset: pageOffset,
-  //     ...searchParams,
-  //     fromDate: searchParams?.fromDate ? new Date(searchParams?.fromDate).getTime() : undefined,
-  //     toDate: searchParams?.toDate ? new Date(searchParams?.toDate).getTime() : undefined,
-  //   },
-  //   null,
-  //   { enabled: shouldSearch && isSearch }
-  // );
 
   const data = [
     {
@@ -222,7 +189,9 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
         <div>
           {!isSearch && <Header>{t("ES_COMMON_INBOX")}</Header>}
           <DesktopInbox
-            data={isInbox ? applications : data}
+            data={rest?.data}
+            tableConfig={rest?.tableConfig}
+            // data={isInbox ? applications : data}
             isLoading={isInbox ? isLoading || isIdle : isSearchLoading}
             isSearch={isSearch}
             shouldSearch={shouldSearch}
