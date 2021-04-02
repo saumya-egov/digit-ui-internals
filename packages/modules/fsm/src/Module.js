@@ -81,10 +81,12 @@ const EmployeeApp = ({ path, url, userType }) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (!location?.pathname?.includes("inbox")) {
-      Digit.SessionStorage.del("fsm/inbox/searchParams");
-    } else if (!location?.pathname?.includes("search")) {
-      Digit.SessionStorage.del("fsm/search/searchParams");
+    if (!location?.pathname?.includes("application-details")) {
+      if (!location?.pathname?.includes("inbox")) {
+        Digit.SessionStorage.del("fsm/inbox/searchParams");
+      } else if (!location?.pathname?.includes("search")) {
+        Digit.SessionStorage.del("fsm/search/searchParams");
+      }
     }
   }, [location]);
 
