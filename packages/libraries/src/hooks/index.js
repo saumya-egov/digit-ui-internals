@@ -13,6 +13,7 @@ import {
 } from "./payment";
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
+import useBoundaryLocalities from "./useLocalities";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -118,6 +119,7 @@ const Hooks = {
   useApplicationsForBusinessServiceSearch,
   useDemandSearch,
   useEmployeeSearch,
+  useBoundaryLocalities,
   pgr,
   fsm,
   pt,

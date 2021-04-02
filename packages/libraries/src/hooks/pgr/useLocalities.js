@@ -9,7 +9,7 @@ const useLocalities = ({ city }) => {
   useEffect(() => {
     (async () => {
       let tenantId = Digit.ULBService.getCurrentTenantId();
-      let response = await Digit.LocationService.getLocalities({ tenantId: tenantId });
+      let response = await Digit.LocationService.getLocalities(tenantId);
       let __localityList = [];
       if (response && response.TenantBoundary.length > 0) {
         __localityList = Digit.LocalityService.get(response.TenantBoundary[0]);
