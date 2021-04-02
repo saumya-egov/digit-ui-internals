@@ -146,7 +146,7 @@ export const SuccessfulPayment = (props) => {
           ))}
 
         <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_TRANSANCTION_ID")} text={egId} />
-        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={amount} />
+        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={"₹ " + amount} />
         {business_service !== "PT" && (
           <Row
             rowContainerStyle={rowContainerStyle}

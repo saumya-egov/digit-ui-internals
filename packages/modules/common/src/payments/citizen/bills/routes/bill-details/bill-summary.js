@@ -1,13 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-const BillSumary = ({ billAccountDetails, total }) => {
+const BillSumary = ({ billAccountDetails, total, businessService }) => {
   const { t } = useTranslation();
+
   return (
     <React.Fragment>
       <div className="bill-summary">
         {billAccountDetails
-          .sort((a, b) => b.amount - a.amount)
+          .sort((a, b) => b.order - a.order)
           .map((amountDetails, index) => {
             return (
               <div key={index} className="bill-account-details">
