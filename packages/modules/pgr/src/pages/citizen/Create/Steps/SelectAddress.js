@@ -14,9 +14,14 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
     const { city_complaint } = value;
     return city_complaint ? city_complaint : null;
   });
-  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(selectedCity?.code, "admin", {
-    enabled: !!selectedCity,
-  });
+  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
+    selectedCity?.code,
+    "admin",
+    {
+      enabled: !!selectedCity,
+    },
+    t
+  );
   const [localities, setLocalities] = useState(null);
   // console.log("find localities here", localities);
 
