@@ -20,18 +20,23 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   const [pageOffset, setPageOffset] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [sortParams, setSortParams] = useState([{ id: "createdTime", desc: false }]);
-  const [searchParams, setSearchParams] = useState(() => {
-    return isInbox
-      ? {
-          applicationStatus: [],
-          locality: [],
-          uuid:
-            DSO || isFSTPOperator
-              ? { code: "ASSIGNED_TO_ME", name: t("ES_INBOX_ASSIGNED_TO_ME") }
-              : { code: "ASSIGNED_TO_ALL", name: t("ES_INBOX_ASSIGNED_TO_ALL") },
-        }
-      : {};
-  });
+
+  const searchParamsKey = isInbox ? "fsm/inbox/searchParams" : "fsm/search/searchParams";
+  const searchParamsValue = isInbox
+    ? {
+        applicationStatus: [],
+        locality: [],
+        uuid:
+          DSO || isFSTPOperator
+            ? { code: "ASSIGNED_TO_ME", name: t("ES_INBOX_ASSIGNED_TO_ME") }
+            : { code: "ASSIGNED_TO_ALL", name: t("ES_INBOX_ASSIGNED_TO_ALL") },
+      }
+    : {};
+  const [searchParams, setSearchParams] = Digit.Hooks.useSessionStorage(searchParamsKey, searchParamsValue);
+
+  useEffect(() => {
+    onSearch(searchParams);
+  }, []);
 
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParms = isMobile
@@ -195,7 +200,12 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
     } else {
       return (
         <div>
-          {!isSearch && <Header>{t("ES_COMMON_INBOX")}</Header>}
+          {!isSearch && (
+            <Header>
+              {t("ES_COMMON_INBOX")}
+              {Number(applications?.[0]?.totalCount) ? <p className="inbox-count">{Number(applications?.[0]?.totalCount)}</p> : null}
+            </Header>
+          )}
           <DesktopInbox
             data={isInbox ? applications : data}
             isLoading={isInbox ? isLoading || isIdle : isSearchLoading}

@@ -40,7 +40,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers })
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: Infinity,
+        staleTime: 15 * 60 * 1000,
         cacheTime: 30 * 60 * 1000,
       },
     },

@@ -56,9 +56,9 @@ const SelectPincode = ({ t, config, onSelect, formData = {}, userType, register,
   };
 
   if (userType === "employee") {
-    return inputs?.map((input) => {
+    return inputs?.map((input, index) => {
       return (
-        <LabelFieldPair>
+        <LabelFieldPair key={index}>
           <CardLabel className="card-label-smaller">
             {t(input.label)}
             {config.isMandatory ? " * " : null}

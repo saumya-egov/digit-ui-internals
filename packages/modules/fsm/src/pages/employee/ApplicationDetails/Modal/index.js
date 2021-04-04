@@ -59,6 +59,10 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   const [vehicleNo, setVehicleNo] = useState(null);
   const [vehicleMenu, setVehicleMenu] = useState([]);
   const [vehicle, setVehicle] = useState(null);
+  const [defaultValues, setDefautValue] = useState({
+    capacity: vehicle?.capacity,
+    wasteCollected: vehicle?.capacity,
+  });
   // const [toastError, setToastError] = useState(false);
   const { data: Reason, isLoading: isReasonLoading } = Digit.Hooks.fsm.useMDMS(stateCode, "FSM", "Reason", { staleTime: Infinity }, [
     "ReassignReason",
@@ -81,6 +85,10 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
       const [vehicle] = vehicleList.filter((item) => item.code === applicationData.vehicleType);
       setVehicleMenu([vehicle]);
       setVehicle(vehicle);
+      setDefautValue({
+        capacity: vehicle?.capacity,
+        wasteCollected: vehicle?.capacity,
+      });
     }
   }, [isVehicleDataLoaded, isSuccess]);
 
@@ -128,11 +136,19 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   function selectVehicle(value) {
     // console.log("find vehicle details here", value)
     setVehicle(value);
+    setDefautValue({
+      capacity: value?.capacity,
+      wasteCollected: value?.capacity,
+    });
   }
 
   // function setTostError(errorMsg) {
   //   setToastError({ label: errorMsg, error: true });
   // }
+
+  function addCommentToWorkflow(state, workflow, data) {
+    workflow.comments = data.comments ? state.code + "~" + data.comments : state.code;
+  }
 
   function submit(data) {
     // console.log("find submit here",data);
@@ -145,24 +161,14 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
     if (data.date) applicationData.possibleServiceDate = new Date(`${data.date}`).getTime();
     if (data.desluged) applicationData.completedOn = new Date(data.desluged).getTime();
     if (data.wasteCollected) applicationData.wasteCollected = data.wasteCollected;
-    if (data.comments)
-      applicationData.additionalDetails.comments = {
-        ...applicationData.additionalDetails.comments,
-        [action]: data.comments,
-      };
-    if (reassignReason) workflow.comments = reassignReason.code;
-    if (rejectionReason) workflow.comments = rejectionReason.code;
-    if (declineReason) workflow.comments = declineReason.code;
-    if (cancelReason) workflow.comments = cancelReason.code;
+    if (reassignReason) addCommentToWorkflow(reassignReason, workflow, data);
+    if (rejectionReason) addCommentToWorkflow(rejectionReason, workflow, data);
+    if (declineReason) addCommentToWorkflow(declineReason, workflow, data);
+    if (cancelReason) addCommentToWorkflow(cancelReason, workflow, data);
+
     // console.log("find fsm update object here",{ fsm: applicationData, workflow });
     submitAction({ fsm: applicationData, workflow });
   }
-
-  let defaultValues = {
-    capacity: vehicle?.capacity,
-    wasteCollected: vehicle?.capacity,
-  };
-
   useEffect(() => {
     switch (action) {
       case "DSO_ACCEPT":

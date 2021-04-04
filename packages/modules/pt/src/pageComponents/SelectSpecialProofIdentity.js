@@ -24,9 +24,8 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
   const onSkip = () => onSelect();
 
   useEffect(() => {
-    if (formData.owners && formData.owners[index] && formData.owners[index].ownerType.code === "NONE") onSelect(config.key, {}, true, index);
+    if (formData.owners && formData.owners[index] && formData.owners[index].ownerType.code === "NONE") onSelect("", {}, true, index);
   }, [formData.owners && formData.owners[index] && formData.owners[index].ownerType.code]);
-
   function selectfile(e) {
     setFile(e.target.files[0]);
   }
@@ -65,7 +64,7 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
         }}
         message={uploadedFile ? `1 ${t(`PT_ACTION_FILEUPLOADED`)}` : t(`PT_ACTION_NO_FILEUPLOADED`)}
       />
-      <CardLabelDesc> </CardLabelDesc>
+      <div style={{ disabled: "true", height: "20px", width: "100%" }}></div>
     </FormStep>
   );
 };

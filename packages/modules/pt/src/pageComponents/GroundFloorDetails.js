@@ -1,9 +1,19 @@
-import React from "react";
-import { FormStep } from "@egovernments/digit-ui-react-components";
+import React, { useState } from "react";
+import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) => {
+  let index = window.location.href.charAt(window.location.href.length - 1);
+  let validation = {};
   const onSkip = () => onSelect();
+  const [plotSize, setplotSize] = useState(formData.units && formData.units[index] && formData.units[index].plotSize);
+  const [builtUpArea, setbuiltUpArea] = useState(formData.units && formData.units[index] && formData.units[index].builtUpArea);
 
+  function setPropertyplotSize(e) {
+    setplotSize(e.target.value);
+  }
+  function setPropertybuiltUpArea(e) {
+    setbuiltUpArea(e.target.value);
+  }
   const inputs = [
     {
       label: "Plot Size(sq.yd)*",
@@ -24,15 +34,38 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       error: "CORE_COMMON_AREA_INVALID",
     },
   ];
+  const goNext = () => {
+    let unit = formData.units && formData.units[index];
+    let floordet = { ...unit, plotSize, builtUpArea };
+    onSelect(config.key, floordet, false, index);
+  };
+  //const onSkip = () => onSelect();
 
   return (
-    <FormStep
-      config={{ ...config, inputs }}
-      _defaultValues={{ PlotSize: value?.PlotSize, BuiltUpArea: value?.BuiltUpArea }}
-      onSelect={(data) => onSelect(data)}
-      onSkip={onSkip}
-      t={t}
-    />
+    <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!plotSize || !builtUpArea}>
+      <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>
+      <TextInput
+        t={t}
+        type={"number"}
+        isMandatory={false}
+        optionKey="i18nKey"
+        name="PlotSize"
+        value={plotSize}
+        onChange={setPropertyplotSize}
+        {...(validation = { pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_PLOT_SIZE_ERROR_MESSAGE") })}
+      />
+      <CardLabel>{`${t("PT_FLOOR_DETAILS_BUILT_UP_AREA_LABEL")}*`}</CardLabel>
+      <TextInput
+        t={t}
+        type={"number"}
+        isMandatory={false}
+        optionKey="i18nKey"
+        name="BuiltUpArea"
+        value={builtUpArea}
+        onChange={setPropertybuiltUpArea}
+        {...(validation = { pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_BUILT_AREA_ERROR_MESSAGE") })}
+      />
+    </FormStep>
   );
 };
 

@@ -25,27 +25,28 @@ export const ApplicationTimeline = (props) => {
   });
 
   const getTimelineCaptions = (checkpoint) => {
+    const __comment = checkpoint?.comment?.split("~");
+    const reason = __comment ? __comment[0] : null;
+    const reason_comment = __comment ? __comment[1] : null;
     if (checkpoint.status === "CREATED") {
       const caption = {
-        date: Digit.DateUtils.ConvertTimestampToDate(props.application?.auditDetails.createdTime),
+        date: checkpoint?.auditDetails?.created,
         source: props.application?.source || "",
       };
       return <TLCaption data={caption} />;
     } else if (
       checkpoint.status === "PENDING_APPL_FEE_PAYMENT" ||
       checkpoint.status === "ASSING_DSO" ||
-      checkpoint.status === "PENDING_DSO_APPROVAL"
+      checkpoint.status === "PENDING_DSO_APPROVAL" ||
+      checkpoint.status === "DSO_REJECTED" ||
+      checkpoint.status === "CANCELED" ||
+      checkpoint.status === "REJECTED"
     ) {
       const caption = {
-        date: Digit.DateUtils.ConvertTimestampToDate(props.application?.auditDetails.createdTime),
-        name: checkpoint.assigner.name,
-      };
-      return <TLCaption data={caption} />;
-    } else if (checkpoint.status === "DSO_REJECTED" || (checkpoint.status === checkpoint.status) === "CANCELED" || checkpoint.status === "REJECTED") {
-      const caption = {
-        date: Digit.DateUtils.ConvertTimestampToDate(props.application?.auditDetails.createdTime),
-        name: checkpoint?.assigner?.name,
-        comment: t(checkpoint?.comment),
+        date: checkpoint?.auditDetails?.created,
+        name: checkpoint?.assigner,
+        comment: reason ? t(`ES_ACTION_REASON_${reason}`) : null,
+        otherComment: reason_comment ? reason_comment : null,
       };
       return <TLCaption data={caption} />;
     } else if (checkpoint.status === "CITIZEN_FEEDBACK_PENDING") {
@@ -62,7 +63,7 @@ export const ApplicationTimeline = (props) => {
       );
     } else if (checkpoint.status === "DSO_INPROGRESS") {
       const caption = {
-        name: `${props.application?.dsoDetails?.displayName} (${t("ES_FSM_DSO")})`,
+        name: checkpoint?.assigner,
         mobileNumber: props.application?.dsoDetails?.mobileNumber,
         date: `${t("CS_FSM_EXPECTED_DATE")} ${Digit.DateUtils.ConvertTimestampToDate(props.application?.possibleServiceDate)}`,
       };

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { cardBodyStyle } from "../utils";
 
 const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length-1);
+  let index = window.location.href.charAt(window.location.href.length - 1);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const [ownerType, setOwnerType] = useState(formData.owners && formData.owners[index] && formData.owners[index].ownerType);
@@ -21,14 +22,16 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!ownerType}>
-      <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        isMandatory={config.isMandatory}
-        options={Menu || []}
-        selectedOption={ownerType}
-        onSelect={setTypeOfOwner}
-      />
+      <div style={cardBodyStyle}>
+        <RadioButtons
+          t={t}
+          optionsKey="i18nKey"
+          isMandatory={config.isMandatory}
+          options={Menu || []}
+          selectedOption={ownerType}
+          onSelect={setTypeOfOwner}
+        />
+      </div>
     </FormStep>
   );
 };

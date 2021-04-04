@@ -151,10 +151,13 @@ const ApplicationDetails = (props) => {
 
   const getTimelineCaptions = (checkpoint) => {
     // console.log("tl", checkpoint);
+    const __comment = checkpoint?.comment?.split("~");
+    const reason = __comment ? __comment[0] : null;
+    const reason_comment = __comment ? __comment[1] : null;
     if (checkpoint.status === "CREATED") {
       const caption = {
-        date: Digit.DateUtils.ConvertTimestampToDate(applicationData?.auditDetails?.createdTime),
-        name: applicationData.citizen.name,
+        date: checkpoint?.auditDetails?.created,
+        name: checkpoint?.assigner,
         mobileNumber: applicationData.citizen.mobileNumber,
         source: applicationData.source || "",
       };
@@ -162,24 +165,21 @@ const ApplicationDetails = (props) => {
     } else if (
       checkpoint.status === "PENDING_APPL_FEE_PAYMENT" ||
       checkpoint.status === "ASSING_DSO" ||
-      checkpoint.status === "PENDING_DSO_APPROVAL"
+      checkpoint.status === "PENDING_DSO_APPROVAL" ||
+      checkpoint.status === "DSO_REJECTED" ||
+      checkpoint.status === "CANCELED" ||
+      checkpoint.status === "REJECTED"
     ) {
       const caption = {
-        date: Digit.DateUtils.ConvertTimestampToDate(applicationData?.auditDetails.createdTime),
-        name: checkpoint.assigner.name,
-      };
-      return <TLCaption data={caption} />;
-    } else if (checkpoint.status === "DSO_REJECTED") {
-      const caption = {
-        date: Digit.DateUtils.ConvertTimestampToDate(applicationData?.auditDetails.createdTime),
-        name: checkpoint?.assigner?.name,
-        comment: checkpoint?.comment ? t(`ES_ACTION_REASON_${checkpoint?.comment}`) : null,
-        otherComment: applicationDetails?.additionalDetails?.comments?.DSO_REJECT,
+        date: checkpoint?.auditDetails?.created,
+        name: checkpoint?.assigner,
+        comment: reason ? t(`ES_ACTION_REASON_${reason}`) : null,
+        otherComment: reason_comment ? reason_comment : null,
       };
       return <TLCaption data={caption} />;
     } else if (checkpoint.status === "DSO_INPROGRESS") {
       const caption = {
-        name: `${checkpoint?.assigner?.name} (${t("ES_FSM_DSO")})`,
+        name: checkpoint?.assigner,
         mobileNumber: checkpoint?.assigner?.mobileNumber,
         date: `${t("CS_FSM_EXPECTED_DATE")} ${Digit.DateUtils.ConvertTimestampToDate(applicationData?.possibleServiceDate)}`,
       };

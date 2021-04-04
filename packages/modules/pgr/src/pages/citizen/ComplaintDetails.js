@@ -147,7 +147,7 @@ const ComplaintDetailsPage = (props) => {
           <Card>{complaintDetails?.service && <WorkflowComponent getWorkFlow={onWorkFlowChange} complaintDetails={complaintDetails} id={id} />}</Card>
           <Card>
             <CardSubHeader>{t(`${LOCALIZATION_KEY.CS_COMMON}_COMMENTS`)}</CardSubHeader>
-            <TextArea value={comment} onChange={(e) => setComment(e.target.value)} name={""} />
+            <TextArea value={comment} onChange={(e) => setComment(e.target.value)} name="" />
             <SubmitBar disabled={disableComment || comment.length < 1} onSubmit={submitComment} label="Send" />
           </Card>
           {toast && (

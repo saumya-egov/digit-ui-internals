@@ -165,6 +165,60 @@ const getPropertyUsageCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getCommonFieldsCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "CommonFieldsConfig",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
+});
+
+const getPreFieldsCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "PreFieldsConfig",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
+});
+
+const getPostFieldsCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "PostFieldsConfig",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const getConfig = (tenantId, moduleCode) => ({
   type: "Config",
   details: {
@@ -311,6 +365,39 @@ const getBillingServiceForBusinessServiceCriteria = () => ({
   ],
 });
 
+const getRoleStatusCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "RoleStatusMapping",
+            filter: null,
+          },
+        ],
+      },
+    ],
+  },
+});
+const getRentalDetailsCategoryCriteria = (tenantId, moduleCode) => ({
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "RentalDetails",
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const GetEgovLocations = (MdmsRes) => {
   return MdmsRes["egov-location"].TenantBoundary[0].boundary.children.map((obj) => ({
     name: obj.localname,
@@ -428,6 +515,22 @@ const GetReasonType = (MdmsRes, type, moduleCode) =>
     }))
   );
 
+const getRentalDetailsCategory = (MdmsRes) => {
+  MdmsRes["PropertyTax"].RentalDetails.filter((category) => category.active).map((RentalDetailsInfo) => {
+    return {
+      ...RentalDetailsInfo,
+      i18nKey: `PROPERTYTAX_BILLING_SLAB_${RentalDetailsInfo.code}`,
+    };
+  });
+};
+
+const GetRoleStatusMapping = (MdmsRes) => MdmsRes["DIGIT-UI"].RoleStatusMapping;
+const GetCommonFields = (MdmsRes) => MdmsRes["FSM"].CommonFieldsConfig;
+
+const GetPreFields = (MdmsRes) => MdmsRes["FSM"].PreFieldsConfig;
+
+const GetPostFields = (MdmsRes) => MdmsRes["FSM"].PostFieldsConfig;
+
 const transformResponse = (type, MdmsRes, moduleCode) => {
   switch (type) {
     case "citymodule":
@@ -460,6 +563,16 @@ const transformResponse = (type, MdmsRes, moduleCode) => {
       return getDocumentRequiredScreen(MdmsRes);
     case "Reason":
       return GetReasonType(MdmsRes, type, moduleCode);
+    case "RoleStatusMapping":
+      return GetRoleStatusMapping(MdmsRes);
+    case "CommonFieldsConfig":
+      return GetCommonFields(MdmsRes);
+    case "PreFieldsConfig":
+      return GetPreFields(MdmsRes);
+    case "PostFieldsConfig":
+      return GetPostFields(MdmsRes);
+    case "RentalDeatils":
+      return getRentalDetailsCategory(MdmsRes);
     default:
       return MdmsRes;
   }
@@ -526,6 +639,19 @@ export const MdmsService = {
 
   getReason: (tenantId, moduleCode, type, payload) =>
     MdmsService.getDataByCriteria(tenantId, getReasonCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
+  getRoleStatus: (tenantId, moduleCode, type) =>
+    MdmsService.getDataByCriteria(tenantId, getRoleStatusCriteria(tenantId, moduleCode, type), moduleCode),
+
+  getCommonFieldsConfig: (tenantId, moduleCode, type, payload) =>
+    MdmsService.getDataByCriteria(tenantId, getCommonFieldsCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
+  getPreFieldsConfig: (tenantId, moduleCode, type, payload) =>
+    MdmsService.getDataByCriteria(tenantId, getPreFieldsCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
+  getPostFieldsConfig: (tenantId, moduleCode, type, payload) =>
+    MdmsService.getDataByCriteria(tenantId, getPostFieldsCriteria(tenantId, moduleCode, type, payload), moduleCode),
+
   getPropertyOwnerShipCategory: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getPropertyOwnerShipCategoryCriteria(tenantId, moduleCode, type), moduleCode);
   },
@@ -537,5 +663,8 @@ export const MdmsService = {
   },
   getDocumentRequiredScreen: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getDocumentRequiredScreenCategory(tenantId, moduleCode), moduleCode);
+  },
+  getRentalDetails: (tenantId, moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getRentalDetailsCategoryCriteria(tenantId, moduleCode), moduleCode);
   },
 };

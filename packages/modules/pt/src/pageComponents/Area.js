@@ -1,32 +1,31 @@
-import React, { useState, useEffect } from "react";
-import { FormStep, TextArea, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-react-components";
+import React, { useState } from "react";
+import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
-const Area = ({ t, config, onSelect, formData, userType }) => {
-  const [landmark, setLandmark] = useState();
+const Area = ({ t, config, onSelect, value, userType, formData }) => {
+  let index = window.location.href.charAt(window.location.href.length - 1);
+  let validation = {};
+  const onSkip = () => onSelect();
+  const [floorarea, setfloorarea] = useState(formData.units && formData.units[index] && formData.units[index].floorarea);
 
-  const [error, setError] = useState("");
+  function setPropertyfloorarea(e) {
+    setfloorarea(e.target.value);
+  }
 
-  const inputs = [
-    {
-      label: "Plot Size (Square Feet)*",
-      type: "text",
-      name: "landmark",
-      validation: {
-        maxLength: 1024,
-      },
-    },
-  ];
-
-  useEffect(() => {
-    setLandmark(formData?.address?.landmark);
-  }, [formData?.address?.landmark]);
+  const goNext = () => {
+    let unit = formData.units && formData.units[index];
+    //units["RentalArea"] = RentArea;
+    //units["AnnualRent"] = AnnualRent;
+    let floordet = { ...unit, floorarea };
+    onSelect(config.key, floordet, false, index);
+  };
+  //const onSkip = () => onSelect();
 
   function onChange(e) {
     if (e.target.value.length > 1024) {
       setError("CS_COMMON_LANDMARK_MAX_LENGTH");
     } else {
       setError(null);
-      setLandmark(e.target.value);
+      setfloorarea(e.target.value);
       if (userType === "employee") {
         const value = e?.target?.value;
         const key = e?.target?.id;
@@ -35,32 +34,20 @@ const Area = ({ t, config, onSelect, formData, userType }) => {
     }
   }
 
-  if (userType === "employee") {
-    return inputs?.map((input) => {
-      return (
-        <LabelFieldPair>
-          <CardLabel style={{ marginBottom: "revert", width: "30%" }}>
-            {t(input.label)}
-            {config.isMandatory ? " * " : null}
-          </CardLabel>
-          <TextArea style={{ width: "50%" }} id={input.name} value={landmark} onChange={onChange} {...input.validation} />
-        </LabelFieldPair>
-      );
-    });
-  }
-  const onSkip = () => onSelect();
-
   return (
-    <FormStep
-      config={{ ...config, inputs }}
-      value={landmark}
-      onChange={onChange}
-      onSelect={(data) => onSelect(config.key, { ...data })}
-      onSkip={onSkip}
-      t={t}
-      isDisabled={!landmark}
-      forcedError={t(error)}
-    ></FormStep>
+    <FormStep config={config} onChange={onChange} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!floorarea}>
+      <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>
+      <TextInput
+        t={t}
+        type={"number"}
+        isMandatory={false}
+        optionKey="i18nKey"
+        name="floorarea"
+        value={floorarea}
+        onChange={setPropertyfloorarea}
+        {...(validation = { pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_PLOT_SIZE_ERROR_MESSAGE") })}
+      />
+    </FormStep>
   );
 };
 

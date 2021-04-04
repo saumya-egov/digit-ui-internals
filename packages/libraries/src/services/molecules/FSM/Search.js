@@ -60,8 +60,8 @@ export const Search = {
 
     const stateId = tenantId?.split(".")[0];
     let slumLabel = "";
-    if (response?.address?.slumName && response?.address?.locality?.code) {
-      const slumData = await MdmsService.getSlumLocalityMapping(tenantId, "FSM", "Slum");
+    if (response?.address?.slumName && response?.address?.locality?.code && response?.tenantId) {
+      const slumData = await MdmsService.getSlumLocalityMapping(response?.tenantId, "FSM", "Slum");
       if (slumData[response?.address?.locality?.code]) {
         slumLabel = slumData[response?.address?.locality?.code].find((slum) => slum?.code === response?.address?.slumName);
       } else {
@@ -212,6 +212,29 @@ export const Search = {
 
   allVehicles: (tenantId, filters) => {
     return FSMService.vehicleSearch(tenantId, filters);
+  },
+  allVehiclesWithDSO: async (tenantId, filters) => {
+    const response = await FSMService.vehicleSearch(tenantId, filters);
+    const { vehicleTrip } = response;
+    let result = vehicleTrip;
+    if (vehicleTrip.length > 0) {
+      const ownerIds = response.vehicleTrip.map((trip) => trip.tripOwnerId);
+      const vendorsResponse = await FSMService.vendorSearch(tenantId, { ownerIds: ownerIds.join(",") });
+      const vendorOwnerKey = vendorsResponse.vendor.reduce((acc, vendor) => {
+        return { ...acc, [vendor.ownerId]: vendor };
+      }, {});
+      result = Search.combineResponse(vehicleTrip, vendorOwnerKey);
+    }
+    return {
+      ...response,
+      vehicleTrip: result,
+    };
+  },
+
+  combineResponse: (vehicleTrip, vendorOwnerKey) => {
+    return vehicleTrip.map((trip) => {
+      return { ...trip, dsoName: vendorOwnerKey[trip.tripOwnerId].name };
+    });
   },
 
   applicationWithBillSlab: async (t, tenantId, applicationNos) => {

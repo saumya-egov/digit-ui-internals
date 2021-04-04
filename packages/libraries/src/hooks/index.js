@@ -4,9 +4,16 @@ import useSessionStorage from "./useSessionStorage";
 import useQueryParams from "./useQueryParams";
 import useClickOutside from "./useClickOutside";
 import useCoreData from "./useCoreData";
-import { useFetchPayment, usePaymentUpdate, useFetchCitizenBillsForBuissnessService, useGetPaymentRulesForBusinessServices } from "./payment";
+import {
+  useFetchPayment,
+  usePaymentUpdate,
+  useFetchCitizenBillsForBuissnessService,
+  useGetPaymentRulesForBusinessServices,
+  useDemandSearch,
+} from "./payment";
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
+import useBoundaryLocalities from "./useLocalities";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -39,9 +46,11 @@ import useApplicationDetail from "./fsm/useApplicationDetail";
 import useApplicationActions from "./fsm/useApplicationActions";
 import useApplicationAudit from "./fsm/useApplicationAudit";
 import useSearchForAuditData from "./fsm/useSearchForAudit";
+import useVehiclesSearch from "./fsm/useVehiclesSearch";
 import useConfig from "./fsm/useConfig";
 import useVendorDetail from "./fsm/useVendorDetail";
 import useSlum from "./fsm/useSlum";
+import useEmployeeSearch from "./useEmployeeSearch";
 
 import usePropertyMDMS from "./pt/usePropertyMDMS";
 import usePropertyAPI from "./pt/usePropertyAPI";
@@ -83,6 +92,7 @@ const fsm = {
   useVehicleSearch,
   useVehicleUpdate,
   useVendorDetail,
+  useVehiclesSearch,
   useConfig,
   useSlum,
 };
@@ -109,6 +119,9 @@ const Hooks = {
   useCoreData,
   useUserSearch,
   useApplicationsForBusinessServiceSearch,
+  useDemandSearch,
+  useEmployeeSearch,
+  useBoundaryLocalities,
   pgr,
   fsm,
   pt,
