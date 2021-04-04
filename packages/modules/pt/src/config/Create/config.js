@@ -159,7 +159,7 @@ export const newConfig = [
         texts: {
           headerCaption: "PT_GROUND_FLOOR_DETAILS_LABEL",
           header: "PT_ASSESSMENT_FLOW_RENTAL_DETAIL_HEADER",
-          cardText: "PT_ASSESSMENT_FLOW_RENTAL_DETAIL_TEXT",
+          cardText: "",
           submitBarLabel: "PT_COMMON_NEXT",
         },
         key: "units",
@@ -209,7 +209,7 @@ export const newConfig = [
           header: "PT_ASSESSMENT_FLOW_UNOCCUPIED_AREA_HEADER",
           cardText: "PT_ASSESSMENT_FLOW_UNOCCUPIED_AREA_TEXT",
           submitBarLabel: "PT_COMMON_NEXT",
-          skipText: "CORE_COMMON_SKIP_CONTINUE",
+          skipText: "",
         },
         key: "units",
         withoutLabel: true,

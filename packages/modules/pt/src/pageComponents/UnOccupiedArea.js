@@ -14,6 +14,7 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
     }
   });
 
+  let validation = {};
   function setPropertyUnOccupiedArea(e) {
     setUnOccupiedArea(e.target.value);
   }
@@ -43,7 +44,16 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   return (
     <FormStep config={config} onChange={onChange} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!UnOccupiedArea}>
       <CardLabel>{`${t("PT_FLOOR_DETAILS_RENTED_AREA_LABEL")}*`}</CardLabel>
-      <TextInput t={t} isMandatory={false} optionKey="i18nKey" name="RentArea" value={UnOccupiedArea} onChange={setPropertyUnOccupiedArea} />
+      <TextInput
+        t={t}
+        isMandatory={false}
+        type={"number"}
+        optionKey="i18nKey"
+        name="RentArea"
+        value={UnOccupiedArea}
+        onChange={setPropertyUnOccupiedArea}
+        {...(validation = { pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_BUILT_AREA_ERROR_MESSAGE") })}
+      />
     </FormStep>
   );
 };

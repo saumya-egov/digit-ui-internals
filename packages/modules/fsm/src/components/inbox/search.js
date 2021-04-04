@@ -4,11 +4,13 @@ import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker
 import { useTranslation } from "react-i18next";
 
 const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFields, searchParams, isInboxPage }) => {
+  const storedSearchParams = isInboxPage ? Digit.SessionStorage.get("fsm/inbox/searchParams") : Digit.SessionStorage.get("fsm/search/searchParams");
+
   const { t } = useTranslation();
   const [applicationNo, setApplicationNo] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const { register, handleSubmit, reset, watch, control } = useForm({
-    defaultValues: searchParams,
+    defaultValues: storedSearchParams || searchParams,
   });
   const mobileView = innerWidth <= 640;
   const FSTP = Digit.UserService.hasAccess("FSM_EMP_FSTPO") || false;
@@ -28,6 +30,11 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
   function clearSearch() {
     const resetValues = searchFields.reduce((acc, field) => ({ ...acc, [field?.name]: "" }), {});
     reset(resetValues);
+    if (isInboxPage) {
+      Digit.SessionStorage.del("fsm/inbox/searchParams");
+    } else {
+      Digit.SessionStorage.del("fsm/search/searchParams");
+    }
     onSearch({});
   }
 

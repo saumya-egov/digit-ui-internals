@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Banner, Card, CardText, Loader, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
-import { useHistory, useParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
 
@@ -20,7 +20,7 @@ export const SuccessfulPayment = (props) => {
 
   const { data: billData, isLoading: isBillDataLoading } = Digit.Hooks.useFetchPayment(
     { tenantId, consumerCode, businessService: business_service },
-    { enabled: allowFetchBill }
+    { enabled: allowFetchBill, retry: false }
   );
 
   const payments = data?.payments;
@@ -79,7 +79,7 @@ export const SuccessfulPayment = (props) => {
     const state = tenantId?.split(".")[0];
     let response = { filestoreIds: [payments.Payments[0]?.fileStoreId] };
     if (!paymentData?.fileStoreId) {
-      response = await Digit.PaymentService.generatePdf(state, { Payments: payments.Payments });
+      response = await Digit.PaymentService.generatePdf(state, { Payments: [payments.Payments[0]] });
     }
     const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: response.filestoreIds[0] });
     if (fileStore && fileStore[response.filestoreIds[0]]) {
@@ -141,12 +141,12 @@ export const SuccessfulPayment = (props) => {
               rowContainerStyle={rowContainerStyle}
               last
               label={t("CS_PAYMENT_AMOUNT_PENDING")}
-              text={demand?.Demands?.[0]?.isPaymentCompleted ? 0 : billData?.Bill[0]?.totalAmount}
+              text={demand?.Demands?.some((e) => !e?.isPaymentCompleted) ? billData?.Bill[0]?.totalAmount : 0}
             />
           ))}
 
         <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_TRANSANCTION_ID")} text={egId} />
-        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={amount} />
+        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={"₹ " + amount} />
         {business_service !== "PT" && (
           <Row
             rowContainerStyle={rowContainerStyle}

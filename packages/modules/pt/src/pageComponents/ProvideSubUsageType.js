@@ -1,5 +1,6 @@
+import { CardLabel, FormStep, RadioButtons, RadioOrSelect } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
-import { FormStep, RadioOrSelect, RadioButtons, CardLabel } from "@egovernments/digit-ui-react-components";
+import { cardBodyStyle } from "../utils";
 
 const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -76,15 +77,17 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageType}>
       <CardLabel>{t("Types of Floor Usage")}</CardLabel>
-      <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        isMandatory={config.isMandatory}
-        //options={data}
-        options={getSubUsagedata(subusageoption) || {}}
-        selectedOption={SubUsageType}
-        onSelect={selectSelfOccupied}
-      />
+      <div style={cardBodyStyle}>
+        <RadioButtons
+          t={t}
+          optionsKey="i18nKey"
+          isMandatory={config.isMandatory}
+          //options={data}
+          options={getSubUsagedata(subusageoption) || {}}
+          selectedOption={SubUsageType}
+          onSelect={selectSelfOccupied}
+        />
+      </div>
     </FormStep>
   );
 };

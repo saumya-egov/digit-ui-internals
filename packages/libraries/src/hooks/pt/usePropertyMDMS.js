@@ -20,6 +20,9 @@ const usePropertyMDMS = (tenantId, moduleCode, type, config = {}) => {
   const usePTPropertyType = () => {
     return useQuery("PT_PROPERTY_TYPE", () => MdmsService.getPTPropertyType(tenantId, moduleCode, type), config);
   };
+  const useRentalDetails = () => {
+    return useQuery("PT_RENTAL_DETAILS", () => MdmsService.getRentalDetails(tenantId, moduleCode), config);
+  };
 
   switch (type) {
     case "OwnerShipCategory":
@@ -34,6 +37,8 @@ const usePropertyMDMS = (tenantId, moduleCode, type, config = {}) => {
       return useUsageCategory();
     case "PTPropertyType":
       return usePTPropertyType();
+    case "RentalDetails":
+      return useRentalDetails();
   }
 };
 
