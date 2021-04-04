@@ -13,7 +13,6 @@ export const PTSearch = {
   applicationDetails: async (t, tenantId, propertyIds, userType) => {
     const filter = { propertyIds };
     const response = await PTSearch.application(tenantId, filter);
-    console.log("%c 🥈: response ", "font-size:16px;background-color:#716bbd;color:white;", response);
 
     const employeeResponse = [
       {
@@ -45,7 +44,37 @@ export const PTSearch = {
           { title: "ES_APPLICATION_DETAILS_PROPERTY_NO_OF_FLOORS", value: response?.noOfFloors },
         ],
         additionalDetails: {
-          floors: response?.floors,
+          floors: response?.units?.map((unit, index) => {
+            let floorName = "Ground Floor";
+            if (unit?.floorNo === 1) floorName = "First Floor";
+            if (unit?.floorNo === 2) floorName = "Second Floor";
+            if (unit?.floorNo === 3) floorName = "Third Floor";
+
+            const values = [
+              {
+                title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
+                value: unit?.usageCategory,
+              },
+              {
+                title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
+                value: unit?.occupancyType,
+              },
+              {
+                title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
+                value: unit?.constructionDetail?.builtUpArea,
+              },
+            ];
+
+            return {
+              title: floorName,
+              values: [
+                {
+                  title: `Unit ${index}`,
+                  values,
+                },
+              ],
+            };
+          }),
         },
       },
       {
@@ -61,7 +90,17 @@ export const PTSearch = {
           { title: "ES_APPLICATION_DETAILS_CORRESPONDENCE_ADDRESS", value: response?.owners[0]?.permanentAddress },
         ],
         additionalDetails: {
-          documents: response?.documents,
+          documents: [
+            {
+              title: "Documents",
+              values: response?.documents?.map((document) => ({
+                title: "Address Proof",
+                documentType: document?.documentType,
+                documentUid: document?.documentUid,
+                fileStoreId: document?.fileStoreId,
+              })),
+            },
+          ],
         },
       },
     ];
