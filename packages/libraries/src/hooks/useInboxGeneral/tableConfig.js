@@ -10,18 +10,17 @@ const GetSlaCell = (value) => {
 
 export const TableConfig = (t) => ({
   FSM: {
-    searchColumns: [{}],
+    searchColumns: (props) => [{}],
     inboxColumns: (props) => [
       {
         Header: t("ES_INBOX_APPLICATION_NO"),
         accessor: "searchData.applicationNo",
         disableSortBy: true,
         Cell: ({ row, value }) => {
-          console.log(row.original, "row data here");
           return (
             <div>
               <span className="link">
-                <Link to={`${props.parentRoute}/${"application-details"}/`}>{value}</Link>
+                <Link to={`${props.parentRoute}/${"application-details"}/${value}`}>{value}</Link>
               </span>
             </div>
           );
@@ -32,7 +31,6 @@ export const TableConfig = (t) => ({
         accessor: "workflowData.businesssServiceSla",
         disableSortBy: true,
         Cell: ({ row, value }) => {
-          console.log(row.original, "row data here");
           return GetSlaCell(value);
         },
       },

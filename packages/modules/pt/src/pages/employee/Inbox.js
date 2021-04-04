@@ -11,17 +11,11 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true }) => {
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
 
-  const { data: statusData } = Digit.Hooks.useApplicationStatusGeneral({ businessService: "FSM" });
-
   const { isLoading: hookLoading, ...rest } = Digit.Hooks.useInboxGeneral({ tenantId, businessService: "FSM", filters: { limit: 100 } });
 
-  useEffect(() => {
-    console.log("data from the hook", hookLoading, rest);
-  }, [hookLoading, rest]);
-
-  useEffect(() => {
-    console.log(statusData, "returned from status");
-  }, [statusData]);
+  // useEffect(() => {
+  //   console.log("data from the hook", hookLoading, rest);
+  // }, [hookLoading, rest]);
 
   const { t } = useTranslation();
   const queryClient = useQueryClient();

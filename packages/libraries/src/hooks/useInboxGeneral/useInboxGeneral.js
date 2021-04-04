@@ -78,11 +78,13 @@ const useInboxGeneral = ({
   filters,
   middlewaresWf = [],
   middlewareSearch = [],
-  combineResponse = (d, wf) => ({ searchData: { ...d }, workflowData: { ...wf } }),
   wfConfig = {},
   searchConfig = {},
+  rawWfHandler = (d) => d,
+  rawSearchHandler = ({ totalCount, ...data }, searchKey, businessIdAlias) => ({ [searchKey]: data[searchKey].map((e) => ({ totalCount, ...e })) }),
+  combineResponse = ({ totalCount, ...d }, wf) => ({ totalCount, searchData: { ...d }, workflowData: { ...wf } }),
   isInbox = true,
-  isSeacrh = false,
+  isSearch = false,
 }) => {
   const client = useQueryClient();
   const filtersObj = fetchFilters({ ...filters });
@@ -92,9 +94,9 @@ const useInboxGeneral = ({
   const workFlowInstances = useQuery(
     ["WORKFLOW_INBOX", businessService, workflowFilters],
     () =>
-      Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businessService }).then((data) =>
-        callMiddlewares(data.ProcessInstances, middlewaresWf)
-      ),
+      Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businessService })
+        .then(rawWfHandler)
+        .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
     { enabled: isInbox, ...wfConfig }
   );
 
@@ -125,10 +127,17 @@ const useInboxGeneral = ({
       businessService,
       { ...filtersObj, applicationNos: filtersObj.applicationNos ? filtersObj.applicationNos : applicationNos.applicationNos },
     ],
-    () => _searchFn().then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch)),
+    () =>
+      _searchFn()
+        .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
+        .then((data) => {
+          return callMiddlewares(data[searchResponseKey], middlewareSearch);
+        }),
     {
-      enabled: (!wfFetching && wfSuccess) || isSeacrh,
-      select: (d) => d.map((e) => combineResponse(e, processInstanceBuisnessIdMap[e[businessIdAliasForSearch]])),
+      enabled: (!wfFetching && wfSuccess) || isSearch,
+      select: (d) => {
+        return d.map((e) => ({ totalCount: d.totalCount, ...combineResponse(e, processInstanceBuisnessIdMap[e[businessIdAliasForSearch]]) }));
+      },
       ...searchConfig,
     }
   );
