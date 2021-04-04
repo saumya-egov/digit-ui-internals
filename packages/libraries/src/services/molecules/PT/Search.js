@@ -70,6 +70,7 @@ export const PTSearch = {
       tenantId: response.tenantId,
       applicationDetails: employeeResponse,
       additionalDetails: response?.additionalDetails,
+      applicationData: response,
     };
   },
 };

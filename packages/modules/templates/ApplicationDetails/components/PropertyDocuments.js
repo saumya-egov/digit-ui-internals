@@ -13,8 +13,8 @@ function PropertyDocuments({ documents }) {
 
   return (
     <div style={{ marginTop: "19px" }}>
-      {documents?.map((document) => (
-        <React.Fragment>
+      {documents?.map((document, index) => (
+        <React.Fragment key={index}>
           <CardSubHeader style={{ marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{t(document?.title)}</CardSubHeader>
           <div style={{ display: "flex" }}>
             {document?.values?.map((value) => (

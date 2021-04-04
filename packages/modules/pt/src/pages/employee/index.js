@@ -13,22 +13,24 @@ const EmployeeApp = ({ path, url, userType }) => {
   const mobileView = innerWidth <= 640;
   return (
     <Switch>
-      <div className="ground-container">
-        <p className="breadcrumb" style={{ marginLeft: mobileView ? "2vw" : "revert" }}>
-          <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
-            {t("ES_COMMON_HOME")}
-          </Link>{" "}
-          / <span>{location.pathname === "/digit-ui/employee/pt/inbox" ? t("ES_TITLE_INBOX") : "PT"}</span>
-        </p>
-        <PrivateRoute exact path={`${path}/`} component={() => <PTLinks matchPath={path} userType={userType} />} />
-        <PrivateRoute path={`${path}/inbox`} component={() => <Inbox parentRoute={path} isInbox={true} />} />
-        <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
-        <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
-        {/* <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} /> */}
-        {/* <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} /> */}
-        {/* <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} /> */}
-        <PrivateRoute path={`${path}/search`} component={() => <Inbox parentRoute={path} isSearch={true} />} />
-      </div>
+      <React.Fragment>
+        <div className="ground-container">
+          <p className="breadcrumb" style={{ marginLeft: mobileView ? "2vw" : "revert" }}>
+            <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
+              {t("ES_COMMON_HOME")}
+            </Link>{" "}
+            / <span>{location.pathname === "/digit-ui/employee/pt/inbox" ? t("ES_TITLE_INBOX") : "PT"}</span>
+          </p>
+          <PrivateRoute exact path={`${path}/`} component={() => <PTLinks matchPath={path} userType={userType} />} />
+          <PrivateRoute path={`${path}/inbox`} component={() => <Inbox parentRoute={path} isInbox={true} />} />
+          <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
+          <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
+          {/* <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} /> */}
+          {/* <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} /> */}
+          {/* <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} /> */}
+          <PrivateRoute path={`${path}/search`} component={() => <Inbox parentRoute={path} isSearch={true} />} />
+        </div>
+      </React.Fragment>
     </Switch>
   );
 };
