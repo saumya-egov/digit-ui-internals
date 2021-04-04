@@ -8,11 +8,11 @@ function PropertyFloors({ floors }) {
   return (
     <React.Fragment>
       {floors.map((floor) => (
-        <div style={{ marginTop: "19px" }}>
+        <div key={t(floor?.title)} style={{ marginTop: "19px" }}>
           <CardSubHeader style={{ marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{t(floor?.title)}</CardSubHeader>
           {floor?.values?.map((value, index) => {
             return (
-              <React.Fragment>
+              <React.Fragment key={index}>
                 <CardSectionHeader style={{ marginBottom: "16px", color: "#505A5F", fontSize: "16px", marginTop: index !== 0 ? "16px" : "revert" }}>
                   {t(value.title)}
                 </CardSectionHeader>

@@ -56,6 +56,7 @@ import usePropertyMDMS from "./pt/usePropertyMDMS";
 import usePropertyAPI from "./pt/usePropertyAPI";
 import useTenantsPT from "./pt/useTenants";
 import usePtApplicationDetail from "./pt/useApplicationDetail";
+import usePtApplicationActions from "./pt/useApplicationActions";
 
 const pgr = {
   useComplaintDetails,
@@ -104,6 +105,7 @@ const pt = {
   usePropertyAPI,
   useTenants: useTenantsPT,
   useApplicationDetail: usePtApplicationDetail,
+  useApplicationActions: usePtApplicationActions,
 };
 
 const Hooks = {

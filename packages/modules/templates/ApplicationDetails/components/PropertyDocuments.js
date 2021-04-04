@@ -17,8 +17,8 @@ function PropertyDocuments({ documents }) {
         <React.Fragment key={index}>
           <CardSubHeader style={{ marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{t(document?.title)}</CardSubHeader>
           <div style={{ display: "flex" }}>
-            {document?.values?.map((value) => (
-              <div style={{ minWidth: "160px" }}>
+            {document?.values?.map((value, index) => (
+              <div style={{ minWidth: "160px" }} key={index}>
                 <PDFSvg width={140} height={140} style={{ background: "#f6f6f6", padding: "8px" }} />
                 <p style={{ marginTop: "8px" }}>{value?.title}</p>
               </div>

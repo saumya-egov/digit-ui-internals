@@ -17,7 +17,7 @@ const ApplicationDetails = () => {
     data: updateResponse,
     error: updateError,
     mutate,
-  } = Digit.Hooks.fsm.useApplicationActions(tenantId);
+  } = Digit.Hooks.pt.useApplicationActions(tenantId);
 
   const workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
