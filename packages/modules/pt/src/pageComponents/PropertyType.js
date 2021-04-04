@@ -14,7 +14,7 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   function getPropertyTypeMenu(proptype) {
     if (Array.isArray(proptype) && proptype.length > 0) {
       for (i = 0; i < proptype.length; i++) {
-        if (i != 1 && Array.isArray(proptype) && proptype.length > 0)
+        if (i != 1 && i != 4 && Array.isArray(proptype) && proptype.length > 0)
           menu.push({ i18nKey: "COMMON_PROPTYPE_" + proptype[i].code.replaceAll(".", "_") });
       }
     }

@@ -3,9 +3,17 @@ import React, { useState, useEffect } from "react";
 import { cardBodyStyle } from "../utils";
 
 const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
+  let index = window.location.href.charAt(window.location.href.length - 1);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
-  const [SubUsageType, setSelfOccupied] = useState(formData?.ProvideSubUsageType);
+  //const [SubUsageType, setSelfOccupied] = useState(formData?.ProvideSubUsageType);
+  let SubUsageType, setSelfOccupied;
+  if (!isNaN(index)) {
+    [SubUsageType, setSelfOccupied] = useState(formData.units && formData.units[index] && formData.units[index].SubUsageType);
+  } else {
+    [SubUsageType, setSelfOccupied] = useState(formData.subusagetype?.SubUsageType);
+  }
+
   const { data: Menu = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "UsageCategory") || {};
 
   let subusageoption = [];
@@ -40,7 +48,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
       let index = window.location.href.charAt(window.location.href.length - 1);
       onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
     }
-  }, [formData?.ProvideSubUsageType?.i18nKey]);
+  }, [!isNaN(index) ? formData?.units[index]?.SubUsageType?.i18nKey : formData?.SubUsageType?.i18nKey]);
 
   useEffect(() => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
@@ -71,8 +79,15 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function goNext() {
-    let index = window.location.href.charAt(window.location.href.length - 1);
-    onSelect(config.key, SubUsageType, "", index);
+    //let index = window.location.href.charAt(window.location.href.length - 1);
+    if (!isNaN(index)) {
+      let unit = formData.units && formData.units[index];
+      let floordet = { ...unit, SubUsageType };
+      onSelect(config.key, floordet, " ", index);
+    } else {
+      [];
+      onSelect("subusagetype", { SubUsageType });
+    }
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageType}>

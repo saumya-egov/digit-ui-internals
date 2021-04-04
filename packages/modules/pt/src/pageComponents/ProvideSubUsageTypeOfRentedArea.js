@@ -2,9 +2,18 @@ import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, RadioButtons } from "@egovernments/digit-ui-react-components";
 
 const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formData }) => {
+  let index = window.location.href.charAt(window.location.href.length - 1);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
-  const [SubUsageTypeOfRentedArea, setSelfOccupied] = useState(formData?.ProvideSubUsageTypeOfRentedArea);
+  //const [SubUsageTypeOfRentedArea, setSelfOccupied] = useState(formData?.ProvideSubUsageTypeOfRentedArea);
+  let SubUsageTypeOfRentedArea, setSelfOccupied;
+  if (!isNaN(index)) {
+    [SubUsageTypeOfRentedArea, setSelfOccupied] = useState(
+      (formData.units && formData.units[index] && formData.units[index].SubUsageTypeOfRentedArea) || ""
+    );
+  } else {
+    [SubUsageTypeOfRentedArea, setSelfOccupied] = useState(formData.Subusagetypeofrentedarea?.SubUsageTypeOfRentedArea || "");
+  }
   const { data: Menu = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "UsageCategory") || {};
 
   let subusageoption = [];
@@ -33,12 +42,13 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   }
 
   useEffect(() => {
+    let index = window.location.href.charAt(window.location.href.length - 1);
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_OTHERS") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       let index = window.location.href.charAt(window.location.href.length - 1);
       onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
     }
-  }, [formData?.ProvideSubUsageTypeOfRentedArea?.i18nKey]);
+  }, [!isNaN(index) ? formData?.units[index]?.SubUsageTypeOfRentedArea?.i18nKey : formData?.SubUsageTypeOfRentedArea?.i18nKey]);
 
   useEffect(() => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
@@ -51,8 +61,13 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   useEffect(() => {
     if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
-      let index = window.location.href.charAt(window.location.href.length - 1);
-      onSelect(config.key, {}, true, index);
+      if (!isNaN(index)) {
+        let index = window.location.href.charAt(window.location.href.length - 1);
+        let unit = formData.units && formData.units[index];
+        onSelect(config.key, unit, true, index);
+      } else {
+        onSelect(config.key, {}, true, index);
+      }
     }
   });
 
@@ -77,8 +92,14 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   }
 
   function goNext() {
-    let index = window.location.href.charAt(window.location.href.length - 1);
-    onSelect(config.key, SubUsageTypeOfRentedArea, "", index);
+    if (!isNaN(index)) {
+      let unit = formData.units && formData.units[index];
+      let floordet = { ...unit, SubUsageTypeOfRentedArea };
+      //let index = window.location.href.charAt(window.location.href.length - 1);
+      onSelect(config.key, floordet, "", index);
+    } else {
+      onSelect("Subusagetypeofrentedarea", { SubUsageTypeOfRentedArea });
+    }
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageTypeOfRentedArea}>

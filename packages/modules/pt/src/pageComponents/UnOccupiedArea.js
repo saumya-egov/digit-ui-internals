@@ -4,7 +4,12 @@ import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-com
 const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
   const onSkip = () => onSelect();
-  const [UnOccupiedArea, setUnOccupiedArea] = useState(formData.units && formData.units[index] && formData.units[index].UnOccupiedArea);
+  let UnOccupiedArea, setUnOccupiedArea;
+  if (!isNaN(index)) {
+    [UnOccupiedArea, setUnOccupiedArea] = useState(formData.units && formData.units[index] && formData.units[index].UnOccupiedArea);
+  } else {
+    [UnOccupiedArea, setUnOccupiedArea] = useState(formData?.UnOccupiedArea?.UnOccupiedArea);
+  }
 
   useEffect(() => {
     let index = window.location.href.charAt(window.location.href.length - 1);
@@ -20,11 +25,15 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   }
 
   const goNext = () => {
-    let unit = formData.units && formData.units[index];
-    //units["RentalArea"] = RentArea;
-    //units["AnnualRent"] = AnnualRent;
-    let floordet = { ...unit, UnOccupiedArea };
-    onSelect(config.key, floordet, false, index);
+    if (!isNaN(index)) {
+      let unit = formData.units && formData.units[index];
+      //units["RentalArea"] = RentArea;
+      //units["AnnualRent"] = AnnualRent;
+      let floordet = { ...unit, UnOccupiedArea };
+      onSelect(config.key, floordet, false, index);
+    } else {
+      onSelect("UnOccupiedArea", { UnOccupiedArea });
+    }
   };
 
   function onChange(e) {

@@ -2,21 +2,33 @@ import React, { useState } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const Area = ({ t, config, onSelect, value, userType, formData }) => {
+  console.log(formData);
   let index = window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
   const onSkip = () => onSelect();
-  const [floorarea, setfloorarea] = useState(formData.units && formData.units[index] && formData.units[index].floorarea);
+  let floorarea;
+  let setfloorarea;
+  if (!isNaN(index)) {
+    [floorarea, setfloorarea] = useState(formData.units && formData.units[index] && formData.units[index].floorarea);
+  } else {
+    debugger;
+    [floorarea, setfloorarea] = useState(formData.landarea?.floorarea);
+  }
 
   function setPropertyfloorarea(e) {
     setfloorarea(e.target.value);
   }
 
   const goNext = () => {
-    let unit = formData.units && formData.units[index];
-    //units["RentalArea"] = RentArea;
-    //units["AnnualRent"] = AnnualRent;
-    let floordet = { ...unit, floorarea };
-    onSelect(config.key, floordet, false, index);
+    if (!isNaN(index)) {
+      let unit = formData.units && formData.units[index];
+      //units["RentalArea"] = RentArea;
+      //units["AnnualRent"] = AnnualRent;
+      let floordet = { ...unit, floorarea };
+      onSelect(config.key, floordet, true, index);
+    } else {
+      onSelect("landarea", { floorarea });
+    }
   };
   //const onSkip = () => onSelect();
 
