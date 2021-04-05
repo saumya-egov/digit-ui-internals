@@ -36,7 +36,7 @@ const PTApplicationDetails = () => {
   return (
     <React.Fragment>
       <Header>{t("PT_MUTATION_APPLICATION_DETAILS")}</Header>
-      <LinkButton label={t("CS_COMMON_DOWNLOAD")} className="check-page-link-button" onClick={handleDownloadPdf} />
+      <LinkButton label={t("CS_COMMON_DOWNLOAD")} className="check-page-link-button pt-application-download-btn" onClick={handleDownloadPdf} />
       <Card>
         <StatusTable>
           <Row label={t("PT_APPLICATION_NUMBER_LABEL")} text={application?.acknowldgementNumber} />
