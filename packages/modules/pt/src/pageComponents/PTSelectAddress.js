@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { cardBodyStyle } from "../utils";
 
 const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
-  const allCities = Digit.Hooks.fsm.useTenants();
+  const allCities = Digit.Hooks.pt.useTenants();
   let tenantId = Digit.ULBService.getCurrentTenantId();
 
   const { pincode, city } = formData?.address || "";
