@@ -1,0 +1,19 @@
+{
+  "id": 12012,
+  "uuid": "3eba8064-d37d-4dc9-9991-96859d30beaf",
+  "userName": "QAPTCE",
+  "name": "Prakash",
+  "mobileNumber": "9999999991",
+  "emailId": null,
+  "locale": null,
+  "type": "EMPLOYEE",
+  "roles": [
+    {
+      "name": "PT Counter Employee",
+      "code": "PT_CEMP",
+      "tenantId": "pb.amritsar"
+    }
+  ],
+  "active": true,
+  "tenantId": "pb.amritsar"
+}

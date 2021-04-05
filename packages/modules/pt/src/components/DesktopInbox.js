@@ -1,6 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
 import PTLink from "./inbox/PTLink";
 import ApplicationTable from "./inbox/ApplicationTable";
@@ -64,7 +64,14 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
         <div className="filters-container">
           <PTLink parentRoute={props.parentRoute} />
           <div>
-            <Filter searchParams={props.searchParams} applications={props.data} onFilterChange={props.onFilterChange} type="desktop" />
+            <Filter
+              businessService={props.businessService}
+              searchParams={props.searchParams}
+              applications={props.data}
+              onFilterChange={props.onFilterChange}
+              translatePrefix={props.translatePrefix}
+              type="desktop"
+            />
           </div>
         </div>
       )}

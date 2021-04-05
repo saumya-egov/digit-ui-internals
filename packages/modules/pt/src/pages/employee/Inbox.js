@@ -6,16 +6,16 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
-const Inbox = ({ parentRoute, isSearch = false, isInbox = true }) => {
+const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService = "PT", translatePrefix = "CS_COMMON_PT_" }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
 
-  const { isLoading: hookLoading, ...rest } = Digit.Hooks.useInboxGeneral({ tenantId, businessService: "FSM", filters: { limit: 100 } });
+  const { isLoading: hookLoading, ...rest } = Digit.Hooks.useInboxGeneral({ tenantId, businessService, filters: { limit: 100 } });
 
-  // useEffect(() => {
-  //   console.log("data from the hook", hookLoading, rest);
-  // }, [hookLoading, rest]);
+  useEffect(() => {
+    console.log("data from the hook", hookLoading, rest);
+  }, [hookLoading, rest]);
 
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -54,21 +54,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true }) => {
   ];
   const isLoading = false;
   const isIdle = false;
-
-  const data = [
-    {
-      applicationNo: "PB-PT-2019-04-23-898898",
-      propertyId: "AM2345DE",
-      owner: "Sankar",
-      applicationType: "New Property",
-      status: "Pending DV",
-      sla: 12,
-      locality: "Ajit Nagar",
-      propertyStatus: "New Property",
-      taxDue: "Pending DV",
-      action: "Collect Tax",
-    },
-  ];
   const isSearchLoading = false;
   const totalCount = 1;
 
@@ -160,7 +145,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true }) => {
     ];
   };
 
-  if (applications?.length !== null) {
+  if (rest?.data?.length !== null) {
     if (isMobile) {
       return (
         <MobileInbox
@@ -183,9 +168,10 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true }) => {
         <div>
           {!isSearch && <Header>{t("ES_COMMON_INBOX")}</Header>}
           <DesktopInbox
+            businessService={businessService}
+            translatePrefix={translatePrefix}
             data={rest?.data}
             tableConfig={rest?.tableConfig}
-            // data={isInbox ? applications : data}
             isLoading={isInbox ? isLoading || isIdle : isSearchLoading}
             isSearch={isSearch}
             shouldSearch={shouldSearch}

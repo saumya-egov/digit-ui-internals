@@ -36,6 +36,8 @@ import QA_CECOLL from "./userInfo/qa-cecoll.json";
 import QACREDITOR from "./userInfo/QACREDITOR.json";
 import QACREATOR from "./userInfo/QACREATOR.json";
 
+import QAPTCE from "./userInfo/QAPTCE.json";
+
 import QAFSTP from "./userInfo/fstp.json";
 import QAADMIN from "./userInfo/QAADMIN.json";
 import NAWANSHAHR_QA_GRO from "./userInfo/qa-gro-nawanshahr.json";
@@ -71,6 +73,7 @@ const userInfo = {
   QACREDITOR,
   QAADMIN,
   QACREATOR,
+  QAPTCE,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT"];

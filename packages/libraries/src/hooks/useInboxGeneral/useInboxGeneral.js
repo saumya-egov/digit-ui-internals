@@ -6,6 +6,8 @@ import { TableConfig } from "./tableConfig";
 
 const fetchFilters = (filtersArg) => {
   // console.log(filters, "inside fetchFilters");
+  let { uuid } = Digit.UserService.getUser()?.info || {};
+
   let filtersObj = {};
   const { applicationNos, mobileNumber, limit, offset, sortBy, sortOrder, total } = filtersArg || {};
   if (filtersArg?.applicationStatus && filtersArg?.applicationStatus?.[0]) {
@@ -90,6 +92,8 @@ const useInboxGeneral = ({
   const filtersObj = fetchFilters({ ...filters });
   const { t } = useTranslation();
 
+  let { uuid } = Digit.UserService.getUser()?.info || {};
+
   const workflowFilters = filtersObj.assignee ? { assignee: uuid } : {};
   const workFlowInstances = useQuery(
     ["WORKFLOW_INBOX", businessService, workflowFilters],
@@ -104,7 +108,7 @@ const useInboxGeneral = ({
   let applicationNos = !wfFetching && wfSuccess ? { applicationNos: processInstances.map((e) => e.businessId).join() } : {};
   applicationNos = applicationNos?.applicationNos === "" ? { applicationNos: "xyz" } : applicationNos;
 
-  const { searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()[businessService];
+  const { searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()?.[businessService] || {};
 
   const searchFilters = {
     ...filtersObj,

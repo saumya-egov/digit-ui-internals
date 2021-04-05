@@ -37,7 +37,7 @@ export const TableConfig = (t) => ({
     ],
   },
   PT: {
-    searchColumns: [
+    searchColumns: (props) => [
       {
         Header: t("ES_INBOX_UNIQUE_PROPERTY_ID"),
         accessor: "propertyId",
@@ -46,7 +46,9 @@ export const TableConfig = (t) => ({
           return (
             <div>
               <span className="link">
-                <Link to={`${props.parentRoute}/application-details/` + row.original["propertyId"]}>{row.original["propertyId"]}</Link>
+                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>
+                  {row.original?.searchData?.["propertyId"]}
+                </Link>
               </span>
             </div>
           );
@@ -95,14 +97,16 @@ export const TableConfig = (t) => ({
         disableSortBy: true,
       },
     ],
-    inboxColumns: [
+    inboxColumns: (props) => [
       {
         Header: t("CS_FILE_DESLUDGING_APPLICATION_NO"),
         Cell: ({ row }) => {
           return (
             <div>
               <span className="link">
-                <Link to={`${props.parentRoute}/application-details/` + row.original["applicationNo"]}>{row.original["applicationNo"]}</Link>
+                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>
+                  {row.original?.searchData?.["propertyId"]}
+                </Link>
               </span>
             </div>
           );
