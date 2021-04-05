@@ -10,7 +10,7 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
   const { data: Documentsob = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Documents");
   const docs = Documentsob?.PropertyTax?.Documents;
 
-  function onSave() { }
+  function onSave() {}
 
   function goNext() {
     onSelect();
@@ -28,19 +28,21 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
           <div>
             {Array.isArray(docs)
               ? docs.map(({ code, dropdownData }, index) => (
-                <div key={index}>
-                  <CardSubHeader>
-                    {index + 1}. {t("PROPERTYTAX_" + code.replaceAll(".", "_") + "_HEADING")}
-                  </CardSubHeader>
-                  {dropdownData.map((dropdownData) => (
-                    <CardText>{t("PROPERTYTAX_" + dropdownData?.code.replaceAll(".", "_") + "_LABEL")}</CardText>
-                  ))}
-                </div>
-              ))
+                  <div key={index}>
+                    <CardSubHeader>
+                      {index + 1}. {t("PROPERTYTAX_" + code.replaceAll(".", "_") + "_HEADING")}
+                    </CardSubHeader>
+                    {dropdownData.map((dropdownData) => (
+                      <CardText>{t("PROPERTYTAX_" + dropdownData?.code.replaceAll(".", "_") + "_LABEL")}</CardText>
+                    ))}
+                  </div>
+                ))
               : console.log("error")}
           </div>
         </div>
-        <span ><SubmitBar label="Next" onSubmit={onSelect} /></span>
+        <span>
+          <SubmitBar label="Next" onSubmit={onSelect} />
+        </span>
       </Card>
     </React.Fragment>
   );

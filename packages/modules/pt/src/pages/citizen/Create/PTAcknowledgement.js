@@ -14,7 +14,6 @@ const GetActionMessage = (props) => {
   } else if (!props.isSuccess) {
     return t("CS_PROPERTY_APPLICATION_FAILED");
   }
-
 };
 
 const rowContainerStyle = {
@@ -41,7 +40,7 @@ const PTAcknowledgement = ({ data, onSuccess }) => {
 
   useEffect(() => {
     try {
-      let formdata=convertToProperty(data);
+      let formdata = convertToProperty(data);
       mutation.mutate(formdata, {
         onSuccess,
       });
@@ -82,12 +81,9 @@ const PTAcknowledgement = ({ data, onSuccess }) => {
         />
       )}
       <StatusTable>
-
         {mutation.isSuccess && (
           <Row rowContainerStyle={rowContainerStyle} last label={t("PT_COMMON_TABLE_COL_PT_ID")} text={mutation?.data?.Properties[0]?.propertyId} />
         )}
-
-
       </StatusTable>
       <Link to={`/digit-ui/citizen`}>
         <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />

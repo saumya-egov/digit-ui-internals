@@ -218,10 +218,10 @@ export const Search = {
     const { vehicleTrip } = response;
     let result = vehicleTrip;
     if (vehicleTrip.length > 0) {
-      const ownerIds = response.vehicleTrip.map(trip => trip.tripOwnerId);
-      const vendorsResponse = await FSMService.vendorSearch(tenantId, { ownerIds: ownerIds.join(',') });
+      const ownerIds = response.vehicleTrip.map((trip) => trip.tripOwnerId);
+      const vendorsResponse = await FSMService.vendorSearch(tenantId, { ownerIds: ownerIds.join(",") });
       const vendorOwnerKey = vendorsResponse.vendor.reduce((acc, vendor) => {
-        return { ...acc, [vendor.ownerId]: vendor }
+        return { ...acc, [vendor.ownerId]: vendor };
       }, {});
       result = Search.combineResponse(vehicleTrip, vendorOwnerKey);
     }
@@ -232,9 +232,9 @@ export const Search = {
   },
 
   combineResponse: (vehicleTrip, vendorOwnerKey) => {
-    return vehicleTrip.map(trip => {
-      return { ...trip, dsoName: vendorOwnerKey[trip.tripOwnerId].name }
-    })
+    return vehicleTrip.map((trip) => {
+      return { ...trip, dsoName: vendorOwnerKey[trip.tripOwnerId].name };
+    });
   },
 
   applicationWithBillSlab: async (t, tenantId, applicationNos) => {

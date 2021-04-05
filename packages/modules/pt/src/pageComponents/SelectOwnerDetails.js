@@ -57,69 +57,66 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       isDisabled={!name || !mobileNumber || !gender || !relationship || !fatherOrHusbandName}
     >
       <div style={cardBodyStyle}>
-      <CardLabel>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
-      <TextInput 
-        t={t} 
-        type={"text"} 
-        isMandatory={false} 
-        optionKey="i18nKey" 
-        name="name" 
-        value={name} 
-        onChange={setOwnerName} 
-        {...validation={
-          isRequired: true,
-          pattern: "^[a-zA-Z-.`' ]*$",
-          type: "tel",
-          title: t("PT_NAME_ERROR_MESSAGE")
-          }
-        }
-      />
-      <CardLabel>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
-      <RadioButtons t={t} options={options} optionsKey="code" name="gender" value={gender} selectedOption={gender} onSelect={setGenderName} />
-      <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
-      <TextInput
-        type={"text"}
-        t={t}
-        isMandatory={false}
-        optionKey="i18nKey"
-        name="mobileNumber"
-        value={mobileNumber}
-        onChange={setMobileNo}
-        {...validation={
-          isRequired: true,
-          pattern: "[6-9]{1}[0-9]{9}",
-          type: "tel",
-          title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
-          }
-        }
-      />
-      <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}*`}</CardLabel>
-      <TextInput
-        t={t}
-        type={"text"}
-        isMandatory={false}
-        optionKey="i18nKey"
-        name="fatherOrHusbandName"
-        value={fatherOrHusbandName}
-        onChange={setGuardiansName}
-        {...validation={
-          isRequired: true,
-          pattern: "^[a-zA-Z-.`' ]*$",
-          type: "tel",
-          title: t("PT_NAME_ERROR_MESSAGE")
-          }
-        }
-      />
-      <CardLabel>{`${t("PT_FORM3_RELATIONSHIP")}*`}</CardLabel>
-      <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        name="relationship"
-        options={GuardianOptions}
-        value={relationship}
-        selectedOption={relationship}
-        onSelect={setGuardianName}
-      />
+        <CardLabel>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
+        <TextInput
+          t={t}
+          type={"text"}
+          isMandatory={false}
+          optionKey="i18nKey"
+          name="name"
+          value={name}
+          onChange={setOwnerName}
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[a-zA-Z-.`' ]*$",
+            type: "tel",
+            title: t("PT_NAME_ERROR_MESSAGE"),
+          })}
+        />
+        <CardLabel>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
+        <RadioButtons t={t} options={options} optionsKey="code" name="gender" value={gender} selectedOption={gender} onSelect={setGenderName} />
+        <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
+        <TextInput
+          type={"text"}
+          t={t}
+          isMandatory={false}
+          optionKey="i18nKey"
+          name="mobileNumber"
+          value={mobileNumber}
+          onChange={setMobileNo}
+          {...(validation = {
+            isRequired: true,
+            pattern: "[6-9]{1}[0-9]{9}",
+            type: "tel",
+            title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
+          })}
+        />
+        <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}*`}</CardLabel>
+        <TextInput
+          t={t}
+          type={"text"}
+          isMandatory={false}
+          optionKey="i18nKey"
+          name="fatherOrHusbandName"
+          value={fatherOrHusbandName}
+          onChange={setGuardiansName}
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[a-zA-Z-.`' ]*$",
+            type: "tel",
+            title: t("PT_NAME_ERROR_MESSAGE"),
+          })}
+        />
+        <CardLabel>{`${t("PT_FORM3_RELATIONSHIP")}*`}</CardLabel>
+        <RadioButtons
+          t={t}
+          optionsKey="i18nKey"
+          name="relationship"
+          options={GuardianOptions}
+          value={relationship}
+          selectedOption={relationship}
+          onSelect={setGuardianName}
+        />
       </div>
     </FormStep>
   );

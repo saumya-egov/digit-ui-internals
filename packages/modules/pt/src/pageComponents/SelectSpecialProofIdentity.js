@@ -64,7 +64,7 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
         }}
         message={uploadedFile ? `1 ${t(`PT_ACTION_FILEUPLOADED`)}` : t(`PT_ACTION_NO_FILEUPLOADED`)}
       />
-      <div style={{disabled:"true", height: "20px", width: "100%"}}></div>
+      <div style={{ disabled: "true", height: "20px", width: "100%" }}></div>
     </FormStep>
   );
 };

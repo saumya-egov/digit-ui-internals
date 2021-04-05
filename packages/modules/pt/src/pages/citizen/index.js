@@ -10,27 +10,29 @@ import SearchPropertyComponent from "./SearchProperty";
 import SearchResultsComponent from "./SearchResults";
 import { shouldHideBackButton } from "../../utils";
 
-const hideBackButtonConfig=[
-  {screenPath:"property/new-application/acknowledgement"}
-]
+const hideBackButtonConfig = [{ screenPath: "property/new-application/acknowledgement" }];
 
 const App = () => {
   const { path, url, ...match } = useRouteMatch();
   return (
     <span className={"pt-citizen"}>
-    <Switch>
-      <AppContainer >
-        {!shouldHideBackButton(hideBackButtonConfig) ? <BackButton style = {{position: "fixed", top: "55px", background: "#f47738"}}>Back</BackButton> : ""}
-        <PrivateRoute path={`${path}/property/new-application`} component={CreateProperty} />
-        <PrivateRoute path={`${path}/property/search`} component={SearchPropertyComponent} />
-        <PrivateRoute path={`${path}/property/search-results`} component={SearchResultsComponent} />
-        <PrivateRoute path={`${path}/property/application/:acknowledgementIds`} component={PTApplicationDetails}></PrivateRoute>
-        <PrivateRoute path={`${path}/property/my-applications`} component={PTMyApplications}></PrivateRoute>
-        <PrivateRoute path={`${path}/property/my-properties`} component={MyProperties}></PrivateRoute>
-        <PrivateRoute path={`${path}/property/properties/:propertyIds`} component={PropertyInformation}></PrivateRoute>
-        {/* <Redirect to={`/`}></Redirect> */}
-      </AppContainer>
-    </Switch>
+      <Switch>
+        <AppContainer>
+          {!shouldHideBackButton(hideBackButtonConfig) ? (
+            <BackButton style={{ position: "fixed", top: "55px", background: "#f47738" }}>Back</BackButton>
+          ) : (
+            ""
+          )}
+          <PrivateRoute path={`${path}/property/new-application`} component={CreateProperty} />
+          <PrivateRoute path={`${path}/property/search`} component={SearchPropertyComponent} />
+          <PrivateRoute path={`${path}/property/search-results`} component={SearchResultsComponent} />
+          <PrivateRoute path={`${path}/property/application/:acknowledgementIds`} component={PTApplicationDetails}></PrivateRoute>
+          <PrivateRoute path={`${path}/property/my-applications`} component={PTMyApplications}></PrivateRoute>
+          <PrivateRoute path={`${path}/property/my-properties`} component={MyProperties}></PrivateRoute>
+          <PrivateRoute path={`${path}/property/properties/:propertyIds`} component={PropertyInformation}></PrivateRoute>
+          {/* <Redirect to={`/`}></Redirect> */}
+        </AppContainer>
+      </Switch>
     </span>
   );
 };
