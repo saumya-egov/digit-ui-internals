@@ -88,7 +88,7 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
             {localities?.length < 5 ? (
               <RadioButtons selectedOption={selectedLocality} options={localities} optionsKey="name" onSelect={selectLocality} />
             ) : (
-              <Dropdown isMandatory selected={selectedLocality} optionKey="code" option={localities} select={selectLocality} t={t} />
+              <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" option={localities} select={selectLocality} t={t} />
             )}
           </React.Fragment>
         )}

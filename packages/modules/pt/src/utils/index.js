@@ -81,7 +81,6 @@ export const convertToProperty = (data = {}) => {
             isCorrespondenceAddress: null,
           },
         ],
-
       additionalDetails: {
         inflammable: false,
         heightAbove36Feet: false,
@@ -123,6 +122,7 @@ export const convertToProperty = (data = {}) => {
   return formdata;
 };
 
+
 /*   method to check not null  if not returns false*/
 export const checkForNotNull = (value = "") => {
   return value && value != null && value != undefined && value != '' ? true : false;
@@ -137,3 +137,4 @@ export const checkForNA = (value = "") => {
 export const isPropertyVacant = (value = "") => {
   return checkForNotNull(value) && value.includes('VACANT') ? true : false;
 }
+

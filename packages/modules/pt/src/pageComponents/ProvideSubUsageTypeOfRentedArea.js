@@ -130,8 +130,7 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
           t={t}
           optionsKey="i18nKey"
           isMandatory={config.isMandatory}
-          //options={data}
-          options={getSubUsagedata(subusageoption) || {}}
+          options={getSubUsagedata(subusageoption) || []}
           selectedOption={SubUsageTypeOfRentedArea}
           onSelect={selectSelfOccupied}
         />
