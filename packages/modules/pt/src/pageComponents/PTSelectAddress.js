@@ -1,5 +1,6 @@
+import { CardLabel, Dropdown, FormStep, LabelFieldPair, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
-import { FormStep, CardLabel, Dropdown, RadioButtons, LabelFieldPair, RadioOrSelect } from "@egovernments/digit-ui-react-components";
+import { cardBodyStyle } from "../utils";
 
 const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   const allCities = Digit.Hooks.pt.useTenants();
@@ -14,7 +15,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
       : allCities;
 
   const [selectedCity, setSelectedCity] = useState(() => formData?.address?.city || null);
-  // console.log("find selected locality here", selectedCity)
+
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     selectedCity?.code,
     "revenue",
@@ -23,20 +24,9 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     },
     t
   );
-  // console.log("find fetchedLocalities here", fetchedLocalities)
-  // if (pincode && city) {
-  //   const filteredLocalityList = localitiesObj[city?.code].filter((locality) => locality?.pincode?.some((item) => item.toString() == pincode));
-  //   localitiesObj[city?.code] = filteredLocalityList.length ? filteredLocalityList : allLocalities[city?.code];
-  // }
+
   const [localities, setLocalities] = useState();
-  //   () => {
-  //   console.log("find usestate localities here", formData?.address?.pincode, fetchedLocalities)
-  // return formData?.address?.pincode ?
-  // fetchedLocalities.filter((obj) => obj.pincode?.find((item) => item == formData.address.pincode))
-  //  :
-  // fetchedLocalities
-  // }
-  // console.log("find set localities here", localities)
+
   const [selectedLocality, setSelectedLocality] = useState();
 
   useEffect(() => {
@@ -47,17 +37,12 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     }
   }, [cities]);
 
-  // useEffect(()=>{
-  //   console.log("let all know locality is set", selectedLocality)
-  // },[selectedLocality])
-
   useEffect(() => {
     if (selectedCity && fetchedLocalities) {
       let __localityList = fetchedLocalities;
       let filteredLocalityList = [];
 
       if (formData?.address?.locality) {
-        // console.log("find formData inside useEffect", formData?.address)
         setSelectedLocality(formData.address.locality);
       }
 
@@ -70,7 +55,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
         onSelect(config.key, { ...formData[config.key], city: selectedCity });
       }
       setLocalities(() => (filteredLocalityList.length > 0 ? filteredLocalityList : __localityList));
-      // console.log("find set localities here", fetchedLocalities, filteredLocalityList.length > 0 ? filteredLocalityList : __localityList )
+
       if (filteredLocalityList.length === 1) {
         setSelectedLocality(filteredLocalityList[0]);
         if (userType === "employee") {
@@ -136,19 +121,21 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
-      <CardLabel>{`${t("MYCITY_CODE_LABEL")} *`}</CardLabel>
-      <RadioOrSelect options={cities} selectedOption={selectedCity} optionKey="code" onSelect={selectCity} t={t} />
-      {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} *`}</CardLabel>}
-      {selectedCity && localities && (
-        <RadioOrSelect
-          isMandatory={config.isMandatory}
-          options={localities}
-          selectedOption={selectedLocality}
-          optionKey="code"
-          onSelect={selectLocality}
-          t={t}
-        />
-      )}
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 23em)" }}>
+        <CardLabel>{`${t("MYCITY_CODE_LABEL")} *`}</CardLabel>
+        <RadioOrSelect options={cities} selectedOption={selectedCity} optionKey="code" onSelect={selectCity} t={t} />
+        {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} *`}</CardLabel>}
+        {selectedCity && localities && (
+          <RadioOrSelect
+            isMandatory={config.isMandatory}
+            options={localities}
+            selectedOption={selectedLocality}
+            optionKey="code"
+            onSelect={selectLocality}
+            t={t}
+          />
+        )}
+      </div>
     </FormStep>
   );
 };

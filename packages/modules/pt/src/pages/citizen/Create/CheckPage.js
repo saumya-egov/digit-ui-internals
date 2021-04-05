@@ -38,7 +38,7 @@ const CheckPage = ({ onSubmit, value = {} }) => {
   return (
     <Card>
       <CardHeader>{t("CS_CHECK_CHECK_YOUR_ANSWERS")}</CardHeader>
-      <div style={cardBodyStyle}>
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 15em)" }}>
         <CardText>{t("CS_CHECK_CHECK_YOUR_ANSWERS_TEXT")}</CardText>
         <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
         <StatusTable>

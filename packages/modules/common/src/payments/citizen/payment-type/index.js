@@ -66,7 +66,15 @@ export const SelectPaymentType = (props) => {
       const redirectUrl = data?.Transaction?.redirectUrl;
       window.location = redirectUrl;
     } catch (error) {
-      console.log(error);
+      let messageToShow = "CS_PAYMENT_UNKNOWN_ERROR_ON_SERVER";
+      console.dir(error);
+      console.log(error.response);
+      if (error.response?.data?.Errors?.[0]) {
+        const { code, message } = error.response?.data?.Errors?.[0];
+        messageToShow = t(message);
+      }
+      window.alert(messageToShow);
+
       // TODO: add error toast for error.response.data.Errors[0].message
     }
   };
