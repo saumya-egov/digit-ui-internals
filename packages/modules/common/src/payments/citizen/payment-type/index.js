@@ -71,7 +71,7 @@ export const SelectPaymentType = (props) => {
       console.log(error.response);
       if (error.response?.data?.Errors?.[0]) {
         const { code, message } = error.response?.data?.Errors?.[0];
-        messageToShow = message;
+        messageToShow = t(message);
       }
       window.alert(messageToShow);
 
