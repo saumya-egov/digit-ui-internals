@@ -45,8 +45,15 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   useEffect(() => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_OTHERS") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
-      let index = window.location.href.charAt(window.location.href.length - 1);
-      onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
+      //let index = window.location.href.charAt(window.location.href.length - 1);
+      //onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
+      if (!isNaN(index)) {
+        let index = window.location.href.charAt(window.location.href.length - 1);
+        let unit = formData.units && formData.units[index];
+        onSelect(config.key, unit, true, index);
+      } else {
+        onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
+      }
     }
   }, [!isNaN(index) ? formData?.units[index]?.SubUsageType?.i18nKey : formData?.SubUsageType?.i18nKey]);
 
@@ -54,9 +61,16 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       let index = window.location.href.charAt(window.location.href.length - 1);
-      onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
+      //onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
+      if (!isNaN(index)) {
+        let index = window.location.href.charAt(window.location.href.length - 1);
+        let unit = formData.units && formData.units[index];
+        onSelect(config.key, unit, true, index);
+      } else {
+        onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
+      }
     }
-  }, [formData?.usageCategoryMajor?.i18nKey]);
+  });
 
   /*  data = [
     {

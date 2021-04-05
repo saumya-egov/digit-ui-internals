@@ -45,8 +45,15 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
     let index = window.location.href.charAt(window.location.href.length - 1);
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_OTHERS") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
-      let index = window.location.href.charAt(window.location.href.length - 1);
-      onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
+      //let index = window.location.href.charAt(window.location.href.length - 1);
+      //onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
+      if (!isNaN(index)) {
+        let index = window.location.href.charAt(window.location.href.length - 1);
+        let unit = formData.units && formData.units[index];
+        onSelect(config.key, unit, true, index);
+      } else {
+        onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
+      }
     }
   }, [!isNaN(index) ? formData?.units[index]?.SubUsageTypeOfRentedArea?.i18nKey : formData?.SubUsageTypeOfRentedArea?.i18nKey]);
 
@@ -54,9 +61,16 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       let index = window.location.href.charAt(window.location.href.length - 1);
-      onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
+      //onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
+      if (!isNaN(index)) {
+        let index = window.location.href.charAt(window.location.href.length - 1);
+        let unit = formData.units && formData.units[index];
+        onSelect(config.key, unit, true, index);
+      } else {
+        onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
+      }
     }
-  }, [formData?.usageCategoryMajor?.i18nKey]);
+  });
 
   useEffect(() => {
     if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const Area = ({ t, config, onSelect, value, userType, formData }) => {
-  console.log(formData);
   let index = window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
   const onSkip = () => onSelect();
@@ -11,7 +10,6 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   if (!isNaN(index)) {
     [floorarea, setfloorarea] = useState(formData.units && formData.units[index] && formData.units[index].floorarea);
   } else {
-    debugger;
     [floorarea, setfloorarea] = useState(formData.landarea?.floorarea);
   }
 
@@ -26,6 +24,13 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
       //units["AnnualRent"] = AnnualRent;
       let floordet = { ...unit, floorarea };
       onSelect(config.key, floordet, true, index);
+      if (formData?.noOfFloors?.i18nKey === "Ground +1" && index < 1) {
+        let newIndex1 = parseInt(index) + 1;
+        onSelect("floordetails", {}, false, newIndex1, true);
+      } else if (formData?.noOfFloors?.i18nKey === "Ground +2" && index < 2) {
+        let newIndex2 = parseInt(index) + 1;
+        onSelect("floordetails", {}, false, newIndex2, true);
+      }
     } else {
       onSelect("landarea", { floorarea });
     }

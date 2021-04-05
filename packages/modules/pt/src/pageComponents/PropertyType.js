@@ -21,18 +21,6 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
     return menu;
   }
 
-  /* const menu = [
-    {
-      i18nKey: "PROPERTYTAX_BILLING_SLAB_INDEPENDENTPROPERTY",
-    },
-    {
-      i18nKey: "PROPERTYTAX_BILLING_SLAB_SHAREDPROPERTY",
-    },
-    {
-      i18nKey: "COMMON_PROPTYPE_VACANT",
-    },
-  ]; */
-
   const onSkip = () => onSelect();
 
   // const propertyOwnerShipCategory = Digit.Hooks.pt.useMDMS("pb", "PropertyTax", "OwnerShipCategory", {});

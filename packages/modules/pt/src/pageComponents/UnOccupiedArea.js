@@ -15,7 +15,13 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
     let index = window.location.href.charAt(window.location.href.length - 1);
     if (userType !== "employee" && formData?.IsAnyPartOfThisFloorUnOccupied?.i18nKey === "No") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
-      onSelect(config.key, {}, true, index);
+      if (!isNaN(index)) {
+        let index = window.location.href.charAt(window.location.href.length - 1);
+        let unit = formData.units && formData.units[index];
+        onSelect(config.key, unit, true, index);
+      } else {
+        onSelect(config.key, {}, true, index);
+      }
     }
   });
 

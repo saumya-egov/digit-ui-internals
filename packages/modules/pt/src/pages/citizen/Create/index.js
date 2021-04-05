@@ -27,7 +27,7 @@ const CreateProperty = ({ parentRoute }) => {
     } else {
       isMultiple = false;
     }
-    if (lastchar == "0") {
+    if (!isNaN(lastchar)) {
       isMultiple = true;
     }
     let { nextStep = {} } = config.find((routeObj) => routeObj.route === currentPath);
@@ -61,7 +61,7 @@ const CreateProperty = ({ parentRoute }) => {
     if (nextStep === null) {
       return redirectWithHistory(`${match.path}/check`);
     }
-    if (nextStep.split("/").pop() == "0") {
+    if (!isNaN(nextStep.split("/").pop())) {
       nextPage = `${match.path}/${nextStep}`;
     } else {
       nextPage = isMultiple && nextStep !== "map" ? `${match.path}/${nextStep}/${index}` : `${match.path}/${nextStep}`;
