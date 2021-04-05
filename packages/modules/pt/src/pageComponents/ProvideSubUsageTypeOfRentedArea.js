@@ -34,15 +34,15 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageTypeOfRentedArea}>
       <CardLabel>{t("Types of Floor Usage")}</CardLabel>
-      <div style={{...cardBodyStyle,maxHeight: 'calc(100vh - 26em)'}}>
-      <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        isMandatory={config.isMandatory}
-        options={data}
-        selectedOption={SubUsageTypeOfRentedArea}
-        onSelect={selectSelfOccupied}
-      />
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }}>
+        <RadioButtons
+          t={t}
+          optionsKey="i18nKey"
+          isMandatory={config.isMandatory}
+          options={data}
+          selectedOption={SubUsageTypeOfRentedArea}
+          onSelect={selectSelfOccupied}
+        />
       </div>
     </FormStep>
   );

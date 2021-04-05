@@ -4,24 +4,22 @@ export const getPropertyTypeLocale = (value) => {
 
 export const getPropertySubtypeLocale = (value) => `PROPERTYTYPE_MASTERS_${value}`;
 
-export const getFixedFilename = (filename = '', size = 5) => {
+export const getFixedFilename = (filename = "", size = 5) => {
   if (filename.length <= size) {
     return filename;
   }
   return `${filename.substr(0, size)}...`;
-}
-
+};
 
 export const shouldHideBackButton = (config = []) => {
-  return config.filter(key => window.location.href.includes(key.screenPath)).length > 0 ? true : false;
-}
+  return config.filter((key) => window.location.href.includes(key.screenPath)).length > 0 ? true : false;
+};
 
 /*   style to keep the body height fixed across screens */
 export const cardBodyStyle = {
-  maxHeight: 'calc(100vh - 20em)',
-  overflowY: 'auto'
-}
-
+  maxHeight: "calc(100vh - 20em)",
+  overflowY: "auto",
+};
 
 /*   method to convert collected details to proeprty create object */
 export const convertToProperty = (data = {}) => {
@@ -29,7 +27,7 @@ export const convertToProperty = (data = {}) => {
   const loc = address?.locality.code;
   const formdata = {
     Property: {
-      tenantId: address?.city?.code || 'pb.amritsar',
+      tenantId: address?.city?.code || "pb.amritsar",
       address: {
         pincode: address?.pincode,
         landmark: address?.landmark,
@@ -58,27 +56,30 @@ export const convertToProperty = (data = {}) => {
       propertyType: "BUILTUP.SHAREDPROPERTY",
       noOfFloors: 1,
       ownershipCategory: "INDIVIDUAL.SINGLEOWNER",
-      owners: owners && owners.map((owners, index) => ({
-        name: owners?.name || 'Ajit',
-        mobileNumber: owners?.mobileNumber || "9965664222",
-        fatherOrHusbandName: owners?.fatherOrHusbandName,
-        emailId: null,
-        permanentAddress: owners?.permanentAddress,
-        relationship: owners?.relationship?.code,
-        ownerType: owners?.ownerType?.code || 'NONE',
-        gender: owners?.gender?.value,
-        isCorrespondenceAddress: null,
-      })) || [{
-        "name": "Jagan",
-        "mobileNumber": "9965664222",
-        "fatherOrHusbandName": "E",
-        "emailId": null,
-        "permanentAddress": "1111, 1111, Back Side 33 KVA Grid Patiala Road - Area1, Amritsar, ",
-        "relationship": "FATHER",
-        "ownerType": "FREEDOMFIGHTER",
-        "gender": "MALE",
-        "isCorrespondenceAddress": null
-      }],
+      owners: (owners &&
+        owners.map((owners, index) => ({
+          name: owners?.name || "Ajit",
+          mobileNumber: owners?.mobileNumber || "9965664222",
+          fatherOrHusbandName: owners?.fatherOrHusbandName,
+          emailId: null,
+          permanentAddress: owners?.permanentAddress,
+          relationship: owners?.relationship?.code,
+          ownerType: owners?.ownerType?.code || "NONE",
+          gender: owners?.gender?.value,
+          isCorrespondenceAddress: null,
+        }))) || [
+        {
+          name: "Jagan",
+          mobileNumber: "9965664222",
+          fatherOrHusbandName: "E",
+          emailId: null,
+          permanentAddress: "1111, 1111, Back Side 33 KVA Grid Patiala Road - Area1, Amritsar, ",
+          relationship: "FATHER",
+          ownerType: "FREEDOMFIGHTER",
+          gender: "MALE",
+          isCorrespondenceAddress: null,
+        },
+      ],
 
       additionalDetails: {
         inflammable: false,
@@ -119,4 +120,4 @@ export const convertToProperty = (data = {}) => {
     },
   };
   return formdata;
-}
+};

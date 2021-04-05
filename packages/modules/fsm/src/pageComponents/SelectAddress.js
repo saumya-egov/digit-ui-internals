@@ -127,7 +127,7 @@ const SelectAddress = ({ t, config, onSelect, userType, formData }) => {
             selected={selectedLocality}
             option={localities}
             select={selectLocality}
-            optionKey="code"
+            optionKey="i18nkey"
             t={t}
           />
         </LabelFieldPair>
@@ -144,7 +144,7 @@ const SelectAddress = ({ t, config, onSelect, userType, formData }) => {
           isMandatory={config.isMandatory}
           options={localities}
           selectedOption={selectedLocality}
-          optionKey="code"
+          optionKey="i18nkey"
           onSelect={selectLocality}
           t={t}
         />

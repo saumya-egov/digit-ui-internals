@@ -11,8 +11,8 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     userType === "employee"
       ? allCities.filter((city) => city.code === tenantId)
       : pincode
-        ? allCities.filter((city) => city?.pincode?.some((pin) => pin == pincode))
-        : allCities;
+      ? allCities.filter((city) => city?.pincode?.some((pin) => pin == pincode))
+      : allCities;
 
   const [selectedCity, setSelectedCity] = useState(() => formData?.address?.city || null);
 
@@ -112,7 +112,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
             selected={selectedLocality}
             option={localities}
             select={selectLocality}
-            optionKey="code"
+            optionKey="i18nkey"
             t={t}
           />
         </LabelFieldPair>
@@ -121,7 +121,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
-      <div style={{ ...cardBodyStyle, maxHeight: 'calc(100vh - 23em)' }}>
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 23em)" }}>
         <CardLabel>{`${t("MYCITY_CODE_LABEL")} *`}</CardLabel>
         <RadioOrSelect options={cities} selectedOption={selectedCity} optionKey="code" onSelect={selectCity} t={t} />
         {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} *`}</CardLabel>}
@@ -130,7 +130,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
             isMandatory={config.isMandatory}
             options={localities}
             selectedOption={selectedLocality}
-            optionKey="code"
+            optionKey="i18nkey"
             onSelect={selectLocality}
             t={t}
           />

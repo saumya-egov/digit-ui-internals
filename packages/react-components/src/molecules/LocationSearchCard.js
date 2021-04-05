@@ -10,7 +10,20 @@ import LocationSearch from "../atoms/LocationSearch";
 import SubmitBar from "../atoms/SubmitBar";
 import LinkButton from "../atoms/LinkButton";
 
-const LocationSearchCard = ({ header, cardText, nextText, t, skipAndContinueText, forcedError, skip, onSave, onChange, position, disabled , cardBodyStyle={} }) => {
+const LocationSearchCard = ({
+  header,
+  cardText,
+  nextText,
+  t,
+  skipAndContinueText,
+  forcedError,
+  skip,
+  onSave,
+  onChange,
+  position,
+  disabled,
+  cardBodyStyle = {},
+}) => {
   let isDisabled = false || disabled;
   const onLocationChange = (val, location) => {
     isDisabled = val ? false : true;
@@ -21,14 +34,14 @@ const LocationSearchCard = ({ header, cardText, nextText, t, skipAndContinueText
     <Card>
       <CardHeader>{header}</CardHeader>
       <div style={cardBodyStyle}>
-      <CardText>
-        {/* Click and hold to drop the pin to complaint location. If you are not
+        <CardText>
+          {/* Click and hold to drop the pin to complaint location. If you are not
         able to pin the location you can skip the continue for next step. */}
-        {cardText}
-      </CardText>
+          {cardText}
+        </CardText>
 
-      <LocationSearch onChange={onLocationChange} position={position} />
-      {forcedError && <CardLabelError>{t(forcedError)}</CardLabelError>}
+        <LocationSearch onChange={onLocationChange} position={position} />
+        {forcedError && <CardLabelError>{t(forcedError)}</CardLabelError>}
       </div>
       <SubmitBar label={nextText} onSubmit={onSave} disabled={isDisabled} />
       {skip ? <LinkButton onClick={skip} label={skipAndContinueText} /> : null}
