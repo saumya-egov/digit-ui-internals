@@ -16,7 +16,7 @@ export const shouldHideBackButton = (config = []) => {
   return config.filter(key => window.location.href.includes(key.screenPath)).length > 0 ? true : false;
 }
 
-/*   style to keep the body height fixed accross screens */
+/*   style to keep the body height fixed across screens */
 export const cardBodyStyle = {
   maxHeight: 'calc(100vh - 20em)',
   overflowY: 'auto'
