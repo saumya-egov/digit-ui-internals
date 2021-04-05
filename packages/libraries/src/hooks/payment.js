@@ -3,10 +3,24 @@ import { useQuery, useQueryClient } from "react-query";
 export const useFetchCitizenBillsForBuissnessService = ({ businessService, ...filters }, config = {}) => {
   const queryClient = useQueryClient();
   const { mobileNumber, tenantId } = Digit.UserService.getUser()?.info || {};
-  const { isLoading, error, isError, data } = useQuery(["citizenBillsForBuisnessService", businessService], () =>
-    Digit.PaymentService.fetchBill(tenantId, { mobileNumber, businessService, ...filters }, config)
+
+  const params = { mobileNumber, businessService, ...filters };
+
+  if (!params["mobileNumber"]) delete params["mobileNumber"];
+
+  const { isLoading, error, isError, data, status } = useQuery(
+    ["citizenBillsForBuisnessService", businessService],
+    () => Digit.PaymentService.fetchBill(tenantId, params),
+    config
   );
-  return { isLoading, error, isError, data, revalidate: () => queryClient.invalidateQueries(["citizenBillsForBuisnessService", businessService]) };
+  return {
+    isLoading,
+    error,
+    isError,
+    data,
+    status,
+    revalidate: () => queryClient.invalidateQueries(["citizenBillsForBuisnessService", businessService]),
+  };
 };
 
 export const useFetchPayment = ({ tenantId, consumerCode, businessService }, config) => {
