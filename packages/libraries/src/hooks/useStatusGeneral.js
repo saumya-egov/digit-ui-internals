@@ -7,19 +7,7 @@ import { useQuery } from "react-query";
  */
 
 const businessServiceParamMap = {
-  PT: [
-    "PT.LEGACY",
-    "PT.NOUSE",
-    "CreatePT",
-    "PT.CREATEWITHWNS",
-    "PT.MUTATION1",
-    "PT.MUTATION",
-    "PT.CREATE",
-    "PT.CREATEWITHWNS.REVAMP",
-    "PT.CREATE.DEPRECATED",
-    "CreateProperty",
-    "PT.MUTATION3",
-  ],
+  PT: ["PT.LEGACY", "PT.CREATEWITHWNS", "PT.MUTATION", "PT.CREATE"],
 };
 
 export const useApplicationStatusGeneral = ({ businessService, tenantId, translatePrefix }, config) => {
