@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+  //let index = window.location.href.charAt(window.location.href.length - 1);
+  let index = window.location.href.split("/").pop();
   let validation = {};
   const onSkip = () => onSelect();
   let RentArea, AnnualRent;
@@ -32,7 +33,8 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
       onSelect(config.key, unit, true, index); */
 
       if (!isNaN(index)) {
-        let index = window.location.href.charAt(window.location.href.length - 1);
+        //let index = window.location.href.charAt(window.location.href.length - 1);
+        let index = window.location.href.split("/").pop();
         let unit = formData.units && formData.units[index];
         onSelect(config.key, unit, true, index);
       } else {

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FormStep, UploadFile, CardLabelDesc } from "@egovernments/digit-ui-react-components";
 
 const Proof = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+  //let index = window.location.href.charAt(window.location.href.length - 1);
+  let index = window.location.href.split("/").pop();
   const [uploadedFile, setUploadedFile] = useState(formData?.documents?.ProofOfAddress?.fileStoreId || null);
   const [file, setFile] = useState(formData?.documents?.ProofOfAddress);
   const [error, setError] = useState(null);

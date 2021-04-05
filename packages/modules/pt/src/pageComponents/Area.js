@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const Area = ({ t, config, onSelect, value, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+  //let index = window.location.href.charAt(window.location.href.length - 1);
+  let index = window.location.href.split("/").pop();
   let validation = {};
   const onSkip = () => onSelect();
   let floorarea;
@@ -24,12 +25,16 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
       //units["AnnualRent"] = AnnualRent;
       let floordet = { ...unit, floorarea };
       onSelect(config.key, floordet, true, index);
-      if (formData?.noOfFloors?.i18nKey === "Ground +1" && index < 1) {
+      if (formData?.noOfFloors?.i18nKey === "Ground +1" && index < 1 && index > -1) {
         let newIndex1 = parseInt(index) + 1;
         onSelect("floordetails", {}, false, newIndex1, true);
-      } else if (formData?.noOfFloors?.i18nKey === "Ground +2" && index < 2) {
+      } else if (formData?.noOfFloors?.i18nKey === "Ground +2" && index < 2 && index > -1) {
         let newIndex2 = parseInt(index) + 1;
         onSelect("floordetails", {}, false, newIndex2, true);
+      } else if (formData?.noOofBasements?.i18nKey === "1 Basement" || (formData?.noOofBasements?.i18nKey === "2 Basement" && index > -1)) {
+        onSelect("floordetails", {}, false, "-1", true);
+      } else if (formData?.noOofBasements?.i18nKey === "2 Basement" && index != -2) {
+        onSelect("floordetails", {}, false, "-2", true);
       }
     } else {
       onSelect("landarea", { floorarea });

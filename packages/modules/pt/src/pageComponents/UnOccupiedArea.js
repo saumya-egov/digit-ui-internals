@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+  //let index = window.location.href.charAt(window.location.href.length - 1);
+  let index = window.location.href.split("/").pop();
   const onSkip = () => onSelect();
   let UnOccupiedArea, setUnOccupiedArea;
   if (!isNaN(index)) {
@@ -12,11 +13,13 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   }
 
   useEffect(() => {
-    let index = window.location.href.charAt(window.location.href.length - 1);
+    //let index = window.location.href.charAt(window.location.href.length - 1);
+    let index = window.location.href.split("/").pop();
     if (userType !== "employee" && formData?.IsAnyPartOfThisFloorUnOccupied?.i18nKey === "No") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       if (!isNaN(index)) {
-        let index = window.location.href.charAt(window.location.href.length - 1);
+        //let index = window.location.href.charAt(window.location.href.length - 1);
+        let index = window.location.href.split("/").pop();
         let unit = formData.units && formData.units[index];
         onSelect(config.key, unit, true, index);
       } else {

@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
 const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+  //let index = window.location.href.charAt(window.location.href.length - 1);
+  let index = window.location.href.split("/").pop();
   let validation = {};
   const onSkip = () => onSelect();
   const [plotSize, setplotSize] = useState(formData.units && formData.units[index] && formData.units[index].plotSize);

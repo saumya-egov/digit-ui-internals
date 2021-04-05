@@ -22,7 +22,8 @@ const IsAnyPartOfThisFloorUnOccupied = ({ t, config, onSelect, userType, formDat
   }
 
   function goNext() {
-    let index = window.location.href.charAt(window.location.href.length - 1);
+    //let index = window.location.href.charAt(window.location.href.length - 1);
+    let index = window.location.href.split("/").pop();
     onSelect(config.key, unOccupiedFloorPart, "", index);
   }
   return (

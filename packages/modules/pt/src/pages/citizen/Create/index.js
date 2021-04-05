@@ -20,10 +20,16 @@ const CreateProperty = ({ parentRoute }) => {
       lastchar = currentPath.charAt(currentPath.length - 1),
       isMultiple = false,
       nextPage;
-    if (Number(parseInt(currentPath)) || currentPath == "0") {
-      currentPath = pathname.slice(0, -2);
-      currentPath = currentPath.split("/").pop();
-      isMultiple = true;
+    if (Number(parseInt(currentPath)) || currentPath == "0" || currentPath == "-1") {
+      if (currentPath == "-1" || currentPath == "-2") {
+        currentPath = pathname.slice(0, -3);
+        currentPath = currentPath.split("/").pop();
+        isMultiple = true;
+      } else {
+        currentPath = pathname.slice(0, -2);
+        currentPath = currentPath.split("/").pop();
+        isMultiple = true;
+      }
     } else {
       isMultiple = false;
     }
@@ -66,6 +72,7 @@ const CreateProperty = ({ parentRoute }) => {
     } else {
       nextPage = isMultiple && nextStep !== "map" ? `${match.path}/${nextStep}/${index}` : `${match.path}/${nextStep}`;
     }
+
     redirectWithHistory(nextPage);
   };
 

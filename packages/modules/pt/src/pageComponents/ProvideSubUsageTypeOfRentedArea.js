@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, RadioButtons } from "@egovernments/digit-ui-react-components";
 
 const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+  //let index = window.location.href.charAt(window.location.href.length - 1);
+  let index = window.location.href.split("/").pop();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   //const [SubUsageTypeOfRentedArea, setSelfOccupied] = useState(formData?.ProvideSubUsageTypeOfRentedArea);
@@ -42,13 +43,15 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   }
 
   useEffect(() => {
-    let index = window.location.href.charAt(window.location.href.length - 1);
+    //let index = window.location.href.charAt(window.location.href.length - 1);
+    let index = window.location.href.split("/").pop();
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_OTHERS") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       //let index = window.location.href.charAt(window.location.href.length - 1);
       //onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
       if (!isNaN(index)) {
-        let index = window.location.href.charAt(window.location.href.length - 1);
+        //let index = window.location.href.charAt(window.location.href.length - 1);
+        let index = window.location.href.split("/").pop();
         let unit = formData.units && formData.units[index];
         onSelect(config.key, unit, true, index);
       } else {
@@ -60,10 +63,12 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   useEffect(() => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
-      let index = window.location.href.charAt(window.location.href.length - 1);
+      //let index = window.location.href.charAt(window.location.href.length - 1);
+      let index = window.location.href.split("/").pop();
       //onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
       if (!isNaN(index)) {
-        let index = window.location.href.charAt(window.location.href.length - 1);
+        //let index = window.location.href.charAt(window.location.href.length - 1);
+        let index = window.location.href.split("/").pop();
         let unit = formData.units && formData.units[index];
         onSelect(config.key, unit, true, index);
       } else {
@@ -76,7 +81,8 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
     if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       if (!isNaN(index)) {
-        let index = window.location.href.charAt(window.location.href.length - 1);
+        //let index = window.location.href.charAt(window.location.href.length - 1);
+        let index = window.location.href.split("/").pop();
         let unit = formData.units && formData.units[index];
         onSelect(config.key, unit, true, index);
       } else {
