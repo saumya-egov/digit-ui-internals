@@ -1,6 +1,6 @@
+import { CardLabel, Dropdown, FormStep, LabelFieldPair, RadioOrSelect } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
-import { FormStep, CardLabel, Dropdown, RadioButtons, LabelFieldPair, RadioOrSelect } from "@egovernments/digit-ui-react-components";
-import { useSelector } from "react-redux";
+import { cardBodyStyle } from "../utils";
 
 const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   const allCities = Digit.Hooks.pt.useTenants();
@@ -13,18 +13,20 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
       : pincode
       ? allCities.filter((city) => city?.pincode?.some((pin) => pin == pincode))
       : allCities;
-  const allLocalities = useSelector((state) => {
-    return state.common.revenue_localities;
-  });
-  const localitiesObj = JSON.parse(JSON.stringify(allLocalities));
-
-  if (pincode && city) {
-    const filteredLocalityList = localitiesObj[city?.code].filter((locality) => locality?.pincode?.some((item) => item.toString() == pincode));
-    localitiesObj[city?.code] = filteredLocalityList.length ? filteredLocalityList : allLocalities[city?.code];
-  }
 
   const [selectedCity, setSelectedCity] = useState(() => formData?.address?.city || null);
-  const [localities, setLocalities] = useState(null);
+
+  const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
+    selectedCity?.code,
+    "revenue",
+    {
+      enabled: !!selectedCity,
+    },
+    t
+  );
+
+  const [localities, setLocalities] = useState();
+
   const [selectedLocality, setSelectedLocality] = useState();
 
   useEffect(() => {
@@ -36,8 +38,8 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }, [cities]);
 
   useEffect(() => {
-    if (selectedCity) {
-      let __localityList = localitiesObj[selectedCity.code];
+    if (selectedCity && fetchedLocalities) {
+      let __localityList = fetchedLocalities;
       let filteredLocalityList = [];
 
       if (formData?.address?.locality) {
@@ -46,10 +48,14 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
 
       if (formData?.address?.pincode) {
         filteredLocalityList = __localityList.filter((obj) => obj.pincode?.find((item) => item == formData.address.pincode));
-        setSelectedLocality();
+        if (!formData?.address?.locality) setSelectedLocality();
       }
 
+      if (userType === "employee") {
+        onSelect(config.key, { ...formData[config.key], city: selectedCity });
+      }
       setLocalities(() => (filteredLocalityList.length > 0 ? filteredLocalityList : __localityList));
+
       if (filteredLocalityList.length === 1) {
         setSelectedLocality(filteredLocalityList[0]);
         if (userType === "employee") {
@@ -57,15 +63,12 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
         }
       }
     }
-  }, [selectedCity, formData?.address?.pincode]);
+  }, [selectedCity, formData?.address?.pincode, fetchedLocalities]);
 
   function selectCity(city) {
     setSelectedLocality(null);
     setLocalities(null);
     setSelectedCity(city);
-    if (userType === "employee") {
-      onSelect(config.key, { ...formData[config.key], city: city });
-    }
   }
 
   function selectLocality(locality) {
@@ -83,13 +86,12 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     return (
       <div>
         <LabelFieldPair>
-          <CardLabel style={{ marginBottom: "revert", width: "30%" }}>
+          <CardLabel className="card-label-smaller">
             {t("MYCITY_CODE_LABEL")}
             {config.isMandatory ? " * " : null}
           </CardLabel>
           <Dropdown
-            className="field"
-            style={{ width: "50%" }}
+            className="form-field"
             isMandatory
             selected={cities?.length === 1 ? cities[0] : selectedCity}
             disable={cities?.length === 1}
@@ -100,13 +102,12 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
           />
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel style={{ marginBottom: "revert", width: "30%" }}>
+          <CardLabel className="card-label-smaller">
             {t("PT_LOCALITY_LABEL")}
             {config.isMandatory ? " * " : null}
           </CardLabel>
           <Dropdown
-            className="field"
-            style={{ width: "50%" }}
+            className="form-field"
             isMandatory
             selected={selectedLocality}
             option={localities}
@@ -120,19 +121,21 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
-      <CardLabel>{`${t("MYCITY_CODE_LABEL")} *`}</CardLabel>
-      <RadioOrSelect options={cities} selectedOption={selectedCity} optionKey="code" onSelect={selectCity} t={t} />
-      {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} *`}</CardLabel>}
-      {selectedCity && localities && (
-        <RadioOrSelect
-          isMandatory={config.isMandatory}
-          options={localities}
-          selectedOption={selectedLocality}
-          optionKey="i18nkey"
-          onSelect={selectLocality}
-          t={t}
-        />
-      )}
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 23em)" }}>
+        <CardLabel>{`${t("MYCITY_CODE_LABEL")} *`}</CardLabel>
+        <RadioOrSelect options={cities} selectedOption={selectedCity} optionKey="code" onSelect={selectCity} t={t} />
+        {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} *`}</CardLabel>}
+        {selectedCity && localities && (
+          <RadioOrSelect
+            isMandatory={config.isMandatory}
+            options={localities}
+            selectedOption={selectedLocality}
+            optionKey="i18nkey"
+            onSelect={selectLocality}
+            t={t}
+          />
+        )}
+      </div>
     </FormStep>
   );
 };
