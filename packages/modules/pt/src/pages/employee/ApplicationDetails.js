@@ -35,6 +35,7 @@ const ApplicationDetails = () => {
       applicationData={applicationDetails?.applicationData}
       mutate={mutate}
       workflowDetails={workflowDetails}
+      businessService="PT"
     />
   );
 };

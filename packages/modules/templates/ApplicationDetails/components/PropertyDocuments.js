@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { CardSubHeader } from "@egovernments/digit-ui-react-components";
 
@@ -10,6 +10,16 @@ const PDFSvg = ({ width = 24, height = 24, style }) => (
 
 function PropertyDocuments({ documents }) {
   const { t } = useTranslation();
+  const filesArray = documents[0]?.values?.map((value) => value?.fileStoreId);
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [pdfFiles, setPdfFiles] = useState({});
+
+  useEffect(() => {
+    Digit.UploadServices.Filefetch(filesArray, tenantId.split(".")[0]).then((res) => {
+      console.log("%c 🧔: PropertyDocuments -> res ", "font-size:16px;background-color:#96d741;color:black;", res);
+      setPdfFiles(res?.data);
+    });
+  }, []);
 
   return (
     <div style={{ marginTop: "19px" }}>
@@ -18,10 +28,10 @@ function PropertyDocuments({ documents }) {
           <CardSubHeader style={{ marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{t(document?.title)}</CardSubHeader>
           <div style={{ display: "flex" }}>
             {document?.values?.map((value, index) => (
-              <div style={{ minWidth: "160px" }} key={index}>
+              <a target="_" href={pdfFiles[value.fileStoreId]?.split(",")[0]} style={{ minWidth: "160px" }} key={index}>
                 <PDFSvg width={140} height={140} style={{ background: "#f6f6f6", padding: "8px" }} />
                 <p style={{ marginTop: "8px" }}>{value?.title}</p>
-              </div>
+              </a>
             ))}
           </div>
         </React.Fragment>

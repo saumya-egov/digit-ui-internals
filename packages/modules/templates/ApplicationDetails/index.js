@@ -17,7 +17,6 @@ const ApplicationDetails = (props) => {
   const state = tenantId.split(".")[0];
   const { t } = useTranslation();
   const history = useHistory();
-  const queryClient = useQueryClient();
   let { id: applicationNumber } = useParams();
   const [displayMenu, setDisplayMenu] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
@@ -53,6 +52,8 @@ const ApplicationDetails = (props) => {
       case "REJECT":
       case "DECLINE":
       case "REASSING":
+      case "SENDBACKTOCITIZEN":
+      case "VERIFY":
         return setShowModal(true);
       case "SUBMIT":
       case "FSM_SUBMIT":
@@ -114,12 +115,14 @@ const ApplicationDetails = (props) => {
               tenantId={tenantId}
               state={state}
               id={applicationNumber}
+              applicationData={applicationDetails?.applicationData}
               closeModal={closeModal}
               submitAction={submitAction}
               actionData={workflowDetails?.data?.timeline}
+              businessService={props?.businessService}
             />
           ) : null}
-          <ApplicationDetailsToast showToast={showToast} closeToast={closeToast} />
+          <ApplicationDetailsToast t={t} showToast={showToast} closeToast={closeToast} />
           <ApplicationDetailsActionBar
             workflowDetails={workflowDetails}
             displayMenu={displayMenu}

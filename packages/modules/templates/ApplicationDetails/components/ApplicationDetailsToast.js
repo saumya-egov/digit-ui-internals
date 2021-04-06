@@ -1,7 +1,7 @@
 import React from "react";
 import { Toast } from "@egovernments/digit-ui-react-components";
 
-function ApplicationDetailsToast({ showToast, closeToast }) {
+function ApplicationDetailsToast({ t, showToast, closeToast }) {
   return (
     <React.Fragment>
       {showToast && (

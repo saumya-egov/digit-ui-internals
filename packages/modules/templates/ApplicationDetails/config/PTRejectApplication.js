@@ -1,7 +1,7 @@
 export const configPTRejectApplication = ({ t, action }) => {
   return {
     label: {
-      heading: `ES_FSM_ACTION_TITLE_${action}`,
+      heading: `ES_PT_ACTION_TITLE_${action}`,
       submit: `CS_COMMON_${action}`,
       cancel: "CS_COMMON_CANCEL",
     },
@@ -9,7 +9,7 @@ export const configPTRejectApplication = ({ t, action }) => {
       {
         body: [
           {
-            label: t("ES_FSM_ACTION_COMMENTS"),
+            label: t("ES_PT_ACTION_COMMENTS"),
             type: "textarea",
             populators: {
               name: "comments",
