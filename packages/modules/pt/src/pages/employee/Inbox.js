@@ -11,12 +11,6 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService 
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
 
-  const { isLoading: hookLoading, ...rest } = Digit.Hooks.useInboxGeneral({ tenantId, businessService, filters: { limit: 100 } });
-
-  useEffect(() => {
-    console.log("data from the hook", hookLoading, rest);
-  }, [hookLoading, rest]);
-
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [shouldSearch, setShouldSearch] = useState(false);
@@ -34,7 +28,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService 
   });
 
   let isMobile = window.Digit.Utils.browser.isMobile();
-  let paginationParms = isMobile
+  let paginationParams = isMobile
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
 
@@ -52,10 +46,17 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService 
       action: "Collect Tax",
     },
   ];
+
   const isLoading = false;
   const isIdle = false;
   const isSearchLoading = false;
   const totalCount = 1;
+
+  const { isLoading: hookLoading, ...rest } = Digit.Hooks.useInboxGeneral({ tenantId, businessService, filters: searchParams });
+
+  useEffect(() => {
+    console.log("data from the hook", hookLoading, rest);
+  }, [hookLoading, rest]);
 
   useEffect(() => {
     setPageOffset(0);
