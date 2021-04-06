@@ -1,7 +1,7 @@
 import { Loader, Modal, FormComposer } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 
-import { configPTRejectApplication, configPTVerifyApplication } from "../config";
+import { configPTRejectApplication, configPTVerifyApplication, configPTApproverApplication } from "../config";
 
 const Heading = (props) => {
   return <h1 className="heading-m">{props.label}</h1>;
@@ -23,25 +23,35 @@ const CloseBtn = (props) => {
 };
 
 const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction, actionData, applicationData, businessService }) => {
+  const { data: fieldInspectorData } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_FIELD_INSPECTOR" }], isActive: true });
+  const { data: approverData } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_APPROVER" }], isActive: true });
+
   const [config, setConfig] = useState({});
   const [defaultValues, setDefaultValues] = useState({});
-  const { data: fieldInspectorData } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_FIELD_INSPECTOR" }], isActive: true });
   const [fieldInspectors, setFieldInspectors] = useState([]);
   const [selectedFieldInspector, setSelectedFieldInspector] = useState({});
+  const [approvers, setApprovers] = useState([]);
+  const [selectedApprover, setSelectedApprover] = useState({});
 
   useEffect(() => {
     setFieldInspectors(fieldInspectorData?.Employees?.map((employee) => ({ uuid: employee?.uuid, name: employee?.user?.name })));
   }, [fieldInspectorData]);
 
+  useEffect(() => {
+    setApprovers(approverData?.Employees?.map((employee) => ({ uuid: employee?.uuid, name: employee?.user?.name })));
+  }, [approverData]);
+
   const businessServiceMap = {
     REJECT: "PT.CREATE",
     SENDBACKTOCITIZEN: "PT.CREATE",
     VERIFY: "PT.CREATE",
+    FORWARD: "PT.CREATE",
   };
 
   function submit(data) {
     let workflow = { action: action, comments: data?.comments, businessService: businessServiceMap[action], moduleName: businessService };
     if (action === "VERIFY") workflow["assignes"] = [selectedFieldInspector];
+    if (action === "FORWARD") workflow["assignes"] = [selectedApprover];
 
     submitAction({
       Property: {
@@ -70,11 +80,21 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
             setSelectedFieldInspector,
           })
         );
+      case "FORWARD":
+        return setConfig(
+          configPTApproverApplication({
+            t,
+            action,
+            approvers,
+            selectedApprover,
+            setSelectedApprover,
+          })
+        );
       default:
         console.log("default case");
         break;
     }
-  }, [action, fieldInspectors]);
+  }, [action, fieldInspectors, approvers]);
 
   return action && config.form ? (
     <Modal

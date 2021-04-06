@@ -38,6 +38,9 @@ import QACREATOR from "./userInfo/QACREATOR.json";
 import QAFSTP from "./userInfo/fstp.json";
 import QAADMIN from "./userInfo/QAADMIN.json";
 
+import QAPTDV from "./userInfo/QAPTDV.json";
+import QAPTFI from "./userInfo/QAPTFI.json";
+
 import UATSU from "./userInfo/UATSU.json";
 
 import NAWANSHAHR_QA_GRO from "./userInfo/qa-gro-nawanshahr.json";
@@ -74,6 +77,8 @@ const userInfo = {
   QAADMIN,
   QACREATOR,
   UATSU,
+  QAPTDV,
+  QAPTFI,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT"];
