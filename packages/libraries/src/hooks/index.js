@@ -54,6 +54,8 @@ import usePropertyMDMS from "./pt/usePropertyMDMS";
 import usePropertyAPI from "./pt/usePropertyAPI";
 import useTenantsPT from "./pt/useTenants";
 
+import useDssMdms from "./dss/useMDMS";
+
 const pgr = {
   useComplaintDetails,
   useComplaintsList,
@@ -102,6 +104,10 @@ const pt = {
   useTenants: useTenantsPT,
 };
 
+const dss = {
+  useMDMS: useDssMdms,
+}
+
 const Hooks = {
   useSessionStorage,
   useQueryParams,
@@ -119,6 +125,7 @@ const Hooks = {
   pgr,
   fsm,
   pt,
+  dss,
 };
 
 export default Hooks;

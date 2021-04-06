@@ -79,6 +79,12 @@ export const StoreService = {
       tenants: [{ code: "pb.amritsar" }],
     });
 
+    initData.modules.push({
+      module: "DSS",
+      code: "DSS",
+      tenants: [{ code: "pb.amritsar" }],
+    })
+
     const moduleTenants = initData.modules
       .map((module) => module.tenants)
       .flat()

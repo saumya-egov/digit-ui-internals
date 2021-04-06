@@ -1,0 +1,17 @@
+.metricsTable {
+  @apply bg-white m-sm px-md pt-md pb-lg shadow-card;
+  max-width: 440px;
+  border-radius: 4px;
+
+  .row {
+    @apply flex justify-between;
+  }
+
+  .lower_red {
+    color: rgb(229, 77, 66);
+  }
+
+  .lower_green {
+    color: #00703C;
+  }
+}
