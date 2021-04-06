@@ -46,6 +46,7 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
     SENDBACKTOCITIZEN: "PT.CREATE",
     VERIFY: "PT.CREATE",
     FORWARD: "PT.CREATE",
+    APPROVE: "PT.CREATE",
   };
 
   function submit(data) {
@@ -63,6 +64,7 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   useEffect(() => {
     switch (action) {
       case "REJECT":
+      case "APPROVE":
       case "SENDBACKTOCITIZEN":
         return setConfig(
           configPTRejectApplication({

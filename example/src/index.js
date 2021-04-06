@@ -40,6 +40,7 @@ import QAADMIN from "./userInfo/QAADMIN.json";
 
 import QAPTDV from "./userInfo/QAPTDV.json";
 import QAPTFI from "./userInfo/QAPTFI.json";
+import QAPTA from "./userInfo/QAPTA.json";
 
 import UATSU from "./userInfo/UATSU.json";
 
@@ -79,6 +80,7 @@ const userInfo = {
   UATSU,
   QAPTDV,
   QAPTFI,
+  QAPTA,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT"];

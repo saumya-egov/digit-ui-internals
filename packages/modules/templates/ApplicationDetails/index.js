@@ -55,6 +55,7 @@ const ApplicationDetails = (props) => {
       case "SENDBACKTOCITIZEN":
       case "VERIFY":
       case "FORWARD":
+      case "APPROVE":
         return setShowModal(true);
       case "SUBMIT":
       case "FSM_SUBMIT":
