@@ -1,7 +1,16 @@
 import React from "react";
-import { Dropdown } from "@egovernments/digit-ui-react-components";
+import { Dropdown, UploadFile } from "@egovernments/digit-ui-react-components";
 
-export const configPTApproverApplication = ({ t, action, approvers, selectedApprover, setSelectedApprover }) => {
+export const configPTApproverApplication = ({
+  t,
+  action,
+  approvers,
+  selectedApprover,
+  setSelectedApprover,
+  selectFile,
+  uploadedFile,
+  setUploadedFile,
+}) => {
   return {
     label: {
       heading: `ES_PT_ACTION_TITLE_${action}`,
@@ -32,6 +41,19 @@ export const configPTApproverApplication = ({ t, action, approvers, selectedAppr
             populators: {
               name: "comments",
             },
+          },
+          {
+            label: t("ES_PT_UPLOAD_FILE"),
+            populators: (
+              <UploadFile
+                // accept=".jpg"
+                onUpload={selectFile}
+                onDelete={() => {
+                  setUploadedFile(null);
+                }}
+                message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
+              />
+            ),
           },
         ],
       },

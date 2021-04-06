@@ -32,6 +32,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   const [selectedFieldInspector, setSelectedFieldInspector] = useState({});
   const [approvers, setApprovers] = useState([]);
   const [selectedApprover, setSelectedApprover] = useState({});
+  const [file, setFile] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     setFieldInspectors(fieldInspectorData?.Employees?.map((employee) => ({ uuid: employee?.uuid, name: employee?.user?.name })));
@@ -40,6 +43,33 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   useEffect(() => {
     setApprovers(approverData?.Employees?.map((employee) => ({ uuid: employee?.uuid, name: employee?.user?.name })));
   }, [approverData]);
+
+  function selectFile(e) {
+    setFile(e.target.files[0]);
+  }
+
+  useEffect(() => {
+    (async () => {
+      setError(null);
+      if (file) {
+        if (file.size >= 5242880) {
+          setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
+        } else {
+          try {
+            const response = await Digit.UploadServices.Filestorage("PT", file, tenantId?.split(".")[0]);
+            if (response?.data?.files?.length > 0) {
+              setUploadedFile(response?.data?.files[0]?.fileStoreId);
+            } else {
+              setError(t("CS_FILE_UPLOAD_ERROR"));
+            }
+          } catch (err) {
+            console.error("Modal -> err ", err);
+            setError(t("CS_FILE_UPLOAD_ERROR"));
+          }
+        }
+      }
+    })();
+  }, [file]);
 
   const businessServiceMap = {
     REJECT: "PT.CREATE",
@@ -53,6 +83,14 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
     let workflow = { action: action, comments: data?.comments, businessService: businessServiceMap[action], moduleName: businessService };
     if (action === "VERIFY") workflow["assignes"] = [selectedFieldInspector];
     if (action === "FORWARD") workflow["assignes"] = [selectedApprover];
+    if (uploadedFile)
+      workflow["documents"] = [
+        {
+          documentType: "Document - 1",
+          fileName: file?.name,
+          fileStoreId: uploadedFile,
+        },
+      ];
 
     submitAction({
       Property: {
@@ -70,6 +108,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
           configPTRejectApplication({
             t,
             action,
+            selectFile,
+            uploadedFile,
+            setUploadedFile,
           })
         );
       case "VERIFY":
@@ -80,6 +121,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
             fieldInspectors,
             selectedFieldInspector,
             setSelectedFieldInspector,
+            selectFile,
+            uploadedFile,
+            setUploadedFile,
           })
         );
       case "FORWARD":
@@ -90,6 +134,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
             approvers,
             selectedApprover,
             setSelectedApprover,
+            selectFile,
+            uploadedFile,
+            setUploadedFile,
           })
         );
       default:
