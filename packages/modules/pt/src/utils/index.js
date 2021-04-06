@@ -28,7 +28,7 @@ export const propertyCardBodyStyle = {
 
 /*   method to convert collected details to proeprty create object */
 export const convertToProperty = (data = {}) => {
-  console.log('jag', data)
+  console.log("jag", data);
   const { address, owners } = data;
   const loc = address?.locality.code;
   const formdata = {
@@ -41,7 +41,8 @@ export const convertToProperty = (data = {}) => {
         doorNo: address?.doorNo,
         buildingName: "NA",
         locality: {
-          code: loc && loc.split("_").length == 4 ? loc.split("_")[3] : "NA",
+          //code: loc && loc.split("_").length == 4 ? loc.split("_")[3] : "NA",
+          code: address?.locality?.code || "NA",
           area: address?.locality?.name,
         },
       },
@@ -74,18 +75,18 @@ export const convertToProperty = (data = {}) => {
           gender: owners?.gender?.value,
           isCorrespondenceAddress: null,
         }))) || [
-          {
-            name: "Jagan",
-            mobileNumber: "9965664222",
-            fatherOrHusbandName: "E",
-            emailId: null,
-            permanentAddress: "1111, 1111, Back Side 33 KVA Grid Patiala Road - Area1, Amritsar, ",
-            relationship: "FATHER",
-            ownerType: "FREEDOMFIGHTER",
-            gender: "MALE",
-            isCorrespondenceAddress: null,
-          },
-        ],
+        {
+          name: "Jagan",
+          mobileNumber: "9965664222",
+          fatherOrHusbandName: "E",
+          emailId: null,
+          permanentAddress: "1111, 1111, Back Side 33 KVA Grid Patiala Road - Area1, Amritsar, ",
+          relationship: "FATHER",
+          ownerType: "FREEDOMFIGHTER",
+          gender: "MALE",
+          isCorrespondenceAddress: null,
+        },
+      ],
       additionalDetails: {
         inflammable: false,
         heightAbove36Feet: false,
@@ -127,19 +128,17 @@ export const convertToProperty = (data = {}) => {
   return formdata;
 };
 
-
 /*   method to check not null  if not returns false*/
 export const checkForNotNull = (value = "") => {
-  return value && value != null && value != undefined && value != '' ? true : false;
-}
+  return value && value != null && value != undefined && value != "" ? true : false;
+};
 
 /*   method to check value  if not returns NA*/
 export const checkForNA = (value = "") => {
-  return checkForNotNull(value) ? value : 'PT_NA';
-}
+  return checkForNotNull(value) ? value : "PT_NA";
+};
 
 /*   method to check value  if not returns NA*/
 export const isPropertyVacant = (value = "") => {
-  return checkForNotNull(value) && value.includes('VACANT') ? true : false;
-}
-
+  return checkForNotNull(value) && value.includes("VACANT") ? true : false;
+};
