@@ -21,6 +21,10 @@ const requestInfo = () => ({
   authToken: Digit.UserService.getUser().access_token,
 });
 
+const authHeaders = () => ({
+  'auth-token': Digit.UserService.getUser().access_token,
+})
+
 const userServiceData = () => ({ userInfo: Digit.UserService.getUser().info });
 
 window.Digit = window.Digit || {};
@@ -45,6 +49,7 @@ export const Request = async ({
     };
     if (auth) {
       data.RequestInfo = { ...data.RequestInfo, ...requestInfo() };
+      headers = { ...headers, ...authHeaders() }
     }
     if (userService) {
       data.RequestInfo = { ...data.RequestInfo, ...userServiceData() };

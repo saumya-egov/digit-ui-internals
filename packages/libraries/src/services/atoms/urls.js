@@ -53,6 +53,10 @@ const Urls = {
     create: "/property-services/property/_create",
     search: "/property-services/property/_search",
   },
+
+  dss: {
+    dashboardConfig: "/dashboard-analytics/dashboard/getDashboardConfig"
+  }
 };
 
 export default Urls;
