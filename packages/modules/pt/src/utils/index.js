@@ -1,8 +1,55 @@
-export const getPropertyTypeLocale = (value) => {
-  return `PROPERTYTYPE_MASTERS_${value?.split(".")[0]}`;
+/*   method to check not null  if not returns false*/
+export const checkForNotNull = (value = "") => {
+  return value && value != null && value != undefined && value != "" ? true : false;
 };
 
-export const getPropertySubtypeLocale = (value) => `PROPERTYTYPE_MASTERS_${value}`;
+
+export const convertDotValues = (value = "") => {
+  return checkForNotNull(value) && (value.replaceAll && value.replaceAll('.', '_') || value.replace && value.replace('.', '_')) || 'NA';
+}
+
+
+
+export const convertToLocale = (value = "", key = "") => {
+  let convertedValue = convertDotValues(value);
+  if (convertedValue == 'NA') {
+    return 'PT_NA';
+  }
+  return `${key}_${convertedValue}`;
+}
+
+
+export const getPropertyTypeLocale = (value = "") => {
+  return convertToLocale(value, 'COMMON_PROPTYPE');
+}
+
+
+export const getPropertyUsageTypeLocale = (value = "") => {
+  return convertToLocale(value, 'COMMON_PROPUSGTYPE');
+}
+
+
+export const getPropertySubUsageTypeLocale = (value = "") => {
+  return convertToLocale(value, 'COMMON_PROPSUBUSGTYPE');
+}
+export const getPropertyOccupancyTypeLocale = (value = "") => {
+  return convertToLocale(value, 'PROPERTYTAX_OCCUPANCYTYPE');
+}
+
+
+export const getMohallaLocale = (value = "", tenantId = "") => {
+  let convertedValue = convertDotValues(tenantId);
+  if (convertedValue == 'NA' || !checkForNotNull(value)) {
+    return 'PT_NA';
+  }
+  convertedValue=convertedValue.toUpperCase();
+  return convertToLocale(value, `${convertedValue}_REVENUE`);
+}
+
+export const getPropertyOwnerTypeLocale = (value = "") => {
+  return convertToLocale(value, 'PROPERTYTAX_OWNERTYPE');
+}
+
 
 export const getFixedFilename = (filename = "", size = 5) => {
   if (filename.length <= size) {
@@ -149,10 +196,6 @@ export const convertToProperty = (data = {}) => {
   return formdata;
 };
 
-/*   method to check not null  if not returns false*/
-export const checkForNotNull = (value = "") => {
-  return value && value != null && value != undefined && value != "" ? true : false;
-};
 
 /*   method to check value  if not returns NA*/
 export const checkForNA = (value = "") => {
