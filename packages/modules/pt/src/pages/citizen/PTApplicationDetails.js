@@ -38,7 +38,7 @@ const PTApplicationDetails = () => {
     <React.Fragment>
       <Header>{t("PT_MUTATION_APPLICATION_DETAILS")}</Header>
       <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 10em)" }}>
-        <div >
+        <div>
           <LinkButton label={t("CS_COMMON_DOWNLOAD")} className="check-page-link-button pt-application-download-btn" onClick={handleDownloadPdf} />
         </div>
         <Card>
@@ -94,7 +94,11 @@ const PTApplicationDetails = () => {
               owners.map((owner, index) => (
                 <div key={index}>
                   <CardSubHeader>
-                    {owners.length != 1 && <span>{t("PT_OWNER_SUB_HEADER")} - {index + 1} </span>}
+                    {owners.length != 1 && (
+                      <span>
+                        {t("PT_OWNER_SUB_HEADER")} - {index + 1}{" "}
+                      </span>
+                    )}
                   </CardSubHeader>
                   <StatusTable>
                     <Row label={t("PT_COMMON_APPLICANT_NAME_LABEL")} text={`${t(owner?.name)}` || "NA"} />
@@ -112,8 +116,7 @@ const PTApplicationDetails = () => {
           <CardSubHeader>{t("PT_COMMON_DOCS")}</CardSubHeader>
           <div>
             {Array.isArray(docs) ? (
-              docs.length > 0 &&
-              <PropertyDocument documents={docs}></PropertyDocument>
+              docs.length > 0 && <PropertyDocument documents={docs}></PropertyDocument>
             ) : (
               <StatusTable>
                 <Row text="PT_NO_DOCUMENTS_MSG" />

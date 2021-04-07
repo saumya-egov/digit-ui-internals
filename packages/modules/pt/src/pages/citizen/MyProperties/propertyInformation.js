@@ -64,7 +64,10 @@ const PropertyInformation = () => {
                 label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")}
                 text={`${(Array.isArray(property) && property.units[0].usageCategory.toLowerCase()) || "NA"}`}
               />
-              <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${(Array.isArray(property) && property.units[0].occupancyType.toLowerCase()) || "NA"}`} />
+              <Row
+                label={t("PT_OCCUPANY_TYPE_LABEL")}
+                text={`${(Array.isArray(property) && property.units[0].occupancyType.toLowerCase()) || "NA"}`}
+              />
               <Row
                 label={t("PT_BUILTUP_AREA_LABEL")}
                 text={`${(Array.isArray(property) && property.units[0].constructionDetail?.builtUpArea) || "NA"}`}
@@ -94,10 +97,20 @@ const PropertyInformation = () => {
               owners.map((owner, index) => (
                 <div key={index}>
                   <CardSubHeader>
-                    {owners.length != 1 && <span>{t("PT_OWNER_SUB_HEADER")} - {index + 1} </span>}
+                    {owners.length != 1 && (
+                      <span>
+                        {t("PT_OWNER_SUB_HEADER")} - {index + 1}{" "}
+                      </span>
+                    )}
                   </CardSubHeader>
                   <StatusTable>
-                    <Row label={t("PT_COMMON_APPLICANT_NAME_LABEL")} text={`${owner?.name || "NA"}`} actionButton={<ActionButton jumpTo={`/digit-ui/citizen/pt/property/owner-history/${property.tenantId}/${property.propertyId}`} />} />
+                    <Row
+                      label={t("PT_COMMON_APPLICANT_NAME_LABEL")}
+                      text={`${owner?.name || "NA"}`}
+                      actionButton={
+                        <ActionButton jumpTo={`/digit-ui/citizen/pt/property/owner-history/${property.tenantId}/${property.propertyId}`} />
+                      }
+                    />
                     <Row label={t("PT_FORM3_GUARDIAN_NAME")} text={`${owner?.fatherOrHusbandName || "NA"}`} />
                     <Row label={t("PT_COMMON_GENDER_LABEL")} text={`${owner?.gender ? owner?.gender.toLowerCase() : "NA"}`} />
                     <Row
@@ -115,8 +128,7 @@ const PropertyInformation = () => {
           <CardSubHeader>{t("PT_COMMON_DOCS")}</CardSubHeader>
           <div>
             {Array.isArray(docs) ? (
-              docs.length > 0 &&
-              <PropertyDocument documents={docs}></PropertyDocument>
+              docs.length > 0 && <PropertyDocument documents={docs}></PropertyDocument>
             ) : (
               <StatusTable>
                 <Row text="PT_NO_DOCUMENTS_MSG" />

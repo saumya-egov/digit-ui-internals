@@ -31,6 +31,7 @@ import CitizenApp from "./pages/citizen";
 import PropertyInformation from "./pages/citizen/MyProperties/propertyInformation";
 import PTWFCaption from "./pageComponents/PTWFCaption";
 import PTWFReason from "./pageComponents/PTWFReason";
+import ProvideFloorNo from "./pageComponents/ProvideFloorNo";
 import propertyOwnerHistory from "./pages/citizen/MyProperties/propertyOwnerHistory";
 import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
 
@@ -64,8 +65,9 @@ const componentsToRegister = {
   PropertyFloorDetails,
   PropertyBasementDetails,
   PropertyInformation,
+  ProvideFloorNo,
   propertyOwnerHistory,
-  TransferDetails
+  TransferDetails,
 };
 
 const addComponentsToRegistry = () => {
