@@ -49,6 +49,8 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
         onChange={setCorrespondenceAddress}
         value={isCorrespondenceAddress}
         checked={isCorrespondenceAddress || false}
+        style={{paddingTop: "10px"}}
+        disable={false}
       />
     </FormStep>
   );
