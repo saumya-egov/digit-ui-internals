@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import config from "../chartconfig.json";
 import CustomAreaChart from "../components/CustomAreaChart";
 import CustomBarChart from "../components/CustomBarChart";
 import CustomPieChart from "../components/CustomPieChart";
@@ -30,4 +29,4 @@ const DashBoard = () => {
   );
 };
 
-export default DashBoard
+export default DashBoard;
