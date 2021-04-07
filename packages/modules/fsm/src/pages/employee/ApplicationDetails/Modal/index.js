@@ -59,6 +59,10 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   const [vehicleNo, setVehicleNo] = useState(null);
   const [vehicleMenu, setVehicleMenu] = useState([]);
   const [vehicle, setVehicle] = useState(null);
+  const [defaultValues, setDefautValue] = useState({
+    capacity: vehicle?.capacity,
+    wasteCollected: vehicle?.capacity,
+  });
   // const [toastError, setToastError] = useState(false);
   const { data: Reason, isLoading: isReasonLoading } = Digit.Hooks.fsm.useMDMS(stateCode, "FSM", "Reason", { staleTime: Infinity }, [
     "ReassignReason",
@@ -81,6 +85,10 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
       const [vehicle] = vehicleList.filter((item) => item.code === applicationData.vehicleType);
       setVehicleMenu([vehicle]);
       setVehicle(vehicle);
+      setDefautValue({
+        capacity: vehicle?.capacity,
+        wasteCollected: vehicle?.capacity,
+      });
     }
   }, [isVehicleDataLoaded, isSuccess]);
 
@@ -100,7 +108,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   }, [isSuccess, isDsoSuccess]);
 
   useEffect(() => {
-    reassignReason || (actionData && actionData[0] && actionData[0].comment?.length > 0) ? setFormValve(true) : setFormValve(false);
+    reassignReason || (actionData && actionData[0] && actionData[0].comment?.length > 0 && actionData[0]?.status === "DSO_REJECTED")
+      ? setFormValve(true)
+      : setFormValve(false);
   }, [reassignReason]);
 
   useEffect(() => {
@@ -128,6 +138,10 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   function selectVehicle(value) {
     // console.log("find vehicle details here", value)
     setVehicle(value);
+    setDefautValue({
+      capacity: value?.capacity,
+      wasteCollected: value?.capacity,
+    });
   }
 
   // function setTostError(errorMsg) {
@@ -157,12 +171,6 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
     // console.log("find fsm update object here",{ fsm: applicationData, workflow });
     submitAction({ fsm: applicationData, workflow });
   }
-
-  let defaultValues = {
-    capacity: vehicle?.capacity,
-    wasteCollected: vehicle?.capacity,
-  };
-
   useEffect(() => {
     switch (action) {
       case "DSO_ACCEPT":
@@ -202,7 +210,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
       case "REASSIGN":
       case "REASSING":
       case "FSM_REASSING":
-        dso && vehicle && (reassignReason || (actionData && actionData[0] && actionData[0].comment?.length > 0))
+        dso &&
+        vehicle &&
+        (reassignReason || (actionData && actionData[0] && actionData[0].comment?.length > 0 && actionData[0]?.status === "DSO_REJECTED"))
           ? setFormValve(true)
           : setFormValve(false);
         // console.log("find reasiign reason data here",Reason?.ReassignReason)
@@ -219,7 +229,8 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
             reassignReason,
             selectReassignReason,
             action,
-            showReassignReason: actionData && actionData[0] && actionData[0].comment?.length > 0 ? false : true,
+            showReassignReason:
+              actionData && actionData[0] && actionData[0].comment?.length > 0 && actionData[0]?.status === "DSO_REJECTED" ? false : true,
           })
         );
       case "COMPLETE":

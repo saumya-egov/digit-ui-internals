@@ -84,16 +84,16 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
 
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!ownershipCategory}>
-    <div style={cardBodyStyle}>
-       <RadioButtons
-        isMandatory={config.isMandatory}
-        options={getDropdwonForProperty(ownerShipdropDown) || []}
-        selectedOption={ownershipCategory}
-        optionsKey="i18nKey"
-        onSelect={selectedValue}
-        value={ownershipCategory}
-      />
-      </div>  
+      <div style={cardBodyStyle}>
+        <RadioButtons
+          isMandatory={config.isMandatory}
+          options={getDropdwonForProperty(ownerShipdropDown) || []}
+          selectedOption={ownershipCategory}
+          optionsKey="i18nKey"
+          onSelect={selectedValue}
+          value={ownershipCategory}
+        />
+      </div>
     </FormStep>
   );
 };

@@ -56,6 +56,7 @@
 @import "./pages/employee/container.scss";
 @import "./pages/employee/inbox.scss";
 @import "./pages/employee/response.scss";
+@import "./pages/employee/form-fields.scss";
 
 @import "./pages/citizen/payment/payment-type.scss";
 
@@ -102,6 +103,12 @@
 
 .check-page-link-button {
   color: #f47738 !important;
+}
+
+.pt-application-download-btn {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0px 8px;
 }
 
 .application-table-container {
@@ -222,7 +229,7 @@ input[type="number"] {
   }
 }
 
-.my-bills {
+.static {
   @apply flex flex-col;
   min-height: 85vh;
 
@@ -396,3 +403,4 @@ input[type="number"] {
 .payment-form-text-input-correction {
   width: 100% !important;
 }
+

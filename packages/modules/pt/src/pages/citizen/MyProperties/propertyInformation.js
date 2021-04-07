@@ -2,7 +2,9 @@ import { Card, CardSubHeader, Header, LinkButton, Loader, Row, StatusTable } fro
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
+import PropertyDocument from "../../../pageComponents/PropertyDocument";
 import { getFixedFilename } from "../../../utils";
+import { propertyCardBodyStyle } from "../../../utils";
 
 const PropertyInformation = () => {
   const { t } = useTranslation();
@@ -34,6 +36,7 @@ const PropertyInformation = () => {
   return (
     <React.Fragment>
       <Header>{t("PT_PROPERTY_INFORMATION")}</Header>
+      <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 10em)" }}>
       <Card>
         <StatusTable>
           <Row label={t("PT_PROPERTY_PTUID")} text={`${property.propertyId || "NA"}`} />
@@ -97,8 +100,11 @@ const PropertyInformation = () => {
                 <StatusTable>
                   <Row label={t("PT_COMMON_APPLICANT_NAME_LABEL")} text={`${owners?.name || "NA"}`} actionButton={<ActionButton jumpTo="" />} />
                   <Row label={t("PT_FORM3_GUARDIAN_NAME")} text={`${owners?.fatherOrHusbandName || "NA"}`} />
-                  <Row label={t("PT_COMMON_GENDER_LABEL")} text={`${owners?.gender.toLowerCase() || "NA"}`} />
-                  <Row label={t("PT_FORM3_OWNERSHIP_TYPE")} text={`${t(property?.ownershipCategory.toLowerCase().split(".")[1])}` || "NA"} />
+                  <Row label={t("PT_COMMON_GENDER_LABEL")} text={`${owners?.gender ? owners?.gender.toLowerCase() : "NA"}`} />
+                  <Row
+                    label={t("PT_FORM3_OWNERSHIP_TYPE")}
+                    text={`${property?.ownershipCategory ? t(property?.ownershipCategory.toLowerCase().split(".")[1]) : "NA"}`}
+                  />
                   <Row label={t("PT_FORM3_MOBILE_NUMBER")} text={`${t(owners?.mobileNumber)}` || "NA"} />
                   <Row label={t("PT_MUTATION_AUTHORISED_EMAIL")} text={`${t("NA")}`} />
                   <Row label={t("PT_MUTATION_TRANSFEROR_SPECIAL_CATEGORY")} text={`${t(owners?.ownerType).toLowerCase()}` || "NA"} />
@@ -111,17 +117,7 @@ const PropertyInformation = () => {
         <div>
           {Array.isArray(docs) ? (
             docs.length > 0 &&
-            docs.map((docs, index) => (
-              <div key="index">
-                <span>
-                  {t("PT_COMMON_DOCS")} - {index + 1}
-                </span>
-                <StatusTable>
-                  <Row label={t("PT_OWNERSHIP_DOCUMENT_TYPE")} text={`${t(docs?.documentType || "NA")}`} />
-                  <Row label={t("PT_OWNERSHIP_DOCUMENT_ID")} text={`${t(docs?.documentUid && getFixedFilename(docs.documentUid, 17) || 'NA')}`} />
-                </StatusTable>
-              </div>
-            ))
+            <PropertyDocument  documents={docs}></PropertyDocument>
           ) : (
             <StatusTable>
               <Row text="PT_NO_DOCUMENTS_MSG" />
@@ -129,6 +125,7 @@ const PropertyInformation = () => {
           )}
         </div>
       </Card>
+      </div>
     </React.Fragment>
   );
 };

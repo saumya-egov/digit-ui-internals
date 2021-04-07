@@ -24,7 +24,10 @@ const IsThisFloorSelfOccupied = ({ t, config, onSelect, userType, formData }) =>
   }
 
   function goNext() {
-    onSelect(config.key, selfOccupied);
+    //let index = window.location.href.charAt(window.location.href.length - 1);
+    let index = window.location.href.split("/").pop();
+    sessionStorage.setItem("IsThisFloorSelfOccupied", selfOccupied.i18nKey);
+    onSelect(config.key, selfOccupied, false, index);
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!selfOccupied}>

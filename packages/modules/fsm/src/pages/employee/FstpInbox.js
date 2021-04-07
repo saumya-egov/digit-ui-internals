@@ -13,8 +13,8 @@ const config = {
         const displayName = owner.name + (owner.userName ? `- ${owner.userName}` : "");
         const tripOwner = { ...owner, displayName };
         return { ...trip, tripOwner };
-      })
-    }
+      }),
+    };
   },
 };
 
@@ -27,7 +27,7 @@ const FstpInbox = () => {
   const { isLoading: isVehiclesLoading, data: vehicles } = Digit.Hooks.fsm.useVehiclesSearch({
     tenantId,
     filters: { registrationNumber: searchParams?.registrationNumber },
-    config: { enabled: searchParams?.registrationNumber?.length > 0 }
+    config: { enabled: searchParams?.registrationNumber?.length > 0 },
   });
   const { data: dsoData, isLoading: isDsoLoading, isSuccess: isDsoSuccess, error: dsoError } = Digit.Hooks.fsm.useDsoSearch(
     tenantId,
@@ -35,15 +35,15 @@ const FstpInbox = () => {
     { enabled: searchParams?.name?.length > 1 }
   );
   let filters = {
-    vehicleIds: vehicles !== undefined && searchParams?.registrationNumber?.length > 0 ? vehicles?.vehicle?.[0]?.id || 'null' : '',
-    tripOwnerIds: dsoData !== undefined && searchParams?.name?.length > 0 ? dsoData?.[0]?.ownerId || 'null' : '',
-    applicationStatus: searchParams?.applicationStatus 
-  }
+    vehicleIds: vehicles !== undefined && searchParams?.registrationNumber?.length > 0 ? vehicles?.vehicle?.[0]?.id || "null" : "",
+    tripOwnerIds: dsoData !== undefined && searchParams?.name?.length > 0 ? dsoData?.[0]?.ownerId || "null" : "",
+    applicationStatus: searchParams?.applicationStatus,
+  };
   const { isLoading, data: { totalCount, vehicleLog } = {}, isSuccess } = Digit.Hooks.fsm.useVehicleSearch({
     tenantId,
     filters,
     config,
-    options: { searchWithDSO: true }
+    options: { searchWithDSO: true },
   });
 
   const onSearch = (params = {}) => {

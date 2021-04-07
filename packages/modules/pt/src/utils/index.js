@@ -4,32 +4,36 @@ export const getPropertyTypeLocale = (value) => {
 
 export const getPropertySubtypeLocale = (value) => `PROPERTYTYPE_MASTERS_${value}`;
 
-export const getFixedFilename = (filename = '', size = 5) => {
+export const getFixedFilename = (filename = "", size = 5) => {
   if (filename.length <= size) {
     return filename;
   }
   return `${filename.substr(0, size)}...`;
-}
-
+};
 
 export const shouldHideBackButton = (config = []) => {
-  return config.filter(key => window.location.href.includes(key.screenPath)).length > 0 ? true : false;
-}
+  return config.filter((key) => window.location.href.includes(key.screenPath)).length > 0 ? true : false;
+};
 
-/*   style to keep the body height fixed accross screens */
+/*   style to keep the body height fixed across screens */
 export const cardBodyStyle = {
-  maxHeight: 'calc(100vh - 20em)',
-  overflowY: 'auto'
-}
+  maxHeight: "calc(100vh - 20em)",
+  overflowY: "auto",
+};
 
+export const propertyCardBodyStyle = {
+  maxHeight: "calc(100vh - 10em)",
+  overflowY: "auto",
+};
 
 /*   method to convert collected details to proeprty create object */
 export const convertToProperty = (data = {}) => {
+  console.log("jag", data);
   const { address, owners } = data;
   const loc = address?.locality.code;
   const formdata = {
     Property: {
-      tenantId: address?.city?.code || 'pb.amritsar',
+      tenantId: address?.city?.code || "pb.amritsar",
       address: {
         pincode: address?.pincode,
         landmark: address?.landmark,
@@ -37,7 +41,8 @@ export const convertToProperty = (data = {}) => {
         doorNo: address?.doorNo,
         buildingName: "NA",
         locality: {
-          code: loc && loc.split("_").length == 4 ? loc.split("_")[3] : "NA",
+          //code: loc && loc.split("_").length == 4 ? loc.split("_")[3] : "NA",
+          code: address?.locality?.code || "NA",
           area: address?.locality?.name,
         },
       },
@@ -58,28 +63,30 @@ export const convertToProperty = (data = {}) => {
       propertyType: "BUILTUP.SHAREDPROPERTY",
       noOfFloors: 1,
       ownershipCategory: "INDIVIDUAL.SINGLEOWNER",
-      owners: owners && owners.map((owners, index) => ({
-        name: owners?.name || 'Ajit',
-        mobileNumber: owners?.mobileNumber || "9965664222",
-        fatherOrHusbandName: owners?.fatherOrHusbandName,
-        emailId: null,
-        permanentAddress: owners?.permanentAddress,
-        relationship: owners?.relationship?.code,
-        ownerType: owners?.ownerType?.code || 'NONE',
-        gender: owners?.gender?.value,
-        isCorrespondenceAddress: null,
-      })) || [{
-        "name": "Jagan",
-        "mobileNumber": "9965664222",
-        "fatherOrHusbandName": "E",
-        "emailId": null,
-        "permanentAddress": "1111, 1111, Back Side 33 KVA Grid Patiala Road - Area1, Amritsar, ",
-        "relationship": "FATHER",
-        "ownerType": "FREEDOMFIGHTER",
-        "gender": "MALE",
-        "isCorrespondenceAddress": null
-      }],
-
+      owners: (owners &&
+        owners.map((owners, index) => ({
+          name: owners?.name || "Ajit",
+          mobileNumber: owners?.mobileNumber || "9965664222",
+          fatherOrHusbandName: owners?.fatherOrHusbandName,
+          emailId: null,
+          permanentAddress: owners?.permanentAddress,
+          relationship: owners?.relationship?.code,
+          ownerType: owners?.ownerType?.code || "NONE",
+          gender: owners?.gender?.value,
+          isCorrespondenceAddress: null,
+        }))) || [
+          {
+            name: "Jagan",
+            mobileNumber: "9965664222",
+            fatherOrHusbandName: "E",
+            emailId: null,
+            permanentAddress: "1111, 1111, Back Side 33 KVA Grid Patiala Road - Area1, Amritsar, ",
+            relationship: "FATHER",
+            ownerType: "FREEDOMFIGHTER",
+            gender: "MALE",
+            isCorrespondenceAddress: null,
+          },
+        ],
       additionalDetails: {
         inflammable: false,
         heightAbove36Feet: false,
@@ -119,4 +126,42 @@ export const convertToProperty = (data = {}) => {
     },
   };
   return formdata;
+};
+
+/*   method to check not null  if not returns false*/
+export const checkForNotNull = (value = "") => {
+  return value && value != null && value != undefined && value != "" ? true : false;
+};
+
+/*   method to check value  if not returns NA*/
+export const checkForNA = (value = "") => {
+  return checkForNotNull(value) ? value : "PT_NA";
+};
+
+/*   method to check value  if not returns NA*/
+export const isPropertyVacant = (value = "") => {
+  return checkForNotNull(value) && value.includes("VACANT") ? true : false;
+};
+
+/*   method to get required format from fielstore url*/
+export const pdfDownloadLink = (documents = {}, fileStoreId = '', format = "") => {
+  /* Need to enhance this util to return required format*/
+
+  let downloadLink = documents[fileStoreId] || '';
+  let differentFormats = downloadLink?.split(',') || [];
+  let fileURL = '';
+  differentFormats.length > 0  && differentFormats.map(link => {
+    if (!link.includes('large') && !link.includes('medium') && !link.includes('small')) {
+      fileURL = link;
+    }
+  })
+  return fileURL;
+};
+
+/*   method to get filename  from fielstore url*/
+export const pdfDocumentName = (documentLink = "",index=0) => {
+ let documentName=decodeURIComponent(documentLink.split("?")[0].split("/").pop().slice(13)) || `Document - ${index + 1}`;
+ return documentName;
 }
+
+
