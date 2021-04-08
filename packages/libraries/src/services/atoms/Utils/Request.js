@@ -22,8 +22,8 @@ const requestInfo = () => ({
 });
 
 const authHeaders = () => ({
-  'auth-token': Digit.UserService.getUser().access_token,
-})
+  "auth-token": Digit.UserService.getUser().access_token,
+});
 
 const userServiceData = () => ({ userInfo: Digit.UserService.getUser().info });
 
@@ -39,6 +39,7 @@ export const Request = async ({
   auth,
   userService,
   reciept = false,
+  authHeader = false,
 }) => {
   // console.log("params:", params);
   // console.log("in request", method);
@@ -49,7 +50,6 @@ export const Request = async ({
     };
     if (auth) {
       data.RequestInfo = { ...data.RequestInfo, ...requestInfo() };
-      headers = { ...headers, ...authHeaders() }
     }
     if (userService) {
       data.RequestInfo = { ...data.RequestInfo, ...userServiceData() };
@@ -58,6 +58,8 @@ export const Request = async ({
       data.RequestInfo = { ...data.RequestInfo, msgId: "string|en_IN" };
     }
   }
+
+  if (authHeader) headers = { ...headers, ...authHeaders() };
 
   let key = "";
   if (useCache) {

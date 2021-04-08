@@ -8,8 +8,8 @@ import MetricChart from "../components/MetricChart";
 const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateCode = tenantId.split(".")[0];
-  const {} = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
-  const {} = Digit.Hooks.dss.useDashboardConfig();
+  const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
+  const { data: dashboardConfig } = Digit.Hooks.dss.useDashboardConfig();
   return (
     <>
       <GenericChart header="Total Cummulative Collection (in lac)">

@@ -41,6 +41,7 @@ import QAADMIN from "./userInfo/QAADMIN.json";
 
 import UATSU from "./userInfo/UATSU.json";
 import UATCSR from "./userInfo/UATCSR.json";
+import UATHRMS from "./userInfo/UATHRMS.json";
 
 import NAWANSHAHR_QA_GRO from "./userInfo/qa-gro-nawanshahr.json";
 
@@ -77,6 +78,7 @@ const userInfo = {
   QACREATOR,
   UATSU,
   UATCSR,
+  UATHRMS,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS"];
