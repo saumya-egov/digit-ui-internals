@@ -37,13 +37,15 @@ export const useFetchPayment = ({ tenantId, consumerCode, businessService }, con
     }
   };
 
-  const { isLoading, error, isError, data } = useQuery(["paymentFetchDetails", tenantId, consumerCode, businessService], () => fetchBill(), config);
+  const retry = (failureCount, error) => {
+    if (error?.response?.data?.Errors?.[0]?.code === "EG_BS_BILL_NO_DEMANDS_FOUND") return false;
+    else return failureCount < 3;
+  };
+
+  const queryData = useQuery(["paymentFetchDetails", tenantId, consumerCode, businessService], () => fetchBill(), { retry, ...config });
 
   return {
-    isLoading,
-    error,
-    isError,
-    data,
+    ...queryData,
     revalidate: () => queryClient.invalidateQueries(["paymentFetchDetails", tenantId, consumerCode, businessService]),
   };
 };
