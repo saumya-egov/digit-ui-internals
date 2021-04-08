@@ -27,14 +27,7 @@ export const useFetchPayment = ({ tenantId, consumerCode, businessService }, con
   const queryClient = useQueryClient();
 
   const fetchBill = async () => {
-    try {
-      return Digit.PaymentService.fetchBill(tenantId, { consumerCode, businessService });
-    } catch (er) {
-      if (er?.res?.data?.code === "EG_BS_BILL_NO_DEMANDS_FOUND") {
-        console.log("in error", er);
-        return new Promise((res) => res("EG_BS_BILL_NO_DEMANDS_FOUND"));
-      } else throw er;
-    }
+    return Digit.PaymentService.fetchBill(tenantId, { consumerCode, businessService });
   };
 
   const retry = (failureCount, error) => {
