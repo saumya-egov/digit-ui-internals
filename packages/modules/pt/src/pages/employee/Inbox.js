@@ -6,7 +6,7 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
-const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService = "PT", translatePrefix = "CS_COMMON_PT_" }) => {
+const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService = "PT", translatePrefix = "CS_COMMON_FSM_", inboxArgs }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
@@ -32,27 +32,16 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService 
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
 
-  const applications = [
-    {
-      applicationNo: "PB-PT-2019-04-23-898898",
-      propertyId: "AM2345DE",
-      owner: "Sankar",
-      applicationType: "New Property",
-      status: "Pending DV",
-      sla: 12,
-      locality: "Ajit Nagar",
-      propertyStatus: "New Property",
-      taxDue: "Pending DV",
-      action: "Collect Tax",
-    },
-  ];
-
   const isLoading = false;
   const isIdle = false;
   const isSearchLoading = false;
   const totalCount = 1;
 
-  const { isLoading: hookLoading, ...rest } = Digit.Hooks.useInboxGeneral({ tenantId, businessService, filters: searchParams });
+  const { isLoading: hookLoading, searchResponseKey, businessIdsParamForSearch, businessIdAliasForSearch, ...rest } = Digit.Hooks.useInboxGeneral({
+    tenantId,
+    businessService,
+    filters: searchParams,
+  });
 
   useEffect(() => {
     console.log("data from the hook", hookLoading, rest);
@@ -150,7 +139,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService 
     if (isMobile) {
       return (
         <MobileInbox
-          data={isInbox ? applications : data}
+          data={rest.data}
           isLoading={isInbox ? isLoading || isIdle : isSearchLoading}
           isSearch={isSearch}
           searchFields={getSearchFields(userRoles)}
@@ -190,7 +179,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = true, businessService 
             parentRoute={parentRoute}
             searchParams={searchParams}
             sortParams={sortParams}
-            totalRecords={isInbox ? Number(applications?.[0]?.totalCount) : totalCount}
+            totalRecords={isInbox ? Number(rest?.data?.[0]?.totalCount) : totalCount}
           />
         </div>
       );

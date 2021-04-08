@@ -31,8 +31,8 @@ const fetchFilters = (filtersArg) => {
   if (sortOrder) {
     filtersObj.sortOrder = sortOrder;
   }
-  if (!total) return { limit, offset, sortBy, sortOrder, ...filtersObj };
-  else return { limit: 100000, offset: 0, sortBy, sortOrder, ...filtersObj };
+  if (!total) return { ...filtersObj };
+  else return { limit: 100000, ...filtersObj };
 };
 
 const inboxConfig = (tenantId, filters) => ({

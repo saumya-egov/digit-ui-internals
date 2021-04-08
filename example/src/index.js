@@ -37,6 +37,7 @@ import QACREDITOR from "./userInfo/QACREDITOR.json";
 import QACREATOR from "./userInfo/QACREATOR.json";
 
 import QAPTCE from "./userInfo/QAPTCE.json";
+import QAPTDV from "./userInfo/QAPTDV.json";
 
 import QAFSTP from "./userInfo/fstp.json";
 import QAADMIN from "./userInfo/QAADMIN.json";
@@ -74,6 +75,7 @@ const userInfo = {
   QAADMIN,
   QACREATOR,
   QAPTCE,
+  QAPTDV,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT"];

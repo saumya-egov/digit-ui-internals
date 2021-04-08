@@ -40,7 +40,7 @@ export const TableConfig = (t) => ({
     searchColumns: (props) => [
       {
         Header: t("ES_INBOX_UNIQUE_PROPERTY_ID"),
-        accessor: "propertyId",
+        accessor: "searchData.propertyId",
         disableSortBy: true,
         Cell: ({ row }) => {
           return (
