@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
-import PTLink from "./inbox/PTLink";
+import InboxLinks from "./inbox/InboxLink";
 import ApplicationTable from "./inbox/ApplicationTable";
 import Filter from "./inbox/Filter";
 import SearchApplication from "./inbox/search";
@@ -10,6 +10,8 @@ import SearchApplication from "./inbox/search";
 const DesktopInbox = ({ tableConfig, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
+
+  // searchData, workFlowData
 
   const columns = React.useMemo(() => tableConfig.inboxColumns(props) || [], []);
 
@@ -62,7 +64,7 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
     <div className="inbox-container">
       {!props.isSearch && (
         <div className="filters-container">
-          <PTLink parentRoute={props.parentRoute} />
+          <InboxLinks parentRoute={props.parentRoute} businessService={props.businessService} />
           <div>
             <Filter
               businessService={props.businessService}
