@@ -1,8 +1,55 @@
-export const getPropertyTypeLocale = (value) => {
-  return `PROPERTYTYPE_MASTERS_${value?.split(".")[0]}`;
+/*   method to check not null  if not returns false*/
+export const checkForNotNull = (value = "") => {
+  return value && value != null && value != undefined && value != "" ? true : false;
 };
 
-export const getPropertySubtypeLocale = (value) => `PROPERTYTYPE_MASTERS_${value}`;
+
+export const convertDotValues = (value = "") => {
+  return checkForNotNull(value) && (value.replaceAll && value.replaceAll('.', '_') || value.replace && value.replace('.', '_')) || 'NA';
+}
+
+
+
+export const convertToLocale = (value = "", key = "") => {
+  let convertedValue = convertDotValues(value);
+  if (convertedValue == 'NA') {
+    return 'PT_NA';
+  }
+  return `${key}_${convertedValue}`;
+}
+
+
+export const getPropertyTypeLocale = (value = "") => {
+  return convertToLocale(value, 'COMMON_PROPTYPE');
+}
+
+
+export const getPropertyUsageTypeLocale = (value = "") => {
+  return convertToLocale(value, 'COMMON_PROPUSGTYPE');
+}
+
+
+export const getPropertySubUsageTypeLocale = (value = "") => {
+  return convertToLocale(value, 'COMMON_PROPSUBUSGTYPE');
+}
+export const getPropertyOccupancyTypeLocale = (value = "") => {
+  return convertToLocale(value, 'PROPERTYTAX_OCCUPANCYTYPE');
+}
+
+
+export const getMohallaLocale = (value = "", tenantId = "") => {
+  let convertedValue = convertDotValues(tenantId);
+  if (convertedValue == 'NA' || !checkForNotNull(value)) {
+    return 'PT_NA';
+  }
+  convertedValue=convertedValue.toUpperCase();
+  return convertToLocale(value, `${convertedValue}_REVENUE`);
+}
+
+export const getPropertyOwnerTypeLocale = (value = "") => {
+  return convertToLocale(value, 'PROPERTYTAX_OWNERTYPE');
+}
+
 
 export const getFixedFilename = (filename = "", size = 5) => {
   if (filename.length <= size) {
@@ -21,11 +68,59 @@ export const cardBodyStyle = {
   overflowY: "auto",
 };
 
+export const propertyCardBodyStyle = {
+  maxHeight: "calc(100vh - 10em)",
+  overflowY: "auto",
+};
+
+export const getIntistitutionDetails = (data) => {
+  const { address, owners } = data;
+  let institution = {}, owner = [];
+  if (owners && owners.length > 0) {
+    if (data?.ownershipCategory?.value === "INSTITUTIONALPRIVATE" || data?.ownershipCategory?.value === "INSTITUTIONALGOVERNMENT") {
+      institution.designation = owners[0]?.designation;
+      institution.name = owners[0]?.inistitutionName;
+      institution.nameOfAuthorizedPerson = owners[0]?.name;
+      institution.tenantId = address?.city?.code;
+      institution.type = owners[0]?.inistitutetype?.value;
+      owner.push({
+        altContactNumber: owners[0]?.altContactNumber,
+        correspondenceAddress: owners[0]?.permanentAddress,
+        designation: owners[0]?.designation,
+        emailId: owners[0]?.emailId,
+        isCorrespondenceAddress: owners[0]?.isCorrespondenceAddress,
+        mobileNumber: owners[0]?.mobileNumber,
+        name: owners[0]?.name,
+        ownerType: ownr?.ownerType?.code || "NONE"
+      })
+      data.institution = institution;
+      data.owners = owner;
+    } else {
+      owners.map(ownr => {
+        owner.push({
+          emailId: ownr?.emailId,
+          fatherOrHusbandName: ownr?.fatherOrHusbandName,
+          gender: ownr?.gender?.value,
+          isCorrespondenceAddress: ownr?.isCorrespondenceAddress,
+          mobileNumber: ownr?.mobileNumber,
+          name: ownr?.name,
+          ownerType: ownr?.ownerType?.code || "NONE",
+          permanentAddress: ownr?.permanentAddress,
+          relationship: ownr?.relationship?.code
+        })
+      })
+      data.owners = owner;
+    }
+  }
+  return data;
+}
+
 /*   method to convert collected details to proeprty create object */
 export const convertToProperty = (data = {}) => {
-  console.log('jag', data)
+  console.log("jag", data);
   const { address, owners } = data;
   const loc = address?.locality.code;
+  data = getIntistitutionDetails(data);
   const formdata = {
     Property: {
       tenantId: address?.city?.code || "pb.amritsar",
@@ -36,7 +131,8 @@ export const convertToProperty = (data = {}) => {
         doorNo: address?.doorNo,
         buildingName: "NA",
         locality: {
-          code: loc && loc.split("_").length == 4 ? loc.split("_")[3] : "NA",
+          //code: loc && loc.split("_").length == 4 ? loc.split("_")[3] : "NA",
+          code: address?.locality?.code || "NA",
           area: address?.locality?.name,
         },
       },
@@ -56,31 +152,9 @@ export const convertToProperty = (data = {}) => {
       landArea: "2000",
       propertyType: "BUILTUP.SHAREDPROPERTY",
       noOfFloors: 1,
-      ownershipCategory: "INDIVIDUAL.SINGLEOWNER",
-      owners: (owners &&
-        owners.map((owners, index) => ({
-          name: owners?.name || "Ajit",
-          mobileNumber: owners?.mobileNumber || "9965664222",
-          fatherOrHusbandName: owners?.fatherOrHusbandName,
-          emailId: null,
-          permanentAddress: owners?.permanentAddress,
-          relationship: owners?.relationship?.code,
-          ownerType: owners?.ownerType?.code || "NONE",
-          gender: owners?.gender?.value,
-          isCorrespondenceAddress: null,
-        }))) || [
-          {
-            name: "Jagan",
-            mobileNumber: "9965664222",
-            fatherOrHusbandName: "E",
-            emailId: null,
-            permanentAddress: "1111, 1111, Back Side 33 KVA Grid Patiala Road - Area1, Amritsar, ",
-            relationship: "FATHER",
-            ownerType: "FREEDOMFIGHTER",
-            gender: "MALE",
-            isCorrespondenceAddress: null,
-          },
-        ],
+      ownershipCategory: data?.ownershipCategory?.value,
+      owners: data.owners,
+      institution: data.institution || null,
       additionalDetails: {
         inflammable: false,
         heightAbove36Feet: false,
@@ -123,18 +197,50 @@ export const convertToProperty = (data = {}) => {
 };
 
 
-/*   method to check not null  if not returns false*/
-export const checkForNotNull = (value = "") => {
-  return value && value != null && value != undefined && value != '' ? true : false;
-}
-
 /*   method to check value  if not returns NA*/
 export const checkForNA = (value = "") => {
-  return checkForNotNull(value) ? value : 'PT_NA';
-}
+  return checkForNotNull(value) ? value : "PT_NA";
+};
 
 /*   method to check value  if not returns NA*/
 export const isPropertyVacant = (value = "") => {
-  return checkForNotNull(value) && value.includes('VACANT') ? true : false;
-}
+  return checkForNotNull(value) && value.includes("VACANT") ? true : false;
+};
 
+/*   method to get required format from fielstore url*/
+export const pdfDownloadLink = (documents = {}, fileStoreId = "", format = "") => {
+  /* Need to enhance this util to return required format*/
+
+  let downloadLink = documents[fileStoreId] || "";
+  let differentFormats = downloadLink?.split(",") || [];
+  let fileURL = "";
+  differentFormats.length > 0 &&
+    differentFormats.map((link) => {
+      if (!link.includes("large") && !link.includes("medium") && !link.includes("small")) {
+        fileURL = link;
+      }
+    });
+  return fileURL;
+};
+
+/*   method to get filename  from fielstore url*/
+export const pdfDocumentName = (documentLink = "", index = 0) => {
+  let documentName = decodeURIComponent(documentLink.split("?")[0].split("/").pop().slice(13)) || `Document - ${index + 1}`;
+  return documentName;
+};
+
+/* methid to get date from epoch */
+export const convertEpochToDate = (dateEpoch) => {
+  // Returning null in else case because new Date(null) returns initial date from calender
+  if (dateEpoch) {
+    const dateFromApi = new Date(dateEpoch);
+    let month = dateFromApi.getMonth() + 1;
+    let day = dateFromApi.getDate();
+    let year = dateFromApi.getFullYear();
+    month = (month > 9 ? "" : "0") + month;
+    day = (day > 9 ? "" : "0") + day;
+    return `${day}/${month}/${year}`;
+  } else {
+    return null;
+  }
+};
