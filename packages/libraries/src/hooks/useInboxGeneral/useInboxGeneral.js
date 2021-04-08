@@ -37,12 +37,14 @@ const fetchFilters = (filtersArg) => {
 
 const inboxConfig = (tenantId, filters) => ({
   PT: {
+    services: ["PT.CREATE"],
     searchResponseKey: "Properties",
-    businessIdsParamForSearch: "propertyIds",
-    businessIdAliasForSearch: "propertyId",
+    businessIdsParamForSearch: "acknowledgementIds",
+    businessIdAliasForSearch: "acknowledgementId",
     _searchFn: () => PTService.search({ tenantId, filters }),
   },
   FSM: {
+    services: ["FSM"],
     searchResponseKey: "fsm",
     businessIdsParamForSearch: "applicationNos",
     businessIdAliasForSearch: "applicationNo",
@@ -94,11 +96,13 @@ const useInboxGeneral = ({
 
   let { uuid } = Digit.UserService.getUser()?.info || {};
 
+  const { services } = inboxConfig()[businessService];
+
   const workflowFilters = filtersObj.assignee ? { assignee: uuid } : {};
   const workFlowInstances = useQuery(
     ["WORKFLOW_INBOX", businessService, workflowFilters],
     () =>
-      Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businessService })
+      Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businessService: services.join() })
         .then(rawWfHandler)
         .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
     { enabled: isInbox, ...wfConfig }
@@ -114,6 +118,9 @@ const useInboxGeneral = ({
     ...filtersObj,
     [businessIdsParamForSearch]: filtersObj.applicationNos ? filtersObj.applicationNos : applicationNos.applicationNos,
   };
+
+  delete searchFilters.assignee;
+  delete searchFilters.locality;
 
   const { _searchFn } = inboxConfig(tenantId, searchFilters)[businessService];
 
