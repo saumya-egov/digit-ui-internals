@@ -82,7 +82,7 @@ export const setAddressDetails = (data) => {
   data.tenantId = address?.city?.code || "pb.amritsar";
   data.address = propAddress;
   return data;
-}
+};
 
 export const setOwnerDetails = (data) => {
   const { address, owners } = data;
@@ -142,10 +142,11 @@ export const setDocumentDetails = (data) => {
     fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
     documentType: address?.documents["ProofOfAddress"]?.documentType || "",
   });
-  owners && documents.push({
-    fileStoreId: owners[owners.length - 1]?.documents["proofIdentity"]?.fileStoreId || "",
-    documentType: owners[owners.length - 1]?.documents["proofIdentity"]?.documentType || "",
-  });
+  owners &&
+    documents.push({
+      fileStoreId: owners[owners.length - 1]?.documents["proofIdentity"]?.fileStoreId || "",
+      documentType: owners[owners.length - 1]?.documents["proofIdentity"]?.documentType || "",
+    });
   data.documents = documents;
   return data;
 };
@@ -156,20 +157,89 @@ const getUsageType = (data) => {
   } else {
     return data?.usageCategoryMajor?.code;
   }
-}
+};
+
+const getOccupancyType = (data) => {
+  if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+    return "SELFOCCUPIED";
+  } else if (data?.selfOccupied?.i18nKey === "Fully rented out") {
+    return "RENTED";
+  } else {
+    return "RENTED";
+  }
+};
+
+const getFloorNumber = (data) => {
+  let floorcode = data?.Floorno?.i18nKey;
+  if (floorcode.charAt(floorcode.length() - 3) === "_") {
+    console.log(parseInt(-floorcode.charAt(floorcode.length() - 3)));
+    return "-" + floorcode.charAt(floorcode.length() - 1);
+  } else {
+    return floorcode.charAt(floorcode.length() - 1);
+  }
+};
+
+const getBuiltUpAreashared = (data) => {
+  let flatplotsize;
+  if (isPropertyselfoccupied(data?.selfOccupied?.i18nKey)) {
+    flatplotsize = parseInt(data?.landarea?.floorarea);
+    if (ispropertyunoccupied(data?.IsAnyPartOfThisFloorUnOccupied?.i18nKey)) {
+      flatplotsize = flatplotsize + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
+    }
+  } else {
+    flatplotsize = parseInt(data?.landarea?.floorarea) + parseInt(data?.Constructiondetails?.RentArea);
+    if (!ispropertyunoccupied(data?.IsAnyPartOfThisFloorUnOccupied?.i18nKey)) {
+      flatplotsize = flatplotsize + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
+    }
+  }
+};
+
+const getOccupancyType = (data) => {
+  if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+    return "SELFOCCUPIED";
+  } else if (data?.selfOccupied?.i18nKey === "Fully rented out") {
+    return "RENTED";
+  } else {
+    return "RENTED";
+  }
+};
+
+const getFloorNumber = (data) => {
+  let floorcode = data?.Floorno?.i18nKey;
+  if (floorcode.charAt(floorcode.length() - 3) === "_") {
+    console.log(parseInt(-floorcode.charAt(floorcode.length() - 3)));
+    return "-" + floorcode.charAt(floorcode.length() - 1);
+  } else {
+    return floorcode.charAt(floorcode.length() - 1);
+  }
+};
+
+const getBuiltUpAreashared = (data) => {
+  let flatplotsize;
+  if (isPropertyselfoccupied(data?.selfOccupied?.i18nKey)) {
+    flatplotsize = parseInt(data?.landarea?.floorarea);
+    if (ispropertyunoccupied(data?.IsAnyPartOfThisFloorUnOccupied?.i18nKey)) {
+      flatplotsize = flatplotsize + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
+    }
+  } else {
+    flatplotsize = parseInt(data?.landarea?.floorarea) + parseInt(data?.Constructiondetails?.RentArea);
+    if (!ispropertyunoccupied(data?.IsAnyPartOfThisFloorUnOccupied?.i18nKey)) {
+      flatplotsize = flatplotsize + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
+    }
+  }
+};
 
 export const setPropertyDetails = (data) => {
-
-  let propertyDetails = {}
-  if (data?.PropertyType?.code?.includes('VACANT')) {
+  let propertyDetails = {};
+  if (data?.PropertyType?.code?.includes("VACANT")) {
     propertyDetails = {
       units: [],
       landArea: data?.landarea?.floorarea,
       propertyType: data?.PropertyType?.code,
       noOfFloors: 0,
       usageCategory: getUsageType(data),
-    }
-  } else if (data?.PropertyType?.code?.includes('SHAREDPROPERTY')) {
+    };
+  } else if (data?.PropertyType?.code?.includes("SHAREDPROPERTY")) {
     /*  update this case tulika*/
     propertyDetails = {
       units: [
@@ -188,9 +258,8 @@ export const setPropertyDetails = (data) => {
       noOfFloors: 1,
       superBuiltUpArea: 16.67,
       usageCategory: getUsageType(data),
-    }
-
-  } else if (data?.PropertyType?.code?.includes('INDEPENDENTPROPERTY')) {
+    };
+  } else if (data?.PropertyType?.code?.includes("INDEPENDENTPROPERTY")) {
     /*  update this case tulika*/
     propertyDetails = {
       units: [
@@ -209,10 +278,8 @@ export const setPropertyDetails = (data) => {
       noOfFloors: 1,
       superBuiltUpArea: 16.67,
       usageCategory: getUsageType(data),
-    }
-
+    };
   } else {
-
     propertyDetails = {
       units: [
         {
@@ -230,24 +297,21 @@ export const setPropertyDetails = (data) => {
       noOfFloors: 1,
       superBuiltUpArea: 16.67,
       usageCategory: getUsageType(data),
-    }
-
+    };
   }
 
   data.propertyDetails = propertyDetails;
   return data;
-}
+};
 
 /*   method to convert collected details to proeprty create object */
 export const convertToProperty = (data = {}) => {
   console.info("propertyFormData", data);
 
-
   data = setDocumentDetails(data);
   data = setOwnerDetails(data);
   data = setAddressDetails(data);
   data = setPropertyDetails(data);
-
 
   const formdata = {
     Property: {
@@ -268,11 +332,10 @@ export const convertToProperty = (data = {}) => {
 
       creationReason: "CREATE",
       source: "MUNICIPAL_RECORDS",
-      channel: "CFC_COUNTER"
-
+      channel: "CFC_COUNTER",
     },
   };
-  console.info("propertyCreated", formdata)
+  console.info("propertyCreated", formdata);
   return formdata;
 };
 
