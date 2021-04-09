@@ -58,6 +58,21 @@ const getCriteria = (tenantId, moduleDetails) => {
   };
 };
 
+const getGeneralCriteria = (tenantId, moduleCode, type) => ({
+  details: {
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: type,
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const getModuleServiceDefsCriteria = (tenantId, moduleCode) => ({
   type: "serviceDefs",
   details: {
@@ -744,5 +759,8 @@ export const MdmsService = {
   },
   getRentalDetails: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getRentalDetailsCategoryCriteria(tenantId, moduleCode), moduleCode);
+  },
+  getPaymentGateway: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
   },
 };
