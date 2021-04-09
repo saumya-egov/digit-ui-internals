@@ -79,7 +79,7 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   });
 
   useEffect(() => {
-    if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+    if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       if (!isNaN(index)) {
         //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -93,7 +93,6 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   });
 
   const getCode = () => {
-    debugger;
     for (i = 0; i < subusageoption.length; i++) {
       if (subusageoption[i]?.code.split(".").pop() === SubUsageTypeOfRentedArea.i18nKey.split("_").pop()) {
         return subusageoption[i]?.code;

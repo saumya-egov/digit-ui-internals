@@ -18,9 +18,11 @@ const IsAnyPartOfThisFloorUnOccupied = ({ t, config, onSelect, userType, formDat
   const data = [
     {
       i18nKey: "No",
+      code: "UNOCCUPIED",
     },
     {
       i18nKey: "Yes",
+      code: "UNOCCUPIED",
     },
   ];
   const onSkip = () => onSelect();

@@ -159,16 +159,6 @@ const getUsageType = (data) => {
   }
 };
 
-const getOccupancyType = (data) => {
-  if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
-    return "SELFOCCUPIED";
-  } else if (data?.selfOccupied?.i18nKey === "Fully rented out") {
-    return "RENTED";
-  } else {
-    return "RENTED";
-  }
-};
-
 const getFloorNumber = (data) => {
   let floorcode = data?.Floorno?.i18nKey;
   if (floorcode.charAt(floorcode.length - 3) === "_") {
@@ -180,10 +170,10 @@ const getFloorNumber = (data) => {
 
 export const getSuperBuiltUparea = (data) => {
   let builtUpArea;
-  if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
     builtUpArea = parseInt(data?.floordetails?.builtUpArea);
   } else {
-    if (data?.selfOccupied?.i18nKey === "Partially rented out") {
+    if (data?.selfOccupied?.i18nKey === "PT_PARTIALLY_RENTED_OUT") {
       builtUpArea = parseInt(data?.landarea?.floorarea) + parseInt(data?.Constructiondetails?.RentArea);
     } else {
       builtUpArea = parseInt(data?.Constructiondetails?.RentArea);
@@ -202,13 +192,13 @@ export const getusageCategory = (data, i) => {
     return data?.isResdential?.code;
   } else {
     if (data?.PropertyType?.code?.includes("INDEPENDENTPROPERTY")) {
-      if (data?.units[i]?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+      if (data?.units[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
         return data?.units[i]?.subuagecode;
       } else {
         return data?.units[i]?.Subusagetypeofrentedareacode;
       }
     } else {
-      if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+      if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
         return data?.subusagetype?.subuagecode;
       } else {
         return data?.Subusagetypeofrentedarea?.Subusagetypeofrentedareacode;
@@ -218,11 +208,10 @@ export const getusageCategory = (data, i) => {
 };
 
 export const getunits = (data) => {
-  debugger;
   let unit = [];
-  if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
     unit.push({
-      occupancyType: "SELFOCCUPIED",
+      occupancyType: data?.selfOccupied?.code,
       floorNo: getFloorNumber(data),
       constructionDetail: {
         builtUpArea: parseInt(data?.floordetails?.builtUpArea) - parseInt(data?.UnOccupiedArea?.UnOccupiedArea),
@@ -231,7 +220,7 @@ export const getunits = (data) => {
       usageCategory: getusageCategory(data),
     });
     unit.push({
-      occupancyType: "UNOCCUPIED",
+      occupancyType: data?.IsAnyPartOfThisFloorUnOccupied?.code,
       floorNo: getFloorNumber(data),
       constructionDetail: {
         builtUpArea: parseInt(data?.UnOccupiedArea?.UnOccupiedArea),
@@ -239,9 +228,9 @@ export const getunits = (data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data),
     });
-  } else if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes") {
+  } else if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes") {
     unit.push({
-      occupancyType: "SELFOCCUPIED",
+      occupancyType: data?.selfOccupied?.code,
       floorNo: getFloorNumber(data),
       constructionDetail: {
         builtUpArea: parseInt(data?.floordetails?.builtUpArea),
@@ -250,8 +239,7 @@ export const getunits = (data) => {
       usageCategory: getusageCategory(data),
     });
   } else {
-    debugger;
-    if (data?.selfOccupied?.i18nKey === "Partially rented out") {
+    if (data?.selfOccupied?.i18nKey === "PT_PARTIALLY_RENTED_OUT") {
       unit.push({
         occupancyType: "SELFOCCUPIED",
         floorNo: getFloorNumber(data),
@@ -263,7 +251,7 @@ export const getunits = (data) => {
       });
     }
     unit.push({
-      occupancyType: "RENTED",
+      occupancyType: data?.selfOccupied?.code,
       floorNo: getFloorNumber(data),
       constructionDetail: {
         builtUpArea: parseInt(data?.Constructiondetails?.RentArea),
@@ -273,7 +261,7 @@ export const getunits = (data) => {
     });
     if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
       unit.push({
-        occupancyType: "UNOCCUPIED",
+        occupancyType: data?.IsAnyPartOfThisFloorUnOccupied?.code,
         floorNo: getFloorNumber(data),
         constructionDetail: {
           builtUpArea: parseInt(data?.UnOccupiedArea?.UnOccupiedArea),
@@ -287,9 +275,9 @@ export const getunits = (data) => {
 };
 
 export const getunitarray = (i, unitsdata, unit, data) => {
-  if (unitsdata[i].selfOccupied?.i18nKey === "Yes, It is fully Self Occupied" && unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "Yes") {
+  if (unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "Yes") {
     unit.push({
-      occupancyType: "SELFOCCUPIED",
+      occupancyType: unitsdata[i].selfOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i].builtUpArea) - parseInt(unitsdata[i].UnOccupiedArea),
@@ -298,7 +286,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       usageCategory: getusageCategory(data, i),
     });
     unit.push({
-      occupancyType: "UNOCCUPIED",
+      occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i]?.UnOccupiedArea),
@@ -306,12 +294,9 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data, i),
     });
-  } else if (
-    unitsdata[i]?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied" &&
-    unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes"
-  ) {
+  } else if (unitsdata[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes") {
     unit.push({
-      occupancyType: "SELFOCCUPIED",
+      occupancyType: unitsdata[i].selfOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i]?.builtUpArea),
@@ -320,8 +305,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       usageCategory: getusageCategory(data, i),
     });
   } else {
-    debugger;
-    if (unitsdata[i]?.selfOccupied?.i18nKey === "Partially rented out") {
+    if (unitsdata[i]?.selfOccupied?.i18nKey === "PT_PARTIALLY_RENTED_OUT") {
       unit.push({
         occupancyType: "SELFOCCUPIED",
         floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
@@ -333,7 +317,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       });
     }
     unit.push({
-      occupancyType: "RENTED",
+      occupancyType: unitsdata[i].selfOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i]?.RentArea),
@@ -343,7 +327,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
     });
     if (unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
       unit.push({
-        occupancyType: "UNOCCUPIED",
+        occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
         floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
         constructionDetail: {
           builtUpArea: parseInt(unitsdata[i]?.UnOccupiedArea),
@@ -359,7 +343,6 @@ export const getunitarray = (i, unitsdata, unit, data) => {
 export const getunitsindependent = (data) => {
   let unit = [];
   let unitsdata = [];
-  debugger;
   unitsdata = data?.units;
 
   let i;
@@ -387,7 +370,6 @@ export const setPropertyDetails = (data) => {
     };
   } else if (data?.PropertyType?.code?.includes("SHAREDPROPERTY")) {
     /*  update this case tulika*/
-    debugger;
     propertyDetails = {
       units: getunits(data),
       landArea: data?.floordetails?.plotSize,
