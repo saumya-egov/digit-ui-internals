@@ -57,7 +57,7 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
   }
 
   const searchValidation = (data) => {
-    console.log("find input", watchSearch, data);
+    // console.log("find input", watchSearch, data);
     return watchSearch.applicationNos || watchSearch.mobileNumber ? true : false;
   };
 
