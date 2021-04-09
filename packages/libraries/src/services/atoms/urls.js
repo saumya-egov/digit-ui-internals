@@ -53,6 +53,7 @@ const Urls = {
     create: "/property-services/property/_create",
     search: "/property-services/property/_search",
     update: "/property-services/property/_update",
+    assessment_create: "/property-services/assessment/_create",
   },
 };
 

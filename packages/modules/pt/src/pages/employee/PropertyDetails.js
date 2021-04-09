@@ -4,12 +4,12 @@ import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails
 
 import { useParams } from "react-router-dom";
 
-const ApplicationDetails = () => {
+const PropertyDetails = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id: applicationNumber } = useParams();
 
-  const { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
+  let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
 
   const {
     isLoading: updatingApplication,
@@ -27,6 +27,21 @@ const ApplicationDetails = () => {
     // serviceData: applicationDetails,
   });
 
+  applicationDetails?.applicationDetails?.shift();
+  applicationDetails?.applicationDetails?.unshift({
+    title: "PT_TITLE_PROPERTY_INFORMATION",
+    values: [
+      {
+        title: "PT_TITLE_UNIQUE_PROPERTY_ID",
+        value: applicationNumber,
+      },
+      // TODO: add below item with value fetched
+      // {
+      //   title: 'PT_TITLE_TOTAL_PROPERTY_DUE', value: 0
+      // },
+    ],
+  });
+
   if (applicationDetails?.applicationData?.status === "ACTIVE") {
     workflowDetails = {
       ...workflowDetails,
@@ -34,7 +49,7 @@ const ApplicationDetails = () => {
         ...workflowDetails?.data,
         nextActions: [
           {
-            action: "VIEW_DETAILS",
+            action: "ASSESS_PROPERTY",
             auditDetails: null,
             roles: ["PT_CEMP"],
             tenantId: "pb",
@@ -57,4 +72,4 @@ const ApplicationDetails = () => {
   );
 };
 
-export default ApplicationDetails;
+export default PropertyDetails;

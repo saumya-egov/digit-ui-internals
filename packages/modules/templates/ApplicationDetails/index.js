@@ -5,8 +5,6 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 
 import ActionModal from "./Modal";
 
-import { useQueryClient } from "react-query";
-
 import { useHistory, useParams } from "react-router-dom";
 import ApplicationDetailsContent from "./components/ApplicationDetailsContent";
 import ApplicationDetailsToast from "./components/ApplicationDetailsToast";
@@ -24,6 +22,7 @@ const ApplicationDetails = (props) => {
   const [showToast, setShowToast] = useState(null);
 
   const { applicationDetails, isLoading, isDataLoading, applicationData, mutate, workflowDetails } = props;
+  const { mutate: assessmentMutate } = Digit.Hooks.pt.usePropertyAssessment(tenantId);
 
   useEffect(() => {
     if (showToast) {
@@ -56,6 +55,7 @@ const ApplicationDetails = (props) => {
       case "VERIFY":
       case "FORWARD":
       case "APPROVE":
+      case "ASSESS_PROPERTY":
         return setShowModal(true);
       case "SUBMIT":
       case "FSM_SUBMIT":
@@ -64,6 +64,8 @@ const ApplicationDetails = (props) => {
       case "FSM_PAY":
       case "ADDITIONAL_PAY_REQUEST":
         return history.push(`/digit-ui/employee/payment/collect/FSM.TRIP_CHARGES/${applicationNumber}`);
+      case "VIEW_DETAILS":
+        return history.push(`/digit-ui/employee/pt/property-details/${applicationNumber}`);
       default:
         console.log("default case");
         break;
@@ -80,19 +82,35 @@ const ApplicationDetails = (props) => {
   };
 
   const submitAction = (data) => {
-    mutate(data, {
-      onError: (error, variables) => {
-        setShowToast({ key: "error", action: error });
-        setTimeout(closeToast, 5000);
-      },
-      onSuccess: (data, variables) => {
-        setShowToast({ key: "success", action: selectedAction });
-        setTimeout(closeToast, 5000);
-        // queryClient.invalidateQueries("FSM_CITIZEN_SEARCH");
-        // const inbox = queryClient.getQueryData("FUNCTION_RESET_INBOX");
-        // inbox?.revalidate();
-      },
-    });
+    if (selectedAction === "ASSESS_PROPERTY") {
+      assessmentMutate(
+        { Assessment: data?.Assessment },
+        {
+          onError: (error, variables) => {
+            setShowToast({ key: "error", action: error });
+            setTimeout(closeToast, 5000);
+          },
+          onSuccess: (data, variables) => {
+            setShowToast({ key: "success", action: selectedAction });
+            setTimeout(closeToast, 5000);
+          },
+        }
+      );
+    } else {
+      mutate(data, {
+        onError: (error, variables) => {
+          setShowToast({ key: "error", action: error });
+          setTimeout(closeToast, 5000);
+        },
+        onSuccess: (data, variables) => {
+          setShowToast({ key: "success", action: selectedAction });
+          setTimeout(closeToast, 5000);
+          // queryClient.invalidateQueries("FSM_CITIZEN_SEARCH");
+          // const inbox = queryClient.getQueryData("FUNCTION_RESET_INBOX");
+          // inbox?.revalidate();
+        },
+      });
+    }
     closeModal();
   };
 

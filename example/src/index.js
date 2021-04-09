@@ -38,6 +38,7 @@ import QACREATOR from "./userInfo/QACREATOR.json";
 import QAFSTP from "./userInfo/fstp.json";
 import QAADMIN from "./userInfo/QAADMIN.json";
 
+import QAPTCE from "./userInfo/QAPTCE.json";
 import QAPTDV from "./userInfo/QAPTDV.json";
 import QAPTFI from "./userInfo/QAPTFI.json";
 import QAPTA from "./userInfo/QAPTA.json";
@@ -78,6 +79,7 @@ const userInfo = {
   QAADMIN,
   QACREATOR,
   UATSU,
+  QAPTCE,
   QAPTDV,
   QAPTFI,
   QAPTA,

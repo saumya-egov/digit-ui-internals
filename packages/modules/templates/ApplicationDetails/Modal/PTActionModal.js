@@ -1,7 +1,7 @@
 import { Loader, Modal, FormComposer } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 
-import { configPTRejectApplication, configPTVerifyApplication, configPTApproverApplication } from "../config";
+import { configPTRejectApplication, configPTVerifyApplication, configPTApproverApplication, configPTAssessProperty } from "../config";
 
 const Heading = (props) => {
   return <h1 className="heading-m">{props.label}</h1>;
@@ -25,6 +25,18 @@ const CloseBtn = (props) => {
 const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction, actionData, applicationData, businessService }) => {
   const { data: fieldInspectorData } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_FIELD_INSPECTOR" }], isActive: true });
   const { data: approverData } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_APPROVER" }], isActive: true });
+  const { data: financialYearsData } = Digit.Hooks.pt.useMDMS(
+    tenantId,
+    businessService,
+    "FINANCIAL_YEARLS",
+    {},
+    {
+      details: {
+        tenantId: "pb",
+        moduleDetails: [{ moduleName: "egf-master", masterDetails: [{ name: "FinancialYear", filter: "[?(@.module == 'PT')]" }] }],
+      },
+    }
+  );
 
   const [config, setConfig] = useState({});
   const [defaultValues, setDefaultValues] = useState({});
@@ -35,6 +47,14 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   const [file, setFile] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
+  const [financialYears, setFinancialYears] = useState([]);
+  const [selectedFinancialYear, setSelectedFinancialYear] = useState(null);
+
+  useEffect(() => {
+    if (financialYearsData && financialYearsData["egf-master"]) {
+      setFinancialYears(financialYearsData["egf-master"]?.["FinancialYear"]);
+    }
+  }, [financialYearsData]);
 
   useEffect(() => {
     setFieldInspectors(fieldInspectorData?.Employees?.map((employee) => ({ uuid: employee?.uuid, name: employee?.user?.name })));
@@ -97,6 +117,14 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
         ...applicationData,
         workflow,
       },
+      Assessment: {
+        financialYear: selectedFinancialYear?.name,
+        propertyId: applicationData?.propertyId,
+        tenantId,
+        source: applicationData?.source,
+        channel: applicationData?.channel,
+        assessmentDate: Date.now(),
+      },
     });
   }
   useEffect(() => {
@@ -139,11 +167,21 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
             setUploadedFile,
           })
         );
+      case "ASSESS_PROPERTY":
+        return setConfig(
+          configPTAssessProperty({
+            t,
+            action,
+            financialYears,
+            selectedFinancialYear,
+            setSelectedFinancialYear,
+          })
+        );
       default:
         console.log("default case");
         break;
     }
-  }, [action, fieldInspectors, approvers]);
+  }, [action, fieldInspectors, approvers, financialYears, selectedFinancialYear]);
 
   return action && config.form ? (
     <Modal
