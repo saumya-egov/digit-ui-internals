@@ -23,7 +23,7 @@ export const SelectPaymentType = (props) => {
   const history = useHistory();
 
   const { pathname } = useLocation();
-  const menu = ["AXIS"];
+  const menu = ["CCAVENUE"];
   const { consumerCode, businessService } = useParams();
   const tenantId = state?.tenantId || __tenantId || Digit.ULBService.getCurrentTenantId();
   const { control, handleSubmit } = useForm();
@@ -41,7 +41,7 @@ export const SelectPaymentType = (props) => {
         billId: billDetails.id,
         consumerCode: consumerCode,
         productInfo: "Common Payment",
-        gateway: "AXIS",
+        gateway: "CCAVENUE",
         taxAndPayments: [
           {
             billId: billDetails.id,
