@@ -46,7 +46,6 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   ];
   const getdisable = () => {
     if (index === "0" || isNaN(index)) {
-      debugger;
       return !plotSize && !builtUpArea;
     } else {
       return !builtUpArea;

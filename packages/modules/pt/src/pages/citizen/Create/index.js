@@ -16,7 +16,6 @@ const CreateProperty = ({ parentRoute }) => {
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_PROPERTY", {});
 
   const goNext = (skipStep, index, isAddMultiple, key) => {
-    debugger;
     let currentPath = pathname.split("/").pop(),
       lastchar = currentPath.charAt(currentPath.length - 1),
       isMultiple = false,
@@ -42,7 +41,6 @@ const CreateProperty = ({ parentRoute }) => {
       if (nextStep[sessionStorage.getItem("ownershipCategory")]) {
         nextStep = `${nextStep[sessionStorage.getItem("ownershipCategory")]}/${index}`;
       } else if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
-        debugger;
         if (`${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}` === "un-occupied-area") {
           nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}/${index}`;
         } else {
@@ -50,11 +48,10 @@ const CreateProperty = ({ parentRoute }) => {
         }
       } else if (nextStep[sessionStorage.getItem("area")]) {
         // nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
-        debugger;
+
         if (`${nextStep[sessionStorage.getItem("area")]}` !== "map") {
           nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
         } else {
-          debugger;
           nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
         }
       } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
@@ -68,10 +65,7 @@ const CreateProperty = ({ parentRoute }) => {
       if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
         nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
       } else if (nextStep[sessionStorage.getItem("area")]) {
-        debugger;
-        console.log("index rigth");
         nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
-        console.log(nextStep);
       } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
         nextStep = `${nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]}`;
       } else if (nextStep[sessionStorage.getItem("PropertyType")]) {
@@ -94,7 +88,6 @@ const CreateProperty = ({ parentRoute }) => {
       return redirectWithHistory(`${match.path}/check`);
     }
     if (!isNaN(nextStep.split("/").pop())) {
-      debugger;
       nextPage = `${match.path}/${nextStep}`;
     } else {
       nextPage = isMultiple && nextStep !== "map" ? `${match.path}/${nextStep}/${index}` : `${match.path}/${nextStep}`;

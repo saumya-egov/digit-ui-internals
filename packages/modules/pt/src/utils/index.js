@@ -194,41 +194,6 @@ const getBuiltUpAreashared = (data) => {
   }
 };
 
-const getOccupancyType = (data) => {
-  if (data?.selfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
-    return "SELFOCCUPIED";
-  } else if (data?.selfOccupied?.i18nKey === "Fully rented out") {
-    return "RENTED";
-  } else {
-    return "RENTED";
-  }
-};
-
-const getFloorNumber = (data) => {
-  let floorcode = data?.Floorno?.i18nKey;
-  if (floorcode.charAt(floorcode.length() - 3) === "_") {
-    console.log(parseInt(-floorcode.charAt(floorcode.length() - 3)));
-    return "-" + floorcode.charAt(floorcode.length() - 1);
-  } else {
-    return floorcode.charAt(floorcode.length() - 1);
-  }
-};
-
-const getBuiltUpAreashared = (data) => {
-  let flatplotsize;
-  if (isPropertyselfoccupied(data?.selfOccupied?.i18nKey)) {
-    flatplotsize = parseInt(data?.landarea?.floorarea);
-    if (ispropertyunoccupied(data?.IsAnyPartOfThisFloorUnOccupied?.i18nKey)) {
-      flatplotsize = flatplotsize + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
-    }
-  } else {
-    flatplotsize = parseInt(data?.landarea?.floorarea) + parseInt(data?.Constructiondetails?.RentArea);
-    if (!ispropertyunoccupied(data?.IsAnyPartOfThisFloorUnOccupied?.i18nKey)) {
-      flatplotsize = flatplotsize + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
-    }
-  }
-};
-
 export const setPropertyDetails = (data) => {
   let propertyDetails = {};
   if (data?.PropertyType?.code?.includes("VACANT")) {
@@ -368,6 +333,10 @@ export const isthere2Basement = (value = "") => {
 
 export const isPropertyselfoccupied = (value = "") => {
   return checkForNotNull(value) && value.includes("Self") ? true : false;
+};
+
+export const isPropertyPartiallyrented = (value = "") => {
+  return checkForNotNull(value) && value.includes("Partially") ? true : false;
 };
 
 export const ispropertyunoccupied = (value = "") => {
