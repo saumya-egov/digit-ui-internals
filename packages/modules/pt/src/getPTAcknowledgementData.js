@@ -6,12 +6,12 @@ import {
   getPropertySubUsageTypeLocale,
   getPropertyOccupancyTypeLocale,
   getMohallaLocale,
+  pdfDocumentName,
+  pdfDownloadLink,
 } from "./utils";
 
 const capitalize = (text) => text.substr(0, 1).toUpperCase() + text.substr(1);
 const ulbCamel = (ulb) => ulb.toLowerCase().split(" ").map(capitalize).join(" ");
-
-
 
 const getOwner=(application,t)=>{
   application.owners=application?.owners.filter(owner=>owner.status== "ACTIVE")||[];
@@ -95,7 +95,9 @@ const getAssessmentInfo=(application,t)=>{
   }
 }
 
-const getPTAcknowledgementData = (application, tenantInfo, t) => {
+const getPTAcknowledgementData = async(application, tenantInfo, t) => {
+  const filesArray = application?.documents?.map((value) => value?.fileStoreId);
+  const res=await Digit.UploadServices.Filefetch(filesArray, application?.tenantId.split(".")[0]);
   return {
     t: t,
     tenantId: tenantInfo?.code,
@@ -135,10 +137,11 @@ const getPTAcknowledgementData = (application, tenantInfo, t) => {
         title: t("PT_COMMON_DOCS"),
         values:
           application.documents.length > 0
-            ? application.documents.map((document) => {
+            ? application.documents.map((document,index) => {
+              let documentLink = pdfDownloadLink(res?.data, document?.fileStoreId);
                 return {
                   title: t(document?.documentType || "N/A"),
-                  value: (document?.documentUid && getFixedFilename(document.documentUid)) || "N/A",
+                  value: pdfDocumentName(documentLink, index) || "N/A",
                 };
               })
             : "NA",
