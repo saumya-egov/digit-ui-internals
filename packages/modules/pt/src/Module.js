@@ -1,6 +1,7 @@
 import { Header, HomeLink } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteMatch } from "react-router-dom";
 import Area from "./pageComponents/Area";
 import GroundFloorDetails from "./pageComponents/GroundFloorDetails";
 import IsAnyPartOfThisFloorUnOccupied from "./pageComponents/IsAnyPartOfThisFloorUnOccupied";
@@ -34,6 +35,9 @@ import PTWFReason from "./pageComponents/PTWFReason";
 import ProvideFloorNo from "./pageComponents/ProvideFloorNo";
 import propertyOwnerHistory from "./pages/citizen/MyProperties/propertyOwnerHistory";
 import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
+
+import EmployeeApp from "./pages/employee";
+import PTCard from "./components/PTCard";
 
 const componentsToRegister = {
   PropertyTax,
@@ -81,12 +85,11 @@ export const PTModule = ({ userType, tenants }) => {
   addComponentsToRegistry();
   console.log(moduleCode, "module integrated");
 
-  Digit.SessionStorage.set("PT_TENANTS", tenants);
-  if (userType === "citizen") {
-    return <CitizenApp />;
-  } else {
-    return null;
-  }
+  const { path, url } = useRouteMatch();
+
+  if (userType === "employee") {
+    return <EmployeeApp path={path} url={url} userType={userType} />;
+  } else return <CitizenApp />;
 };
 
 export const PTLinks = ({ matchPath, userType }) => {
@@ -107,4 +110,10 @@ export const PTLinks = ({ matchPath, userType }) => {
       </div>
     </React.Fragment>
   );
+};
+
+export const PTComponents = {
+  PTCard,
+  PTModule,
+  PTLinks,
 };
