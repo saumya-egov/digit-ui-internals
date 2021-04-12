@@ -41,7 +41,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
   };
 
   return (
-    <FormStep config={config} t={t} onSelect={goNext} isDisabled={!permanentAddress} >
+    <FormStep config={config} t={t} onSelect={goNext} isDisabled={!permanentAddress}>
       <TextInput isMandatory={false} optionKey="i18nKey" t={t} name="address" onChange={setOwnerPermanentAddress} value={permanentAddress} />
       {/* <CardLabel>{t("PT_OWNER_S_ADDRESS")}</CardLabel> */}
       <CheckBox
@@ -49,7 +49,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
         onChange={setCorrespondenceAddress}
         value={isCorrespondenceAddress}
         checked={isCorrespondenceAddress || false}
-        style={{paddingTop: "10px"}}
+        style={{ paddingTop: "10px" }}
       />
     </FormStep>
   );

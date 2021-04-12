@@ -9,12 +9,12 @@ const PDFSvg = ({ width = 20, height = 20, style }) => (
   </svg>
 );
 
-function PropertyDocument({ property={} }) {
+function PropertyDocument({ property = {} }) {
   const { t } = useTranslation();
   const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertyDocumentSearch({
-    property
+    property,
   });
-  const documents=property?.documents||[];
+  const documents = property?.documents || [];
 
   if (isLoading) {
     return <Loader />;

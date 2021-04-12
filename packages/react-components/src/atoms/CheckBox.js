@@ -25,7 +25,9 @@ const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, sty
           <CheckSvg />
         </p>
       </div>
-      <p className="label" style={style ? style : null}>{label}</p>
+      <p className="label" style={style ? style : null}>
+        {label}
+      </p>
     </div>
   );
 };

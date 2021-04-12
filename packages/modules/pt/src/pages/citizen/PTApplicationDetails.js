@@ -27,7 +27,7 @@ const PTApplicationDetails = () => {
   if (isLoading) {
     return <Loader />;
   }
-  const handleDownloadPdf = async() => {
+  const handleDownloadPdf = async () => {
     const applications = application || {};
     const tenantInfo = coreData.tenants.find((tenant) => tenant.code === applications.tenantId);
     const pdfData = await getPTAcknowledgementData({ ...applications }, tenantInfo, t);

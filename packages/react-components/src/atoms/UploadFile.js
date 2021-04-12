@@ -10,34 +10,34 @@ const getCitizenStyles = (value) => {
         whiteSpace: "nowrap",
         width: "100%",
         overflow: "hidden",
-        textOverflow: "ellipsis"
+        textOverflow: "ellipsis",
       },
       tagStyles: {
-        width: "90%"
+        width: "90%",
       },
       inputStyles: {
-        width: "44%"
+        width: "44%",
       },
       buttonStyles: {
         height: "auto",
         minHeight: "2rem",
-        width: "40%"
+        width: "40%",
       },
       tagContainerStyles: {
-        width: "60%"
-      }
-    }
+        width: "60%",
+      },
+    };
   } else {
     citizenStyles = {
       textStyles: {},
       tagStyles: {},
       inputStyles: {},
       buttonStyles: {},
-      tagContainerStyles: {}
-    }
+      tagContainerStyles: {},
+    };
   }
   return citizenStyles;
-}
+};
 
 const UploadFile = (props) => {
   const inpRef = useRef();
@@ -47,11 +47,11 @@ const UploadFile = (props) => {
     if (inpRef.current.files[0]) setHasFile(true);
     else setHasFile(false);
   };
-  switch(props.extraStyleName) {
+  switch (props.extraStyleName) {
     case "propertyCreate":
       extraStyles = getCitizenStyles("propertyCreate");
-    break;
-    default: 
+      break;
+    default:
       extraStyles = getCitizenStyles("");
   }
 
@@ -71,7 +71,9 @@ const UploadFile = (props) => {
         ) : (
           <div className="tag-container" style={extraStyles ? extraStyles?.tagContainerStyles : null}>
             <div className="tag" style={extraStyles ? extraStyles?.tagStyles : null}>
-              <span className="text" style={extraStyles ? extraStyles?.textStyles : null}>{inpRef.current.files[0]?.name?.slice(0, 20)}</span>
+              <span className="text" style={extraStyles ? extraStyles?.textStyles : null}>
+                {inpRef.current.files[0]?.name?.slice(0, 20)}
+              </span>
               <span onClick={() => handleDelete()}>
                 <Close className="close" />
               </span>
@@ -79,7 +81,14 @@ const UploadFile = (props) => {
           </div>
         )}
       </div>
-      <input style={extraStyles ? extraStyles?.inputStyles : null} ref={inpRef} type="file" name="file" accept={props.accept} onChange={(e) => props.onUpload(e)} />
+      <input
+        style={extraStyles ? extraStyles?.inputStyles : null}
+        ref={inpRef}
+        type="file"
+        name="file"
+        accept={props.accept}
+        onChange={(e) => props.onUpload(e)}
+      />
     </div>
   );
 };
