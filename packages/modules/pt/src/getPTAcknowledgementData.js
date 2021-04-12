@@ -82,7 +82,10 @@ const getAssessmentInfo = (application, t) => {
       { title: t("PT_ASSESSMENT_UNIT_USAGE_TYPE"), value: t(getPropertySubUsageTypeLocale(unit?.usageCategory)) || "N/A" },
       { title: t("PT_ASSESMENT_INFO_OCCUPLANCY"), value: t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) || "N/A" },
       { title: t("PT_FORM2_BUILT_AREA"), value: t(unit?.constructionDetail?.builtUpArea) || "N/A" },
-      { title: t("PT_FORM2_TOTAL_ANNUAL_RENT"), value: t(unit?.arv) || "N/A" },
+      {
+        title: t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ? t("PT_FORM2_TOTAL_ANNUAL_RENT") : t(""),
+        value: t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ? t(unit?.arv) : t(""),
+      },
     ];
     values.push(...doc);
   });

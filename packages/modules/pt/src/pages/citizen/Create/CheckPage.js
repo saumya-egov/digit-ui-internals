@@ -280,14 +280,14 @@ const CheckPage = ({ onSubmit, value = {} }) => {
               text={`${t(checkForNA(floordetails?.builtUpArea))} ${(floordetails?.builtUpArea && "sq.ft") || ""}`}
               actionButton={<ActionButton jumpTo="/digit-ui/citizen/pt/property/new-application/floordetails" />}
             />
-            {!isPropertyselfoccupied(selfOccupied?.i18nKey) && (
+            {isPropertyselfoccupied(selfOccupied?.i18nKey) && (
               <Row
                 label={t("PT_PROPERTY_RENTED_AREA_LABEL")}
                 text={`${t(checkForNA(Constructiondetails?.RentArea))} ${(Constructiondetails?.RentArea && "sq.ft") || ""}`}
                 actionButton={<ActionButton jumpTo="/digit-ui/citizen/pt/property/new-application/rental-details" />}
               />
             )}
-            {!isPropertyselfoccupied(selfOccupied?.i18nKey) && (
+            {isPropertyselfoccupied(selfOccupied?.i18nKey) && (
               <Row
                 label={t("PT_PROPERTY_ANNUAL_RENT_LABEL")}
                 text={`${t(checkForNA(Constructiondetails?.AnnualRent))} ${(Constructiondetails?.AnnualRent && "sq.ft") || ""}`}
