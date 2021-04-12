@@ -38,7 +38,7 @@ const SelectPincode = ({ t, config, onSelect, formData = {}, userType, register,
       const foundValue = tenants?.find((obj) => obj.pincode?.find((item) => item.toString() === e.target.value));
       if (foundValue) {
         const city = tenants.filter((obj) => obj.pincode?.find((item) => item == e.target.value))[0];
-        onSelect(config.key, { ...formData.address, city, pincode: e.target.value, slum: null, locality: null });
+        onSelect(config.key, { ...formData.address, city, pincode: e.target.value, slum: null });
       } else {
         onSelect(config.key, { ...formData.address, pincode: e.target.value });
         setPincodeServicability("CS_COMMON_PINCODE_NOT_SERVICABLE");
