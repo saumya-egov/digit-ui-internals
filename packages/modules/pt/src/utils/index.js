@@ -252,6 +252,7 @@ export const getunits = (data) => {
     }
     unit.push({
       occupancyType: data?.selfOccupied?.code,
+      arv: data?.Constructiondetails?.AnnualRent,
       floorNo: getFloorNumber(data),
       constructionDetail: {
         builtUpArea: parseInt(data?.Constructiondetails?.RentArea),
@@ -318,6 +319,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
     }
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
+      arv: unitsdata[i].AnnualRent,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i]?.RentArea),
