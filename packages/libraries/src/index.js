@@ -4,7 +4,7 @@ import mergeConfig from "./config/mergeConfig";
 import { useStore } from "./services/index";
 import { initI18n } from "./translations/index";
 
-import { Storage } from "./services/atoms/Utils/Storage";
+import { Storage, PersistantStorage } from "./services/atoms/Utils/Storage";
 import { UploadServices } from "./services/atoms/UploadServices";
 
 import { LocationService } from "./services/elements/Location";
@@ -39,6 +39,7 @@ const setupLibraries = (Library, props) => {
 
 const initLibraries = () => {
   setupLibraries("SessionStorage", Storage);
+  setupLibraries("PersistantStorage", PersistantStorage);
   setupLibraries("UserService", UserService);
   setupLibraries("ULBService", ULBService);
 
