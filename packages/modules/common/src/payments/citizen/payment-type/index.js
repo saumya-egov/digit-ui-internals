@@ -23,16 +23,19 @@ export const SelectPaymentType = (props) => {
   const history = useHistory();
 
   const { pathname } = useLocation();
-  const menu = ["AXIS"];
+  // const menu = ["AXIS"];
   const { consumerCode, businessService } = useParams();
   const tenantId = state?.tenantId || __tenantId || Digit.ULBService.getCurrentTenantId();
+  const stateTenant = tenantId.split(".")[0];
   const { control, handleSubmit } = useForm();
+  const { data: menu } = Digit.Hooks.useCommonMDMS(stateTenant, "DIGIT-UI", "PaymentGateway");
   const { data: paymentdetails } = Digit.Hooks.useFetchPayment({ tenantId: tenantId, consumerCode, businessService });
 
   const billDetails = paymentdetails?.Bill ? paymentdetails?.Bill[0] : {};
   console.log({ billDetails, payment: paymentdetails?.Bill });
 
   const onSubmit = async (d) => {
+    // console.log("find submitted data", d);
     const filterData = {
       Transaction: {
         tenantId: tenantId,
@@ -41,7 +44,7 @@ export const SelectPaymentType = (props) => {
         billId: billDetails.id,
         consumerCode: consumerCode,
         productInfo: "Common Payment",
-        gateway: "AXIS",
+        gateway: d.paymentType,
         taxAndPayments: [
           {
             billId: billDetails.id,
@@ -66,7 +69,15 @@ export const SelectPaymentType = (props) => {
       const redirectUrl = data?.Transaction?.redirectUrl;
       window.location = redirectUrl;
     } catch (error) {
-      console.log(error);
+      let messageToShow = "CS_PAYMENT_UNKNOWN_ERROR_ON_SERVER";
+      console.dir(error);
+      console.log(error.response);
+      if (error.response?.data?.Errors?.[0]) {
+        const { code, message } = error.response?.data?.Errors?.[0];
+        messageToShow = t(message);
+      }
+      window.alert(messageToShow);
+
       // TODO: add error toast for error.response.data.Errors[0].message
     }
   };

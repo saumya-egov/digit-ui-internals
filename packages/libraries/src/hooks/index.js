@@ -14,6 +14,7 @@ import {
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
 import useBoundaryLocalities from "./useLocalities";
+import useCommonMDMS from "./useMDMS";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -54,6 +55,7 @@ import useEmployeeSearch from "./useEmployeeSearch";
 
 import usePropertyMDMS from "./pt/usePropertyMDMS";
 import usePropertyAPI from "./pt/usePropertyAPI";
+import usePropertyDocumentSearch from "./pt/usePropertyDocumentSearch";
 import useTenantsPT from "./pt/useTenants";
 import usePtApplicationDetail from "./pt/useApplicationDetail";
 import usePtApplicationActions from "./pt/useApplicationActions";
@@ -105,6 +107,7 @@ const pt = {
   usePropertyPayment,
   usePropertyMDMS,
   usePropertyAPI,
+  usePropertyDocumentSearch,
   useTenants: useTenantsPT,
   useApplicationDetail: usePtApplicationDetail,
   useApplicationActions: usePtApplicationActions,
@@ -128,6 +131,7 @@ const Hooks = {
   useDemandSearch,
   useEmployeeSearch,
   useBoundaryLocalities,
+  useCommonMDMS,
   pgr,
   fsm,
   pt,

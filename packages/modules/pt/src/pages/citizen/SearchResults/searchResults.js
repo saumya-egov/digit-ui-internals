@@ -15,8 +15,9 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const result = Digit.Hooks.pt.usePropertySearch({ filters });
   const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
+
   const paymentDetails = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
-    { consumerCode, businessService: "PT" },
+    { consumerCode, businessService: "PT", mobileNumber: mobileNumber, consumerCodes: consumerCode },
     { enabled: consumerCode ? true : false }
   );
 

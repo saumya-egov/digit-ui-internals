@@ -1,14 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-const BillSumary = ({ billAccountDetails, total, businessService }) => {
+const BillSumary = ({ billAccountDetails, total, businessService, arrears }) => {
   const { t } = useTranslation();
 
   return (
     <React.Fragment>
       <div className="bill-summary">
         {billAccountDetails
-          .sort((a, b) => b.order - a.order)
+          .sort((a, b) => a.order - b.order)
           .map((amountDetails, index) => {
             return (
               <div key={index} className="bill-account-details">
@@ -17,6 +17,13 @@ const BillSumary = ({ billAccountDetails, total, businessService }) => {
               </div>
             );
           })}
+
+        {arrears && (
+          <div className="bill-account-details">
+            <div className="label">{t("COMMON_ARREARS")}</div>
+            <div className="value">₹ {arrears}</div>
+          </div>
+        )}
 
         <hr className="underline" />
         <div className="amount-details">

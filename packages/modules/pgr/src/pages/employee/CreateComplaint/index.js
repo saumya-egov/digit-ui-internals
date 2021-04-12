@@ -221,7 +221,7 @@ export const CreateComplaint = ({ parentUrl }) => {
           isMandatory: true,
           dependency: selectedCity && localities ? true : false,
           populators: (
-            <Dropdown isMandatory selected={selectedLocality} optionKey="code" id="locality" option={localities} select={selectLocality} t={t} />
+            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
           ),
         },
         {

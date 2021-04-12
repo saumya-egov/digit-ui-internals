@@ -8,12 +8,12 @@ const Localities = ({ selectLocality, tenantId, boundaryType }) => {
   const { t } = useTranslation();
 
   const { data: tenantlocalties, isLoading } = Digit.Hooks.useBoundaryLocalities(tenantId, boundaryType, {}, t);
-  // console.log("find data here", tenantlocalties)
+  console.log("find data here", tenantlocalties);
   if (isLoading) {
     return <Loader />;
   }
 
-  return <Dropdown option={tenantlocalties} keepNull={true} selected={null} select={selectLocality} optionKey={"code"} />;
+  return <Dropdown option={tenantlocalties} keepNull={true} selected={null} select={selectLocality} optionKey="i18nkey" />;
   //  <h1>ABCD</h1>
 };
 
