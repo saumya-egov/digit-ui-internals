@@ -79,23 +79,36 @@ const FsmBreadCrumb = ({ location }) => {
 
 const EmployeeApp = ({ path, url, userType }) => {
   const location = useLocation();
+
+  useEffect(() => {
+    if (!location?.pathname?.includes("application-details")) {
+      if (!location?.pathname?.includes("inbox")) {
+        Digit.SessionStorage.del("fsm/inbox/searchParams");
+      } else if (!location?.pathname?.includes("search")) {
+        Digit.SessionStorage.del("fsm/search/searchParams");
+      }
+    }
+  }, [location]);
+
   return (
     <Switch>
-      <div className="ground-container">
-        <FsmBreadCrumb location={location} />
-        <PrivateRoute exact path={`${path}/`} component={() => <FSMLinks matchPath={path} userType={userType} />} />
-        <PrivateRoute path={`${path}/inbox`} component={() => <Inbox parentRoute={path} isInbox={true} />} />
-        <PrivateRoute path={`${path}/fstp-inbox`} component={() => <FstpInbox parentRoute={path} />} />
-        <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
-        <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} />
-        <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} />
-        <PrivateRoute path={`${path}/fstp-operator-details/:id`} component={FstpOperatorDetails} />
-        <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
-        <PrivateRoute path={`${path}/application-audit/:id`} component={() => <ApplicationAudit parentRoute={path} />} />
-        <PrivateRoute path={`${path}/search`} component={() => <Inbox parentRoute={path} isSearch={true} />} />
-        <PrivateRoute path={`${path}/rate-view/:id`} component={() => <RateView parentRoute={path} />} />
-        <PrivateRoute path={`${path}/mark-for-disposal`} component={() => <MarkForDisposal parentRoute={path} />} />
-      </div>
+      <React.Fragment>
+        <div className="ground-container">
+          <FsmBreadCrumb location={location} />
+          <PrivateRoute exact path={`${path}/`} component={() => <FSMLinks matchPath={path} userType={userType} />} />
+          <PrivateRoute path={`${path}/inbox`} component={() => <Inbox parentRoute={path} isInbox={true} />} />
+          <PrivateRoute path={`${path}/fstp-inbox`} component={() => <FstpInbox parentRoute={path} />} />
+          <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
+          <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} />
+          <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} />
+          <PrivateRoute path={`${path}/fstp-operator-details/:id`} component={FstpOperatorDetails} />
+          <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
+          <PrivateRoute path={`${path}/application-audit/:id`} component={() => <ApplicationAudit parentRoute={path} />} />
+          <PrivateRoute path={`${path}/search`} component={() => <Inbox parentRoute={path} isSearch={true} />} />
+          <PrivateRoute path={`${path}/rate-view/:id`} component={() => <RateView parentRoute={path} />} />
+          <PrivateRoute path={`${path}/mark-for-disposal`} component={() => <MarkForDisposal parentRoute={path} />} />
+        </div>
+      </React.Fragment>
     </Switch>
   );
 };

@@ -4,6 +4,7 @@ import { cardBodyStyle } from "../utils";
 
 const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let index = 0;
+  let validation = {};
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [inistitutionName, setInistitutionName] = useState(formData.owners && formData.owners[index] && formData.owners[index].inistitutionName);
   const [inistitutetype, setInistitutetype] = useState(formData.owners && formData.owners[index] && formData.owners[index].inistitutetype);
@@ -97,7 +98,11 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="institutionName"
           onChange={setInistitution}
           value={inistitutionName}
-          pattern="^[a-zA-Z_ ]*$"
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[a-zA-Z-.`' ]*$",
+            title: t("PT_NAME_ERROR_MESSAGE"),
+          })}
         />
         <CardLabel>{t("PT_TYPE_OF_INSTITUTION")}</CardLabel>
         <Dropdown
@@ -110,7 +115,19 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
         />
         <CardHeader>{t("PT_AUTH_PERSON_DETAILS")}</CardHeader>
         <CardLabel>{t("PT_OWNER_NAME")}</CardLabel>
-        <TextInput isMandatory={false} optionKey="i18nKey" t={t} name="name" onChange={setInistituteName} value={name} pattern="^[a-zA-Z_ ]*$" />
+        <TextInput
+          isMandatory={false}
+          optionKey="i18nKey"
+          t={t}
+          name="name"
+          onChange={setInistituteName}
+          value={name}
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[a-zA-Z-.`' ]*$",
+            title: t("PT_NAME_ERROR_MESSAGE"),
+          })}
+        />
         <CardLabel>{t("PT_COMMON_AUTHORISED_PERSON_DESIGNATION")}</CardLabel>
         <TextInput
           isMandatory={false}
@@ -119,7 +136,11 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="designation"
           onChange={setDesignationName}
           value={designation}
-          pattern="^[a-zA-Z_ ]*$"
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[a-zA-Z-.`' ]*$",
+            title: t("PT_DESIGNATION_ERROR_MESSAGE"),
+          })}
         />
         <CardLabel>{t("PT_FORM3_MOBILE_NUMBER")}</CardLabel>
         <TextInput
@@ -129,7 +150,13 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="setMobileNo"
           onChange={setMobileNo}
           value={mobileNumber}
-          pattern="^([0]|((\+\d{1,2}[-]{0,1})))?\(?[6-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
+          type={"tel"}
+          {...(validation = {
+            isRequired: true,
+            pattern: "[6-9]{1}[0-9]{9}",
+            type: "tel",
+            title: t("CORE_COMMON_APPLICANT_ALT_NUMBER_INVALID"),
+          })}
         />
         <CardLabel>{t("PT_OWNERSHIP_INFO_TEL_PHONE_NO")}</CardLabel>
         <TextInput
@@ -139,10 +166,29 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="altContactNumber"
           onChange={setAltContactNo}
           value={altContactNumber}
-          pattern="^[0-9]{10,11}$"
+          type={"number"}
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[0-9]{10,11}$",
+            type: "number",
+            title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
+          })}
         />
         <CardLabel>{t("PT_FORM3_EMAIL_ID")}</CardLabel>
-        <TextInput isMandatory={false} optionKey="i18nKey" t={t} name="email" onChange={setEmail} value={emailId} />
+        <TextInput
+          isMandatory={false}
+          optionKey="i18nKey"
+          t={t}
+          name="email"
+          onChange={setEmail}
+          type="email"
+          value={emailId}
+          {...(validation = {
+            isRequired: true,
+            type: "email",
+            title: t("PT_EMAIL_ID_ERROR_MESSAGE"),
+          })}
+        />
       </div>
     </FormStep>
   );

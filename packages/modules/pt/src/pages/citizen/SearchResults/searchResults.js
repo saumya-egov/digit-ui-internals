@@ -15,8 +15,9 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const result = Digit.Hooks.pt.usePropertySearch({ filters });
   const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
+
   const paymentDetails = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
-    { consumerCode, businessService: "PT" },
+    { consumerCode, businessService: "PT", mobileNumber: mobileNumber, consumerCodes: consumerCode },
     { enabled: consumerCode ? true : false }
   );
 
@@ -62,16 +63,20 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   return (
     <div className="static" style={{ marginTop: "16px" }}>
       <div className="static-wrapper">
-        {header && <Header style={{ marginLeft: "8px" }}>{t(header)}</Header>}
+        {header && (
+          <Header style={{ marginLeft: "8px" }}>
+            {t(header)} ({searchResults?.length})
+          </Header>
+        )}
         <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
       </div>
 
-      <p style={{ marginLeft: "16px", marginTop: "16px" }}>
-        {t("PT_TEXT_NOT_ABLE_TO_FIND_THE_PROPERTY")}{" "}
-        <span className="link">
-          <Link to="/digit-ui/citizen/pt/property/search">{t("PT_COMMON_CLICK_HERE")}</Link>
-        </span>
-      </p>
+      <div style={{ marginLeft: "16px", marginTop: "16px" }}>
+        <p>{t("PT_TEXT_WANT_TO_ADD_A_NEW_PROPERTY")} </p>
+        <p className="link">
+          <Link to="/digit-ui/citizen/pt/property/new-application/info">{t("PT_COMMON_CLICK_HERE_TO_REGISTER_NEW_PROPERTY")}</Link>
+        </p>
+      </div>
     </div>
   );
 };

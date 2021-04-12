@@ -64,6 +64,21 @@ const getCriteria = (tenantId, moduleDetails) => {
   };
 };
 
+const getGeneralCriteria = (tenantId, moduleCode, type) => ({
+  details: {
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: type,
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const getModuleServiceDefsCriteria = (tenantId, moduleCode) => ({
   type: "serviceDefs",
   details: {
@@ -347,6 +362,45 @@ const getDocumentRequiredScreenCategory = (tenantId, moduleCode) => ({
   },
 });
 
+const getUsageCategoryList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "UsageCategory" }],
+      },
+    ],
+  },
+});
+
+const getPTPropertyTypeList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "PropertyType" }],
+      },
+    ],
+  },
+});
+
+const getPTFloorList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "Floor" }],
+      },
+    ],
+  },
+});
+
 const getReasonCriteria = (tenantId, moduleCode, type, payload) => ({
   type,
   details: {
@@ -448,7 +502,7 @@ const GetVehicleType = (MdmsRes) =>
       };
     });
 
-const GetSlumLocalityMapping = (MdmsRes) =>
+const GetSlumLocalityMapping = (MdmsRes, tenantId) =>
   MdmsRes["FSM"].Slum.filter((type) => type.active).reduce((prev, curr) => {
     // console.log("find prev",prev, curr)
     return prev[curr.locality]
@@ -458,7 +512,7 @@ const GetSlumLocalityMapping = (MdmsRes) =>
             ...prev[curr.locality],
             {
               ...curr,
-              i18nKey: `${curr.locality}_${curr.code}`,
+              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
             },
           ],
         }
@@ -467,7 +521,7 @@ const GetSlumLocalityMapping = (MdmsRes) =>
           [curr.locality]: [
             {
               ...curr,
-              i18nKey: `${curr.locality}_${curr.code}`,
+              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
             },
           ],
         };
@@ -508,6 +562,30 @@ const getDocumentRequiredScreen = (MdmsRes) => {
   });
 };
 
+const getUsageCategory = (MdmsRes) =>
+  MdmsRes["PropertyTax"].UsageCategory.filter((UsageCategory) => UsageCategory.active).map((UsageCategorylist) => {
+    return {
+      ...UsageCategorylist,
+      i18nKey: `PROPERTYTAX_BILLING_SLAB_${UsageCategorylist.code}`,
+    };
+  });
+
+const getPTPropertyType = (MdmsRes) =>
+  MdmsRes["PropertyTax"].UsageCategory.filter((PropertyType) => PropertyType.active).map((PTPropertyTypelist) => {
+    return {
+      ...UsageCategorylist,
+      i18nKey: `COMMON_PROPTYPE_${PTPropertyTypelist.code.replaceAll(".", "_")}`,
+    };
+  });
+
+const getFloorList = (MdmsRes) =>
+  MdmsRes["PropertyTax"].Floor.filter((PTFloor) => PTFloor.active).map((PTFloorlist) => {
+    return {
+      ...PTFloorlist,
+      i18nKey: `PROPERTYTAX_FLOOR_${PTFloorlist.code}`,
+    };
+  });
+
 const GetReasonType = (MdmsRes, type, moduleCode) =>
   Object.assign(
     {},
@@ -537,7 +615,7 @@ const GetPreFields = (MdmsRes) => MdmsRes["FSM"].PreFieldsConfig;
 
 const GetPostFields = (MdmsRes) => MdmsRes["FSM"].PostFieldsConfig;
 
-const transformResponse = (type, MdmsRes, moduleCode) => {
+const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
   switch (type) {
     case "citymodule":
       return GetCitiesWithi18nKeys(MdmsRes, moduleCode);
@@ -558,7 +636,7 @@ const transformResponse = (type, MdmsRes, moduleCode) => {
     case "VehicleType":
       return GetVehicleType(MdmsRes);
     case "Slum":
-      return GetSlumLocalityMapping(MdmsRes);
+      return GetSlumLocalityMapping(MdmsRes, tenantId);
     case "OwnerShipCategory":
       return GetPropertyOwnerShipCategory(MdmsRes);
     case "OwnerType":
@@ -567,6 +645,12 @@ const transformResponse = (type, MdmsRes, moduleCode) => {
       return getSubPropertyOwnerShipCategory(MdmsRes);
     case "Documents":
       return getDocumentRequiredScreen(MdmsRes);
+    case "UsageCategory":
+      return getUsageCategory(MdmsRes);
+    case "PTPropertyType":
+      return getPTPropertyType(MdmsRes);
+    case "Floor":
+      return getFloorList(MdmsRes);
     case "Reason":
       return GetReasonType(MdmsRes, type, moduleCode);
     case "RoleStatusMapping":
@@ -683,7 +767,7 @@ export const MdmsService = {
     }
     console.log("mdms request details ---->", mdmsDetails, moduleCode);
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
-    const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase());
+    const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase(), tenantId);
     const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
     PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
     return responseValue;
@@ -752,7 +836,19 @@ export const MdmsService = {
   getDocumentRequiredScreen: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getDocumentRequiredScreenCategory(tenantId, moduleCode), moduleCode);
   },
+  getUsageCategory: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getUsageCategoryList(tenantId, moduleCode), moduleCode);
+  },
+  getPTPropertyType: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getPTPropertyTypeList(tenantId, moduleCode), moduleCode);
+  },
+  getFloorList: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getPTFloorList(tenantId, moduleCode, type), moduleCode);
+  },
   getRentalDetails: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getRentalDetailsCategoryCriteria(tenantId, moduleCode), moduleCode);
+  },
+  getPaymentGateway: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
   },
 };

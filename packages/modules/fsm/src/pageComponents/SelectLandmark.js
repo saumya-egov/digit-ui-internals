@@ -36,14 +36,14 @@ const SelectLandmark = ({ t, config, onSelect, formData, userType }) => {
   }
 
   if (userType === "employee") {
-    return inputs?.map((input) => {
+    return inputs?.map((input, index) => {
       return (
-        <LabelFieldPair>
+        <LabelFieldPair key={index}>
           <CardLabel className="card-label-smaller">
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
-          <TextArea className="form-field" id={input.name} value={landmark} onChange={onChange} {...input.validation} />
+          <TextArea className="form-field" id={input.name} value={landmark} onChange={onChange} name={input.name || ""} {...input.validation} />
         </LabelFieldPair>
       );
     });

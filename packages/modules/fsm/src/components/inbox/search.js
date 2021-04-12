@@ -4,14 +4,17 @@ import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker
 import { useTranslation } from "react-i18next";
 
 const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFields, searchParams, isInboxPage }) => {
+  const storedSearchParams = isInboxPage ? Digit.SessionStorage.get("fsm/inbox/searchParams") : Digit.SessionStorage.get("fsm/search/searchParams");
+
   const { t } = useTranslation();
   const [applicationNo, setApplicationNo] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const { register, handleSubmit, reset, watch, control } = useForm({
-    defaultValues: searchParams,
+    defaultValues: storedSearchParams || searchParams,
   });
   const mobileView = innerWidth <= 640;
   const FSTP = Digit.UserService.hasAccess("FSM_EMP_FSTPO") || false;
+  const watchSearch = watch(["applicationNos", "mobileNumber"]);
 
   const onSubmitInput = (data) => {
     console.log("data", data);
@@ -28,6 +31,11 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
   function clearSearch() {
     const resetValues = searchFields.reduce((acc, field) => ({ ...acc, [field?.name]: "" }), {});
     reset(resetValues);
+    if (isInboxPage) {
+      Digit.SessionStorage.del("fsm/inbox/searchParams");
+    } else {
+      Digit.SessionStorage.del("fsm/search/searchParams");
+    }
     onSearch({});
   }
 
@@ -48,6 +56,11 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
     setMobileNo(e.target.value);
   }
 
+  const searchValidation = (data) => {
+    // console.log("find input", watchSearch, data);
+    return watchSearch.applicationNos || watchSearch.mobileNumber ? true : false;
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmitInput)}>
       <React.Fragment>
@@ -66,7 +79,15 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
                 <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
                   <Label>{input.label}</Label>
                   {input.type !== "date" ? (
-                    <TextInput {...input} inputRef={register} watch={watch} shouldUpdate={true} />
+                    <TextInput
+                      {...input}
+                      inputRef={register}
+                      {...register(input.name, {
+                        validate: searchValidation,
+                      })}
+                      watch={watch}
+                      shouldUpdate={true}
+                    />
                   ) : (
                     <Controller
                       render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
