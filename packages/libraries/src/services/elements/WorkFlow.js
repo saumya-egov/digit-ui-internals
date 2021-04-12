@@ -27,7 +27,6 @@ export const WorkflowService = {
     // console.log("getWorkflowDetails", tenantId, id, moduleCode, role);
     // console.log(Digit);
     const workflow = await Digit.WorkflowService.getByBusinessId(tenantId, id);
-    const something = await Digit.WorkflowService.init(tenantId, moduleCode);
     const businessServiceResponse = (await Digit.WorkflowService.init(tenantId, moduleCode))?.BusinessServices[0]?.states;
     if (workflow && workflow.ProcessInstances) {
       const processInstances = workflow.ProcessInstances;
