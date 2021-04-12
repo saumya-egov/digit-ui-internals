@@ -27,17 +27,17 @@ const PTApplicationDetails = () => {
   if (isLoading) {
     return <Loader />;
   }
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const applications = application || {};
     const tenantInfo = coreData.tenants.find((tenant) => tenant.code === applications.tenantId);
-    const data = getPTAcknowledgementData({ ...applications }, tenantInfo, t);
-    Digit.Utils.pdf.generate(data);
+    const pdfData = await getPTAcknowledgementData({ ...applications }, tenantInfo, t);
+    Digit.Utils.pdf.generate(pdfData);
   };
 
   return (
     <React.Fragment>
       <Header>{t("PT_MUTATION_APPLICATION_DETAILS")}</Header>
-      <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 10em)" }}>
+      <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 12em)" }}>
         <div>
           <LinkButton label={t("CS_COMMON_DOWNLOAD")} className="check-page-link-button pt-application-download-btn" onClick={handleDownloadPdf} />
         </div>
@@ -116,7 +116,7 @@ const PTApplicationDetails = () => {
           <CardSubHeader>{t("PT_COMMON_DOCS")}</CardSubHeader>
           <div>
             {Array.isArray(docs) ? (
-              docs.length > 0 && <PropertyDocument documents={docs}></PropertyDocument>
+              docs.length > 0 && <PropertyDocument property={application}></PropertyDocument>
             ) : (
               <StatusTable>
                 <Row text="PT_NO_DOCUMENTS_MSG" />

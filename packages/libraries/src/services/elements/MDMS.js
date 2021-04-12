@@ -1,5 +1,7 @@
+import { ApiCacheService } from "../atoms/ApiCacheService";
 import Urls from "../atoms/urls";
 import { Request, ServiceRequest } from "../atoms/Utils/Request";
+import { PersistantStorage } from "../atoms/Utils/Storage";
 
 const SortByName = (na, nb) => {
   if (na < nb) {
@@ -44,6 +46,10 @@ const initRequestBody = (tenantId) => ({
       {
         moduleName: "tenant",
         masterDetails: [{ name: "tenants" }, { name: "citymodule" }],
+      },
+      {
+        moduleName: "DIGIT-UI",
+        masterDetails: [{ name: "ApiCachingSettings" }],
       },
     ],
   },
@@ -662,6 +668,73 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
   }
 };
 
+const getCacheSetting = (moduleName) => {
+  return ApiCacheService.getSettingByServiceUrl(Urls.MDMS, moduleName);
+};
+
+const mergedData = {};
+const mergedPromises = {};
+const callAllPromises = (success, promises = [], resData) => {
+  promises.forEach((promise) => {
+    if (success) {
+      promise.resolve(resData);
+    } else {
+      promise.reject(resData);
+    }
+  });
+};
+const mergeMDMSData = (data, tenantId) => {
+  if (!mergedData[tenantId] || Object.keys(mergedData[tenantId]).length === 0) {
+    mergedData[tenantId] = data;
+  } else {
+    data.MdmsCriteria.moduleDetails.forEach((dataModuleDetails) => {
+      const moduleName = dataModuleDetails.moduleName;
+      const masterDetails = dataModuleDetails.masterDetails;
+      let found = false;
+      mergedData[tenantId].MdmsCriteria.moduleDetails.forEach((moduleDetail) => {
+        if (moduleDetail.moduleName === moduleName) {
+          found = true;
+          moduleDetail.masterDetails = [...moduleDetail.masterDetails, ...masterDetails];
+        }
+      });
+      if (!found) {
+        mergedData[tenantId].MdmsCriteria.moduleDetails.push(dataModuleDetails);
+      }
+    });
+  }
+};
+const debouncedCall = ({ serviceName, url, data, useCache, params }, resolve, reject) => {
+  if (!mergedPromises[params.tenantId] || mergedPromises[params.tenantId].length === 0) {
+    const cacheSetting = getCacheSetting();
+    setTimeout(() => {
+      let callData = JSON.parse(JSON.stringify(mergedData[params.tenantId]));
+      mergedData[params.tenantId] = {};
+      let callPromises = [...mergedPromises[params.tenantId]];
+      mergedPromises[params.tenantId] = [];
+      // console.log("calling merged mdms service", callData);
+      ServiceRequest({
+        serviceName,
+        url,
+        data: callData,
+        useCache,
+        params,
+      })
+        .then((data) => {
+          callAllPromises(true, callPromises, data);
+        })
+        .catch((err) => {
+          callAllPromises(false, callPromises, err);
+        });
+    }, cacheSetting.debounceTimeInMS || 500);
+  }
+  mergeMDMSData(data, params.tenantId);
+  if (!mergedPromises[params.tenantId]) {
+    mergedPromises[params.tenantId] = [];
+  }
+  mergedPromises[params.tenantId].push({ resolve, reject });
+  // console.log("debouncing mdms", JSON.stringify(data, null, 2), JSON.stringify(mergedData[params.tenantId], null, 2));
+};
+
 export const MdmsService = {
   init: (stateCode) =>
     ServiceRequest({
@@ -671,18 +744,33 @@ export const MdmsService = {
       useCache: true,
       params: { tenantId: stateCode },
     }),
-  call: (tenantId, details) =>
-    ServiceRequest({
-      serviceName: "mdmsCall",
-      url: Urls.MDMS,
-      data: getCriteria(tenantId, details),
-      useCache: true,
-      params: { tenantId },
-    }),
+  call: (tenantId, details) => {
+    return new Promise((resolve, reject) =>
+      debouncedCall(
+        {
+          serviceName: "mdmsCall",
+          url: Urls.MDMS,
+          data: getCriteria(tenantId, details),
+          useCache: true,
+          params: { tenantId },
+        },
+        resolve,
+        reject
+      )
+    );
+  },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
+    const key = `MDMS.${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
+    const inStoreValue = PersistantStorage.get(key);
+    if (inStoreValue) {
+      return inStoreValue;
+    }
     console.log("mdms request details ---->", mdmsDetails, moduleCode);
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
-    return transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase(), tenantId);
+    const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase(), tenantId);
+    const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
+    PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
+    return responseValue;
   },
   getServiceDefs: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getModuleServiceDefsCriteria(tenantId, moduleCode), moduleCode);

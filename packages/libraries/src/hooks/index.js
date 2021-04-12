@@ -55,6 +55,7 @@ import useEmployeeSearch from "./useEmployeeSearch";
 
 import usePropertyMDMS from "./pt/usePropertyMDMS";
 import usePropertyAPI from "./pt/usePropertyAPI";
+import usePropertyDocumentSearch from "./pt/usePropertyDocumentSearch";
 import useTenantsPT from "./pt/useTenants";
 
 const pgr = {
@@ -102,6 +103,7 @@ const pt = {
   usePropertyPayment,
   usePropertyMDMS,
   usePropertyAPI,
+  usePropertyDocumentSearch,
   useTenants: useTenantsPT,
 };
 

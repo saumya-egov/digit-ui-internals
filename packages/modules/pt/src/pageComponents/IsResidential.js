@@ -4,7 +4,10 @@ import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-re
 
 const IsResidential = ({ t, config, onSelect, userType, formData }) => {
   const [isResdential, setisResdential] = useState(formData?.isResdential);
-  const menu = [{ i18nKey: "PT_COMMON_YES" ,code:"RESIDENTIAL"}, { i18nKey: "PT_COMMON_NO" ,code:"NONRESIDENTIAL"}];
+  const menu = [
+    { i18nKey: "PT_COMMON_YES", code: "RESIDENTIAL" },
+    { i18nKey: "PT_COMMON_NO", code: "NONRESIDENTIAL" },
+  ];
 
   const onSkip = () => onSelect();
 
