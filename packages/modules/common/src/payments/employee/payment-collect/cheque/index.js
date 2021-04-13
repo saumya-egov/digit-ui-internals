@@ -50,9 +50,9 @@ export const ChequeDetailsComponent = (props) => {
         const { BANK, BRANCH } = await res.json();
         setBankName(BANK);
         setBankBranch(BRANCH?.replace("┬á", " "));
-      } else alert("Please enter correct IFSC Code!");
+      } else alert(t("CS_PAYMENT_INCORRECT_IFSC_CODE_ERROR"));
     } catch (er) {
-      alert("Please enter correct IFSC Code!");
+      alert(t("CS_PAYMENT_INCORRECT_IFSC_CODE_ERROR"));
     }
   };
 
