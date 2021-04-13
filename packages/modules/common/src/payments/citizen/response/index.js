@@ -20,7 +20,7 @@ export const SuccessfulPayment = (props) => {
 
   const { data: billData, isLoading: isBillDataLoading } = Digit.Hooks.useFetchPayment(
     { tenantId, consumerCode, businessService: business_service },
-    { enabled: allowFetchBill, retry: false }
+    { enabled: allowFetchBill, retry: false, staleTime: Infinity }
   );
 
   const payments = data?.payments;
