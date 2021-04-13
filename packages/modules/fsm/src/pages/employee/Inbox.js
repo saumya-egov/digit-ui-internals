@@ -70,6 +70,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
       limit: pageSize,
       offset: pageOffset,
       ...searchParams,
+      applicationStatus: searchParams?.applicationStatus?.code,
       fromDate: searchParams?.fromDate ? new Date(searchParams?.fromDate).getTime() : undefined,
       toDate: searchParams?.toDate ? new Date(searchParams?.toDate).getTime() : undefined,
     },
@@ -140,6 +141,11 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
           maxlength: 10,
           pattern: "[6-9][0-9]{9}",
           title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        },
+        {
+          label: t("ES_INBOX_STATUS"),
+          name: "applicationStatus",
+          type: "status",
         },
         {
           label: t("ES_SEARCH_FROM_DATE"),
