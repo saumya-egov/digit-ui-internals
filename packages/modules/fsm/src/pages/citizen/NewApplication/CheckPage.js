@@ -62,7 +62,7 @@ const CheckPage = ({ onSubmit, value }) => {
         <Row
           label={t("CS_CHECK_ADDRESS")}
           text={`${address?.doorNo?.trim() ? `${address?.doorNo?.trim()}, ` : ""} ${address?.street?.trim() ? `${address?.street?.trim()}, ` : ""}${t(
-            address?.locality.code
+            address?.locality?.i18nkey
           )}, ${t(address?.city.code)}`}
           actionButton={<ActionButton jumpTo="/digit-ui/citizen/fsm/new-application/pincode" />}
         />
