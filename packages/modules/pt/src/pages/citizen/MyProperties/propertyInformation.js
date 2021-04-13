@@ -22,7 +22,9 @@ const PropertyInformation = () => {
   if (isLoading) {
     return <Loader />;
   }
-
+  let flrno,
+    i = 0;
+  flrno = property?.units[0].floorNo;
   const ActionButton = ({ jumpTo }) => {
     const { t } = useTranslation();
     const history = useHistory();
@@ -43,10 +45,10 @@ const PropertyInformation = () => {
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
           <StatusTable>
-            <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${property.pincode || "NA"}`} />
+            <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${property.address?.pincode || "NA"}`} />
             <Row label={t("PT_COMMON_CITY")} text={`${property.address?.city || "NA"}`} />
             <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={t("PB_AMRITSAR_REVENUE_SUN04")} />
-            <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${property.street || "NA"}`} />
+            <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${property.address?.street || "NA"}`} />
             <Row label={t("PT_PROPERTY_ADDRESS_COLONY_NAME")} text={`${property.address?.buildingName || "NA"}`} />
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ASSESSMENT_DETAILS_HEADER")}</CardSubHeader>
@@ -56,7 +58,7 @@ const PropertyInformation = () => {
             <Row label={t("PT_ASSESMENT1_PLOT_SIZE")} text={`${property.landArea || "NA"}`} />
             <Row label={t("PT_ASSESMENT_INFO_NO_OF_FLOOR")} text={`${property.noOfFloors || "NA"}`} />
           </StatusTable>
-          <CardSubHeader>{t("Ground Floor")}</CardSubHeader>
+          {/* <CardSubHeader>{t("Ground Floor")}</CardSubHeader>
           <CardSubHeader>{t("Unit 1")}</CardSubHeader>
           <div style={{ border: "groove" }}>
             <StatusTable>
@@ -73,21 +75,36 @@ const PropertyInformation = () => {
                 text={`${(Array.isArray(property) && property.units[0].constructionDetail?.builtUpArea) || "NA"}`}
               />
             </StatusTable>
-          </div>
+          </div> */}
           <div>
             {Array.isArray(units) &&
-              units.length > 1 &&
+              units.length > 0 &&
               units.map((unit, index) => (
                 <div key={index}>
-                  <CardSubHeader>
-                    {index} {t("Floor")}
-                  </CardSubHeader>
-                  <CardSubHeader>{t("Unit 1")}</CardSubHeader>
-                  <StatusTable>
-                    <Row label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")} text={`${unit?.usageCategory.toLowerCase() || "NA"}`} />
-                    <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${unit?.occupancyType.toLowerCase() || "NA"}`} />
-                    <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${unit?.constructionDetail?.builtUpArea || "NA"}`} />
-                  </StatusTable>
+                  {(flrno !== unit?.floorNo ? (i = 1) : (i = i + 1)) && i === 1 && (
+                    <CardSubHeader>{`${t("PROPERTYTAX_FLOOR_")}${unit?.floorNo}`}</CardSubHeader>
+                  )}
+                  <div style={{ border: "groove" }}>
+                    <CardSubHeader>
+                      {t("Unit")} {i}
+                    </CardSubHeader>
+                    {(true ? (flrno = unit?.floorNo) : console.log("")) && (
+                      <StatusTable>
+                        <Row
+                          label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")}
+                          text={
+                            `${t(
+                              (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
+                                (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory) +
+                                (property.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
+                            )}` || "NA"
+                          }
+                        />
+                        <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t("PROPERTYTAX_OCCUPANCYTYPE_" + unit?.occupancyType)}` || "NA"} />
+                        <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${unit?.constructionDetail?.builtUpArea || "NA"}`} />
+                      </StatusTable>
+                    )}
+                  </div>
                 </div>
               ))}
           </div>
