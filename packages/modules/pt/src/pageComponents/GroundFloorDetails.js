@@ -24,9 +24,9 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   function setPropertybuiltUpArea(e) {
     setbuiltUpArea(e.target.value);
   }
-  const inputs = [
+  /* const inputs = [
     {
-      label: "Plot Size(sq.yd)*",
+      label: "PT_FLOOR_DETAILS_PLOT_SIZE_LABEL",
       type: "text",
       name: "PlotSize",
       validation: {
@@ -43,7 +43,7 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       },
       error: "CORE_COMMON_AREA_INVALID",
     },
-  ];
+  ]; */
   const getdisable = () => {
     if (index === "0" || isNaN(index)) {
       return !plotSize && !builtUpArea;

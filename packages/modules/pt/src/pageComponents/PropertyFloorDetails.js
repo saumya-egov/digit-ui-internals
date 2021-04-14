@@ -6,13 +6,16 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData }) => {
 
   const menu = [
     {
-      i18nKey: "Ground Floor Only",
+      //i18nKey: "Ground Floor Only",
+      i18nKey: "PT_GROUND_FLOOR_OPTION",
     },
     {
-      i18nKey: "Ground +1",
+      //i18nKey: "Ground +1",
+      i18nKey: "PT_GROUND_PLUS_ONE_OPTION",
     },
     {
-      i18nKey: "Ground +2",
+      //i18nKey: "Ground +2",
+      i18nKey: "PT_GROUND_PLUS_TWO_OPTION",
     },
   ];
 

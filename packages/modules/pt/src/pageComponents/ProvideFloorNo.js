@@ -33,7 +33,7 @@ const ProvideFloorNo = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!Floorno}>
-      <CardLabel>{t("Floor Number")}</CardLabel>
+      <CardLabel>{t("PT_FLOOR_NUMBER_LABEL")}</CardLabel>
       <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }}>
         {data && (
           <RadioOrSelect

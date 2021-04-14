@@ -178,7 +178,7 @@ export const getSuperBuiltUparea = (data) => {
     } else {
       builtUpArea = parseInt(data?.Constructiondetails?.RentArea);
     }
-    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
       builtUpArea = builtUpArea + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
     }
   }
@@ -209,7 +209,7 @@ export const getusageCategory = (data, i) => {
 
 export const getunits = (data) => {
   let unit = [];
-  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
     unit.push({
       occupancyType: data?.selfOccupied?.code,
       floorNo: getFloorNumber(data),
@@ -228,7 +228,7 @@ export const getunits = (data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data),
     });
-  } else if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes") {
+  } else if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "PT_COMMON_YES") {
     unit.push({
       occupancyType: data?.selfOccupied?.code,
       floorNo: getFloorNumber(data),
@@ -260,7 +260,7 @@ export const getunits = (data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data),
     });
-    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
       unit.push({
         occupancyType: data?.IsAnyPartOfThisFloorUnOccupied?.code,
         floorNo: getFloorNumber(data),
@@ -276,7 +276,10 @@ export const getunits = (data) => {
 };
 
 export const getunitarray = (i, unitsdata, unit, data) => {
-  if (unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "Yes") {
+  if (
+    unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
+    unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "PT_COMMON_YES"
+  ) {
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
@@ -295,7 +298,10 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data, i),
     });
-  } else if (unitsdata[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes") {
+  } else if (
+    unitsdata[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
+    unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "PT_COMMON_YES"
+  ) {
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
@@ -327,7 +333,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data, i),
     });
-    if (unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+    if (unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
       unit.push({
         occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
         floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
@@ -470,23 +476,23 @@ export const isPropertyIndependent = (value = "") => {
 };
 
 export const isthere1Basement = (value = "") => {
-  return checkForNotNull(value) && value.includes("1") ? true : false;
+  return checkForNotNull(value) && value.includes("ONE") ? true : false;
 };
 
 export const isthere2Basement = (value = "") => {
-  return checkForNotNull(value) && value.includes("2") ? true : false;
+  return checkForNotNull(value) && value.includes("TWO") ? true : false;
 };
 
 export const isPropertyselfoccupied = (value = "") => {
-  return checkForNotNull(value) && value.includes("Self") ? true : false;
+  return checkForNotNull(value) && value.includes("SELFOCCUPIED") ? true : false;
 };
 
 export const isPropertyPartiallyrented = (value = "") => {
-  return checkForNotNull(value) && value.includes("Partially") ? true : false;
+  return checkForNotNull(value) && value.includes("PARTIALLY") ? true : false;
 };
 
 export const ispropertyunoccupied = (value = "") => {
-  return checkForNotNull(value) && value.includes("Yes") ? true : false;
+  return checkForNotNull(value) && value.includes("YES") ? true : false;
 };
 /*   method to get required format from fielstore url*/
 export const pdfDownloadLink = (documents = {}, fileStoreId = "", format = "") => {

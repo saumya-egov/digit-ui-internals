@@ -119,7 +119,7 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageTypeOfRentedArea}>
-      <CardLabel>{t("Types of Floor Usage")}</CardLabel>
+      <CardLabel>{t("PT_SUB_USAGE_TYPE_LABEL")}</CardLabel>
       <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }}>
         {getSubUsagedata(subusageoption) && (
           <RadioOrSelect
