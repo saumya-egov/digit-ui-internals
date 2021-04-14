@@ -84,6 +84,7 @@ export const PTModule = ({ userType, tenants }) => {
   const moduleCode = "PT";
   addComponentsToRegistry();
   console.log(moduleCode, "module integrated");
+  Digit.SessionStorage.set("PT_TENANTS", tenants);
 
   const { path, url } = useRouteMatch();
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
+import { FormStep, CardLabel, TextInput, CardHeader, Card, CardText } from "@egovernments/digit-ui-react-components";
 
 const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -24,9 +24,9 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   function setPropertybuiltUpArea(e) {
     setbuiltUpArea(e.target.value);
   }
-  const inputs = [
+  /* const inputs = [
     {
-      label: "Plot Size(sq.yd)*",
+      label: "PT_FLOOR_DETAILS_PLOT_SIZE_LABEL",
       type: "text",
       name: "PlotSize",
       validation: {
@@ -43,7 +43,7 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       },
       error: "CORE_COMMON_AREA_INVALID",
     },
-  ];
+  ]; */
   const getdisable = () => {
     if (index === "0" || isNaN(index)) {
       return !plotSize && !builtUpArea;
@@ -51,6 +51,15 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       return !builtUpArea;
     }
   };
+
+  const getheader = () => {
+    if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_SHAREDPROPERTY") {
+      return "PT_FLOOR_DETAILS_HEADER";
+    } else {
+      return `PROPERTYTAX_FLOOR_${index}_DETAILS`;
+    }
+  };
+
   const goNext = () => {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     if (!isNaN(index)) {
@@ -69,7 +78,14 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   //const onSkip = () => onSelect();
 
   return (
-    <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!builtUpArea && (!plotSize || !builtUpArea)}>
+    <FormStep
+      config={((config.texts.header = getheader()), config)}
+      header="ground"
+      onSelect={goNext}
+      onSkip={onSkip}
+      t={t}
+      isDisabled={!builtUpArea && (!plotSize || !builtUpArea)}
+    >
       {(index === "0" || isNaN(index)) && (
         <div>
           <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>

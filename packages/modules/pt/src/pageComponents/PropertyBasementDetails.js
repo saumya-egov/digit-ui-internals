@@ -6,13 +6,16 @@ const PropertyBasementsDetails = ({ t, config, onSelect, userType, formData }) =
 
   const menu = [
     {
-      i18nKey: "No Basement",
+      //i18nKey: "No Basement",
+      i18nKey: "PT_NO_BASEMENT_OPTION",
     },
     {
-      i18nKey: "1 Basement",
+      //i18nKey: "1 Basement",
+      i18nKey: "PT_ONE_BASEMENT_OPTION",
     },
     {
-      i18nKey: "2 Basement",
+      //i18nKey: "2 Basement",
+      i18nKey: "PT_TWO_BASEMENT_OPTION",
     },
   ];
 

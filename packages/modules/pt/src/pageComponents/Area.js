@@ -35,15 +35,15 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
       let floordet = { ...unit, floorarea };
       onSelect(config.key, floordet, false, index);
       /*   onSelect(config.key, floordet, false, index);
-      if (formData?.noOfFloors?.i18nKey === "Ground +1" && index < 1 && index > -1) {
+      if (formData?.noOfFloors?.i18nKey === "PT_GROUND_PLUS_ONE_OPTION" && index < 1 && index > -1) {
         let newIndex1 = parseInt(index) + 1;
         onSelect("is-this-floor-self-occupied", {}, false, newIndex1, true);
-      } else if (formData?.noOfFloors?.i18nKey === "Ground +2" && index < 2 && index > -1) {
+      } else if (formData?.noOfFloors?.i18nKey === "PT_GROUND_PLUS_TWO_OPTION" && index < 2 && index > -1) {
         let newIndex2 = parseInt(index) + 1;
         onSelect("is-this-floor-self-occupied", {}, false, newIndex2, true);
-      } else if ((formData?.noOofBasements?.i18nKey === "1 Basement" || formData?.noOofBasements?.i18nKey === "2 Basement") && index > -1) {
+      } else if ((formData?.noOofBasements?.i18nKey === "PT_ONE_BASEMENT_OPTION" || formData?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION") && index > -1) {
         onSelect("is-this-floor-self-occupied", {}, false, "-1", true);
-      } else if (formData?.noOofBasements?.i18nKey === "2 Basement" && index != -2) {
+      } else if (formData?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION" && index != -2) {
         onSelect("is-this-floor-self-occupied", {}, false, "-2", true);
       } */
     } else {
@@ -79,7 +79,7 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
 
   return (
     <FormStep config={config} onChange={onChange} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!floorarea}>
-      <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>
+      <CardLabel>{`${t("PT_PLOT_SIZE_SQUARE_FEET_LABEL")}*`}</CardLabel>
       <TextInput
         t={t}
         type={"number"}

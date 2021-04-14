@@ -1,9 +1,13 @@
 import { FormStep, TextInput, CardLabel, LabelFieldPair } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, register, errors, props }) => {
   const tenants = Digit.Hooks.pt.useTenants();
   const [pincode, setPincode] = useState(() => formData?.address?.pincode || "");
+
+  const { pathname } = useLocation();
+  const presentInModifyApplication = pathname.includes("modify");
 
   const inputs = [
     {
@@ -34,7 +38,7 @@ const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
       const foundValue = tenants?.find((obj) => obj.pincode?.find((item) => item.toString() === e.target.value));
       if (foundValue) {
         const city = tenants.filter((obj) => obj.pincode?.find((item) => item == e.target.value))[0];
-        onSelect(config.key, { ...formData.address, city, pincode: e.target.value, slum: null, locality: null });
+        onSelect(config.key, { ...formData.address, city, pincode: e.target.value, slum: null });
       } else {
         onSelect(config.key, { ...formData.address, pincode: e.target.value });
         setPincodeServicability("CS_COMMON_PINCODE_NOT_SERVICABLE");
@@ -52,15 +56,15 @@ const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
   };
 
   if (userType === "employee") {
-    return inputs?.map((input) => {
+    return inputs?.map((input, index) => {
       return (
-        <LabelFieldPair>
-          <CardLabel style={{ marginBottom: "revert", width: "30%" }}>
+        <LabelFieldPair key={index}>
+          <CardLabel className="card-label-smaller">
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
           <div className="field">
-            <TextInput key={input.name} value={pincode} onChange={onChange} {...input.validation} />
+            <TextInput key={input.name} value={pincode} onChange={onChange} {...input.validation} autoFocus={presentInModifyApplication} />
           </div>
         </LabelFieldPair>
       );
