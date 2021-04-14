@@ -126,7 +126,6 @@ export const newConfig = [
         component: "GroundFloorDetails",
         texts: {
           headerCaption: "",
-          header: "PT_GROUND_FLOOR_DETAILS_LABEL",
           cardText: "PT_PROPERTY_DETAILS_FLOOR_DETAILS_TEXT",
           submitBarLabel: "Next",
         },
