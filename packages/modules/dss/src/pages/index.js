@@ -15,8 +15,13 @@ const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const stateCode = tenantId.split(".")[0];
-  const {} = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
-  const {} = Digit.Hooks.dss.useDashboardConfig();
+  const moduleCode = "DssDashboard";
+  // const moduleCode = "propertytax";
+  const mdmsType = "dss-dashboard";
+  const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
+  const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
+  // const { data: dashboardConfig } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
+  console.log("find all data here", dashData, screenConfig);
   const dashboardConfig = config?.responseData;
   return (
     <>
@@ -31,4 +36,4 @@ const DashBoard = () => {
   );
 };
 
-export default DashBoard
+export default DashBoard;

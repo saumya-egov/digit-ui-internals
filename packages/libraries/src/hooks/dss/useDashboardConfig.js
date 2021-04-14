@@ -1,8 +1,8 @@
-import { useQuery } from "react-query"
-import { DSSService } from "../../services/elements/DSS"
+import { useQuery } from "react-query";
+import { DSSService } from "../../services/elements/DSS";
 
-const useDashoardConfig = () => {
-  return useQuery("DSS_DASHBOARD_CONFIG", () => DSSService.getDashboardConfig());
+const useDashoardConfig = (moduleCode) => {
+  return useQuery("DSS_DASHBOARD_CONFIG", () => DSSService.getDashboardConfig(moduleCode));
 };
 
 export default useDashoardConfig;
