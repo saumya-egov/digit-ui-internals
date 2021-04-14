@@ -1,6 +1,5 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
-// import { ArrowDown } from "@egovernments/digit-ui-react-components";
 
 const chartData = {
   "noUnit" : true,
@@ -73,7 +72,7 @@ const MetricData = () => {
 
   return (
     <div>
-      <p className="heading-m">{`${displaySymbol(data.headerSymbol)} ${data.headerValue}`}</p>
+      <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>{`${displaySymbol(data.headerSymbol)} ${data.headerValue}`}</p>
       {data.insight && 
         <div>
           <p className={`${data.insight.colorCode}`}>
@@ -120,12 +119,11 @@ const MetricChart = () => {
   const { charts } = chartData;
 
   return (
-    <Card className="metricsTable">
-      <CardSubHeader>{chartData.label}</CardSubHeader>
+    <>
       {charts.map((chart, index) => (
         <MetricChartRow data={chart} />
       ))}
-    </Card>
+    </>
   )
 };
 

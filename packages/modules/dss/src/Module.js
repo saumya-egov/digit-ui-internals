@@ -4,11 +4,13 @@ import { useSelector } from "react-redux";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import DashBoard from "./pages";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
+import Overview from "./pages/Overview";
 
 const Routes = ({ path }) => {
   return (
     <Switch>
       <Route path={`${path}/dashboard`} component={DashBoard} />
+      <Route path={`${path}/overview`} component={Overview} />
     </Switch>
   )
 }

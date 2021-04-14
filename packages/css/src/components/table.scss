@@ -39,3 +39,17 @@
 .pagination button:nth-child(1) span::after {
   content: "\f105";
 }
+
+.customTable {
+
+  th {
+    font-weight: bold;
+  }
+
+  th,
+  td {
+    text-align: center;
+    border-bottom: 1px solid #B1B4B6;
+    padding: 0 10px;
+  }
+}

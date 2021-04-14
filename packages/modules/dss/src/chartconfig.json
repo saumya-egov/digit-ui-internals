@@ -131,7 +131,7 @@
                      "vizType" : "performing-metric"
                   },
                   {
-                     "vizType" : "chart",
+                     "vizType" : "pie",
                      "dimensions" : {
                         "height" : 250,
                         "width" : 4
@@ -224,7 +224,7 @@
                      "label" : "",
                      "id" : 231,
                      "isCollapsible" : true,
-                     "vizType" : "chart"
+                     "vizType" : "table"
                   }
                ],
                "name" : "DSS_REVENUE"

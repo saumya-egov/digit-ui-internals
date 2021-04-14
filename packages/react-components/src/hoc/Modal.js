@@ -8,6 +8,7 @@ import Toast from "../atoms/Toast";
 const Modal = ({
   headerBarMain,
   headerBarEnd,
+  popupStyles,
   children,
   actionCancelLabel,
   actionCancelOnSubmit,
@@ -20,7 +21,7 @@ const Modal = ({
 }) => {
   return (
     <PopUp>
-      <div className="popup-module">
+      <div className="popup-module" style={popupStyles}>
         <HeaderBar main={headerBarMain} end={headerBarEnd} />
         <div className="popup-module-main">
           {children}

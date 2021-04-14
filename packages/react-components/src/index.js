@@ -55,7 +55,7 @@ import ApplyFilterBar from "./atoms/ApplyFilterBar";
 import NavBar from "./atoms/NavBar";
 import Hamburger from "./atoms/Hamburger";
 import { PrivateRoute } from "./atoms/PrivateRoute";
-import { GetApp, ArrowLeft, HomeIcon, LanguageIcon, LogoutIcon, ArrowRightInbox, SortDown, SortUp, ShippingTruck, CloseSvg } from "./atoms/svgindex";
+import { GetApp, ArrowLeft, ArrowDown, DownloadIcon, Ellipsis, Poll, Details, HomeIcon, LanguageIcon, LogoutIcon, ArrowRightInbox, SortDown, SortUp, ShippingTruck, CloseSvg, UpwardArrow } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
 import RoundedLabel from "./atoms/RoundedLabel";
@@ -165,6 +165,7 @@ export {
   CitizenInfoLabel,
   SearchIconSvg,
   ArrowRightInbox,
+  ArrowDown,
   SortDown,
   SortUp,
   ShippingTruck,
@@ -184,4 +185,9 @@ export {
   ResponseComposer,
   PitDimension,
   Modal,
+  UpwardArrow,
+  DownloadIcon,
+  Ellipsis,
+  Poll,
+  Details,
 };
