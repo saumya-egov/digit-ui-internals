@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker } from "@egovernments/digit-ui-react-components";
+import DropdownStatus from "./DropdownStatus";
 import { useTranslation } from "react-i18next";
 
 const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFields, searchParams, isInboxPage }) => {
   const storedSearchParams = isInboxPage ? Digit.SessionStorage.get("fsm/inbox/searchParams") : Digit.SessionStorage.get("fsm/search/searchParams");
 
+  const { data: applicationStatuses, isFetched: areApplicationStatus } = Digit.Hooks.fsm.useApplicationStatus();
+
   const { t } = useTranslation();
-  const [applicationNo, setApplicationNo] = useState("");
-  const [mobileNo, setMobileNo] = useState("");
   const { register, handleSubmit, reset, watch, control } = useForm({
     defaultValues: storedSearchParams || searchParams,
   });
@@ -21,7 +22,6 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
     if (!data.mobileNumber) {
       delete data.mobileNumber;
     }
-
     onSearch(data);
     if (type === "mobile") {
       onClose();
@@ -48,17 +48,51 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
     );
   };
 
-  function setComplaint(e) {
-    setApplicationNo(e.target.value);
-  }
-
-  function setMobile(e) {
-    setMobileNo(e.target.value);
-  }
-
   const searchValidation = (data) => {
     // console.log("find input", watchSearch, data);
     return watchSearch.applicationNos || watchSearch.mobileNumber ? true : false;
+  };
+
+  const getFields = (input) => {
+    switch (input.type) {
+      case "date":
+        return (
+          <Controller
+            render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
+            name={input.name}
+            control={control}
+            defaultValue={null}
+          />
+        );
+      case "status":
+        return (
+          <Controller
+            render={(props) => (
+              <DropdownStatus
+                onAssignmentChange={props.onChange}
+                value={props.value}
+                applicationStatuses={applicationStatuses}
+                areApplicationStatus={areApplicationStatus}
+              />
+            )}
+            name={input.name}
+            control={control}
+            defaultValue={null}
+          />
+        );
+      default:
+        return (
+          <TextInput
+            {...input}
+            inputRef={register}
+            {...register(input.name, {
+              validate: searchValidation,
+            })}
+            watch={watch}
+            shouldUpdate={true}
+          />
+        );
+    }
   };
 
   return (
@@ -78,24 +112,7 @@ const SearchApplication = ({ onSearch, type, onClose, isFstpOperator, searchFiel
               {searchFields?.map((input, index) => (
                 <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
                   <Label>{input.label}</Label>
-                  {input.type !== "date" ? (
-                    <TextInput
-                      {...input}
-                      inputRef={register}
-                      {...register(input.name, {
-                        validate: searchValidation,
-                      })}
-                      watch={watch}
-                      shouldUpdate={true}
-                    />
-                  ) : (
-                    <Controller
-                      render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
-                      name={input.name}
-                      control={control}
-                      defaultValue={null}
-                    />
-                  )}{" "}
+                  {getFields(input)}{" "}
                 </span>
               ))}
               {/* <span className="complaint-input">
