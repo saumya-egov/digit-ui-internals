@@ -42,31 +42,5 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData }) => {
     </FormStep>
   );
 };
-// return (
-//   <FormStep t={t} config={config} onSelect={goNext}>
-//     <TypeSelectCard
-//       t={t}
-//       optionsKey="key"
-//       options={menu || []}
-//       selected = {selectedValue}
-//       selectedOption={FloorDetails}
-//       onSave={goNext}      />
-//   </FormStep>
-// );
-// };
-
-// return (
-//   <TypeSelectCard
-//     {...textParams}
-//     {...{ menu: menu }}
-//     // {...{ menu: ownershipCategory }}
-//     {...{ optionsKey: "key" }}
-//     {...{ selected: selectedValue }}
-//     {...{ selectedOption: FloorDetails }}
-//     {...{ onSave: goNext }}
-//     {...{ t }}
-//   />
-// );
-// };
 
 export default PropertyFloorsDetails;

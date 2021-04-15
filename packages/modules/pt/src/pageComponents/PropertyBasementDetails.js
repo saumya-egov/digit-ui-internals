@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { RadioButtons, TypeSelectCard, FormStep } from "@egovernments/digit-ui-react-components";
+import { RadioButtons, TypeSelectCard, FormStep, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
 
 const PropertyBasementsDetails = ({ t, config, onSelect, userType, formData }) => {
   const [BasementDetails, setBasementDetails] = useState(formData?.noOofBasements);
@@ -33,42 +33,20 @@ const PropertyBasementsDetails = ({ t, config, onSelect, userType, formData }) =
   }
 
   return (
-    <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!BasementDetails} isMultipleAllow={true}>
-      <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        isMandatory={config.isMandatory}
-        options={menu}
-        selectedOption={BasementDetails}
-        onSelect={setBasementDetails}
-      />
-    </FormStep>
+    <React.Fragment>
+      <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!BasementDetails} isMultipleAllow={true}>
+        <RadioButtons
+          t={t}
+          optionsKey="i18nKey"
+          isMandatory={config.isMandatory}
+          options={menu}
+          selectedOption={BasementDetails}
+          onSelect={setBasementDetails}
+        />
+      </FormStep>
+      {BasementDetails && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_BASEMENT_NUMBER_INFO_MSG", BasementDetails)} />}
+    </React.Fragment>
   );
 };
-//   return (
-//   <FormStep t={t} config={config} onSelect={goNext}>
-//     <TypeSelectCard
-//       t={t}
-//       optionsKey="key"
-//       options={menu || []}
-//       selected = {selectedValue}
-//       selectedOption={BasementDetails}
-//       onSave={goNext}      />
-//   </FormStep>
-// );
-// };
-// return (
-//   <TypeSelectCard
-//     {...textParams}
-//     {...{ menu: menu }}
-//     // {...{ menu: ownershipCategory }}
-//     {...{ optionsKey: "key" }}
-//     {...{ selected: selectedValue }}
-//     {...{ selectedOption: BasementDetails }}
-//     {...{ onSave: goNext }}
-//     {...{ t }}
-//   />
-// );
-// };
 
 export default PropertyBasementsDetails;
