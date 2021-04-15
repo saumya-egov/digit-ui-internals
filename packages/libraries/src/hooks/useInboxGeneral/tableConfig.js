@@ -99,7 +99,7 @@ export const TableConfig = (t) => ({
     ],
     inboxColumns: (props) => [
       {
-        Header: t("CS_FILE_DESLUDGING_APPLICATION_NO"),
+        Header: t("ES_INBOX_UNIQUE_PROPERTY_ID"),
         Cell: ({ row }) => {
           return (
             <div>
@@ -113,32 +113,29 @@ export const TableConfig = (t) => ({
         },
       },
       {
-        Header: t("ES_INBOX_UNIQUE_PROPERTY_ID"),
-        accessor: "propertyId",
-        Cell: ({ row }) => {
-          return GetCell(`${row.original["propertyId"]}`);
-        },
-      },
-      {
         Header: t("ES_INBOX_OWNER"),
         Cell: ({ row }) => {
-          return GetCell(`${row.original["owner"]}`);
+          // console.log(row.original?.searchData["owner"]);
+          return GetCell(`${row.original?.searchData["owners"]?.[0].name}`);
         },
       },
       {
         Header: t("ES_INBOX_APPLICATION_TYPE"),
-        Cell: ({ row }) => GetCell(`${row.original["applicationType"]}`),
+        Cell: ({ row }) => GetCell(`${row.original?.searchData["propertyType"]}`),
       },
       {
         Header: t("ES_INBOX_STATUS"),
         Cell: ({ row }) => {
-          return GetCell(`${row.original["status"]}`);
+          const wf = row.original?.workflowData;
+          return GetCell(t(`PT_INBOX_STATUS_${wf?.state?.["state"]}`));
         },
       },
       {
         Header: t("ES_INBOX_SLA_DAYS_REMAINING"),
         Cell: ({ row }) => {
-          return GetSlaCell(row.original["sla"]);
+          const wf = row.original.workflowData;
+          const math = Math.round(wf.businesssServiceSla / (24 * 60 * 60 * 1000)) || "-";
+          return GetSlaCell(math);
         },
       },
     ],
