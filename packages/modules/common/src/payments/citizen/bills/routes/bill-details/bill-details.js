@@ -103,7 +103,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
               ₹
             </span>
             {paymentType !== t("CS_PAYMENT_FULL_AMOUNT") ? (
-              <TextInput className="text-indent-xl" onChange={(e) => onChangeAmount(e.target.value)} value={amount} />
+              <TextInput className="text-indent-xl" onChange={(e) => onChangeAmount(e.target.value)} value={amount} disable={getTotal() === 0} />
             ) : (
               <TextInput className="text-indent-xl" value={getTotal()} onChange={() => {}} disable={true} />
             )}
