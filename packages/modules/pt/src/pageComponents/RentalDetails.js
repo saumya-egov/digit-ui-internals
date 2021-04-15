@@ -49,26 +49,6 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   function setPropertyAnnualRent(e) {
     setAnnualRent(e.target.value);
   }
-  /* const inputs = [
-    {
-      label: "Plot Size(sq.yd)*",
-      type: "text",
-      name: "PlotSize",
-      validation: {
-        pattern: "/^[ws]{1,256}$/",
-      },
-      error: "CORE_COMMON_PLOTSIZE_INVALID",
-    },
-    {
-      label: "Built Up Area(sq.yd)*",
-      type: "text",
-      name: "BuiltUpArea",
-      validation: {
-        pattern: "/^[w]([w/,s])*$/",
-      },
-      error: "CORE_COMMON_AREA_INVALID",
-    },
-  ]; */
 
   const getheaderCaption = () => {
     if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_SHAREDPROPERTY") {
