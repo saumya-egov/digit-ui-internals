@@ -21,8 +21,7 @@ const ApplicationDetails = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(null);
 
-  const { applicationDetails, isLoading, isDataLoading, applicationData, mutate, workflowDetails } = props;
-  const { mutate: assessmentMutate } = Digit.Hooks.pt.usePropertyAssessment(tenantId);
+  const { applicationDetails, isLoading, isDataLoading, applicationData, mutate, workflowDetails, assessmentMutate } = props;
 
   useEffect(() => {
     if (showToast) {

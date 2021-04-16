@@ -10,6 +10,7 @@ const PropertyDetails = () => {
   const { id: applicationNumber } = useParams();
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
+  const { mutate: assessmentMutate } = Digit.Hooks.pt.usePropertyAssessment(tenantId);
 
   const {
     isLoading: updatingApplication,
@@ -68,6 +69,7 @@ const PropertyDetails = () => {
       mutate={mutate}
       workflowDetails={workflowDetails}
       businessService="PT"
+      assessmentMutate={assessmentMutate}
     />
   );
 };
