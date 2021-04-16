@@ -45,10 +45,10 @@ export const PTSearch = {
         ],
         additionalDetails: {
           floors: response?.units?.map((unit, index) => {
-            let floorName = "Ground Floor";
-            if (unit?.floorNo === 1) floorName = "First Floor";
-            if (unit?.floorNo === 2) floorName = "Second Floor";
-            if (unit?.floorNo === 3) floorName = "Third Floor";
+            let floorName = "ES_APPLICATION_DETAILS_GROUND_FLOOR";
+            if (unit?.floorNo === 1) floorName = "ES_APPLICATION_DETAILS_FIRST_FLOOR";
+            if (unit?.floorNo === 2) floorName = "ES_APPLICATION_DETAILS_SECOND_FLOOR";
+            if (unit?.floorNo === 3) floorName = "ES_APPLICATION_DETAILS_THIRD_FLOOR";
 
             const values = [
               {
@@ -69,7 +69,7 @@ export const PTSearch = {
               title: floorName,
               values: [
                 {
-                  title: `Unit ${index}`,
+                  title: `${t("ES_APPLICATION_DETAILS_UNIT")} ${index}`,
                   values,
                 },
               ],
@@ -92,9 +92,9 @@ export const PTSearch = {
         additionalDetails: {
           documents: [
             {
-              title: "Documents",
+              title: "ES_APPLICATION_DETAILS_DOCUMENTS",
               values: response?.documents?.map((document) => ({
-                title: "Address Proof",
+                title: "ES_APPLICATION_DETAILS_ADDRESS_PROOF",
                 documentType: document?.documentType,
                 documentUid: document?.documentUid,
                 fileStoreId: document?.fileStoreId,
