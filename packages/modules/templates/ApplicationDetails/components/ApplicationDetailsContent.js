@@ -18,7 +18,7 @@ import { Link } from "react-router-dom";
 import PropertyDocuments from "./PropertyDocuments";
 import PropertyFloors from "./PropertyFloors";
 
-function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData }) {
+function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService }) {
   const { t } = useTranslation();
 
   const getTimelineCaptions = (checkpoint) => {
@@ -123,7 +123,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
                       <CheckPoint
                         keyValue={index}
                         isCompleted={index === 0}
-                        label={t("CS_COMMON_FSM_" + checkpoint.status)}
+                        label={t(`${businessService === "PT" ? "ES_PT_COMMON_STATUS_" : "CS_COMMON_FSM_"}${checkpoint.state}`)}
                         customChild={getTimelineCaptions(checkpoint)}
                       />
                     </React.Fragment>
