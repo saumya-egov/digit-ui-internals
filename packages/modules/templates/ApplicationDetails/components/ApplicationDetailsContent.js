@@ -111,7 +111,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
           {workflowDetails?.data?.timeline && workflowDetails?.data?.timeline?.length === 1 ? (
             <CheckPoint
               isCompleted={true}
-              label={t("CS_COMMON_" + workflowDetails?.data?.timeline[0]?.status)}
+              label={t(`${businessService === "PT" ? "ES_PT_COMMON_STATUS_" : "CS_COMMON_"}${workflowDetails?.data?.timeline[0]?.state}`)}
               customChild={getTimelineCaptions(workflowDetails?.data?.timeline[0])}
             />
           ) : (
