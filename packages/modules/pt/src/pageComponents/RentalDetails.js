@@ -49,26 +49,15 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   function setPropertyAnnualRent(e) {
     setAnnualRent(e.target.value);
   }
-  const inputs = [
-    {
-      label: "Plot Size(sq.yd)*",
-      type: "text",
-      name: "PlotSize",
-      validation: {
-        pattern: "/^[ws]{1,256}$/",
-      },
-      error: "CORE_COMMON_PLOTSIZE_INVALID",
-    },
-    {
-      label: "Built Up Area(sq.yd)*",
-      type: "text",
-      name: "BuiltUpArea",
-      validation: {
-        pattern: "/^[w]([w/,s])*$/",
-      },
-      error: "CORE_COMMON_AREA_INVALID",
-    },
-  ];
+
+  const getheaderCaption = () => {
+    if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_SHAREDPROPERTY") {
+      return "PT_FLOOR_DETAILS_HEADER";
+    } else {
+      return `PROPERTYTAX_FLOOR_${index}_DETAILS`;
+    }
+  };
+
   const goNext = () => {
     if (!isNaN(index)) {
       let unit = formData.units && formData.units[index];
@@ -83,7 +72,13 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   //const onSkip = () => onSelect();
 
   return (
-    <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!RentArea || !AnnualRent}>
+    <FormStep
+      config={((config.texts.headerCaption = getheaderCaption()), config)}
+      onSelect={goNext}
+      onSkip={onSkip}
+      t={t}
+      isDisabled={!RentArea || !AnnualRent}
+    >
       <CardLabel>{`${t("PT_FLOOR_DETAILS_RENTED_AREA_LABEL")}*`}</CardLabel>
       <TextInput
         t={t}

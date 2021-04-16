@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
+import { FormStep, CardLabel, TextInput, CardHeader, Card, CardText } from "@egovernments/digit-ui-react-components";
 
 const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -18,46 +18,37 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
     [plotSize, setplotSize] = useState(formData.floordetails?.plotSize);
     [builtUpArea, setbuiltUpArea] = useState(formData.floordetails?.builtUpArea);
   }
+  const [builtupplotsizeeroor, setbuiltupplotsizeeroor] = useState(null);
   function setPropertyplotSize(e) {
     setplotSize(e.target.value);
   }
   function setPropertybuiltUpArea(e) {
     setbuiltUpArea(e.target.value);
-  }
-  const inputs = [
-    {
-      label: "Plot Size(sq.yd)*",
-      type: "text",
-      name: "PlotSize",
-      validation: {
-        pattern: "/^[ws]{1,256}$/",
-      },
-      error: "CORE_COMMON_PLOTSIZE_INVALID",
-    },
-    {
-      label: "Built Up Area(sq.yd)*",
-      type: "text",
-      name: "BuiltUpArea",
-      validation: {
-        pattern: "/^[w]([w/,s])*$/",
-      },
-      error: "CORE_COMMON_AREA_INVALID",
-    },
-  ];
-  const getdisable = () => {
-    if (index === "0" || isNaN(index)) {
-      return !plotSize && !builtUpArea;
+    setbuiltupplotsizeeroor(null);
+    console.log(e.target.value);
+    if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_INDEPENDENTPROPERTY" && index != "0") {
+      if (formData?.units[0]?.plotSize && parseInt(e.target.value) > parseInt(formData?.units[0]?.plotSize)) {
+        setbuiltupplotsizeeroor("wrong built up area");
+      }
     } else {
-      return !builtUpArea;
+      if (plotSize && parseInt(e.target.value) > parseInt(plotSize)) {
+        setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
+      }
+    }
+  }
+
+  const getheader = () => {
+    if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_SHAREDPROPERTY") {
+      return "PT_FLOOR_DETAILS_HEADER";
+    } else {
+      return `PROPERTYTAX_FLOOR_${index}_DETAILS`;
     }
   };
+
   const goNext = () => {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     if (!isNaN(index)) {
       let unit = formData.units && formData.units[index];
-      /* let floordet = { plotSize, builtUpArea };
-    sessionStorage.setItem("propertyArea", "multiple");
-    onSelect(config.key, floordet, "", index); */
       let floordet = { plotSize, builtUpArea };
       sessionStorage.setItem("propertyArea", "multiple");
       onSelect(config.key, floordet, "", index);
@@ -66,10 +57,17 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       onSelect("floordetails", { plotSize, builtUpArea });
     }
   };
-  //const onSkip = () => onSelect();
 
   return (
-    <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!builtUpArea && (!plotSize || !builtUpArea)}>
+    <FormStep
+      config={((config.texts.header = getheader()), config)}
+      header="ground"
+      onSelect={goNext}
+      onSkip={onSkip}
+      t={t}
+      forcedError={t(builtupplotsizeeroor)}
+      isDisabled={builtupplotsizeeroor || (!builtUpArea && (!plotSize || !builtUpArea))}
+    >
       {(index === "0" || isNaN(index)) && (
         <div>
           <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>

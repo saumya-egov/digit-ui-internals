@@ -73,7 +73,7 @@ export const newConfig = [
         component: "ProvideFloorNo",
         texts: {
           headerCaption: "",
-          header: "Provide Floor Number",
+          header: "PT_FLOOR_NUMBER_HEADER",
           cardText: "",
           submitBarLabel: "PT_COMMONS_NEXT",
         },
@@ -110,9 +110,9 @@ export const newConfig = [
           submitBarLabel: "PT_COMMONS_NEXT",
         },
         nextStep: {
-          "No Basement": "floordetails",
-          "1 Basement": "floordetails",
-          "2 Basement": "floordetails",
+          PT_NO_BASEMENT_OPTION: "floordetails",
+          PT_ONE_BASEMENT_OPTION: "floordetails",
+          PT_TWO_BASEMENT_OPTION: "floordetails",
         },
         //nextStep: "floordetails@0",
         key: "noOofBasements",
@@ -126,7 +126,6 @@ export const newConfig = [
         component: "GroundFloorDetails",
         texts: {
           headerCaption: "",
-          header: "PT_GROUND_FLOOR_DETAILS_LABEL",
           cardText: "PT_PROPERTY_DETAILS_FLOOR_DETAILS_TEXT",
           submitBarLabel: "Next",
         },
@@ -181,7 +180,7 @@ export const newConfig = [
         isMandatory: true,
         component: "RentalDetails",
         texts: {
-          headerCaption: "PT_GROUND_FLOOR_DETAILS_LABEL",
+          //headerCaption: "PT_GROUND_FLOOR_DETAILS_LABEL",
           header: "PT_ASSESSMENT_FLOW_RENTAL_DETAIL_HEADER",
           cardText: "",
           submitBarLabel: "PT_COMMON_NEXT",
@@ -213,7 +212,7 @@ export const newConfig = [
         isMandatory: true,
         component: "IsAnyPartOfThisFloorUnOccupied",
         texts: {
-          headerCaption: "PT_GROUND_FLOOR_DETAILS_LABEL",
+          //headerCaption: "PT_GROUND_FLOOR_DETAILS_LABEL",
           header: "PT_ASSESSMENT_FLOW_ISUNOCCUPIED_HEADER",
           cardText: "PT_ASSESSMENT_FLOW_ISUNOCCUPIED_TEXT",
           submitBarLabel: "PT_COMMON_NEXT",
@@ -222,8 +221,8 @@ export const newConfig = [
         withoutLabel: true,
         //nextStep: "un-occupied-area",
         nextStep: {
-          No: "map",
-          Yes: "un-occupied-area",
+          PT_COMMON_NO: "map",
+          PT_COMMON_YES: "un-occupied-area",
         },
         hideInEmployee: true,
       },
@@ -233,7 +232,7 @@ export const newConfig = [
         isMandatory: true,
         component: "UnOccupiedArea",
         texts: {
-          headerCaption: "PT_GROUND_FLOOR_DETAILS_LABEL",
+          //headerCaption: "PT_GROUND_FLOOR_DETAILS_LABEL",
           header: "PT_ASSESSMENT_FLOW_UNOCCUPIED_AREA_HEADER",
           cardText: "PT_ASSESSMENT_FLOW_UNOCCUPIED_AREA_TEXT",
           submitBarLabel: "PT_COMMON_NEXT",

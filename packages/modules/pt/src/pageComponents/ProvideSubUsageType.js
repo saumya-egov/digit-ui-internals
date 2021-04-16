@@ -28,7 +28,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
       if (
         Array.isArray(subusageoption) &&
         subusageoption.length > 0 &&
-        subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor.i18nKey.split("_")[3] &&
+        subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] &&
         subusageoption[i].code.split(".").length == 4
       ) {
         data.push({
@@ -104,8 +104,8 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageType}>
-      <CardLabel>{t("Types of Floor Usage")}</CardLabel>
-      <div style={cardBodyStyle}>
+      <CardLabel>{t("PT_SUB_USAGE_TYPE_LABEL")}</CardLabel>
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }} className={"form-pt-dropdown-only"}>
         {getSubUsagedata(subusageoption) && (
           <RadioOrSelect
             isMandatory={config.isMandatory}

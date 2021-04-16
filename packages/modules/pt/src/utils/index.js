@@ -113,7 +113,13 @@ export const setOwnerDetails = (data) => {
         if (ownr?.ownerType?.code != "NONE") {
           document.push({
             fileStoreId: ownr.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: ownr.documents["specialProofIdentity"].documentType || "",
+            documentType: ownr.documents["specialProofIdentity"].documentType || ""
+          });
+        }
+        if(ownr?.documents["proofIdentity"]?.fileStoreId) {
+          document.push({
+            fileStoreId: ownr.documents["proofIdentity"].fileStoreId || "",
+            documentType: ownr.documents["proofIdentity"].documentType || ""
           });
         }
         owner.push({
@@ -142,11 +148,21 @@ export const setDocumentDetails = (data) => {
     fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
     documentType: address?.documents["ProofOfAddress"]?.documentType || "",
   });
-  owners &&
-    documents.push({
-      fileStoreId: owners[owners.length - 1]?.documents["proofIdentity"]?.fileStoreId || "",
-      documentType: owners[owners.length - 1]?.documents["proofIdentity"]?.documentType || "",
-    });
+  owners && owners.length > 0 && 
+  owners.map(owner => {
+    if(owner.documents && owner.documents["proofIdentity"]) {
+      documents.push({
+        fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
+        documentType: owner.documents["proofIdentity"].documentType || ""
+      });
+    }
+    if(owner.documents && owner.documents["specialProofIdentity"]) {
+      documents.push({
+        fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
+        documentType: owner.documents["specialProofIdentity"].documentType || "",
+      })
+    }
+  })
   data.documents = documents;
   return data;
 };
@@ -178,7 +194,7 @@ export const getSuperBuiltUparea = (data) => {
     } else {
       builtUpArea = parseInt(data?.Constructiondetails?.RentArea);
     }
-    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
       builtUpArea = builtUpArea + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
     }
   }
@@ -209,7 +225,7 @@ export const getusageCategory = (data, i) => {
 
 export const getunits = (data) => {
   let unit = [];
-  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
     unit.push({
       occupancyType: data?.selfOccupied?.code,
       floorNo: getFloorNumber(data),
@@ -228,7 +244,7 @@ export const getunits = (data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data),
     });
-  } else if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes") {
+  } else if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "PT_COMMON_YES") {
     unit.push({
       occupancyType: data?.selfOccupied?.code,
       floorNo: getFloorNumber(data),
@@ -260,7 +276,7 @@ export const getunits = (data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data),
     });
-    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
       unit.push({
         occupancyType: data?.IsAnyPartOfThisFloorUnOccupied?.code,
         floorNo: getFloorNumber(data),
@@ -276,7 +292,10 @@ export const getunits = (data) => {
 };
 
 export const getunitarray = (i, unitsdata, unit, data) => {
-  if (unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "Yes") {
+  if (
+    unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
+    unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "PT_COMMON_YES"
+  ) {
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
@@ -295,7 +314,10 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data, i),
     });
-  } else if (unitsdata[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "Yes") {
+  } else if (
+    unitsdata[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
+    unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "PT_COMMON_YES"
+  ) {
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
       floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
@@ -327,7 +349,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
       tenantId: data.tenantId,
       usageCategory: getusageCategory(data, i),
     });
-    if (unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "Yes") {
+    if (unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
       unit.push({
         occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
         floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
@@ -418,7 +440,8 @@ export const setPropertyDetails = (data) => {
 /*   method to convert collected details to proeprty create object */
 export const convertToProperty = (data = {}) => {
   console.info("propertyFormData", data);
-
+  let isResdential = data.isResdential;
+  let propertyType = data.PropertyType;
   data = setDocumentDetails(data);
   data = setOwnerDetails(data);
   data = setAddressDetails(data);
@@ -439,11 +462,13 @@ export const convertToProperty = (data = {}) => {
       additionalDetails: {
         inflammable: false,
         heightAbove36Feet: false,
+        isResdential: isResdential,
+        propertyType: propertyType
       },
 
       creationReason: "CREATE",
       source: "MUNICIPAL_RECORDS",
-      channel: "CFC_COUNTER",
+      channel: "CITIZEN",
     },
   };
   console.info("propertyCreated", formdata);
@@ -470,23 +495,23 @@ export const isPropertyIndependent = (value = "") => {
 };
 
 export const isthere1Basement = (value = "") => {
-  return checkForNotNull(value) && value.includes("1") ? true : false;
+  return checkForNotNull(value) && value.includes("ONE") ? true : false;
 };
 
 export const isthere2Basement = (value = "") => {
-  return checkForNotNull(value) && value.includes("2") ? true : false;
+  return checkForNotNull(value) && value.includes("TWO") ? true : false;
 };
 
 export const isPropertyselfoccupied = (value = "") => {
-  return checkForNotNull(value) && value.includes("Self") ? true : false;
+  return checkForNotNull(value) && value.includes("SELFOCCUPIED") ? true : false;
 };
 
 export const isPropertyPartiallyrented = (value = "") => {
-  return checkForNotNull(value) && value.includes("Partially") ? true : false;
+  return checkForNotNull(value) && value.includes("PARTIALLY") ? true : false;
 };
 
 export const ispropertyunoccupied = (value = "") => {
-  return checkForNotNull(value) && value.includes("Yes") ? true : false;
+  return checkForNotNull(value) && value.includes("YES") ? true : false;
 };
 /*   method to get required format from fielstore url*/
 export const pdfDownloadLink = (documents = {}, fileStoreId = "", format = "") => {
