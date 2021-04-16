@@ -22,7 +22,7 @@ export const SelectPaymentType = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   // const menu = ["AXIS"];
   const { consumerCode, businessService } = useParams();
   const tenantId = state?.tenantId || __tenantId || Digit.ULBService.getCurrentTenantId();
