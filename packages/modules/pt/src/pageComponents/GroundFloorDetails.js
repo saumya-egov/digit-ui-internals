@@ -48,10 +48,14 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   const goNext = () => {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     if (!isNaN(index)) {
-      let unit = formData.units && formData.units[index];
-      let floordet = { plotSize, builtUpArea };
-      sessionStorage.setItem("propertyArea", "multiple");
-      onSelect(config.key, floordet, "", index);
+      let unit = (formData.units && formData.units[index]) || null;
+      if (unit !== null) {
+        onSelect(config.key, unit, "", index);
+      } else {
+        let floordet = { plotSize, builtUpArea };
+        sessionStorage.setItem("propertyArea", "multiple");
+        onSelect(config.key, floordet, "", index);
+      }
     } else {
       sessionStorage.setItem("propertyArea", "multiple");
       onSelect("floordetails", { plotSize, builtUpArea });

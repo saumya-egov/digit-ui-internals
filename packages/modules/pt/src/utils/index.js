@@ -448,6 +448,11 @@ export const convertToProperty = (data = {}) => {
   let subusagetype = data.subusagetype || null;
   let IsAnyPartOfThisFloorUnOccupied = data.IsAnyPartOfThisFloorUnOccupied || null;
   let builtUpArea = data?.floordetails?.builtUpArea || null;
+  let noOfFloors = data?.noOfFloors;
+  let noOofBasements = data?.noOofBasements;
+  let unit = data?.units;
+  let basement1 = data?.units["-1"];
+  let basement2 = data?.units["-2"];
 
   data = setDocumentDetails(data);
   data = setOwnerDetails(data);
@@ -476,6 +481,11 @@ export const convertToProperty = (data = {}) => {
         subusagetype: subusagetype,
         IsAnyPartOfThisFloorUnOccupied: IsAnyPartOfThisFloorUnOccupied,
         builtUpArea: builtUpArea,
+        noOfFloors: noOfFloors,
+        noOofBasements: noOofBasements,
+        unit: unit,
+        basement1: basement1,
+        basement2: basement2,
       },
 
       creationReason: "CREATE",

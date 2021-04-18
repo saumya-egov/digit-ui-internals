@@ -88,8 +88,19 @@ const getPropertyEditDetails = (data = {}) => {
         }
       });
     data.floordetails = { plotSize: data?.landArea, builtUpArea: data?.additionalDetails?.builtUpArea };
+  } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
+    data.isResdential = data?.additionalDetails?.isResdential;
+    data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+    data.PropertyType = data?.additionalDetails?.propertyType;
+    data.noOfFloors = data?.additionalDetails?.noOfFloors;
+    data.noOofBasements = data?.additionalDetails?.noOofBasements;
+    data.units = data?.additionalDetails?.unit;
+    data.units[0].selfOccupied = data?.additionalDetails?.unit[0]?.selfOccupied;
+    data.units["-1"] = data?.additionalDetails?.basement1;
+    data.units["-2"] = data?.additionalDetails?.basement2;
   }
 
+  console.log(data);
   return data;
 };
 const EditProperty = ({ parentRoute }) => {
