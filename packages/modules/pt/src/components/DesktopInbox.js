@@ -18,7 +18,7 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
   let result;
   if (props.isLoading) {
     result = <Loader />;
-  } else if ((props.isSearch && !props.shouldSearch) || props?.data?.length === 0) {
+  } else if (props.isSearch || props?.data?.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
@@ -66,14 +66,14 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
         <div className="filters-container">
           <InboxLinks parentRoute={props.parentRoute} businessService={props.businessService} />
           <div>
-            <Filter
+            {/* <Filter
               businessService={props.businessService}
               searchParams={props.searchParams}
               applications={props.data}
               onFilterChange={props.onFilterChange}
               translatePrefix={props.translatePrefix}
               type="desktop"
-            />
+            /> */}
           </div>
         </div>
       )}
