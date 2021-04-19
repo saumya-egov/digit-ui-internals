@@ -18,12 +18,12 @@ const BillSumary = ({ billAccountDetails, total, businessService, arrears }) => 
             );
           })}
 
-        {arrears && (
+        {arrears ? (
           <div className="bill-account-details">
             <div className="label">{t("COMMON_ARREARS")}</div>
             <div className="value">₹ {arrears}</div>
           </div>
-        )}
+        ) : null}
 
         <hr className="underline" />
         <div className="amount-details">
