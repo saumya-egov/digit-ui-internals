@@ -15,6 +15,7 @@ import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
 import useBoundaryLocalities from "./useLocalities";
 import useCommonMDMS from "./useMDMS";
+import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";

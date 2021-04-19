@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-const Filter = ({ clearAll }) => {
+const Filter = ({ clearAll, ...props }) => {
+  const { t } = useTranslation();
   return (
     <React.Fragment>
       <div className="filter">
@@ -26,3 +28,5 @@ const Filter = ({ clearAll }) => {
     </React.Fragment>
   );
 };
+
+export default Filter;
