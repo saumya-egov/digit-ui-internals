@@ -6,7 +6,7 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
-const Inbox = ({ parentRoute, businessService = "PT", initialStates = {} }) => {
+const Inbox = ({ parentRoute, businessService = "PT", initialStates = {}, filterComponent = "PT_INBOX_FILTER" }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
@@ -117,6 +117,7 @@ const Inbox = ({ parentRoute, businessService = "PT", initialStates = {} }) => {
             sortParams={sortParams}
             totalRecords={Number(data?.[0]?.totalCount)}
             setIsInbox={setIsInbox}
+            filterComponent={filterComponent}
           />
         </div>
       );

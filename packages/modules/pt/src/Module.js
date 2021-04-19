@@ -111,4 +111,5 @@ export const PTComponents = {
   PTCard,
   PTModule,
   PTLinks,
+  PT_INBOX_FILTER: (props) => <div>{JSON.stringify(props)}</div>,
 };
