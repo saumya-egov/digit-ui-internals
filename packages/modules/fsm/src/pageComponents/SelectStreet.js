@@ -15,6 +15,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData }) => {
       name: "street",
       validation: {
         pattern: "[a-zA-Z0-9 ]{1,255}",
+        maxlength: 256,
         title: t("CORE_COMMON_STREET_INVALID"),
       },
     },
@@ -24,6 +25,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData }) => {
       name: "doorNo",
       validation: {
         pattern: "([A-z0-9À-ž/s ]){1,}",
+        maxlength: 256,
         title: t("CORE_COMMON_DOOR_INVALID"),
       },
     },
