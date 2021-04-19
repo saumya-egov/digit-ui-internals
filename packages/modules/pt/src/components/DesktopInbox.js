@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
@@ -10,6 +10,7 @@ import SearchApplication from "./inbox/search";
 const DesktopInbox = ({ tableConfig, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
+  const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent("PT_INBOX_FILTER"));
 
   // searchData, workFlowData
 
@@ -66,6 +67,7 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
         <div className="filters-container">
           <InboxLinks parentRoute={props.parentRoute} businessService={props.businessService} />
           <div>
+            {<FilterComponent check={0} />}
             {/* <Filter
               businessService={props.businessService}
               searchParams={props.searchParams}
