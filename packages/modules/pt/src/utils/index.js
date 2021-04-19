@@ -113,13 +113,13 @@ export const setOwnerDetails = (data) => {
         if (ownr?.ownerType?.code != "NONE") {
           document.push({
             fileStoreId: ownr.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: ownr.documents["specialProofIdentity"].documentType || ""
+            documentType: ownr.documents["specialProofIdentity"].documentType || "",
           });
         }
-        if(ownr?.documents["proofIdentity"]?.fileStoreId) {
+        if (ownr?.documents["proofIdentity"]?.fileStoreId) {
           document.push({
             fileStoreId: ownr.documents["proofIdentity"].fileStoreId || "",
-            documentType: ownr.documents["proofIdentity"].documentType || ""
+            documentType: ownr.documents["proofIdentity"].documentType || "",
           });
         }
         owner.push({
@@ -148,21 +148,22 @@ export const setDocumentDetails = (data) => {
     fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
     documentType: address?.documents["ProofOfAddress"]?.documentType || "",
   });
-  owners && owners.length > 0 && 
-  owners.map(owner => {
-    if(owner.documents && owner.documents["proofIdentity"]) {
-      documents.push({
-        fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
-        documentType: owner.documents["proofIdentity"].documentType || ""
-      });
-    }
-    if(owner.documents && owner.documents["specialProofIdentity"]) {
-      documents.push({
-        fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
-        documentType: owner.documents["specialProofIdentity"].documentType || "",
-      })
-    }
-  })
+  owners &&
+    owners.length > 0 &&
+    owners.map((owner) => {
+      if (owner.documents && owner.documents["proofIdentity"]) {
+        documents.push({
+          fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
+          documentType: owner.documents["proofIdentity"].documentType || "",
+        });
+      }
+      if (owner.documents && owner.documents["specialProofIdentity"]) {
+        documents.push({
+          fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
+          documentType: owner.documents["specialProofIdentity"].documentType || "",
+        });
+      }
+    });
   data.documents = documents;
   return data;
 };
@@ -442,6 +443,17 @@ export const convertToProperty = (data = {}) => {
   console.info("propertyFormData", data);
   let isResdential = data.isResdential;
   let propertyType = data.PropertyType;
+  let selfOccupied = data.selfOccupied;
+  let Subusagetypeofrentedarea = data.Subusagetypeofrentedarea || null;
+  let subusagetype = data.subusagetype || null;
+  let IsAnyPartOfThisFloorUnOccupied = data.IsAnyPartOfThisFloorUnOccupied || null;
+  let builtUpArea = data?.floordetails?.builtUpArea || null;
+  let noOfFloors = data?.noOfFloors;
+  let noOofBasements = data?.noOofBasements;
+  let unit = data?.units;
+  let basement1 = data?.units["-1"];
+  let basement2 = data?.units["-2"];
+
   data = setDocumentDetails(data);
   data = setOwnerDetails(data);
   data = setAddressDetails(data);
@@ -463,7 +475,17 @@ export const convertToProperty = (data = {}) => {
         inflammable: false,
         heightAbove36Feet: false,
         isResdential: isResdential,
-        propertyType: propertyType
+        propertyType: propertyType,
+        selfOccupied: selfOccupied,
+        Subusagetypeofrentedarea: Subusagetypeofrentedarea,
+        subusagetype: subusagetype,
+        IsAnyPartOfThisFloorUnOccupied: IsAnyPartOfThisFloorUnOccupied,
+        builtUpArea: builtUpArea,
+        noOfFloors: noOfFloors,
+        noOofBasements: noOofBasements,
+        unit: unit,
+        basement1: basement1,
+        basement2: basement2,
       },
 
       creationReason: "CREATE",

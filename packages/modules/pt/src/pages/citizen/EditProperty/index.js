@@ -15,22 +15,23 @@ const getPropertyEditDetails = (data = {}) => {
     if (data?.owners[0]?.documents?.documentType == "IDENTITYPROOF") {
       document["proofIdentity"] = data?.owners[0]?.documents[0];
     }
-    data.owners[0].designation = data?.institution?.designation,
-      data.owners[0].inistitutionName = data?.institution?.name,
-      data.owners[0].name = data?.institution?.nameOfAuthorizedPerson,
-      data.owners[0].inistitutetype = { value: data?.institution.type, code: data?.institution.type },
-      data.owners[0].documents = document
+    (data.owners[0].designation = data?.institution?.designation),
+      (data.owners[0].inistitutionName = data?.institution?.name),
+      (data.owners[0].name = data?.institution?.nameOfAuthorizedPerson),
+      (data.owners[0].inistitutetype = { value: data?.institution.type, code: data?.institution.type }),
+      (data.owners[0].documents = document);
   } else {
     data.owners.map((owner) => {
       let document = [];
-      owner.documents && owner.documents.map(doc => {
-        if (doc.documentType == "SPECIAL_CATEGORY_PROOF") {
-          document["specialProofIdentity"] = doc;
-        }
-        if (doc.documentType == "IDENTITYPROOF") {
-          document["proofIdentity"] = doc;
-        }
-      });
+      owner.documents &&
+        owner.documents.map((doc) => {
+          if (doc.documentType == "SPECIAL_CATEGORY_PROOF") {
+            document["specialProofIdentity"] = doc;
+          }
+          if (doc.documentType == "IDENTITYPROOF") {
+            document["proofIdentity"] = doc;
+          }
+        });
       owner.emailId = owner?.emailId;
       owner.fatherOrHusbandName = owner?.fatherOrHusbandName;
       owner.isCorrespondenceAddress = owner?.isCorrespondenceAddress;
@@ -44,28 +45,64 @@ const getPropertyEditDetails = (data = {}) => {
     });
   }
   //converting ownershipCategory
-  data.ownershipCategory = { code: data?.ownershipCategory, value: data?.ownershipCategory }
+  data.ownershipCategory = { code: data?.ownershipCategory, value: data?.ownershipCategory };
 
   //converting address details
-  if ((data?.address?.geoLocation?.latitude && data?.address?.geoLocation?.longitude)) {
+  if (data?.address?.geoLocation?.latitude && data?.address?.geoLocation?.longitude) {
     data.address.geoLocation = {
       latitude: data?.address?.geoLocation?.latitude,
-      longitude: data?.address?.geoLocation?.longitude
-    }
+      longitude: data?.address?.geoLocation?.longitude,
+    };
   } else {
-    data.address.geoLocation = {}
+    data.address.geoLocation = {};
   }
   data.address.pincode = data?.address?.pincode;
-  let addressDocs = data.documents.filter(doc => doc.documentType == "ADDRESSPROOF");
+  let addressDocs = data.documents.filter((doc) => doc.documentType == "ADDRESSPROOF");
   data.documents["ProofOfAddress"] = addressDocs[0];
 
   // asessment details
-  data.PropertyType = data?.additionalDetails?.propertyType;
-  data.isResdential = data?.additionalDetails?.isResdential;
-  data.landarea = { floorarea: data?.landArea };
+  if (data?.additionalDetails?.PropertyType?.code === "VACANT") {
+    data.PropertyType = data?.additionalDetails?.propertyType;
+    data.isResdential = data?.additionalDetails?.isResdential;
+    data.landarea = { floorarea: data?.landArea };
+  } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.SHAREDPROPERTY") {
+    data.isResdential = data?.additionalDetails?.isResdential;
+    data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+    data.PropertyType = data?.additionalDetails?.propertyType;
+    data.Floorno =
+      data?.units[0]?.floorNo < 0
+        ? { i18nKey: `PROPERTYTAX_FLOOR__${data?.units[0]?.floorNo * -1}` }
+        : { i18nKey: `PROPERTYTAX_FLOOR_${data?.units[0]?.floorNo}` };
+    data.selfOccupied = data?.additionalDetails?.selfOccupied;
+    data.Subusagetypeofrentedarea = data?.additionalDetails?.Subusagetypeofrentedarea;
+    data.subusagetype = data?.additionalDetails?.subusagetype;
+    data.IsAnyPartOfThisFloorUnOccupied = data?.additionalDetails?.IsAnyPartOfThisFloorUnOccupied;
+    data?.units &&
+      data?.units.map((unit, index) => {
+        if (unit?.occupancyType === "RENTED") {
+          data.Constructiondetails = { RentArea: unit?.constructionDetail?.builtUpArea, AnnualRent: unit?.arv };
+        } else if (unit?.occupancyType === "UNOCCUPIED") {
+          data.UnOccupiedArea = { UnOccupiedArea: unit?.constructionDetail?.builtUpArea };
+        } else if (unit?.occupancyType === "SELFOCCUPIED") {
+          data.landarea = { floorarea: unit?.constructionDetail?.builtUpArea };
+        }
+      });
+    data.floordetails = { plotSize: data?.landArea, builtUpArea: data?.additionalDetails?.builtUpArea };
+  } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
+    data.isResdential = data?.additionalDetails?.isResdential;
+    data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+    data.PropertyType = data?.additionalDetails?.propertyType;
+    data.noOfFloors = data?.additionalDetails?.noOfFloors;
+    data.noOofBasements = data?.additionalDetails?.noOofBasements;
+    data.units = data?.additionalDetails?.unit;
+    data.units[0].selfOccupied = data?.additionalDetails?.unit[0]?.selfOccupied;
+    data.units["-1"] = data?.additionalDetails?.basement1;
+    data.units["-2"] = data?.additionalDetails?.basement2;
+  }
 
+  console.log(data);
   return data;
-}
+};
 const EditProperty = ({ parentRoute }) => {
   const queryClient = useQueryClient();
   const match = useRouteMatch();
@@ -75,7 +112,7 @@ const EditProperty = ({ parentRoute }) => {
   let config = [];
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_PROPERTY", {});
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const acknowledgementIds = window.location.href.split('/').pop();
+  const acknowledgementIds = window.location.href.split("/").pop();
   let application = {};
   const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({
     tenantId,
@@ -93,7 +130,6 @@ const EditProperty = ({ parentRoute }) => {
   }, [data]);
 
   // const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_PROPERTY", application);
-
 
   const goNext = (skipStep, index, isAddMultiple, key) => {
     let currentPath = pathname.split("/").pop(),
@@ -195,8 +231,8 @@ const EditProperty = ({ parentRoute }) => {
     goNext(skipStep, index, isAddMultiple, key);
   }
 
-  const handleSkip = () => { };
-  const handleMultiple = () => { };
+  const handleSkip = () => {};
+  const handleMultiple = () => {};
 
   const onSuccess = () => {
     clearParams();
