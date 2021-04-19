@@ -6,13 +6,16 @@ const PropertyBasementsDetails = ({ t, config, onSelect, userType, formData }) =
 
   const menu = [
     {
-      i18nKey: "No Basement",
+      //i18nKey: "No Basement",
+      i18nKey: "PT_NO_BASEMENT_OPTION",
     },
     {
-      i18nKey: "1 Basement",
+      //i18nKey: "1 Basement",
+      i18nKey: "PT_ONE_BASEMENT_OPTION",
     },
     {
-      i18nKey: "2 Basement",
+      //i18nKey: "2 Basement",
+      i18nKey: "PT_TWO_BASEMENT_OPTION",
     },
   ];
 
@@ -24,7 +27,8 @@ const PropertyBasementsDetails = ({ t, config, onSelect, userType, formData }) =
 
   function goNext() {
     let index = window.location.href.charAt(window.location.href.length - 1);
-    sessionStorage.setItem("noOofBasements", BasementDetails);
+    //let index = window.location.href.split("/").pop();
+    sessionStorage.setItem("noOofBasements", BasementDetails.i18nKey);
     onSelect(config.key, BasementDetails, "", index);
   }
 

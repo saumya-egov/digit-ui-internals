@@ -17,27 +17,66 @@ const CreateProperty = ({ parentRoute }) => {
 
   const goNext = (skipStep, index, isAddMultiple, key) => {
     let currentPath = pathname.split("/").pop(),
+      lastchar = currentPath.charAt(currentPath.length - 1),
       isMultiple = false,
       nextPage;
-    if (Number(parseInt(currentPath)) || currentPath == "0") {
-      currentPath = pathname.slice(0, -2);
-      currentPath = currentPath.split("/").pop();
-      isMultiple = true;
+    if (Number(parseInt(currentPath)) || currentPath == "0" || currentPath == "-1") {
+      if (currentPath == "-1" || currentPath == "-2") {
+        currentPath = pathname.slice(0, -3);
+        currentPath = currentPath.split("/").pop();
+        isMultiple = true;
+      } else {
+        currentPath = pathname.slice(0, -2);
+        currentPath = currentPath.split("/").pop();
+        isMultiple = true;
+      }
     } else {
       isMultiple = false;
     }
-    let { nextStep } = config.find((routeObj) => routeObj.route === currentPath);
-    if (typeof nextStep == "object" && nextStep != null) {
+    if (!isNaN(lastchar)) {
+      isMultiple = true;
+    }
+    let { nextStep = {} } = config.find((routeObj) => routeObj.route === currentPath);
+    if (typeof nextStep == "object" && nextStep != null && isMultiple != false) {
       if (nextStep[sessionStorage.getItem("ownershipCategory")]) {
         nextStep = `${nextStep[sessionStorage.getItem("ownershipCategory")]}/${index}`;
+      } else if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
+        if (`${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}` === "un-occupied-area") {
+          nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}/${index}`;
+        } else {
+          nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
+        }
+      } else if (nextStep[sessionStorage.getItem("area")]) {
+        // nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
+
+        if (`${nextStep[sessionStorage.getItem("area")]}` !== "map") {
+          nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
+        } else {
+          nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
+        }
+      } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]}/${index}`;
       } else {
-        nextStep = `${"floordetails"}/${index}`;
+        nextStep = `${nextStep[sessionStorage.getItem("noOofBasements")]}/${index}`;
+        //nextStep = `${"floordetails"}/${index}`;
       }
-      console.log(nextStep);
     }
-    if (nextStep === "is-this-floor-self-occupied") {
+    if (typeof nextStep == "object" && nextStep != null && isMultiple == false) {
+      if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
+      } else if (nextStep[sessionStorage.getItem("area")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
+      } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]}`;
+      } else if (nextStep[sessionStorage.getItem("PropertyType")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("PropertyType")]}`;
+      } else if (nextStep[sessionStorage.getItem("isResdential")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("isResdential")]}`;
+      }
+    }
+    /* if (nextStep === "is-this-floor-self-occupied") {
       isMultiple = false;
-    }
+    } */
     let redirectWithHistory = history.push;
     if (skipStep) {
       redirectWithHistory = history.replace;
@@ -46,11 +85,14 @@ const CreateProperty = ({ parentRoute }) => {
       nextStep = key;
     }
     if (nextStep === null) {
-      console.log(match.path);
-
       return redirectWithHistory(`${match.path}/check`);
     }
-    nextPage = isMultiple ? `${match.path}/${nextStep}/${index}` : `${match.path}/${nextStep}`;
+    if (!isNaN(nextStep.split("/").pop())) {
+      nextPage = `${match.path}/${nextStep}`;
+    } else {
+      nextPage = isMultiple && nextStep !== "map" ? `${match.path}/${nextStep}/${index}` : `${match.path}/${nextStep}`;
+    }
+
     redirectWithHistory(nextPage);
   };
 

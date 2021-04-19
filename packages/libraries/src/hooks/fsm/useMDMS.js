@@ -2,16 +2,18 @@ import { MdmsService } from "../../services/elements/MDMS";
 import { useQuery } from "react-query";
 
 const useMDMS = (tenantId, moduleCode, type, config = {}, payload = []) => {
+  const queryConfig = { staleTime: Infinity, ...config };
+
   const useSanitationType = () => {
-    return useQuery("FSM_SANITATION_TYPE", () => MdmsService.getSanitationType(tenantId, moduleCode), config);
+    return useQuery("FSM_SANITATION_TYPE", () => MdmsService.getSanitationType(tenantId, moduleCode), queryConfig);
   };
 
   const usePitType = () => {
-    return useQuery("FSM_PIT_TYPE", () => MdmsService.getPitType(tenantId, moduleCode, config));
+    return useQuery("FSM_PIT_TYPE", () => MdmsService.getPitType(tenantId, moduleCode, queryConfig));
   };
 
   const useApplicationChannel = () => {
-    return useQuery("FSM_APPLICATION_NEW_APPLICATION_CHANNEL", () => MdmsService.getApplicationChannel(tenantId, moduleCode, type), config);
+    return useQuery("FSM_APPLICATION_NEW_APPLICATION_CHANNEL", () => MdmsService.getApplicationChannel(tenantId, moduleCode, type), queryConfig);
   };
 
   const useEmployeeApplicationChannel = () => {
@@ -19,31 +21,35 @@ const useMDMS = (tenantId, moduleCode, type, config = {}, payload = []) => {
       const allApplicationChannels = await MdmsService.getApplicationChannel(tenantId, moduleCode, type);
       return allApplicationChannels.filter((type) => !type.citizenOnly);
     }
-    return useQuery("FSM_APPLICATION_EDIT_APPLICATION_CHANNEL", () => onlyEmployeeChannels(), config);
+    return useQuery("FSM_APPLICATION_EDIT_APPLICATION_CHANNEL", () => onlyEmployeeChannels(), queryConfig);
   };
 
   const usePropertyType = () => {
-    return useQuery("FSM_PROPERTY_TYPE", () => MdmsService.getPropertyType(tenantId, moduleCode, type), config);
+    return useQuery("FSM_PROPERTY_TYPE", () => MdmsService.getPropertyType(tenantId, moduleCode, type), queryConfig);
   };
 
   const usePropertySubType = () => {
-    return useQuery("FSM_PROPERTY_SUBTYPE", () => MdmsService.getPropertyType(tenantId, moduleCode, type), config);
+    return useQuery("FSM_PROPERTY_SUBTYPE", () => MdmsService.getPropertyType(tenantId, moduleCode, type), queryConfig);
   };
 
   const useChecklist = () => {
-    return useQuery("FSM_CHECKLIST", () => MdmsService.getChecklist(tenantId, moduleCode));
+    return useQuery("FSM_CHECKLIST", () => MdmsService.getChecklist(tenantId, moduleCode), queryConfig);
   };
 
   const useVehicleType = () => {
-    return useQuery("FSM_VEHICLE_TYPE", () => MdmsService.getVehicleType(tenantId, moduleCode, type), config);
+    return useQuery("FSM_VEHICLE_TYPE", () => MdmsService.getVehicleType(tenantId, moduleCode, type), queryConfig);
   };
 
   const useSlumLocality = () => {
-    return useQuery(["SLUM_LOCALITY_MAPPING", tenantId, moduleCode], () => MdmsService.getSlumLocalityMapping(tenantId, moduleCode, type));
+    return useQuery(
+      ["SLUM_LOCALITY_MAPPING", tenantId, moduleCode],
+      () => MdmsService.getSlumLocalityMapping(tenantId, moduleCode, type),
+      queryConfig
+    );
   };
 
   const useReason = () => {
-    return useQuery("CANCELLATION_REASON", () => MdmsService.getReason(tenantId, moduleCode, type, payload));
+    return useQuery("CANCELLATION_REASON", () => MdmsService.getReason(tenantId, moduleCode, type, payload), queryConfig);
   };
 
   const useRoleStatusMapping = () => {

@@ -13,8 +13,8 @@ const RadioButtons = (props) => {
 
   return (
     <div style={props.style} className="radio-wrap">
-      {props.options.map((option, ind) => {
-        if (props.optionsKey) {
+      {props?.options?.map((option, ind) => {
+        if (props?.optionsKey) {
           return (
             <div style={props.innerStyles} key={ind}>
               <span className="radio-btn-wrap">

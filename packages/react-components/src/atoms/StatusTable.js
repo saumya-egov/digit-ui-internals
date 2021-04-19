@@ -11,6 +11,7 @@ export const LastRow = (props) => {
 
 export const Row = (props) => {
   let value = props.text;
+  let valueStyle = props.textStyle || {};
   if (Array.isArray(props.text)) {
     value = props.text.map((val, index) => {
       if (val?.className) {
@@ -27,7 +28,7 @@ export const Row = (props) => {
   return (
     <div style={props.rowContainerStyle} className={`${props.last ? "row last" : "row"} ${props?.className || ""}`}>
       <h2>{props.label}</h2>
-      <div className="value">
+      <div className="value" style={valueStyle}>
         {value}
         {props.caption && <div className="caption">{props.caption}</div>}
       </div>
@@ -49,7 +50,7 @@ export const StatusTable = (props) => {
   const employee = Digit.SessionStorage.get("user_type") === "employee" ? true : false;
   if (props.dataObject) {
     return (
-      <div className={employee ? "employee-data-table" : "data-table"}>
+      <div className={employee ? "employee-data-table" : "data-table"} style={props.style}>
         {Object.keys(props.dataObject).map((name, index) => {
           if (++index === Object.keys(props.dataObject).length) {
             return <LastRow key={index} label={name} text={props.dataObject[name]} />;
@@ -59,6 +60,10 @@ export const StatusTable = (props) => {
       </div>
     );
   } else {
-    return <div className={employee ? "employee-data-table" : "data-table"}> {props.children} </div>;
+    return (
+      <div className={employee ? "employee-data-table" : "data-table"} style={props.style}>
+        {props.children}
+      </div>
+    );
   }
 };

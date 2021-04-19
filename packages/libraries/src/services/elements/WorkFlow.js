@@ -27,17 +27,17 @@ export const WorkflowService = {
     // console.log("getWorkflowDetails", tenantId, id, moduleCode, role);
     // console.log(Digit);
     const workflow = await Digit.WorkflowService.getByBusinessId(tenantId, id);
-    const businessServiceResponse = (await Digit.WorkflowService.init(tenantId, moduleCode)).BusinessServices[0].states;
+    const businessServiceResponse = (await Digit.WorkflowService.init(tenantId, moduleCode))?.BusinessServices[0]?.states;
     if (workflow && workflow.ProcessInstances) {
       const processInstances = workflow.ProcessInstances;
       const nextStates = processInstances[0]?.nextActions.map((action) => ({ action: action.action, nextState: action.nextState }));
       const nextActions = nextStates.map((id) => ({
         action: id.action,
-        state: businessServiceResponse.find((state) => state.uuid === id.nextState),
+        state: businessServiceResponse?.find((state) => state.uuid === id.nextState),
       }));
       const actionRolePair = nextActions?.map((action) => ({
         action: action.action,
-        roles: action.state.actions?.map((action) => action.roles).join(","),
+        roles: action.state?.actions?.map((action) => action.roles).join(","),
       }));
 
       if (processInstances.length > 0) {

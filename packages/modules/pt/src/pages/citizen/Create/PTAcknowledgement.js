@@ -49,11 +49,11 @@ const PTAcknowledgement = ({ data, onSuccess }) => {
     }
   }, []);
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const { Properties = [] } = mutation.data;
     const Property = (Properties && Properties[0]) || {};
     const tenantInfo = coreData.tenants.find((tenant) => tenant.code === Property.tenantId);
-    const data = getPTAcknowledgementData({ ...Property }, tenantInfo, t);
+    const data = await getPTAcknowledgementData({ ...Property }, tenantInfo, t);
     Digit.Utils.pdf.generate(data);
   };
 
@@ -82,7 +82,13 @@ const PTAcknowledgement = ({ data, onSuccess }) => {
       )}
       <StatusTable>
         {mutation.isSuccess && (
-          <Row rowContainerStyle={rowContainerStyle} last label={t("PT_COMMON_TABLE_COL_PT_ID")} text={mutation?.data?.Properties[0]?.propertyId} />
+          <Row
+            rowContainerStyle={rowContainerStyle}
+            last
+            label={t("PT_COMMON_TABLE_COL_PT_ID")}
+            text={mutation?.data?.Properties[0]?.propertyId}
+            textStyle={{ whiteSpace: "pre", width: "60%" }}
+          />
         )}
       </StatusTable>
       <Link to={`/digit-ui/citizen`}>

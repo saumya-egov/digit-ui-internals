@@ -4,6 +4,7 @@ import { cardBodyStyle } from "../utils";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
+  let validation = {};
   const [name, setName] = useState(formData.owners && formData.owners[index] && formData.owners[index].name);
   const [gender, setGender] = useState(formData.owners && formData.owners[index] && formData.owners[index].gender);
   const [mobileNumber, setMobileNumber] = useState(formData.owners && formData.owners[index] && formData.owners[index].mobileNumber);
@@ -65,7 +66,12 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="name"
           value={name}
           onChange={setOwnerName}
-          pattern="^[a-zA-Z-.`' ]*$"
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[a-zA-Z-.`' ]*$",
+            type: "tel",
+            title: t("PT_NAME_ERROR_MESSAGE"),
+          })}
         />
         <CardLabel>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
         <RadioButtons t={t} options={options} optionsKey="code" name="gender" value={gender} selectedOption={gender} onSelect={setGenderName} />
@@ -78,7 +84,12 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="mobileNumber"
           value={mobileNumber}
           onChange={setMobileNo}
-          pattern="^([0]|((\+\d{1,2}[-]{0,1})))?\(?[6-9]\d{2}\)?[\s.-]?\d{3}[\s.-]?\d{4}$"
+          {...(validation = {
+            isRequired: true,
+            pattern: "[6-9]{1}[0-9]{9}",
+            type: "tel",
+            title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
+          })}
         />
         <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}*`}</CardLabel>
         <TextInput
@@ -89,7 +100,12 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="fatherOrHusbandName"
           value={fatherOrHusbandName}
           onChange={setGuardiansName}
-          pattern="^[a-zA-Z-.`' ]*$"
+          {...(validation = {
+            isRequired: true,
+            pattern: "^[a-zA-Z-.`' ]*$",
+            type: "tel",
+            title: t("PT_NAME_ERROR_MESSAGE"),
+          })}
         />
         <CardLabel>{`${t("PT_FORM3_RELATIONSHIP")}*`}</CardLabel>
         <RadioButtons

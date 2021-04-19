@@ -20,18 +20,23 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
   const [pageOffset, setPageOffset] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [sortParams, setSortParams] = useState([{ id: "createdTime", desc: false }]);
-  const [searchParams, setSearchParams] = useState(() => {
-    return isInbox
-      ? {
-          applicationStatus: [],
-          locality: [],
-          uuid:
-            DSO || isFSTPOperator
-              ? { code: "ASSIGNED_TO_ME", name: t("ES_INBOX_ASSIGNED_TO_ME") }
-              : { code: "ASSIGNED_TO_ALL", name: t("ES_INBOX_ASSIGNED_TO_ALL") },
-        }
-      : {};
-  });
+
+  const searchParamsKey = isInbox ? "fsm/inbox/searchParams" : "fsm/search/searchParams";
+  const searchParamsValue = isInbox
+    ? {
+        applicationStatus: [],
+        locality: [],
+        uuid:
+          DSO || isFSTPOperator
+            ? { code: "ASSIGNED_TO_ME", name: t("ES_INBOX_ASSIGNED_TO_ME") }
+            : { code: "ASSIGNED_TO_ALL", name: t("ES_INBOX_ASSIGNED_TO_ALL") },
+      }
+    : {};
+  const [searchParams, setSearchParams] = Digit.Hooks.useSessionStorage(searchParamsKey, searchParamsValue);
+
+  useEffect(() => {
+    onSearch(searchParams);
+  }, []);
 
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParms = isMobile
@@ -65,6 +70,7 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
       limit: pageSize,
       offset: pageOffset,
       ...searchParams,
+      applicationStatus: searchParams?.applicationStatus?.code,
       fromDate: searchParams?.fromDate ? new Date(searchParams?.fromDate).getTime() : undefined,
       toDate: searchParams?.toDate ? new Date(searchParams?.toDate).getTime() : undefined,
     },
@@ -135,6 +141,11 @@ const Inbox = ({ parentRoute, isSearch = false, isInbox = false }) => {
           maxlength: 10,
           pattern: "[6-9][0-9]{9}",
           title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        },
+        {
+          label: t("ES_INBOX_STATUS"),
+          name: "applicationStatus",
+          type: "status",
         },
         {
           label: t("ES_SEARCH_FROM_DATE"),

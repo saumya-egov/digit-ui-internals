@@ -1,6 +1,7 @@
 import { LocalizationService } from "../../elements/Localization/service";
 import { MdmsService } from "../../elements/MDMS";
 import { Storage } from "../../atoms/Utils/Storage";
+import { ApiCacheService } from "../../atoms/ApiCacheService";
 
 const getImgUrl = (url, fallbackUrl) => {
   if (!url && fallbackUrl) {
@@ -42,14 +43,14 @@ export const StoreService = {
   getBoundries: async (tenants) => {
     let allBoundries = [];
     allBoundries = tenants.map((tenant) => {
-      return Digit.LocationService.getLocalities({ tenantId: tenant.code });
+      return Digit.LocationService.getLocalities(tenant.code);
     });
     return await Promise.all(allBoundries);
   },
   getRevenueBoundries: async (tenants) => {
     let allBoundries = [];
     allBoundries = tenants.map((tenant) => {
-      return Digit.LocationService.getRevenueLocalities({ tenantId: tenant.code });
+      return Digit.LocationService.getRevenueLocalities(tenant.code);
     });
     return await Promise.all(allBoundries);
   },
@@ -72,12 +73,7 @@ export const StoreService = {
     };
     initData.selectedLanguage = initData.languages[0].value;
 
-    // TODO: remove the FSM & Payment temp data once added in mdms master
-    initData.modules.push({
-      module: "Payment",
-      code: "Payment",
-      tenants: [{ code: "pb.amritsar" }],
-    });
+    ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
 
     const moduleTenants = initData.modules
       .map((module) => module.tenants)
@@ -86,6 +82,13 @@ export const StoreService = {
     initData.tenants = MdmsRes?.tenant?.tenants
       .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
       .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
+
+    // TODO: remove the FSM & Payment temp data once added in mdms master
+    initData.modules.push({
+      module: "Payment",
+      code: "Payment",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
 
     await LocalizationService.getLocale({
       modules: [
@@ -97,15 +100,7 @@ export const StoreService = {
       tenantId: stateCode,
     });
     Storage.set("initData", initData);
-    let tenantBoundriesList = await StoreService.getBoundries(initData.tenants);
-    let revenueBoundaryList = await StoreService.getRevenueBoundries(initData.tenants);
-    revenueBoundaryList.forEach((boundry) => {
-      revenue_localities[boundry.TenantBoundary[0].tenantId] = Digit.LocalityService.get(boundry.TenantBoundary[0]);
-    });
     initData.revenue_localities = revenue_localities;
-    tenantBoundriesList.forEach((boundry) => {
-      localities[boundry.TenantBoundary[0].tenantId] = Digit.LocalityService.get(boundry.TenantBoundary[0]);
-    });
     initData.localities = localities;
     setTimeout(() => {
       renderTenantLogos(stateInfo, initData.tenants);

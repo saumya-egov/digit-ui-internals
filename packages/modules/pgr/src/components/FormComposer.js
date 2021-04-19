@@ -30,11 +30,11 @@ export const FormComposer = (props) => {
         return (
           <div className="field-container">
             {populators.componentInFront ? populators.componentInFront : null}
-            <TextInput className="field" {...populators} inputRef={register(populators.validation)} />
+            <TextInput className="field desktop-w-full" {...populators} inputRef={register(populators.validation)} />
           </div>
         );
       case "textarea":
-        return <TextArea className="field" {...populators} inputRef={register(populators.validation)} />;
+        return <TextArea className="field desktop-w-full" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} />;
       default:
         return populators.dependency !== false ? populators : null;
     }

@@ -1,6 +1,7 @@
 import { Header, HomeLink } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteMatch } from "react-router-dom";
 import Area from "./pageComponents/Area";
 import GroundFloorDetails from "./pageComponents/GroundFloorDetails";
 import IsAnyPartOfThisFloorUnOccupied from "./pageComponents/IsAnyPartOfThisFloorUnOccupied";
@@ -28,12 +29,16 @@ import SelectSpecialOwnerCategoryType from "./pageComponents/SelectSpecialOwnerC
 import SelectSpecialProofIdentity from "./pageComponents/SelectSpecialProofIdentity";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
 import CitizenApp from "./pages/citizen";
-import EmployeeApp from "./pages/employee";
-import { useRouteMatch } from "react-router-dom";
-import PTCard from "./components/PTCard";
+
 import PropertyInformation from "./pages/citizen/MyProperties/propertyInformation";
 import PTWFCaption from "./pageComponents/PTWFCaption";
 import PTWFReason from "./pageComponents/PTWFReason";
+import ProvideFloorNo from "./pageComponents/ProvideFloorNo";
+import propertyOwnerHistory from "./pages/citizen/MyProperties/propertyOwnerHistory";
+import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
+
+import EmployeeApp from "./pages/employee";
+import PTCard from "./components/PTCard";
 
 const componentsToRegister = {
   PropertyTax,
@@ -65,6 +70,9 @@ const componentsToRegister = {
   PropertyFloorDetails,
   PropertyBasementDetails,
   PropertyInformation,
+  ProvideFloorNo,
+  propertyOwnerHistory,
+  TransferDetails,
 };
 
 const addComponentsToRegistry = () => {
@@ -77,14 +85,14 @@ export const PTModule = ({ userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
   addComponentsToRegistry();
-
+  console.log(moduleCode, "module integrated");
   Digit.SessionStorage.set("PT_TENANTS", tenants);
 
-  if (userType === "citizen") {
-    return <CitizenApp />;
-  } else {
+  const { path, url } = useRouteMatch();
+
+  if (userType === "employee") {
     return <EmployeeApp path={path} url={url} userType={userType} />;
-  }
+  } else return <CitizenApp />;
 };
 
 export const PTLinks = ({ matchPath, userType }) => {

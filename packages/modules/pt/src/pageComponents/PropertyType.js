@@ -4,18 +4,22 @@ import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-re
 
 const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   const [BuildingType, setBuildingType] = useState(formData?.PropertyType);
-
-  const menu = [
-    {
-      i18nKey: "PROPERTYTAX_BILLING_SLAB_INDEPENDENTPROPERTY",
-    },
-    {
-      i18nKey: "PROPERTYTAX_BILLING_SLAB_SHAREDPROPERTY",
-    },
-    {
-      i18nKey: "COMMON_PROPTYPE_VACANT",
-    },
-  ];
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
+  const { data: Menu = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "PTPropertyType") || {};
+  let proptype = [];
+  proptype = Menu?.PropertyTax?.PropertyType;
+  let i;
+  let menu = [];
+  function getPropertyTypeMenu(proptype) {
+    if (Array.isArray(proptype) && proptype.length > 0) {
+      for (i = 0; i < proptype.length; i++) {
+        if (i != 1 && i != 4 && Array.isArray(proptype) && proptype.length > 0)
+          menu.push({ i18nKey: "COMMON_PROPTYPE_" + proptype[i].code.replaceAll(".", "_"), code: proptype[i].code });
+      }
+    }
+    return menu;
+  }
 
   const onSkip = () => onSelect();
 
@@ -25,6 +29,7 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function goNext() {
+    sessionStorage.setItem("PropertyType", BuildingType.i18nKey);
     onSelect(config.key, BuildingType);
   }
   return (
@@ -33,7 +38,8 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
         t={t}
         optionsKey="i18nKey"
         isMandatory={config.isMandatory}
-        options={menu}
+        //options={menu}
+        options={getPropertyTypeMenu(proptype) || {}}
         selectedOption={BuildingType}
         onSelect={selectBuildingType}
       />

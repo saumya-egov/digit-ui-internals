@@ -13,8 +13,8 @@ import {
 } from "./payment";
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
-import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
-import { useApplicationStatusGeneral } from "./useStatusGeneral";
+import useBoundaryLocalities from "./useLocalities";
+import useCommonMDMS from "./useMDMS";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -55,7 +55,12 @@ import useEmployeeSearch from "./useEmployeeSearch";
 
 import usePropertyMDMS from "./pt/usePropertyMDMS";
 import usePropertyAPI from "./pt/usePropertyAPI";
+import usePropertyDocumentSearch from "./pt/usePropertyDocumentSearch";
 import useTenantsPT from "./pt/useTenants";
+import usePtApplicationDetail from "./pt/useApplicationDetail";
+import usePtApplicationActions from "./pt/useApplicationActions";
+import usePtMDMS from "./pt/useMDMS";
+import usePropertyAssessment from "./pt/usePropertyAssessment";
 
 const pgr = {
   useComplaintDetails,
@@ -102,7 +107,12 @@ const pt = {
   usePropertyPayment,
   usePropertyMDMS,
   usePropertyAPI,
+  usePropertyDocumentSearch,
   useTenants: useTenantsPT,
+  useApplicationDetail: usePtApplicationDetail,
+  useApplicationActions: usePtApplicationActions,
+  useMDMS: usePtMDMS,
+  usePropertyAssessment,
 };
 
 const Hooks = {
@@ -121,7 +131,8 @@ const Hooks = {
   useDemandSearch,
   useInboxGeneral,
   useEmployeeSearch,
-  useApplicationStatusGeneral,
+  useBoundaryLocalities,
+  useCommonMDMS,
   pgr,
   fsm,
   pt,

@@ -32,8 +32,7 @@ export const ChequeDetailsComponent = (props) => {
   const [instrumentNumber, setChequeNo] = useState(props.chequeDetails.instrumentNumber);
   const [ifscCode, setIfsc] = useState(props.chequeDetails.ifscCode);
   const [bankName, setBankName] = useState(props.chequeDetails.bankName);
-  const [bankBranch, setBankBranch] = useState(props.chequeDetails.bankBranch);
-
+  const [bankBranch, setBankBranch] = useState(props.chequeDetails.bankBranch?.replace("┬á", " "));
   useEffect(() => {
     if (props.onChange) {
       let errorObj = {};
@@ -50,10 +49,10 @@ export const ChequeDetailsComponent = (props) => {
       if (res.ok) {
         const { BANK, BRANCH } = await res.json();
         setBankName(BANK);
-        setBankBranch(BRANCH);
-      } else alert("Please enter correct IFSC Code!");
+        setBankBranch(BRANCH?.replace("┬á", " "));
+      } else alert(t("CS_PAYMENT_INCORRECT_IFSC_CODE_ERROR"));
     } catch (er) {
-      alert("Please enter correct IFSC Code!");
+      alert(t("CS_PAYMENT_INCORRECT_IFSC_CODE_ERROR"));
     }
   };
 

@@ -15,6 +15,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
   const { minAmountPayable, isAdvanceAllowed } = paymentRules;
 
   const billDetails = (bill?.billDetails.length && bill?.billDetails[0]) || [];
+  const Arrears = bill?.billDetails?.reduce((total, current, index) => (index == 0 ? total : total + current.amount), 0) || 0;
 
   const { key, label } = Digit.Hooks.useApplicationsForBusinessServiceSearch({ businessService }, { enabled: false });
 
@@ -30,7 +31,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
 
   const getBillBreakDown = () => billDetails?.billAccountDetails || [];
 
-  const getTotal = () => Math.round(getBillBreakDown()?.reduce((total, tax) => total + tax.amount, 0) || 0);
+  const getTotal = () => bill?.totalAmount || 0;
 
   const [paymentType, setPaymentType] = useState(t("CS_PAYMENT_FULL_AMOUNT"));
   const [amount, setAmount] = useState(getTotal());
@@ -84,7 +85,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
         <div className="bill-details-summary">
           <KeyNote keyValue={t(label)} note={consumerCode} />
           <KeyNote keyValue={t("CS_PAYMENT_BILLING_PERIOD")} note={getBillingPeriod()} />
-          <BillSumary billAccountDetails={getBillBreakDown()} />
+          <BillSumary billAccountDetails={getBillBreakDown()} total={getTotal()} businessService={businessService} arrears={Arrears} />
         </div>
         <div className="bill-payment-amount">
           <hr className="underline" />
@@ -102,7 +103,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
               ₹
             </span>
             {paymentType !== t("CS_PAYMENT_FULL_AMOUNT") ? (
-              <TextInput className="text-indent-xl" onChange={(e) => onChangeAmount(e.target.value)} value={amount} />
+              <TextInput className="text-indent-xl" onChange={(e) => onChangeAmount(e.target.value)} value={amount} disable={getTotal() === 0} />
             ) : (
               <TextInput className="text-indent-xl" value={getTotal()} onChange={() => {}} disable={true} />
             )}

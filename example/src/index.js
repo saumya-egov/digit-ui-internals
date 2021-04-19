@@ -36,11 +36,16 @@ import QA_CECOLL from "./userInfo/qa-cecoll.json";
 import QACREDITOR from "./userInfo/QACREDITOR.json";
 import QACREATOR from "./userInfo/QACREATOR.json";
 
-import QAPTCE from "./userInfo/QAPTCE.json";
-import QAPTDV from "./userInfo/QAPTDV.json";
-
 import QAFSTP from "./userInfo/fstp.json";
 import QAADMIN from "./userInfo/QAADMIN.json";
+
+import QAPTCE from "./userInfo/QAPTCE.json";
+import QAPTDV from "./userInfo/QAPTDV.json";
+import QAPTFI from "./userInfo/QAPTFI.json";
+import QAPTA from "./userInfo/QAPTA.json";
+
+import UATSU from "./userInfo/UATSU.json";
+
 import NAWANSHAHR_QA_GRO from "./userInfo/qa-gro-nawanshahr.json";
 
 import * as comps from "@egovernments/digit-ui-react-components";
@@ -74,8 +79,11 @@ const userInfo = {
   QACREDITOR,
   QAADMIN,
   QACREATOR,
+  UATSU,
   QAPTCE,
   QAPTDV,
+  QAPTFI,
+  QAPTA,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT"];
