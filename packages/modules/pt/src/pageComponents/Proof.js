@@ -8,6 +8,7 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
   const [file, setFile] = useState(formData?.documents?.ProofOfAddress);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
+
   const handleSubmit = () => {
     let fileStoreId = uploadedFile;
     let fileDetails = file;
@@ -58,7 +59,7 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_SIZE`)}</CardLabelDesc>
       <UploadFile
         extraStyleName={"propertyCreate"}
-        accept=".jpg"
+        accept=".jpg,.png,.pdf"
         onUpload={selectfile}
         onDelete={() => {
           setUploadedFile(null);
