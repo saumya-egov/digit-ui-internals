@@ -49,6 +49,8 @@ const FormStep = ({
               onChange={onChange}
               minlength={input.validation.minlength}
               maxlength={input.validation.maxlength}
+              pattern={input.validation?.pattern}
+              title={input.validation?.title}
               inputRef={register(input.validation)}
               isMandatory={errors[input.name]}
             />

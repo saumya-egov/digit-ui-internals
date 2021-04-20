@@ -12,6 +12,7 @@ const SelectPitType = ({ t, formData, config, onSelect, userType }) => {
     setPitType(value);
     if (userType === "employee") {
       onSelect(config.key, value);
+      onSelect("pitDetail", null);
     }
   };
 
