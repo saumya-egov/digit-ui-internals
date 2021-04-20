@@ -23,10 +23,11 @@ export const SuccessfulPayment = (props) => {
     { enabled: allowFetchBill, retry: false, staleTime: Infinity }
   );
 
-  const { data } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey");
+  const { data: receiptKeyData } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey");
   let generatePdfKey = "consolidatedreceipt";
-  if (data) {
-    generatePdfKey = data["common-masters"]?.uiCommonPay?.filter(({ code }) => code === business_service)[0]?.receiptKey || "consolidatedreceipt";
+  if (receiptKeyData) {
+    generatePdfKey =
+      receiptKeyData["common-masters"]?.uiCommonPay?.filter(({ code }) => code === business_service)[0]?.receiptKey || "consolidatedreceipt";
   }
 
   const payments = data?.payments;
