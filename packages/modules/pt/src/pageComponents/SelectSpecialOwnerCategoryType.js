@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
+import React, { useEffect, useState } from "react";
+import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, CardLabel, Dropdown } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 
 const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formData }) => {
@@ -20,6 +20,47 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
     ownerDetails["ownerType"] = ownerType;
     onSelect(config.key, ownerDetails, "", index);
   }
+
+  useEffect(() => {
+    if (userType === "employee") {
+      onSelect(config.key, ownerType);
+    }
+  }, [ownerType]);
+
+  const inputs = [
+    {
+      label: "PT_SPECIAL_OWNER_CATEGORY",
+      type: "text",
+      name: "ownerSpecialCategory",
+      validation: {},
+    },
+  ];
+
+  if (userType === "employee") {
+    return inputs?.map((input, index) => {
+      return (
+        <LabelFieldPair key={index}>
+          <CardLabel className="card-label-smaller">
+            {t(input.label)}
+            {config.isMandatory ? " * " : null}
+          </CardLabel>
+          <div className="field">
+            <Dropdown
+              className="form-field"
+              isMandatory={config.isMandatory}
+              selected={Menu?.length === 1 ? Menu[0] : ownerType}
+              disable={Menu?.length === 1}
+              option={Menu}
+              select={setTypeOfOwner}
+              optionKey="i18nKey"
+              t={t}
+            />
+          </div>
+        </LabelFieldPair>
+      );
+    });
+  }
+
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!ownerType}>
       <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 22em)" }}>
@@ -30,8 +71,8 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
           options={Menu || []}
           selectedOption={ownerType}
           onSelect={setTypeOfOwner}
-          labelKey = "PROPERTYTAX_OWNERTYPE"
-          isDependent = {true}
+          labelKey="PROPERTYTAX_OWNERTYPE"
+          isDependent={true}
         />
       </div>
     </FormStep>

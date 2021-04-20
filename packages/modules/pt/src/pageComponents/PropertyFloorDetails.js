@@ -1,7 +1,15 @@
-import React, { useState } from "react";
-import { TypeSelectCard, RadioButtons, FormStep, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
+import React, { useEffect, useState } from "react";
+import {
+  TypeSelectCard,
+  RadioButtons,
+  FormStep,
+  CitizenInfoLabel,
+  CardLabel,
+  LabelFieldPair,
+  Dropdown,
+} from "@egovernments/digit-ui-react-components";
 
-const PropertyFloorsDetails = ({ t, config, onSelect, formData }) => {
+const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
   const [FloorDetails, setFloorDetails] = useState(formData?.noOfFloors);
 
   const menu = [
@@ -27,6 +35,46 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData }) => {
 
   function goNext() {
     onSelect(config.key, FloorDetails);
+  }
+
+  useEffect(() => {
+    if (userType === "employee") {
+      goNext();
+    }
+  }, [FloorDetails]);
+
+  const inputs = [
+    {
+      label: "BPA_SCRUTINY_DETAILS_NUMBER_OF_FLOORS_LABEL",
+      type: "text",
+      name: "propertyType",
+      validation: {},
+    },
+  ];
+
+  if (userType === "employee") {
+    return inputs?.map((input, index) => {
+      return (
+        <LabelFieldPair key={index}>
+          <CardLabel className="card-label-smaller">
+            {t(input.label)}
+            {config.isMandatory ? " * " : null}
+          </CardLabel>
+          <div className="field">
+            <Dropdown
+              className="form-field"
+              isMandatory={config.isMandatory}
+              selected={menu?.length === 1 ? menu[0] : FloorDetails}
+              disable={menu?.length === 1}
+              option={menu}
+              select={selectFloorDetails}
+              optionKey="i18nKey"
+              t={t}
+            />
+          </div>
+        </LabelFieldPair>
+      );
+    });
   }
 
   return (

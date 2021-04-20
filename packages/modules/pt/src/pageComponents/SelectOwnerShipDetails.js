@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, Dropdown, CardLabel } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 
 const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => {
@@ -40,7 +40,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
     return {
       label: name,
       value: code,
-      code: code
+      code: code,
     };
   }
 
@@ -79,8 +79,48 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
   const onSkip = () => onSelect();
   function goNext() {
     let index = window.location.href.charAt(window.location.href.length - 1);
-    sessionStorage.setItem("ownershipCategory", ownershipCategory.value);
+    sessionStorage.setItem("ownershipCategory", ownershipCategory?.value);
     onSelect(config.key, ownershipCategory, "", index);
+  }
+
+  useEffect(() => {
+    if (userType === "employee") {
+      goNext();
+    }
+  }, [ownershipCategory]);
+
+  const inputs = [
+    {
+      label: "PT_PROVIDE_OWNERSHIP_DETAILS",
+      type: "text",
+      name: "typeOfOwnership",
+      validation: {},
+    },
+  ];
+
+  if (userType === "employee") {
+    return inputs?.map((input, index) => {
+      return (
+        <LabelFieldPair key={index}>
+          <CardLabel className="card-label-smaller">
+            {t(input.label)}
+            {config.isMandatory ? " * " : null}
+          </CardLabel>
+          <div className="field">
+            <Dropdown
+              className="form-field"
+              isMandatory={config.isMandatory}
+              selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
+              disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1}
+              option={getDropdwonForProperty(ownerShipdropDown)}
+              select={selectedValue}
+              optionKey="i18nKey"
+              t={t}
+            />
+          </div>
+        </LabelFieldPair>
+      );
+    });
   }
 
   return (
@@ -93,8 +133,8 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
           optionsKey="i18nKey"
           onSelect={selectedValue}
           value={ownershipCategory}
-          labelKey = "PT_OWNERSHIP"
-          isDependent = {true}
+          labelKey="PT_OWNERSHIP"
+          isDependent={true}
         />
       </div>
     </FormStep>

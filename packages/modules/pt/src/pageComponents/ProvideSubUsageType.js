@@ -1,4 +1,4 @@
-import { CardLabel, FormStep, RadioButtons, RadioOrSelect } from "@egovernments/digit-ui-react-components";
+import { CardLabel, FormStep, RadioOrSelect, LabelFieldPair, Dropdown } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { cardBodyStyle } from "../utils";
 
@@ -98,10 +98,54 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
       let floordet = { ...unit, SubUsageType, subuagecode };
       onSelect(config.key, floordet, false, index);
     } else {
-      [];
-      onSelect("subusagetype", { SubUsageType, subuagecode });
+      if (userType === "employee") {
+        onSelect(config.key, { SubUsageType, subuagecode });
+      } else {
+        onSelect("subusagetype", { SubUsageType, subuagecode });
+      }
     }
   }
+
+  const inputs = [
+    {
+      label: "PT_ASSESSMENT_FLOW_SUBUSAGE_HEADER",
+      type: "dropdown",
+      name: "subusagetype",
+      validation: {},
+    },
+  ];
+
+  useEffect(() => {
+    if (userType === "employee") {
+      goNext();
+    }
+  }, [SubUsageType]);
+
+  if (userType === "employee") {
+    return inputs?.map((input, index) => {
+      return (
+        <LabelFieldPair key={index}>
+          <CardLabel className="card-label-smaller">
+            {t(input.label)}
+            {config.isMandatory ? " * " : null}
+          </CardLabel>
+          <div className="field">
+            <Dropdown
+              className="form-field"
+              isMandatory={config.isMandatory}
+              selected={getSubUsagedata(subusageoption)?.length === 1 ? [0] : SubUsageType}
+              disable={getSubUsagedata(subusageoption)?.length === 1}
+              option={getSubUsagedata(subusageoption)}
+              select={selectSelfOccupied}
+              optionKey="i18nKey"
+              t={t}
+            />
+          </div>
+        </LabelFieldPair>
+      );
+    });
+  }
+
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageType}>
       <CardLabel>{t("PT_SUB_USAGE_TYPE_LABEL")}</CardLabel>
