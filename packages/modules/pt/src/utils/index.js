@@ -79,7 +79,7 @@ export const setAddressDetails = (data) => {
       area: address?.locality?.name,
     },
   };
-  data.tenantId = address?.city?.code || "pb.amritsar";
+  data.tenantId = data?.tenantId || "pb.amritsar";
   data.address = propAddress;
   return data;
 };
@@ -396,7 +396,7 @@ export const setPropertyDetails = (data) => {
   if (data?.PropertyType?.code?.includes("VACANT")) {
     propertyDetails = {
       units: [],
-      landArea: data?.landarea?.floorarea,
+      landArea: parseInt(data?.landarea?.floorarea),
       propertyType: data?.PropertyType?.code,
       noOfFloors: 0,
       usageCategory: getUsageType(data),
@@ -587,6 +587,7 @@ export const convertToUpdateProperty = (data = {}) => {
   let propertyType = data.PropertyType;
   data = setAddressDetails(data);
   data = setUpdateOwnerDetails(data);
+  data = setPropertyDetails(data);
 
   const formdata = {
     Property: {
