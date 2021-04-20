@@ -15,11 +15,11 @@ const getPropertyEditDetails = (data = {}) => {
     if (data?.owners[0]?.documents[0]?.documentType == "IDENTITYPROOF") {
       document["proofIdentity"] = data?.owners[0]?.documents[0];
     }
-    data.owners[0].designation = data?.institution?.designation,
-    data.owners[0].inistitutionName = data?.institution?.name,
-    data.owners[0].name = data?.institution?.nameOfAuthorizedPerson,
-    data.owners[0].inistitutetype = { value: data?.institution.type, code: data?.institution.type },
-    data.owners[0].documents = document;
+    (data.owners[0].designation = data?.institution?.designation),
+      (data.owners[0].inistitutionName = data?.institution?.name),
+      (data.owners[0].name = data?.institution?.nameOfAuthorizedPerson),
+      (data.owners[0].inistitutetype = { value: data?.institution.type, code: data?.institution.type }),
+      (data.owners[0].documents = document);
     data.owners[0].permanentAddress = data?.owners[0]?.correspondenceAddress;
     data.owners[0].isCorrespondenceAddress = data?.owners[0]?.isCorrespondenceAddress;
   } else {
@@ -59,10 +59,10 @@ const getPropertyEditDetails = (data = {}) => {
     data.address.geoLocation = {};
   }
   data.address.pincode = data?.address?.pincode;
-  let addressDocs = data.documents.filter(doc => doc.documentType == "ADDRESSPROOF");
-  if(data?.address?.documents) {
+  let addressDocs = data.documents.filter((doc) => doc.documentType == "ADDRESSPROOF");
+  if (data?.address?.documents) {
     data.address.documents["ProofOfAddress"] = addressDocs[0];
-  }else {
+  } else {
     data.address.documents = [];
     data.address.documents["ProofOfAddress"] = addressDocs[0];
   }
@@ -72,6 +72,7 @@ const getPropertyEditDetails = (data = {}) => {
   if (data?.additionalDetails?.propertyType?.code === "VACANT") {
     data.PropertyType = data?.additionalDetails?.propertyType;
     data.isResdential = data?.additionalDetails?.isResdential;
+    data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
     data.landarea = { floorarea: data?.landArea };
   } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.SHAREDPROPERTY") {
     data.isResdential = data?.additionalDetails?.isResdential;
@@ -134,8 +135,13 @@ const EditProperty = ({ parentRoute }) => {
     application = data?.Properties[0];
     if (data && application) {
       application = data?.Properties[0];
-      if(typeOfProperty) { application.isUpdateProperty = true; application.isEditProperty = false;}
-      else { application.isUpdateProperty = false; application.isEditProperty = true; }
+      if (typeOfProperty) {
+        application.isUpdateProperty = true;
+        application.isEditProperty = false;
+      } else {
+        application.isUpdateProperty = false;
+        application.isEditProperty = true;
+      }
       let propertyEditDetails = getPropertyEditDetails(application);
       setParams({ ...params, ...propertyEditDetails });
     }
