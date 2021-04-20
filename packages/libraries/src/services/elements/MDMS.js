@@ -79,6 +79,22 @@ const getGeneralCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getReceiptKey = (tenantId, moduleCode) => ({
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "uiCommonPay",
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const getModuleServiceDefsCriteria = (tenantId, moduleCode) => ({
   type: "serviceDefs",
   details: {
@@ -850,5 +866,8 @@ export const MdmsService = {
   },
   getPaymentGateway: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getReceiptKey: (tenantId, moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getReceiptKey(tenantId, moduleCode), moduleCode);
   },
 };
