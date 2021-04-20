@@ -34,14 +34,14 @@ export const PaymentService = {
       params: { tenantId, ...filters },
     }),
 
-  generatePdf: (tenantId, data = {}) =>
+  generatePdf: (tenantId, data = {}, key) =>
     Request({
       url: Urls.payment.generate_pdf,
       useCache: false,
       method: "POST",
       auth: true,
       userService: true,
-      params: { tenantId, key: "fsm-receipt" },
+      params: { tenantId, key },
       data: data,
     }),
 
