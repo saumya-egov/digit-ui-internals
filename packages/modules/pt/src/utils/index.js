@@ -96,10 +96,10 @@ export const setOwnerDetails = (data) => {
       institution.tenantId = address?.city?.code;
       institution.type = owners[0]?.inistitutetype?.value;
       let document = [];
-      if(owners[0]?.documents["proofIdentity"]?.fileStoreId) {
+      if (owners[0]?.documents["proofIdentity"]?.fileStoreId) {
         document.push({
           fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
-          documentType: owners[0].documents["proofIdentity"].documentType || ""
+          documentType: owners[0].documents["proofIdentity"].documentType || "",
         });
       }
       owner.push({
@@ -111,7 +111,7 @@ export const setOwnerDetails = (data) => {
         mobileNumber: owners[0]?.mobileNumber,
         name: owners[0]?.name,
         ownerType: owners[0]?.ownerType?.code || "NONE",
-        documents: document
+        documents: document,
       });
       data.institution = institution;
       data.owners = owner;
@@ -458,9 +458,9 @@ export const convertToProperty = (data = {}) => {
   let builtUpArea = data?.floordetails?.builtUpArea || null;
   let noOfFloors = data?.noOfFloors;
   let noOofBasements = data?.noOofBasements;
-  // let unit = data?.units;
-  // let basement1 = data?.units["-1"];
-  // let basement2 = data?.units["-2"];
+  let unit = data?.units;
+  let basement1 = Array.isArray(data?.units) && data?.units["-1"] ? data?.units["-1"] : null;
+  let basement2 = Array.isArray(data?.units) && data?.units["-2"] ? data?.units["-2"] : null;
 
   data = setDocumentDetails(data);
   data = setOwnerDetails(data);
@@ -491,9 +491,9 @@ export const convertToProperty = (data = {}) => {
         builtUpArea: builtUpArea,
         noOfFloors: noOfFloors,
         noOofBasements: noOofBasements,
-        // unit: unit,
-        // basement1: basement1,
-        // basement2: basement2,
+        unit: unit,
+        basement1: basement1,
+        basement2: basement2,
       },
 
       creationReason: "CREATE",
@@ -515,7 +515,7 @@ export const setUpdateOwnerDetails = (data = []) => {
       institution.tenantId = data?.address?.city?.code;
       institution.type = owners[0]?.inistitutetype?.value;
       let document = [];
-      if(owners[0]?.documents["proofIdentity"]?.fileStoreId && owners[0].documents["proofIdentity"].id) {
+      if (owners[0]?.documents["proofIdentity"]?.fileStoreId && owners[0].documents["proofIdentity"].id) {
         document.push({
           fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
           documentType: owners[0].documents["proofIdentity"].documentType || "",
@@ -525,24 +525,24 @@ export const setUpdateOwnerDetails = (data = []) => {
       } else {
         document.push({
           fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
-          documentType: owners[0].documents["proofIdentity"].documentType || ""
+          documentType: owners[0].documents["proofIdentity"].documentType || "",
         });
       }
-      data.owners.forEach(owner => {
-        owner.altContactNumber =  owners[0]?.altContactNumber;
-        owner.correspondenceAddress =  owners[0]?.permanentAddress;
-        owner.designation =  owners[0]?.designation;
-        owner.emailId =  owners[0]?.emailId;
-        owner.isCorrespondenceAddress =  owners[0]?.isCorrespondenceAddress;
-        owner.mobileNumber =  owners[0]?.mobileNumber;
-        owner.name =  owners[0]?.name;
-        owner.ownerType =  owners[0]?.ownerType?.code || "NONE";
+      data.owners.forEach((owner) => {
+        owner.altContactNumber = owners[0]?.altContactNumber;
+        owner.correspondenceAddress = owners[0]?.permanentAddress;
+        owner.designation = owners[0]?.designation;
+        owner.emailId = owners[0]?.emailId;
+        owner.isCorrespondenceAddress = owners[0]?.isCorrespondenceAddress;
+        owner.mobileNumber = owners[0]?.mobileNumber;
+        owner.name = owners[0]?.name;
+        owner.ownerType = owners[0]?.ownerType?.code || "NONE";
         owner.documents = document;
-      })
+      });
       data.institution = institution;
     }
   } else {
-    data.owners.forEach(owner => {
+    data.owners.forEach((owner) => {
       let document = [];
       if (owner?.ownerType?.code != "NONE") {
         if (owner.documents["specialProofIdentity"].id) {
@@ -555,10 +555,9 @@ export const setUpdateOwnerDetails = (data = []) => {
         } else {
           document.push({
             fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: owner.documents["specialProofIdentity"].documentType || ""
+            documentType: owner.documents["specialProofIdentity"].documentType || "",
           });
         }
-
       }
       if (owner?.documents["proofIdentity"]?.fileStoreId) {
         if (owner.documents["proofIdentity"].id) {
@@ -571,18 +570,18 @@ export const setUpdateOwnerDetails = (data = []) => {
         } else {
           document.push({
             fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
-            documentType: owner.documents["proofIdentity"].documentType || ""
+            documentType: owner.documents["proofIdentity"].documentType || "",
           });
         }
       }
       owner.gender = owner?.gender?.code;
       owner.ownerType = owner?.ownerType?.code;
       owner.relationship = owner?.relationship?.code;
-    })
+    });
   }
   return data;
-}
-export const convertToUpdateProperty = (data = {}) => { 
+};
+export const convertToUpdateProperty = (data = {}) => {
   console.info("propertyFormData", data);
   let isResdential = data.isResdential;
   let propertyType = data.PropertyType;
@@ -610,21 +609,23 @@ export const convertToUpdateProperty = (data = {}) => {
         inflammable: false,
         heightAbove36Feet: false,
         isResdential: isResdential,
-        propertyType: propertyType
+        propertyType: propertyType,
       },
 
       creationReason: !data?.isUpdateProperty ? "CREATE" : "UPDATE",
       source: "MUNICIPAL_RECORDS",
       channel: "CITIZEN",
-      workflow: !data?.isUpdateProperty ?  {
-        action: "REOPEN",
-        businessService: "PT.CREATE",
-        moduleName: "PT"
-      } : {
-        action: "OPEN",
-        businessService: "PT.UPDATE",
-        moduleName: "PT"
-      }
+      workflow: !data?.isUpdateProperty
+        ? {
+            action: "REOPEN",
+            businessService: "PT.CREATE",
+            moduleName: "PT",
+          }
+        : {
+            action: "OPEN",
+            businessService: "PT.UPDATE",
+            moduleName: "PT",
+          },
     },
   };
   console.info("propertyCreated", formdata);
