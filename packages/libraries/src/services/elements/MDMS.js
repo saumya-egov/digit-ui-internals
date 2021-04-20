@@ -79,6 +79,22 @@ const getGeneralCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getReceiptKey = (tenantId, moduleCode) => ({
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "uiCommonPay",
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const getModuleServiceDefsCriteria = (tenantId, moduleCode) => ({
   type: "serviceDefs",
   details: {
@@ -767,6 +783,7 @@ export const MdmsService = {
     }
     console.log("mdms request details ---->", mdmsDetails, moduleCode);
     const { MdmsRes } = await MdmsService.call(tenantId, mdmsDetails.details);
+    console.log("%c 🔀: MdmsRes ", "font-size:16px;background-color:#cd9a50;color:white;", MdmsRes);
     const responseValue = transformResponse(mdmsDetails.type, MdmsRes, moduleCode.toUpperCase(), tenantId);
     const cacheSetting = getCacheSetting(mdmsDetails.details.moduleDetails[0].moduleName);
     PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
@@ -850,5 +867,8 @@ export const MdmsService = {
   },
   getPaymentGateway: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getReceiptKey: (tenantId, moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getReceiptKey(tenantId, moduleCode), moduleCode);
   },
 };

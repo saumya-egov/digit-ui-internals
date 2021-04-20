@@ -21,6 +21,12 @@ export const SuccessfulPayment = (props) => {
   const getMessage = () => t("ES_PAYMENT_COLLECTED");
   // console.log("--------->", consumerCode);
 
+  const { data } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey");
+  let generatePdfKey = "consolidatedreceipt";
+  if (data) {
+    generatePdfKey = data["common-masters"]?.uiCommonPay?.filter(({ code }) => code === businessService)[0]?.receiptKey || "consolidatedreceipt";
+  }
+
   const printReciept = async () => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const state = tenantId?.split(".")[0];
@@ -28,7 +34,7 @@ export const SuccessfulPayment = (props) => {
     let response = { filestoreIds: [payments.Payments[0]?.fileStoreId] };
 
     if (!payments.Payments[0]?.fileStoreId) {
-      response = await Digit.PaymentService.generatePdf(state, { Payments: payments.Payments });
+      response = await Digit.PaymentService.generatePdf(state, { Payments: payments.Payments }, generatePdfKey);
       // console.log({ response });
     }
     const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: response.filestoreIds[0] });
