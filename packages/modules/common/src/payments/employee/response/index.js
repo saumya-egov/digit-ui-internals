@@ -10,6 +10,7 @@ export const SuccessfulPayment = (props) => {
   const queryClient = useQueryClient();
   props.setLink("Response");
   let { consumerCode, receiptNumber, businessService } = useParams();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   receiptNumber = receiptNumber.replace(/%2F/g, "/");
 
   useEffect(() => {
