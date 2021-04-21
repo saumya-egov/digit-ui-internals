@@ -13,7 +13,6 @@ const inboxConfig = (tenantId, filters) => ({
     businessIdsParamForSearch: "acknowledgementIds",
     businessIdAliasForSearch: "acknowldgementNumber",
     fetchFilters: filterFunctions.PT,
-
     _searchFn: () => PTService.search({ tenantId, filters }),
   },
   FSM: {
@@ -80,7 +79,9 @@ const useInboxGeneral = ({
   );
 
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
-  if (isInbox && !searchFilters[businessIdAliasForSearch]) searchFilters = { ...searchFilters, [businessIdsParamForSearch]: applicationNoFromWF };
+
+  if (isInbox && applicationNoFromWF && !searchFilters[businessIdAliasForSearch])
+    searchFilters = { ...searchFilters, [businessIdsParamForSearch]: applicationNoFromWF };
 
   const { _searchFn } = inboxConfig(tenantId, searchFilters)[businessService];
 
@@ -97,7 +98,18 @@ const useInboxGeneral = ({
     () =>
       _searchFn()
         .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
-        .then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch)),
+        .then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch))
+        .catch((Err) => {
+          if (
+            Err?.response?.data?.Errors?.some(
+              (e) =>
+                e.code === "EG_PT_INVALID_SEARCH" &&
+                e.message === " Search is not allowed on empty Criteria, Atleast one criteria should be provided with tenantId for EMPLOYEE"
+            )
+          )
+            return [];
+          throw Err;
+        }),
     {
       enabled: !isInbox || (!wfFetching && wfSuccess),
       select: (d) => {

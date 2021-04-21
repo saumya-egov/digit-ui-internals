@@ -99,7 +99,6 @@ export const SelectPaymentType = (props) => {
             <CardSectionHeader> ₹ {paymentAmount || billDetails.totalAmount}</CardSectionHeader>
           </div>
           <CardLabel>{t("PAYMENT_CS_SELECT_METHOD")}</CardLabel>
-
           {menu?.length && (
             <Controller
               name="paymentType"

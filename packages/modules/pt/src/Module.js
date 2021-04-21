@@ -39,7 +39,7 @@ import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
 
 import EmployeeApp from "./pages/employee";
 import PTCard from "./components/PTCard";
-import InboxFilter from "./components/inbox/newFilter";
+import InboxFilter from "./components/inbox/NewInboxFilter";
 
 const componentsToRegister = {
   PropertyTax,

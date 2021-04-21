@@ -15,8 +15,8 @@ export const filterFunctions = {
     if (filtersArg?.locality) {
       searchFilters.locality = filtersArg?.locality.map((item) => item.code.split("_").pop()).join(",");
     }
-    if (filtersArg?.uuid && Object.keys(filtersArg?.uuid).length > 0) {
-      workflowFilters.assignee = filtersArg?.uuid.code === "ASSIGNED_TO_ME" ? uuid : "";
+    if (filtersArg?.uuid && filtersArg?.uuid.code === "ASSIGNED_TO_ME") {
+      workflowFilters.assignee = uuid;
     }
     if (mobileNumber) {
       searchFilters.mobileNumber = mobileNumber;

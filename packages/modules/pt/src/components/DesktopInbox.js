@@ -67,7 +67,7 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
         <div className="filters-container">
           <InboxLinks parentRoute={props.parentRoute} businessService={props.businessService} />
           <div>
-            {<FilterComponent check={0} />}
+            {<FilterComponent onFilterChange={props.onFilterChange} searchParams={props.searchParams} />}
             {/* <Filter
               businessService={props.businessService}
               searchParams={props.searchParams}

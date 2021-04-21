@@ -3,19 +3,17 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import StatusCount from "./StatusCount";
 
-const Status = ({ onAssignmentChange, fsmfilters, translatePrefix = "CS_COMMON_FSM_", businessService = "PT" }) => {
+const Status = ({ onAssignmentChange, searchParams, businessServices, translateState }) => {
   const { t } = useTranslation();
 
   const [moreStatus, showMoreStatus] = useState(false);
 
-  const { data: statusData, isLoading } = Digit.Hooks.useApplicationStatusGeneral({ businessService, translatePrefix }, {});
+  const { data: statusData, isLoading } = Digit.Hooks.useApplicationStatusGeneral({ businessServices }, {});
 
-  const { userRoleOptions, otherRoleOptions } = statusData || {};
-
-  console.log(businessService, "in status");
+  const { userRoleStates, otherRoleStates } = statusData || {};
 
   useEffect(() => {
-    console.log(statusData, ">>>>>>>>>status data");
+    console.log(statusData, "status data");
   }, [statusData]);
 
   if (isLoading) {
@@ -25,18 +23,24 @@ const Status = ({ onAssignmentChange, fsmfilters, translatePrefix = "CS_COMMON_F
   return (
     <div className="status-container">
       <div className="filter-label">{t("ES_INBOX_STATUS")}</div>
-      {userRoleOptions?.map((option, index) => (
-        <StatusCount businessService={businessService} key={index} onAssignmentChange={onAssignmentChange} status={option} fsmfilters={fsmfilters} />
+      {userRoleStates?.map((option, index) => (
+        <StatusCount
+          businessServices={businessServices}
+          key={index}
+          onAssignmentChange={onAssignmentChange}
+          status={{ name: translateState(option), code: option.applicationStatus }}
+          searchParams={searchParams}
+        />
       ))}
       {moreStatus &&
-        otherRoleOptions?.map((option, index) => {
+        otherRoleStates?.map((option, index) => {
           return (
             <StatusCount
-              businessService={businessService}
+              businessServices={businessServices}
               key={index}
               onAssignmentChange={onAssignmentChange}
-              status={option}
-              fsmfilters={fsmfilters}
+              status={{ name: translateState(option), code: option.applicationStatus }}
+              searchParams={searchParams}
             />
           );
         })}

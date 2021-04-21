@@ -6,11 +6,7 @@ import { useQuery } from "react-query";
  * @param {businessServive} neccessory
  */
 
-const businessServiceParamMap = {
-  PT: ["PT.LEGACY", "PT.CREATEWITHWNS", "PT.MUTATION", "PT.CREATE"],
-};
-
-export const useApplicationStatusGeneral = ({ businessService, tenantId, translatePrefix }, config) => {
+const useApplicationStatusGeneral = ({ businessServices, tenantId }, config) => {
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
 
   const userInfo = Digit.UserService.getUser();
@@ -24,9 +20,7 @@ export const useApplicationStatusGeneral = ({ businessService, tenantId, transla
 
   const select = (data) => {
     let states = [];
-    const requestedServices = businessServiceParamMap[businessService] || [businessService];
-
-    const filteredData = data.filter((e) => requestedServices.includes(e.businessService));
+    const filteredData = data.filter((e) => businessServices.includes(e.businessService));
     filteredData.forEach((service) => {
       states = [...states, ...service.states];
     });
@@ -43,18 +37,12 @@ export const useApplicationStatusGeneral = ({ businessService, tenantId, transla
     const userRoleStates = roleStateMapArray.filter(({ roles }) => roles?.some((role) => userRoles.includes(role)));
     const otherRoleStates = roleStateMapArray.filter(({ roles }) => !roles?.some((role) => userRoles.includes(role)));
 
-    const convertStateToOptions = (state, translatePrefix) => {
-      const { applicationStatus: code, roles } = state;
-      return { code, roles, name: translatePrefix + code };
-    };
-
-    const userRoleOptions = userRoleStates.map((state) => convertStateToOptions(state, translatePrefix));
-    const otherRoleOptions = otherRoleStates.map((state) => convertStateToOptions(state, translatePrefix)).filter((e) => e.code);
-    console.log("returned from status select");
-    return { userRoleOptions, otherRoleOptions };
+    return { userRoleStates, otherRoleStates };
   };
 
   const queryData = useQuery(["workflow_states", tenantId], () => fetch(), { select, ...config });
 
   return queryData;
 };
+
+export default useApplicationStatusGeneral;
