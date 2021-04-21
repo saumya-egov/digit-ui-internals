@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FormStep, TypeSelectCard, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { FormStep, TypeSelectCard, RadioButtons, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
 import { Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { cardBodyStyle } from "../utils";
 
@@ -22,7 +22,7 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
         usagecat[i].code.split(".")[0] == "NONRESIDENTIAL" &&
         usagecat[i].code.split(".").length == 2
       ) {
-        menu.push({ i18nKey: "PROPERTYTAX_BILLING_SLAB_" + usagecat[i].code.split(".")[1] });
+        menu.push({ i18nKey: "PROPERTYTAX_BILLING_SLAB_" + usagecat[i].code.split(".")[1], code: usagecat[i].code });
       }
     }
     return menu;
@@ -54,23 +54,31 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function goNext() {
-    onSelect(config.key, usageCategoryMajor);
+    if (usageCategoryMajor.i18nKey === "PROPERTYTAX_BILLING_SLAB_OTHERS") {
+      usageCategoryMajor.i18nKey = "PROPERTYTAX_BILLING_SLAB_NONRESIDENTIAL";
+      onSelect(config.key, usageCategoryMajor);
+    } else {
+      onSelect(config.key, usageCategoryMajor);
+    }
     // onSelect(config.key,ResidentialType, false, index);
   }
   return (
-    <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!usageCategoryMajor}>
-      <div style={cardBodyStyle}>
-        <RadioButtons
-          t={t}
-          optionsKey="i18nKey"
-          isMandatory={config.isMandatory}
-          //options={menu}
-          options={usageCategoryMajorMenu(usagecat) || {}}
-          selectedOption={usageCategoryMajor}
-          onSelect={selectPropertyPurpose}
-        />
-      </div>
-    </FormStep>
+    <React.Fragment>
+      <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!usageCategoryMajor}>
+        <div style={cardBodyStyle}>
+          <RadioButtons
+            t={t}
+            optionsKey="i18nKey"
+            isMandatory={config.isMandatory}
+            //options={menu}
+            options={usageCategoryMajorMenu(usagecat) || {}}
+            selectedOption={usageCategoryMajor}
+            onSelect={selectPropertyPurpose}
+          />
+        </div>
+      </FormStep>
+      {usageCategoryMajor && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_USAGE_TYPE_INFO_MSG", usageCategoryMajor)} />}
+    </React.Fragment>
   );
 };
 

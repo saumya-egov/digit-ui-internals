@@ -10,13 +10,16 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
   const handleSubmit = () => {
     let fileStoreId = uploadedFile;
     let fileDetails = file;
-    if (fileDetails) fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
+    if (fileDetails) {
+      fileDetails.documentType = "SPECIAL_CATEGORY_PROOF";
+      fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
+    }
     let ownerDetails = formData.owners && formData.owners[index];
     if (ownerDetails && ownerDetails.documents) {
-      ownerDetails.documents["specialProofIdentity"] = { ...fileDetails };
+      ownerDetails.documents["specialProofIdentity"] = fileDetails;
     } else {
       ownerDetails["documents"] = [];
-      ownerDetails.documents["specialProofIdentity"] = { ...fileDetails };
+      ownerDetails.documents["specialProofIdentity"] = fileDetails;
     }
     onSelect(config.key, ownerDetails, "", index);
     // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
@@ -57,7 +60,8 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_TYPES`)}</CardLabelDesc>
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_SIZE`)}</CardLabelDesc>
       <UploadFile
-        accept=".jpg"
+        extraStyleName={"propertyCreate"}
+        accept=".jpg,.png,.pdf"
         onUpload={selectfile}
         onDelete={() => {
           setUploadedFile(null);

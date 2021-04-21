@@ -4,15 +4,17 @@ import { FormStep, UploadFile, CardLabelDesc } from "@egovernments/digit-ui-reac
 const Proof = ({ t, config, onSelect, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
   let index = window.location.href.split("/").pop();
-  const [uploadedFile, setUploadedFile] = useState(formData?.documents?.ProofOfAddress?.fileStoreId || null);
-  const [file, setFile] = useState(formData?.documents?.ProofOfAddress);
+  const [uploadedFile, setUploadedFile] = useState(formData?.address?.documents?.ProofOfAddress?.fileStoreId || null);
+  const [file, setFile] = useState(formData?.address?.documents?.ProofOfAddress);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
+
   const handleSubmit = () => {
     let fileStoreId = uploadedFile;
     let fileDetails = file;
+    if (fileDetails) fileDetails.documentType = "ADDRESSPROOF";
     if (fileDetails) fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
-    let address = formData;
+    let address = formData?.address;
     if (address && address.documents) {
       address.documents["ProofOfAddress"] = fileDetails;
     } else {
@@ -56,7 +58,8 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_TYPES`)}</CardLabelDesc>
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_SIZE`)}</CardLabelDesc>
       <UploadFile
-        accept=".jpg"
+        extraStyleName={"propertyCreate"}
+        accept=".jpg,.png,.pdf"
         onUpload={selectfile}
         onDelete={() => {
           setUploadedFile(null);

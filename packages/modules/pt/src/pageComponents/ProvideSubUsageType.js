@@ -28,7 +28,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
       if (
         Array.isArray(subusageoption) &&
         subusageoption.length > 0 &&
-        subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor.i18nKey.split("_")[3] &&
+        subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] &&
         subusageoption[i].code.split(".").length == 4
       ) {
         data.push({
@@ -76,20 +76,14 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
     }
   });
 
-  /*  data = [
-    {
-      i18nKey: "Retail",
-    },
-    {
-      i18nKey: "Medical",
-    },
-    {
-      i18nKey: "Stationary",
-    },
-    {
-      i18nKey: "Other",
-    },
-  ];  */
+  const getCode = () => {
+    for (i = 0; i < subusageoption.length; i++) {
+      if (subusageoption[i]?.code.split(".").pop() === SubUsageType.i18nKey.split("_").pop()) {
+        return subusageoption[i]?.code;
+      }
+    }
+  };
+
   const onSkip = () => onSelect();
 
   function selectSelfOccupied(value) {
@@ -98,28 +92,30 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
 
   function goNext() {
     //let index = window.location.href.charAt(window.location.href.length - 1);
+    let subuagecode = getCode();
     if (!isNaN(index)) {
       let unit = formData.units && formData.units[index];
-      let floordet = { ...unit, SubUsageType };
-      onSelect(config.key, floordet, " ", index);
+      let floordet = { ...unit, SubUsageType, subuagecode };
+      onSelect(config.key, floordet, false, index);
     } else {
       [];
-      onSelect("subusagetype", { SubUsageType });
+      onSelect("subusagetype", { SubUsageType, subuagecode });
     }
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageType}>
-      <CardLabel>{t("Types of Floor Usage")}</CardLabel>
-      <div style={cardBodyStyle}>
-        <RadioButtons
-          t={t}
-          optionsKey="i18nKey"
-          isMandatory={config.isMandatory}
-          //options={data}
-          options={getSubUsagedata(subusageoption) || {}}
-          selectedOption={SubUsageType}
-          onSelect={selectSelfOccupied}
-        />
+      <CardLabel>{t("PT_SUB_USAGE_TYPE_LABEL")}</CardLabel>
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }} className={"form-pt-dropdown-only"}>
+        {getSubUsagedata(subusageoption) && (
+          <RadioOrSelect
+            isMandatory={config.isMandatory}
+            selectedOption={SubUsageType}
+            options={data || {}}
+            t={t}
+            optionKey="i18nKey"
+            onSelect={selectSelfOccupied}
+          />
+        )}
       </div>
     </FormStep>
   );

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { PGRModule, PGRLinks, PGRReducers } from "@egovernments/digit-ui-module-pgr";
-import { PTModule, PTLinks } from "@egovernments/digit-ui-module-pt";
+import { PTModule, PTLinks, PTComponents } from "@egovernments/digit-ui-module-pt";
 import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
@@ -38,6 +38,11 @@ import QACREDITOR from "./userInfo/QACREDITOR.json";
 import QACREATOR from "./userInfo/QACREATOR.json";
 import QAFSTP from "./userInfo/fstp.json";
 import QAADMIN from "./userInfo/QAADMIN.json";
+
+import QAPTCE from "./userInfo/QAPTCE.json";
+import QAPTDV from "./userInfo/QAPTDV.json";
+import QAPTFI from "./userInfo/QAPTFI.json";
+import QAPTA from "./userInfo/QAPTA.json";
 
 import UATSU from "./userInfo/UATSU.json";
 import UATCSR from "./userInfo/UATCSR.json";
@@ -79,6 +84,10 @@ const userInfo = {
   UATSU,
   UATCSR,
   UATHRMS,
+  QAPTCE,
+  QAPTDV,
+  QAPTFI,
+  QAPTA,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS"];
@@ -119,6 +128,7 @@ const initDigitUI = () => {
     PaymentLinks,
     PTModule,
     PTLinks,
+    ...PTComponents,
   });
 
   initFSMComponents();

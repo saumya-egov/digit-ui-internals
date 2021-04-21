@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FormStep, CardLabel, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { FormStep, CardLabel, RadioButtons, RadioOrSelect } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 
 const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formData }) => {
@@ -79,7 +79,7 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   });
 
   useEffect(() => {
-    if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "Yes, It is fully Self Occupied") {
+    if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       if (!isNaN(index)) {
         //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -92,20 +92,14 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
     }
   });
 
-  /* const data = [
-    {
-      i18nKey: "Retail",
-    },
-    {
-      i18nKey: "Medical",
-    },
-    {
-      i18nKey: "Stationary",
-    },
-    {
-      i18nKey: "Other",
-    },
-  ]; */
+  const getCode = () => {
+    for (i = 0; i < subusageoption.length; i++) {
+      if (subusageoption[i]?.code.split(".").pop() === SubUsageTypeOfRentedArea.i18nKey.split("_").pop()) {
+        return subusageoption[i]?.code;
+      }
+    }
+  };
+
   const onSkip = () => onSelect();
 
   function selectSelfOccupied(value) {
@@ -113,27 +107,30 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
   }
 
   function goNext() {
+    let Subusagetypeofrentedareacode = getCode();
     if (!isNaN(index)) {
       let unit = formData.units && formData.units[index];
-      let floordet = { ...unit, SubUsageTypeOfRentedArea };
+      let floordet = { ...unit, SubUsageTypeOfRentedArea, Subusagetypeofrentedareacode };
       //let index = window.location.href.charAt(window.location.href.length - 1);
-      onSelect(config.key, floordet, "", index);
+      onSelect(config.key, floordet, false, index);
     } else {
-      onSelect("Subusagetypeofrentedarea", { SubUsageTypeOfRentedArea });
+      onSelect("Subusagetypeofrentedarea", { SubUsageTypeOfRentedArea, Subusagetypeofrentedareacode });
     }
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!SubUsageTypeOfRentedArea}>
-      <CardLabel>{t("Types of Floor Usage")}</CardLabel>
-      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }}>
-        <RadioButtons
-          t={t}
-          optionsKey="i18nKey"
-          isMandatory={config.isMandatory}
-          options={getSubUsagedata(subusageoption) || []}
-          selectedOption={SubUsageTypeOfRentedArea}
-          onSelect={selectSelfOccupied}
-        />
+      <CardLabel>{t("PT_SUB_USAGE_TYPE_LABEL")}</CardLabel>
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }} className={"form-pt-dropdown-only"}>
+        {getSubUsagedata(subusageoption) && (
+          <RadioOrSelect
+            t={t}
+            optionKey="i18nKey"
+            isMandatory={config.isMandatory}
+            options={data || []}
+            selectedOption={SubUsageTypeOfRentedArea}
+            onSelect={selectSelfOccupied}
+          />
+        )}
       </div>
     </FormStep>
   );

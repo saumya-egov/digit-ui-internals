@@ -40,6 +40,20 @@ const CreateProperty = ({ parentRoute }) => {
     if (typeof nextStep == "object" && nextStep != null && isMultiple != false) {
       if (nextStep[sessionStorage.getItem("ownershipCategory")]) {
         nextStep = `${nextStep[sessionStorage.getItem("ownershipCategory")]}/${index}`;
+      } else if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
+        if (`${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}` === "un-occupied-area") {
+          nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}/${index}`;
+        } else {
+          nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
+        }
+      } else if (nextStep[sessionStorage.getItem("area")]) {
+        // nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
+
+        if (`${nextStep[sessionStorage.getItem("area")]}` !== "map") {
+          nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
+        } else {
+          nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
+        }
       } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
         nextStep = `${nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]}/${index}`;
       } else {
@@ -48,10 +62,16 @@ const CreateProperty = ({ parentRoute }) => {
       }
     }
     if (typeof nextStep == "object" && nextStep != null && isMultiple == false) {
-      if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
+      if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
+      } else if (nextStep[sessionStorage.getItem("area")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
+      } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {
         nextStep = `${nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]}`;
-      } else {
+      } else if (nextStep[sessionStorage.getItem("PropertyType")]) {
         nextStep = `${nextStep[sessionStorage.getItem("PropertyType")]}`;
+      } else if (nextStep[sessionStorage.getItem("isResdential")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("isResdential")]}`;
       }
     }
     /* if (nextStep === "is-this-floor-self-occupied") {

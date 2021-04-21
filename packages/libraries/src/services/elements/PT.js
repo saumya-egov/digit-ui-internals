@@ -28,6 +28,26 @@ export const PTService = {
       useCache: true,
       userService: true,
       method: "POST",
+      params: {  },
+      auth: true,
+    }),
+  update: (details, tenantId) =>
+    Request({
+      url: Urls.pt.update,
+      data: details,
+      useCache: false,
+      userService: true,
+      method: "POST",
+      params: {  },
+      auth: true,
+    }),
+  assessmentCreate: (details, tenantId) =>
+    Request({
+      url: Urls.pt.assessment_create,
+      data: details,
+      useCache: false,
+      userService: true,
+      method: "POST",
       params: { tenantId },
       auth: true,
     }),

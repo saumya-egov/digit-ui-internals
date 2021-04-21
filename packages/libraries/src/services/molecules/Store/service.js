@@ -1,6 +1,7 @@
 import { LocalizationService } from "../../elements/Localization/service";
 import { MdmsService } from "../../elements/MDMS";
 import { Storage } from "../../atoms/Utils/Storage";
+import { ApiCacheService } from "../../atoms/ApiCacheService";
 
 const getImgUrl = (url, fallbackUrl) => {
   if (!url && fallbackUrl) {
@@ -68,16 +69,11 @@ export const StoreService = {
         bannerUrl: stateInfo.bannerUrl,
       },
       localizationModules: stateInfo.localizationModules,
-      modules: MdmsRes?.tenant?.citymodule.filter((module) => enabledModules.includes(module.code)),
+      modules: MdmsRes?.tenant?.citymodule.filter(module => module.active).filter((module) => enabledModules.includes(module.code)),
     };
     initData.selectedLanguage = initData.languages[0].value;
 
-    // TODO: remove the FSM & Payment temp data once added in mdms master
-    initData.modules.push({
-      module: "Payment",
-      code: "Payment",
-      tenants: [{ code: "pb.amritsar" }],
-    });
+    ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
 
     initData.modules.push({
       module: "DSS",
@@ -92,6 +88,13 @@ export const StoreService = {
     initData.tenants = MdmsRes?.tenant?.tenants
       .filter((item) => !!moduleTenants.find((mt) => mt.code === item.code))
       .map((tenant) => ({ i18nKey: `TENANT_TENANTS_${tenant.code.replace(".", "_").toUpperCase()}`, ...tenant }));
+
+    // TODO: remove the FSM & Payment temp data once added in mdms master
+    initData.modules.push({
+      module: "Payment",
+      code: "Payment",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
 
     await LocalizationService.getLocale({
       modules: [

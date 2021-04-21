@@ -13,9 +13,14 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   } else {
     [floorarea, setfloorarea] = useState(formData.landarea?.floorarea);
   }
+  const [unitareaerror, setunitareaerror] = useState(null);
 
   function setPropertyfloorarea(e) {
     setfloorarea(e.target.value);
+    setunitareaerror(null);
+    if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY" && parseInt(formData?.units[index]?.builtUpArea) < e.target.value) {
+      setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
+    }
   }
 
   const goNext = () => {
@@ -23,20 +28,29 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
       let unit = formData.units && formData.units[index];
       //units["RentalArea"] = RentArea;
       //units["AnnualRent"] = AnnualRent;
-      let floordet = { ...unit, floorarea };
-      onSelect(config.key, floordet, true, index);
-      if (formData?.noOfFloors?.i18nKey === "Ground +1" && index < 1 && index > -1) {
-        let newIndex1 = parseInt(index) + 1;
-        onSelect("floordetails", {}, false, newIndex1, true);
-      } else if (formData?.noOfFloors?.i18nKey === "Ground +2" && index < 2 && index > -1) {
-        let newIndex2 = parseInt(index) + 1;
-        onSelect("floordetails", {}, false, newIndex2, true);
-      } else if ((formData?.noOofBasements?.i18nKey === "1 Basement" || formData?.noOofBasements?.i18nKey === "2 Basement") && index > -1) {
-        onSelect("floordetails", {}, false, "-1", true);
-      } else if (formData?.noOofBasements?.i18nKey === "2 Basement" && index != -2) {
-        onSelect("floordetails", {}, false, "-2", true);
+      if (
+        (formData?.isResdential?.i18nKey === "PT_COMMON_YES" || formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_NONRESIDENTIAL") &&
+        formData?.PropertyType?.i18nKey !== "COMMON_PROPTYPE_VACANT"
+      ) {
+        sessionStorage.setItem("area", "yes");
+      } else {
+        sessionStorage.setItem("area", "no");
       }
+
+      let floordet = { ...unit, floorarea };
+      onSelect(config.key, floordet, false, index);
     } else {
+      if (
+        (formData?.isResdential?.i18nKey === "PT_COMMON_YES" || formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_NONRESIDENTIAL") &&
+        formData?.PropertyType?.i18nKey !== "COMMON_PROPTYPE_VACANT"
+      ) {
+        sessionStorage.setItem("area", "yes");
+      } else if (formData?.PropertyType?.code === "VACANT") {
+        sessionStorage.setItem("area", "vacant");
+      } else {
+        sessionStorage.setItem("area", "no");
+      }
+
       onSelect("landarea", { floorarea });
     }
   };
@@ -57,8 +71,16 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   }
 
   return (
-    <FormStep config={config} onChange={onChange} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!floorarea}>
-      <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>
+    <FormStep
+      config={config}
+      onChange={onChange}
+      forcedError={t(unitareaerror)}
+      onSelect={goNext}
+      onSkip={onSkip}
+      t={t}
+      isDisabled={unitareaerror || !floorarea}
+    >
+      <CardLabel>{`${t("PT_PLOT_SIZE_SQUARE_FEET_LABEL")}*`}</CardLabel>
       <TextInput
         t={t}
         type={"number"}

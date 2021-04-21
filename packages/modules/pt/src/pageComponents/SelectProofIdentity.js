@@ -37,26 +37,47 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
     })();
   }, [file]);
 
+  const [multipleownererror, setmultipleownererror] = useState(null);
+
   const handleSubmit = () => {
-    let fileStoreId = uploadedFile;
-    let fileDetails = file;
-    if (fileDetails) {
-      fileDetails = { ...fileDetails };
-      fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
-    }
-    let ownerDetails = formData.owners && formData.owners[index];
-    if (ownerDetails && ownerDetails.documents) {
-      ownerDetails.documents["proofIdentity"] = { ...fileDetails };
+    setmultipleownererror(null);
+    if (formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" && index === "0") {
+      setmultipleownererror("PT_MULTI_OWNER_ADD_ERR_MSG");
     } else {
-      ownerDetails["documents"] = [];
-      ownerDetails.documents["proofIdentity"] = { ...fileDetails };
+      let fileStoreId = uploadedFile;
+      let fileDetails = file;
+      if (fileDetails) {
+        fileDetails.documentType = "IDENTITYPROOF";
+        fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
+      }
+      let ownerDetails = formData.owners && formData.owners[index];
+      if (ownerDetails && ownerDetails.documents) {
+        ownerDetails.documents["proofIdentity"] = fileDetails;
+      } else {
+        ownerDetails["documents"] = [];
+        ownerDetails.documents["proofIdentity"] = fileDetails;
+      }
+
+      onSelect(config.key, ownerDetails, "", index);
     }
-    onSelect(config.key, ownerDetails, "", index);
     // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
   };
 
   function onAdd() {
     let newIndex = parseInt(index) + 1;
+    let fileStoreId = uploadedFile;
+    let fileDetails = file;
+    if (fileDetails) {
+      fileDetails.documentType = "IDENTITYPROOF";
+      fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
+    }
+    let ownerDetails = formData.owners && formData.owners[index];
+    if (ownerDetails && ownerDetails.documents) {
+      ownerDetails.documents["proofIdentity"] = fileDetails;
+    } else {
+      ownerDetails["documents"] = [];
+      ownerDetails.documents["proofIdentity"] = fileDetails;
+    }
     onSelect("owner-details", {}, false, newIndex, true);
   }
   return (
@@ -65,14 +86,16 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
       config={config}
       onSelect={handleSubmit}
       onSkip={onSkip}
-      isDisabled={!uploadedFile}
+      forcedError={t(multipleownererror)}
+      isDisabled={multipleownererror || !uploadedFile}
       onAdd={onAdd}
       isMultipleAllow={formData?.ownershipCategory?.value == "INDIVIDUAL.MULTIPLEOWNERS"}
     >
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_TYPES`)}</CardLabelDesc>
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_SIZE`)}</CardLabelDesc>
       <UploadFile
-        accept=".jpg"
+        extraStyleName={"propertyCreate"}
+        accept=".jpg,.png,.pdf"
         onUpload={selectfile}
         onDelete={() => {
           setUploadedFile(null);

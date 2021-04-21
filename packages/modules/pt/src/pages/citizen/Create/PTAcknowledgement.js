@@ -3,16 +3,16 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import getPTAcknowledgementData from "../../../getPTAcknowledgementData";
-import { convertToProperty } from "../../../utils";
+import { convertToProperty, convertToUpdateProperty } from "../../../utils";
 
 const GetActionMessage = (props) => {
   const { t } = useTranslation();
   if (props.isSuccess) {
-    return t("CS_PROPERTY_APPLICATION_SUCCESS");
+    return !window.location.href.includes("edit-application") ? t("CS_PROPERTY_APPLICATION_SUCCESS") : t("CS_PROPERTY_UPDATE_APPLICATION_SUCCESS");
   } else if (props.isLoading) {
-    return t("CS_PROPERTY_APPLICATION_PENDING");
+    return !window.location.href.includes("edit-application") ? t("CS_PROPERTY_APPLICATION_PENDING") : t("CS_PROPERTY_UPDATE_APPLICATION_PENDING");
   } else if (!props.isSuccess) {
-    return t("CS_PROPERTY_APPLICATION_FAILED");
+    return !window.location.href.includes("edit-application") ? t("CS_PROPERTY_APPLICATION_FAILED") : t("CS_PROPERTY_UPDATE_APPLICATION_FAILED");
   }
 };
 
@@ -35,12 +35,16 @@ const BannerPicker = (props) => {
 const PTAcknowledgement = ({ data, onSuccess }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const mutation = Digit.Hooks.pt.usePropertyAPI(data?.address?.city ? data.address?.city?.code : tenantId);
+  const mutation = Digit.Hooks.pt.usePropertyAPI(
+    data?.address?.city ? data.address?.city?.code : tenantId,
+    {},
+    !window.location.href.includes("edit-application")
+  );
   const coreData = Digit.Hooks.useCoreData();
 
   useEffect(() => {
     try {
-      let formdata = convertToProperty(data);
+      let formdata = !window.location.href.includes("edit-application") ? convertToProperty(data) : convertToUpdateProperty(data);
       mutation.mutate(formdata, {
         onSuccess,
       });
@@ -49,11 +53,11 @@ const PTAcknowledgement = ({ data, onSuccess }) => {
     }
   }, []);
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const { Properties = [] } = mutation.data;
     const Property = (Properties && Properties[0]) || {};
     const tenantInfo = coreData.tenants.find((tenant) => tenant.code === Property.tenantId);
-    const data = getPTAcknowledgementData({ ...Property }, tenantInfo, t);
+    const data = await getPTAcknowledgementData({ ...Property }, tenantInfo, t);
     Digit.Utils.pdf.generate(data);
   };
 
@@ -82,7 +86,13 @@ const PTAcknowledgement = ({ data, onSuccess }) => {
       )}
       <StatusTable>
         {mutation.isSuccess && (
-          <Row rowContainerStyle={rowContainerStyle} last label={t("PT_COMMON_TABLE_COL_PT_ID")} text={mutation?.data?.Properties[0]?.propertyId} />
+          <Row
+            rowContainerStyle={rowContainerStyle}
+            last
+            label={t("PT_COMMON_TABLE_COL_PT_ID")}
+            text={mutation?.data?.Properties[0]?.propertyId}
+            textStyle={{ whiteSpace: "pre", width: "60%" }}
+          />
         )}
       </StatusTable>
       <Link to={`/digit-ui/citizen`}>

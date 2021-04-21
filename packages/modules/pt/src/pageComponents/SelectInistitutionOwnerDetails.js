@@ -13,6 +13,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
   const [mobileNumber, setMobileNumber] = useState(formData.owners && formData.owners[index] && formData.owners[index].mobileNumber);
   const [altContactNumber, setAltContactNumber] = useState(formData.owners && formData.owners[index] && formData.owners[index].altContactNumber);
   const [emailId, setEmailId] = useState(formData.owners && formData.owners[index] && formData.owners[index].emailId);
+  const isUpdateProperty = formData?.isUpdateProperty || false;
 
   function setInistitution(e) {
     setInistitutionName(e.target.value);
@@ -48,7 +49,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
   const getDropdwonForInstitution = () => {
     let SubOwnerShipCategory = {};
     let PropertyTaxPayload = JSON.parse(sessionStorage.getItem("getSubPropertyOwnerShipCategory"));
-    let SubOwnerShipCategoryOb = PropertyTaxPayload.PropertyTax.SubOwnerShipCategory;
+    let SubOwnerShipCategoryOb = PropertyTaxPayload?.PropertyTax?.SubOwnerShipCategory;
     SubOwnerShipCategoryOb &&
       SubOwnerShipCategoryOb.length > 0 &&
       SubOwnerShipCategoryOb.map((category) => {
@@ -90,7 +91,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
       isDisabled={!inistitutionName || !inistitutetype || !name || !designation || !mobileNumber || !altContactNumber}
     >
       <div style={cardBodyStyle}>
-        <CardLabel>{t("PT_COMMON_INSTITUTION_NAME")}</CardLabel>
+        <CardLabel>{`${t("PT_COMMON_INSTITUTION_NAME")}*`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -98,14 +99,14 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="institutionName"
           onChange={setInistitution}
           value={inistitutionName}
+          disable = {isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
-            type: "tel",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })}
         />
-        <CardLabel>{t("PT_TYPE_OF_INSTITUTION")}</CardLabel>
+        <CardLabel>{`${t("PT_TYPE_OF_INSTITUTION")}*`}</CardLabel>
         <Dropdown
           t={t}
           isMandatory={false}
@@ -113,9 +114,10 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           selected={inistitutetype}
           optionKey="code"
           select={setTypeOfInistituteName}
+          disabled = {isUpdateProperty}
         />
         <CardHeader>{t("PT_AUTH_PERSON_DETAILS")}</CardHeader>
-        <CardLabel>{t("PT_OWNER_NAME")}</CardLabel>
+        <CardLabel>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -123,14 +125,14 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="name"
           onChange={setInistituteName}
           value={name}
+          disable = {isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
-            type: "tel",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })}
         />
-        <CardLabel>{t("PT_COMMON_AUTHORISED_PERSON_DESIGNATION")}</CardLabel>
+        <CardLabel>{`${t("PT_COMMON_AUTHORISED_PERSON_DESIGNATION")}*`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -138,14 +140,14 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="designation"
           onChange={setDesignationName}
           value={designation}
+          disable = {isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
-            type: "tel",
             title: t("PT_DESIGNATION_ERROR_MESSAGE"),
           })}
         />
-        <CardLabel>{t("PT_FORM3_MOBILE_NUMBER")}</CardLabel>
+        <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -154,6 +156,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           onChange={setMobileNo}
           value={mobileNumber}
           type={"tel"}
+          disable = {isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "[6-9]{1}[0-9]{9}",
@@ -161,7 +164,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
             title: t("CORE_COMMON_APPLICANT_ALT_NUMBER_INVALID"),
           })}
         />
-        <CardLabel>{t("PT_OWNERSHIP_INFO_TEL_PHONE_NO")}</CardLabel>
+        <CardLabel>{`${t("PT_OWNERSHIP_INFO_TEL_PHONE_NO")}*`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -169,7 +172,8 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="altContactNumber"
           onChange={setAltContactNo}
           value={altContactNumber}
-          type={"tel"}
+          type={"number"}
+          disable = {isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[0-9]{10,11}$",
@@ -184,13 +188,14 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           t={t}
           name="email"
           onChange={setEmail}
+          type="email"
           value={emailId}
-          {...(validation = {
-            isRequired: true,
-            pattern: `^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))`,
-            type: "number",
-            title: t("PT_EMAIL_ID_ERROR_MESSAGE"),
-          })}
+          disable = {isUpdateProperty}
+          // {...(validation = {
+          //   isRequired: true,
+          //   type: "email",
+          //   title: t("PT_EMAIL_ID_ERROR_MESSAGE"),
+          // })}
         />
       </div>
     </FormStep>
