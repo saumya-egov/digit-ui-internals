@@ -474,6 +474,22 @@ const getRentalDetailsCategoryCriteria = (tenantId, moduleCode) => ({
   },
 });
 
+const getDssDashboardCriteria = (tenantId, moduleCode) => ({
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "dashboard-config"
+          }
+        ]
+      }
+    ]
+  }
+})
+
 const GetEgovLocations = (MdmsRes) => {
   return MdmsRes["egov-location"].TenantBoundary[0].boundary.children.map((obj) => ({
     name: obj.localname,
@@ -624,6 +640,10 @@ const getRentalDetailsCategory = (MdmsRes) => {
   });
 };
 
+const getDssDashboard = () =>
+  MdmsRes['dss-dashboard']['dashboard-config'];
+
+
 const GetRoleStatusMapping = (MdmsRes) => MdmsRes["DIGIT-UI"].RoleStatusMapping;
 const GetCommonFields = (MdmsRes) => MdmsRes["FSM"].CommonFieldsConfig;
 
@@ -679,6 +699,8 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return GetPostFields(MdmsRes);
     case "RentalDeatils":
       return getRentalDetailsCategory(MdmsRes);
+    case "DssDashboard":
+      return getDssDashboard(MdmsRes);
     default:
       return MdmsRes;
   }
@@ -863,6 +885,9 @@ export const MdmsService = {
   },
   getRentalDetails: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getRentalDetailsCategoryCriteria(tenantId, moduleCode), moduleCode);
+  },
+  getDssDashboard: (tenantId, moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getDssDashboardCriteria(tenantId, moduleCode), moduleCode);
   },
   getPaymentGateway: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);

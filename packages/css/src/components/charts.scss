@@ -1,0 +1,21 @@
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+
+  .sideContent {
+    display: flex;
+    justify-content: space-around;
+
+    .searchInput {
+      margin-right: 30px;
+    }
+  }
+}
+
+.chart-row {
+  @apply flex justify-between flex-wrap;
+  .chart-item {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+}

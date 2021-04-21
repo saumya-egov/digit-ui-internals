@@ -75,6 +75,12 @@ export const StoreService = {
 
     ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
 
+    initData.modules.push({
+      module: "DSS",
+      code: "DSS",
+      tenants: [{ code: "pb.amritsar" }],
+    })
+
     const moduleTenants = initData.modules
       .map((module) => module.tenants)
       .flat()

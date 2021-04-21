@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR="$( cd "$( dirname "$0" )" && pwd )"
+BASEDIR="$(cd "$(dirname "$0")" && pwd)"
 
 msg() {
   echo -e "\n\n\033[32;32m$1\033[0m"
@@ -13,10 +13,8 @@ msg() {
 msg "Building and publishing css"
 cd "$BASEDIR/packages/css" && yarn publish --access public
 
-
 msg "Building and publishing libraries"
 cd "$BASEDIR/packages/libraries" && yarn publish --access public
-
 
 msg "Building and publishing react-components"
 cd "$BASEDIR/packages/react-components" && yarn publish --access public
@@ -34,6 +32,9 @@ cd "$BASEDIR/packages/modules/fsm" && yarn publish --access public
 
 msg "Building and publishing PT module"
 cd "$BASEDIR/packages/modules/pt" && yarn publish --access public
+
+msg "Building and publishing DSS module"
+cd "$BASEDIR/packages/modules/dss" && yarn publish --access public
 
 msg "Building and publishing Common module"
 cd "$BASEDIR/packages/modules/common" && yarn publish --access public

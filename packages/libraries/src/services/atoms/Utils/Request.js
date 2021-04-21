@@ -21,6 +21,10 @@ const requestInfo = () => ({
   authToken: Digit.UserService.getUser().access_token,
 });
 
+const authHeaders = () => ({
+  "auth-token": Digit.UserService.getUser().access_token,
+});
+
 const userServiceData = () => ({ userInfo: Digit.UserService.getUser().info });
 
 window.Digit = window.Digit || {};
@@ -35,6 +39,7 @@ export const Request = async ({
   auth,
   userService,
   reciept = false,
+  authHeader = false,
 }) => {
   // console.log("params:", params);
   // console.log("in request", method);
@@ -53,6 +58,8 @@ export const Request = async ({
       data.RequestInfo = { ...data.RequestInfo, msgId: "string|en_IN" };
     }
   }
+
+  if (authHeader) headers = { ...headers, ...authHeaders() };
 
   let key = "";
   if (useCache) {

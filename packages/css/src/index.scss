@@ -8,6 +8,9 @@
 
 @import "tailwindcss/utilities";
 
+@import 'react-date-range/dist/styles.css';
+@import 'react-date-range/dist/theme/default.css';
+
 @import "./components/loader.scss";
 
 @import "./components/body.scss";
@@ -49,6 +52,10 @@
 @import "./components/citizenInfoLabel.scss";
 @import "./components/roundedLabel.scss";
 @import "./components/changeLanguage.scss";
+@import "./components//metricsTable.scss";
+@import "./components/filters.scss";
+@import "./components//charts.scss";
+@import "./components/summary.scss";
 
 @import "./pages/employee/index.scss";
 @import "./pages/employee/popupmodule.scss";

@@ -29,6 +29,7 @@ module.exports = function (app) {
     "/vendor",
     "/property-services",
     "/fsm-calculator/v1/billingSlab/_search",
+    "/dashboard-analytics",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
 };

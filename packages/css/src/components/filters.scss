@@ -1,0 +1,31 @@
+.filters-wrapper {
+  height: 100%;
+  width: 264px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 64px;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  padding: 100px 36px 0px;
+
+  .switch-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    .radio-switch {
+      display: none;
+
+      &:checked ~ label {
+        border-color: #F47738;
+        color: #F47738;
+      }
+    }
+
+    label {
+      border: 1px solid;
+      padding: 6px;
+      border-color: rgba(70, 70, 70, var(--border-opacity));
+    }
+  }
+}
