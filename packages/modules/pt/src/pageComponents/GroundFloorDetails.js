@@ -21,14 +21,18 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   const [builtupplotsizeeroor, setbuiltupplotsizeeroor] = useState(null);
   function setPropertyplotSize(e) {
     setplotSize(e.target.value);
+    setbuiltupplotsizeeroor(null);
+
+    if (e.target.value && parseInt(builtUpArea) > parseInt(e.target.value)) {
+      setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
+    }
   }
   function setPropertybuiltUpArea(e) {
     setbuiltUpArea(e.target.value);
     setbuiltupplotsizeeroor(null);
-    console.log(e.target.value);
     if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_INDEPENDENTPROPERTY" && index != "0") {
       if (formData?.units[0]?.plotSize && parseInt(e.target.value) > parseInt(formData?.units[0]?.plotSize)) {
-        setbuiltupplotsizeeroor("wrong built up area");
+        setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
       }
     } else {
       if (plotSize && parseInt(e.target.value) > parseInt(plotSize)) {
