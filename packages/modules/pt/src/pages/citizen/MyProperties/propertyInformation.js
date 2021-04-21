@@ -42,13 +42,13 @@ const PropertyInformation = () => {
         <Card>
           <StatusTable>
             <Row label={t("PT_PROPERTY_PTUID")} text={`${property.propertyId || "NA"}`} textStyle={{ whiteSpace: "pre" }} />
-            <Row label={t("Total Property Due")} text={"3223"} />
+            <Row label={t("Total Property Due")} text={"NA"} />
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
           <StatusTable>
             <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${property.address?.pincode || "NA"}`} />
             <Row label={t("PT_COMMON_CITY")} text={`${property.address?.city || "NA"}`} />
-            <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={t("PB_AMRITSAR_REVENUE_SUN04")} />
+            <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={`${t(property?.address?.locality?.name)}` || "NA"} />
             <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${property.address?.street || "NA"}`} />
             <Row label={t("PT_PROPERTY_ADDRESS_COLONY_NAME")} text={`${property.address?.buildingName || "NA"}`} />
           </StatusTable>
@@ -96,8 +96,8 @@ const PropertyInformation = () => {
                           text={
                             `${t(
                               (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
-                              (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory) +
-                              (property.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
+                                (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory) +
+                                (property.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
                             )}` || "NA"
                           }
                         />
@@ -154,13 +154,13 @@ const PropertyInformation = () => {
             )}
           </div>
           <div>
-            {(property?.status === "ACTIVE") &&
+            {property?.status === "ACTIVE" && (
               <div style={{ marginTop: "24px", position: "fixed", bottom: "0px", width: "100%", marginLeft: "-6%" }}>
-                <Link to={{ pathname:`/digit-ui/citizen/pt/property/edit-application/update=true/${property.propertyId}`}}>
+                <Link to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/update=true/${property.propertyId}` }}>
                   <SubmitBar label={t("PT_UPDATE_PROPERTY_BUTTON")} />
                 </Link>
               </div>
-            }
+            )}
           </div>
         </Card>
       </div>
