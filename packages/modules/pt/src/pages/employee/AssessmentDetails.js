@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
 
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
-const PropertyDetails = () => {
+const AssessmentDetails = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id: applicationNumber } = useParams();
+  const location = useLocation();
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
+  const { mutate: assessmentMutate } = Digit.Hooks.pt.usePropertyAssessment(tenantId);
+  const { mutate: ptCalculationEstimateMutate } = Digit.Hooks.pt.usePtCalculationEstimate(tenantId);
+
+  useEffect(() => {
+    ptCalculationEstimateMutate({ Assessment: location?.state?.Assessment });
+  }, []);
 
   const {
     isLoading: updatingApplication,
@@ -68,8 +75,10 @@ const PropertyDetails = () => {
       mutate={mutate}
       workflowDetails={workflowDetails}
       businessService="PT"
+      assessmentMutate={assessmentMutate}
+      ptCalculationEstimateMutate={ptCalculationEstimateMutate}
     />
   );
 };
 
-export default PropertyDetails;
+export default AssessmentDetails;

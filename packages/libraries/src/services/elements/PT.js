@@ -41,6 +41,16 @@ export const PTService = {
       params: { tenantId },
       auth: true,
     }),
+  ptCalculationEstimate: (details, tenantId) =>
+    Request({
+      url: Urls.pt.pt_calculation_estimate,
+      data: details,
+      useCache: false,
+      userService: true,
+      method: "POST",
+      params: { tenantId },
+      auth: true,
+    }),
   assessmentCreate: (details, tenantId) =>
     Request({
       url: Urls.pt.assessment_create,

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import NewApplication from "./NewApplication";
 import ApplicationDetails from "./ApplicationDetails";
 import PropertyDetails from "./PropertyDetails";
+import AssessmentDetails from "./AssessmentDetails";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -27,6 +28,7 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
           <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
           <PrivateRoute path={`${path}/property-details/:id`} component={() => <PropertyDetails parentRoute={path} />} />
+          <PrivateRoute path={`${path}/assessment-details/:id`} component={() => <AssessmentDetails parentRoute={path} />} />
           {/* <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} /> */}
           {/* <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} /> */}
           {/* <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} /> */}

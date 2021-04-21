@@ -82,19 +82,26 @@ const ApplicationDetails = (props) => {
 
   const submitAction = (data) => {
     if (selectedAction === "ASSESS_PROPERTY") {
-      assessmentMutate(
-        { Assessment: data?.Assessment },
-        {
-          onError: (error, variables) => {
-            setShowToast({ key: "error", action: error });
-            setTimeout(closeToast, 5000);
-          },
-          onSuccess: (data, variables) => {
-            setShowToast({ key: "success", action: selectedAction });
-            setTimeout(closeToast, 5000);
-          },
-        }
-      );
+      if (history?.location?.pathname?.includes("assessment-details")) {
+        assessmentMutate(
+          { Assessment: data?.Assessment },
+          {
+            onError: (error, variables) => {
+              setShowToast({ key: "error", action: error });
+              setTimeout(closeToast, 5000);
+            },
+            onSuccess: (data, variables) => {
+              setShowToast({ key: "success", action: selectedAction });
+              setTimeout(closeToast, 5000);
+            },
+          }
+        );
+      } else {
+        return history.push({
+          pathname: `/digit-ui/employee/pt/assessment-details/${applicationNumber}/${data?.Assessment?.financialYear}`,
+          state: data,
+        });
+      }
     } else {
       mutate(data, {
         onError: (error, variables) => {

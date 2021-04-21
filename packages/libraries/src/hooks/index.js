@@ -61,6 +61,7 @@ import usePtApplicationDetail from "./pt/useApplicationDetail";
 import usePtApplicationActions from "./pt/useApplicationActions";
 import usePtMDMS from "./pt/useMDMS";
 import usePropertyAssessment from "./pt/usePropertyAssessment";
+import usePtCalculationEstimate from "./pt/usePtCalculationEstimate";
 
 const pgr = {
   useComplaintDetails,
@@ -113,6 +114,7 @@ const pt = {
   useApplicationActions: usePtApplicationActions,
   useMDMS: usePtMDMS,
   usePropertyAssessment,
+  usePtCalculationEstimate,
 };
 
 const Hooks = {
