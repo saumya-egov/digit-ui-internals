@@ -13,9 +13,14 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   } else {
     [floorarea, setfloorarea] = useState(formData.landarea?.floorarea);
   }
+  const [unitareaerror, setunitareaerror] = useState(null);
 
   function setPropertyfloorarea(e) {
     setfloorarea(e.target.value);
+    setunitareaerror(null);
+    if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY" && parseInt(formData?.units[index]?.builtUpArea) < e.target.value) {
+      setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
+    }
   }
 
   const goNext = () => {
@@ -66,7 +71,15 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   }
 
   return (
-    <FormStep config={config} onChange={onChange} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!floorarea}>
+    <FormStep
+      config={config}
+      onChange={onChange}
+      forcedError={t(unitareaerror)}
+      onSelect={goNext}
+      onSkip={onSkip}
+      t={t}
+      isDisabled={unitareaerror || !floorarea}
+    >
       <CardLabel>{`${t("PT_PLOT_SIZE_SQUARE_FEET_LABEL")}*`}</CardLabel>
       <TextInput
         t={t}

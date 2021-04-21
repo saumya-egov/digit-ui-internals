@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, TextInput } from "@egovernments/digit-ui-react-components";
 
-const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
+const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
   let index = window.location.href.split("/").pop();
   const onSkip = () => onSelect();
@@ -29,8 +29,17 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   });
 
   let validation = {};
+  const [unitareaerror, setunitareaerror] = useState(null);
+
   function setPropertyUnOccupiedArea(e) {
     setUnOccupiedArea(e.target.value);
+    setunitareaerror(null);
+    if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
+      let totalarea = parseInt(formData?.units[index]?.floorarea || 0) + parseInt(formData?.units[index]?.RentArea || 0) + parseInt(e.target.value);
+      if (parseInt(formData?.units[index]?.builtUpArea) < totalarea) {
+        setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
+      }
+    }
   }
 
   const getheaderCaption = () => {
@@ -87,9 +96,10 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
       config={((config.texts.headerCaption = getheaderCaption()), config)}
       onChange={onChange}
       onSelect={goNext}
+      forcedError={t(unitareaerror)}
       onSkip={onSkip}
       t={t}
-      isDisabled={!UnOccupiedArea}
+      isDisabled={unitareaerror || !UnOccupiedArea}
     >
       <CardLabel>{`${t("PT_UNOCCUPIED_AREA_SQ_FEET_LABEL")}*`}</CardLabel>
       <TextInput
@@ -106,4 +116,4 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
   );
 };
 
-export default RentalDetails;
+export default UnOccupiedArea;
