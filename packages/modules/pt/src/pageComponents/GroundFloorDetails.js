@@ -50,6 +50,8 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
     if (!isNaN(index)) {
       let unit = (formData.units && formData.units[index]) || null;
       if (unit !== null) {
+        unit["builtUpArea"] = builtUpArea;
+        unit["plotSize"] = plotSize;
         onSelect(config.key, unit, "", index);
       } else {
         let floordet = { plotSize, builtUpArea };

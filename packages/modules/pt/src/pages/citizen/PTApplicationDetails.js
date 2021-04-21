@@ -27,6 +27,9 @@ const PTApplicationDetails = () => {
   if (isLoading) {
     return <Loader />;
   }
+  let flrno,
+    i = 0;
+  flrno = units && units[0]?.floorNo;
   const handleDownloadPdf = async () => {
     const applications = application || {};
     const tenantInfo = coreData.tenants.find((tenant) => tenant.code === applications.tenantId);
@@ -62,7 +65,7 @@ const PTApplicationDetails = () => {
             <Row label={t("PT_ASSESMENT1_PLOT_SIZE")} text={`${t(application?.landArea)}` || "NA"} />
             <Row label={t("PT_ASSESMENT_INFO_NO_OF_FLOOR")} text={`${t(application?.noOfFloors)}` || "NA"} />
           </StatusTable>
-          <CardSubHeader>{t("Ground Floor")}</CardSubHeader>
+          {/* <CardSubHeader>{t("Ground Floor")}</CardSubHeader>
           <CardSubHeader>{t("Unit 1")}</CardSubHeader>
           <div style={{ border: "groove" }}>
             <StatusTable>
@@ -70,21 +73,36 @@ const PTApplicationDetails = () => {
               <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t(Array.isArray(units) && units[0]?.occupancyType)}` || "NA"} />
               <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${t(Array.isArray(units) && units[0]?.constructionDetail?.builtUpArea)}` || "NA"} />
             </StatusTable>
-          </div>
+          </div> */}
           <div>
             {Array.isArray(units) &&
-              units.length > 1 &&
+              units.length > 0 &&
               units.map((unit, index) => (
                 <div key={index}>
-                  <CardSubHeader>
-                    {index} {t("Floor")}
-                  </CardSubHeader>
-                  <CardSubHeader>{t("Unit 1")}</CardSubHeader>
-                  <StatusTable>
-                    <Row label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")} text={`${t(unit?.usageCategory)}` || "NA"} />
-                    <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t(unit?.occupancyType)}` || "NA"} />
-                    <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${t(unit?.constructionDetail?.builtUpArea)}` || "NA"} />
-                  </StatusTable>
+                  {(flrno !== unit?.floorNo ? (i = 1) : (i = i + 1)) && i === 1 && (
+                    <CardSubHeader>{`${t("PROPERTYTAX_FLOOR_")}${unit?.floorNo}`}</CardSubHeader>
+                  )}
+                  <div style={{ border: "groove" }}>
+                    <CardSubHeader>
+                      {t("Unit")} {i}
+                    </CardSubHeader>
+                    {(true ? (flrno = unit?.floorNo) : console.log("")) && (
+                      <StatusTable>
+                        <Row
+                          label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")}
+                          text={
+                            `${t(
+                              (application.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
+                                (application?.usageCategory?.split(".")[1] ? application?.usageCategory?.split(".")[1] : application.usageCategory) +
+                                (application.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
+                            )}` || "NA"
+                          }
+                        />
+                        <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t("PROPERTYTAX_OCCUPANCYTYPE_" + unit?.occupancyType)}` || "NA"} />
+                        <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${unit?.constructionDetail?.builtUpArea || "NA"}`} />
+                      </StatusTable>
+                    )}
+                  </div>
                 </div>
               ))}
           </div>
