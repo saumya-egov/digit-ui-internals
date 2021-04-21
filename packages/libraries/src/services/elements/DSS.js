@@ -10,4 +10,13 @@ export const DSSService = {
       method: "GET",
       authHeader: true,
     }),
+  getCharts: (data) =>
+    Request({
+      url: Urls.dss.getCharts,
+      useCache: false,
+      userService: false,
+      method: "POST",
+      auth: true,
+      data,
+    })
 };

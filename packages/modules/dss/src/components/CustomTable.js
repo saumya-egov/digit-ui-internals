@@ -28,12 +28,12 @@ const CustomTable = () => {
         <tr>
           <td>2</td>
           <td>DDR B</td>
-          <td>0 0%</td>
-          <td>0 0%</td>
-          <td>226 100%</td>
-          <td>226 100%</td>
-          <td>0 0%</td>
-          <td>100 100%</td>
+          <td>0 <UpwardArrow /> 0%</td>
+          <td>0 <UpwardArrow /> 0%</td>
+          <td>226 <UpwardArrow /> 100%</td>
+          <td>226 <UpwardArrow /> 100%</td>
+          <td>0 <UpwardArrow /> 0%</td>
+          <td>100 <UpwardArrow /> 100%</td>
         </tr>
       </table>
     </>

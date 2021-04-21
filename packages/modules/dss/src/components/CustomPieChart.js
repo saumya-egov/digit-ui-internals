@@ -1,6 +1,7 @@
-import { Card } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { Cell, Legend, Pie, PieChart, Tooltip } from "recharts";
+import { startOfMonth, endOfMonth, getTime } from "date-fns";
+import { ResponsiveContainer, Cell, Legend, Pie, PieChart, Tooltip } from "recharts";
+import { Card, Loader } from "@egovernments/digit-ui-react-components";
 
 const data = [{
   "headerName": "DSS_PT_COLLECTION_BY_USAGE_TYPE",
@@ -49,18 +50,41 @@ const data = [{
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const CustomPieChart = ({
-  dataKey = 'value'
+  dataKey = 'value',
+  data
 }) => {
+  const { id } = data;
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const requestDate = {
+    startDate: getTime(startOfMonth(new Date())),
+    endDate: getTime(endOfMonth(new Date())),
+    interval: "month",
+    title: "",
+  }
+  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+    key: id,
+    type: "metric",
+    tenantId,
+    requestDate,
+  });
+
+  if (isLoading) {
+    return (
+      <Loader />
+    );
+  }
   return (
-    <PieChart width={730} height={250}>
-      <Pie data={data?.[0]?.plots} dataKey={dataKey} innerRadius={60} outerRadius={80} fill="#8884d8" label={true} labelLine={false}>
-        {data?.[0]?.plots.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-      </Pie>
-      <Tooltip />
-      <Legend layout="vertical" align="right" iconType="circle" />
-    </PieChart>
+    <ResponsiveContainer width="99%" height={300}>
+      <PieChart width="100%" height="100%">
+        <Pie data={response?.responseData?.data?.[0]?.plots} dataKey={dataKey} innerRadius={60} outerRadius={80} fill="#8884d8" label={true} labelLine={false}>
+          {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
+            <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend layout="vertical" align="right" iconType="circle" />
+      </PieChart>
+    </ResponsiveContainer>
   )
 }
 

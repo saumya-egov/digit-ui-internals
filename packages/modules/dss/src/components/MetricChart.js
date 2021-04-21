@@ -1,78 +1,19 @@
 import React, { Fragment } from "react";
 import { Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { startOfMonth, endOfMonth, getTime } from "date-fns";
 
-const chartData = {
-  "noUnit" : true,
-  "charts" : [
-     {
-        "headers" : [],
-        "chartType" : "metric",
-        "name" : "DSS_TOTAL_COLLECTION_TODAY",
-        "filter" : {
-           "title" : "TODAY"
-        },
-        "id" : "todaysCollection",
-        "code" : ""
-     },
-     {
-        "id" : "totalCollection",
-        "code" : "",
-        "filter" : "",
-        "chartType" : "metric",
-        "name" : "DSS_TOTAL_COLLECTION",
-        "headers" : []
-     },
-     {
-        "chartType" : "metric",
-        "name" : "DSS_TARGET_COLLECTION",
-        "headers" : [],
-        "id" : "targetCollection",
-        "code" : "",
-        "filter" : ""
-     },
-     {
-        "headers" : [],
-        "chartType" : "metric",
-        "name" : "DSS_TARGET_ACHIEVED",
-        "filter" : "",
-        "id" : "targetAchieved",
-        "code" : ""
-     }
-  ],
-  "name" : "DSS_OVERVIEW",
-  "dimensions" : {
-     "height" : 350,
-     "width" : 5
-  },
-  "label" : "DSS_OVERVIEW",
-  "isCollapsible" : false,
-  "id" : 211,
-  "vizType" : "metric-collection"
-};
-
-const MetricData = () => {
-  const data = {
-    "headerName": "DSS_TOTAL_COLLECTION",
-    "headerValue": 0.0,
-    "headerSymbol": "Amount",
-    "insight": {
-      "name": "INSIGHTS",
-      "value": "-100% than last year",
-      "indicator": "lower_red",
-      "colorCode": "lower_red"
-    },
-    "plots": []
-  }
+const MetricData = ({ data }) => {
   const displaySymbol = (type) => {
     switch(type) {
       case "Amount": return "₹";
+      case "number": return "";
       default: return "";
     }
   }
 
   return (
     <div>
-      <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>{`${displaySymbol(data.headerSymbol)} ${data.headerValue}`}</p>
+      <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>{`${displaySymbol(data.headerSymbol)} ${+data.headerValue.toFixed(1)}`}</p>
       {data.insight && 
         <div>
           <p className={`${data.insight.colorCode}`}>
@@ -98,25 +39,36 @@ const res = {
 }
 
 const MetricChartRow = ({ data }) => {
-  const response = {
-    "headerName": "DSS_TOTAL_COLLECTION",
-    "headerValue": 0.0,
-    "headerSymbol": "Amount",
-    "insight": null,
-    "plots": []
+  const { id, chartType } = data
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const requestDate = {
+    startDate: getTime(startOfMonth(new Date())),
+    endDate: getTime(endOfMonth(new Date())),
+    interval: "month",
+    title: "",
+  }
+  const { isLoading, data: response, } = Digit.Hooks.dss.useGetChart({
+    key: id,
+    type: chartType,
+    tenantId,
+    requestDate
+  })
+
+  if (isLoading) {
+    return false;
   }
 
   return (
     <div className="row">
       <div>{data.name}</div>
-      <MetricData data={response} />
+      <MetricData data={response?.responseData?.data?.[0]} />
       {/* <div>{`${displaySymbol(response.headerSymbol)} ${response.headerValue}`}</div> */}
     </div>
   )
 }
 
-const MetricChart = () => {
-  const { charts } = chartData;
+const MetricChart = ({ data }) => {
+  const { charts } = data;
 
   return (
     <>

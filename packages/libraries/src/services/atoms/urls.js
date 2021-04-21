@@ -55,7 +55,8 @@ const Urls = {
   },
 
   dss: {
-    dashboardConfig: "/dashboard-analytics/dashboard/getDashboardConfig"
+    dashboardConfig: "/dashboard-analytics/dashboard/getDashboardConfig",
+    getCharts: "/dashboard-analytics/dashboard/getChartV2"
   }
 };
 

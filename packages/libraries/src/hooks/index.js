@@ -59,6 +59,7 @@ import useTenantsPT from "./pt/useTenants";
 import useDssMdms from "./dss/useMDMS";
 import useDashboardConfig from "./dss/useDashboardConfig";
 import useDSSDashboard from "./dss/useDSSDashboard";
+import useGetChart from "./dss/useGetChart";
 
 const pgr = {
   useComplaintDetails,
@@ -112,6 +113,7 @@ const dss = {
   useMDMS: useDssMdms,
   useDashboardConfig,
   useDSSDashboard,
+  useGetChart
 };
 
 const Hooks = {

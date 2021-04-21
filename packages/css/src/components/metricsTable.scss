@@ -1,5 +1,5 @@
 .metricsTable {
-  @apply bg-white m-sm px-md pt-md pb-lg shadow-card;
+  @apply bg-white px-md pt-md pb-lg shadow-card;
   max-width: 440px;
   border-radius: 4px;
 
@@ -11,7 +11,7 @@
     color: rgb(229, 77, 66);
   }
 
-  .lower_green {
+  .upper_green {
     color: #00703C;
   }
 }

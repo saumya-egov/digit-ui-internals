@@ -1,6 +1,8 @@
 import React from "react";
-import { CardLabel, Header, Poll } from "@egovernments/digit-ui-react-components";
+import { useTranslation } from "react-i18next";
+import { CardLabel, Header, Loader, Poll } from "@egovernments/digit-ui-react-components";
 import Summary from "../components/Summary";
+import Layout from "../components/Layout";
 
 const response = [
   {
@@ -35,21 +37,33 @@ const response = [
   }
 ]
 const Overview = () => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { t } = useTranslation();
+  const moduleCode = "home";
+  const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
+
+  if (isLoading) {
+    return (
+      <Loader />
+    )
+  }
+
   return (
     <div>
-      <Header>Overview Dashboard</Header>
-      {response.map((item, key) => (
-        <Summary
-          key={key}
-          title={item.title}
-          todayValue={item.todayValue}
-          monthValue={item.monthValue}
-          target={item.target}
-          task={item.task}
-          monthlyTask={item.monthlyTask}
-          sla={item.sla}
-          logo={item.logo}
-        />
+      <Header>{ t(response?.[0]?.name) }</Header>
+      {response?.responseData?.[0]?.visualizations.map((item, key) => (
+        <Layout rowData={item} key={key} />
+        // <Summary
+        //   key={key}
+        //   title={item.title}
+        //   todayValue={item.todayValue}
+        //   monthValue={item.monthValue}
+        //   target={item.target}
+        //   task={item.task}
+        //   monthlyTask={item.monthlyTask}
+        //   sla={item.sla}
+        //   logo={item.logo}
+        // />
       ))}
     </div>
   )

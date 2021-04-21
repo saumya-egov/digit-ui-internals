@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { Header } from "@egovernments/digit-ui-react-components";
+import { Header, Loader } from "@egovernments/digit-ui-react-components";
 import config from "../chartconfig.json";
 import CustomAreaChart from "../components/CustomAreaChart";
 import CustomBarChart from "../components/CustomBarChart";
@@ -15,14 +15,20 @@ const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const stateCode = tenantId.split(".")[0];
-  const moduleCode = "DssDashboard";
+  const moduleCode = "fsm";
   // const moduleCode = "propertytax";
   const mdmsType = "dss-dashboard";
-  const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
+  // const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
-  // const { data: dashboardConfig } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
-  console.log("find all data here", dashData, screenConfig);
-  const dashboardConfig = config?.responseData;
+  const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
+  // console.log("find all data here", dashData, screenConfig);
+  if (isLoading) {
+    return (
+      <Loader />
+    );
+  }
+
+  const dashboardConfig = response?.responseData;
   return (
     <>
       <Filters />

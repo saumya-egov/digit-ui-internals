@@ -11,3 +11,11 @@
     }
   }
 }
+
+.chart-row {
+  @apply flex justify-between flex-wrap;
+  .chart-item {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+}

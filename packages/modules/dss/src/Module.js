@@ -5,6 +5,7 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import DashBoard from "./pages";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import Overview from "./pages/Overview";
+import DSSCard from "./components/DSSCard";
 
 const Routes = ({ path }) => {
   return (
@@ -30,15 +31,14 @@ const DSSModule = ({ stateCode, userType, tenants }) => {
   console.log("dss", userType, state, store);
   Digit.SessionStorage.set("DSS_TENANTS", tenants);
 
-  if (userType === "citizen") {
-    return <Routes path={path} />;
-  } else {
+  if (userType !== "citizen") {
     return <Routes path={path} />;
   }
 };
 
 const componentsToRegister = {
   DSSModule,
+  DSSCard
 };
 
 export const initDSSComponents = () => {

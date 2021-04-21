@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CardSectionHeader, Dropdown, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { CardSectionHeader, Dropdown, SubmitBar, FilterIcon, RefreshIcon } from "@egovernments/digit-ui-react-components";
 import Switch from "./Switch";
 import DateRange from "./DateRange";
 
@@ -25,11 +25,15 @@ const Filters = () => {
   };
   return (
     <div className="filters-wrapper">
-      <CardSectionHeader>Filters</CardSectionHeader>
+      <CardSectionHeader style={{ display: "flex" }}>
+        <FilterIcon />
+        <span style={{ marginLeft: "8px", marginRight: "70px", fontWeight: 400, fontSize: "24px" }}>Filters</span>
+        <RefreshIcon />
+      </CardSectionHeader>
+      <DateRange onFilterChange={handleFilterChange} values={filters?.range} />
       <div>ULBs</div>
       <Dropdown option={ULBS} optionKey="name" select={selectULB} />
       <Switch />
-      <DateRange onFilterChange={handleFilterChange} values={filters?.range} />
       <SubmitBar label={"Apply"} style={{ width: "100%" }} />
     </div>
   )
