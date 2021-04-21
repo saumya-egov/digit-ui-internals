@@ -24,7 +24,8 @@ export const SuccessfulPayment = (props) => {
   const { data } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey");
   let generatePdfKey = "consolidatedreceipt";
   if (data) {
-    generatePdfKey = data["common-masters"]?.uiCommonPay?.filter(({ code }) => code === businessService)[0]?.receiptKey || "consolidatedreceipt";
+    generatePdfKey =
+      data["common-masters"]?.uiCommonPay?.filter(({ code }) => businessService?.includes(code))[0]?.receiptKey || "consolidatedreceipt";
   }
 
   const printReciept = async () => {

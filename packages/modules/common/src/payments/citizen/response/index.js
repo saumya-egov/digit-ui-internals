@@ -27,7 +27,7 @@ export const SuccessfulPayment = (props) => {
   let generatePdfKey = "consolidatedreceipt";
   if (receiptKeyData) {
     generatePdfKey =
-      receiptKeyData["common-masters"]?.uiCommonPay?.filter(({ code }) => code === business_service)[0]?.receiptKey || "consolidatedreceipt";
+      receiptKeyData["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt";
   }
 
   const payments = data?.payments;
