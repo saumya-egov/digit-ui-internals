@@ -49,16 +49,16 @@ export const NewApplication = ({ parentUrl, heading }) => {
       setSubmitValve(true);
       const pitDetailValues = formData?.pitDetail ? Object.values(formData?.pitDetail).filter((value) => value > 0) : null;
       if (formData?.pitType) {
-        if (isConventionalSpecticTank(formData?.pitType?.dimension) && pitDetailValues?.length >= 3) {
+        if (pitDetailValues === null || pitDetailValues?.length === 0) {
+          setSubmitValve(true)
+        }
+        else if (isConventionalSpecticTank(formData?.pitType?.dimension) && pitDetailValues?.length >= 3) {
           setSubmitValve(true)
         }
         else if (!isConventionalSpecticTank(formData?.pitType?.dimension) && pitDetailValues?.length >= 2) {
           setSubmitValve(true);
         }
         else setSubmitValve(false);
-      }
-      else if (pitDetailValues !== null && pitDetailValues?.length > 0) {
-        setSubmitValve(false)
       }
     } else {
       setSubmitValve(false);
