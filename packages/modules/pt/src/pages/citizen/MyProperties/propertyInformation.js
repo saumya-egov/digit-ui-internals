@@ -54,8 +54,16 @@ const PropertyInformation = () => {
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ASSESSMENT_DETAILS_HEADER")}</CardSubHeader>
           <StatusTable>
-            <Row label={t("PT_ASSESMENT_INFO_USAGE_TYPE")} text={`${property.usageCategory || "NA"}`} />
-            <Row label={t("PT_COMMON_PROPERTY_TYPE")} text={`${t(property?.propertyType.toLowerCase().split(".")[1])}` || "NA"} />
+            <Row
+              label={t("PT_ASSESMENT_INFO_USAGE_TYPE")}
+              text={
+                `${t(
+                  (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
+                    (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory)
+                )}` || "NA"
+              }
+            />
+            <Row label={t("PT_COMMON_PROPERTY_TYPE")} text={`${t(`COMMON_PROPTYPE_BUILTUP_${property?.propertyType.split(".")[1]}`)}` || "NA"} />
             <Row label={t("PT_ASSESMENT1_PLOT_SIZE")} text={`${property.landArea || "NA"}`} />
             <Row label={t("PT_ASSESMENT_INFO_NO_OF_FLOOR")} text={`${property.noOfFloors || "NA"}`} />
           </StatusTable>
@@ -133,7 +141,7 @@ const PropertyInformation = () => {
                     <Row label={t("PT_COMMON_GENDER_LABEL")} text={`${owner?.gender ? owner?.gender.toLowerCase() : "NA"}`} />
                     <Row
                       label={t("PT_FORM3_OWNERSHIP_TYPE")}
-                      text={`${property?.ownershipCategory ? t(property?.ownershipCategory.toLowerCase().split(".")[1]) : "NA"}`}
+                      text={`${property?.ownershipCategory ? t(`PT_OWNERSHIP_${property?.ownershipCategory}`) : "NA"}`}
                     />
                     <Row label={t("PT_FORM3_MOBILE_NUMBER")} text={`${t(owner?.mobileNumber)}` || "NA"} />
                     <Row label={t("PT_MUTATION_AUTHORISED_EMAIL")} text={`${t("NA")}`} />
