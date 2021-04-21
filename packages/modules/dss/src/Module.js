@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
 // import { useRouteMatch } from "react-router";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { BackButton, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
 import DashBoard from "./pages";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import Overview from "./pages/Overview";
@@ -9,10 +9,13 @@ import DSSCard from "./components/DSSCard";
 
 const Routes = ({ path }) => {
   return (
-    <Switch>
-      <Route path={`${path}/dashboard`} component={DashBoard} />
-      <Route path={`${path}/overview`} component={Overview} />
-    </Switch>
+    <>
+      <BackButton></BackButton>
+      <Switch>
+        <PrivateRoute path={`${path}/dashboard`} component={DashBoard} />
+        <PrivateRoute path={`${path}/overview`} component={Overview} />
+      </Switch>
+    </>
   )
 }
 
