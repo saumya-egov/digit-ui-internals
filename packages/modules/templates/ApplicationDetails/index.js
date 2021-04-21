@@ -21,8 +21,7 @@ const ApplicationDetails = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(null);
 
-  const { applicationDetails, isLoading, isDataLoading, applicationData, mutate, workflowDetails } = props;
-  const { mutate: assessmentMutate } = Digit.Hooks.pt.usePropertyAssessment(tenantId);
+  const { applicationDetails, isLoading, isDataLoading, applicationData, mutate, workflowDetails, assessmentMutate, businessService } = props;
 
   useEffect(() => {
     if (showToast) {
@@ -127,6 +126,7 @@ const ApplicationDetails = (props) => {
             workflowDetails={workflowDetails}
             isDataLoading={isDataLoading}
             applicationData={applicationData}
+            businessService={businessService}
           />
           {showModal ? (
             <ActionModal
@@ -139,15 +139,16 @@ const ApplicationDetails = (props) => {
               closeModal={closeModal}
               submitAction={submitAction}
               actionData={workflowDetails?.data?.timeline}
-              businessService={props?.businessService}
+              businessService={businessService}
             />
           ) : null}
-          <ApplicationDetailsToast t={t} showToast={showToast} closeToast={closeToast} />
+          <ApplicationDetailsToast t={t} showToast={showToast} closeToast={closeToast} businessService={businessService} />
           <ApplicationDetailsActionBar
             workflowDetails={workflowDetails}
             displayMenu={displayMenu}
             onActionSelect={onActionSelect}
             setDisplayMenu={setDisplayMenu}
+            businessService={businessService}
           />
         </React.Fragment>
       ) : (
