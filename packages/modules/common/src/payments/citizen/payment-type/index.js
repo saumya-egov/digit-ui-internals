@@ -52,8 +52,8 @@ export const SelectPaymentType = (props) => {
           },
         ],
         user: {
-          name: billDetails.payerName,
-          mobileNumber: billDetails.mobileNumber,
+          name: userInfo?.info?.name,
+          mobileNumber: userInfo?.info?.mobileNumber,
           tenantId: tenantId,
         },
         // success
