@@ -9,7 +9,7 @@ Axios.interceptors.response.use(
       for (const error of err.response.data.Errors) {
         if (error.message.includes("InvalidAccessTokenException")) {
           window.location.href =
-            (isEmployee ? "/employee/user/login" : "/digit-ui/citizen/login") + `?from=${encodeURIComponent(window.location.pathname)}`;
+            (isEmployee ? "/employee/user/login" : "/digit-ui/citizen/login") + `?from=${encodeURIComponent(window.location.pathname+window.location.search)}`;
         }
       }
     }
@@ -19,6 +19,10 @@ Axios.interceptors.response.use(
 
 const requestInfo = () => ({
   authToken: Digit.UserService.getUser().access_token,
+});
+
+const authHeaders = () => ({
+  "auth-token": Digit.UserService.getUser().access_token,
 });
 
 const userServiceData = () => ({ userInfo: Digit.UserService.getUser().info });
@@ -35,6 +39,7 @@ export const Request = async ({
   auth,
   userService,
   reciept = false,
+  authHeader = false,
 }) => {
   // console.log("params:", params);
   // console.log("in request", method);
@@ -53,6 +58,8 @@ export const Request = async ({
       data.RequestInfo = { ...data.RequestInfo, msgId: "string|en_IN" };
     }
   }
+
+  if (authHeader) headers = { ...headers, ...authHeaders() };
 
   let key = "";
   if (useCache) {

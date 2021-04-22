@@ -6,6 +6,7 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
   let index = window.location.href.charAt(window.location.href.length - 1);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
+  const isUpdateProperty = formData?.isUpdateProperty || false;
   const [ownerType, setOwnerType] = useState(formData.owners && formData.owners[index] && formData.owners[index].ownerType);
   const { data: Menu, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "OwnerType");
 
@@ -30,6 +31,9 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
           options={Menu || []}
           selectedOption={ownerType}
           onSelect={setTypeOfOwner}
+          labelKey = "PROPERTYTAX_OWNERTYPE"
+          isDependent = {true}
+          disabled = {isUpdateProperty}
         />
       </div>
     </FormStep>

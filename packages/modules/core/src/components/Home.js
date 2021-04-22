@@ -8,12 +8,15 @@ const CitizenHome = ({ modules }) => {
   const paymentModule = modules.filter(({ code }) => code === "Payment")[0];
   const moduleArr = modules.filter(({ code }) => code !== "Payment");
   const moduleArray = [paymentModule, ...moduleArr];
-
+  const showQuickPay = moduleArr.some(module => module.code === "QuickPayLinks");
   return (
     <React.Fragment>
       {moduleArray.map(({ code }, index) => {
         //console.log("in module map", code);
-        const Links = Digit.ComponentRegistryService.getComponent(`${code}Links`) || (() => <React.Fragment />);
+        let Links = Digit.ComponentRegistryService.getComponent(`${code}Links`) || (() => <React.Fragment />);
+        if (code === "Payment" && !showQuickPay) {
+          Links = (() => <React.Fragment />);
+        }
         return <Links key={index} matchPath={`/digit-ui/citizen/${code.toLowerCase()}`} userType={"citizen"} />;
       })}
     </React.Fragment>

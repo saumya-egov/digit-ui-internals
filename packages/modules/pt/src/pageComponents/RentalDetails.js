@@ -43,32 +43,21 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
     }
   });
 
+  const [unitareaerror, setunitareaerror] = useState(null);
+
   function setPropertyRentArea(e) {
     setRentArea(e.target.value);
+    setunitareaerror(null);
+    if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
+      let totalarea = parseInt(formData?.units[index]?.floorarea || 0) + parseInt(e.target.value);
+      if (parseInt(formData?.units[index]?.builtUpArea) < totalarea) {
+        setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
+      }
+    }
   }
   function setPropertyAnnualRent(e) {
     setAnnualRent(e.target.value);
   }
-  /* const inputs = [
-    {
-      label: "Plot Size(sq.yd)*",
-      type: "text",
-      name: "PlotSize",
-      validation: {
-        pattern: "/^[ws]{1,256}$/",
-      },
-      error: "CORE_COMMON_PLOTSIZE_INVALID",
-    },
-    {
-      label: "Built Up Area(sq.yd)*",
-      type: "text",
-      name: "BuiltUpArea",
-      validation: {
-        pattern: "/^[w]([w/,s])*$/",
-      },
-      error: "CORE_COMMON_AREA_INVALID",
-    },
-  ]; */
 
   const getheaderCaption = () => {
     if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_SHAREDPROPERTY") {
@@ -96,8 +85,9 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
       config={((config.texts.headerCaption = getheaderCaption()), config)}
       onSelect={goNext}
       onSkip={onSkip}
+      forcedError={t(unitareaerror)}
       t={t}
-      isDisabled={!RentArea || !AnnualRent}
+      isDisabled={unitareaerror || !RentArea || !AnnualRent}
     >
       <CardLabel>{`${t("PT_FLOOR_DETAILS_RENTED_AREA_LABEL")}*`}</CardLabel>
       <TextInput
@@ -110,7 +100,7 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
         onChange={setPropertyRentArea}
         {...(validation = { pattern: "^([0-9]){0,8}$", type: "number", title: t("PT_RENT_AREA_ERROR_MESSAGE") })}
       />
-      <CardLabel>{`${t("PT_FLOOR_DETAILS_BUILT_UP_AREA_LABEL")}*`}</CardLabel>
+      <CardLabel>{`${t("PT_FLOOR_DETAILS_ANNUAL_RENT_LABEL")}*`}</CardLabel>
       <TextInput
         t={t}
         isMandatory={false}

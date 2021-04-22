@@ -55,6 +55,11 @@ const Urls = {
     update: "/property-services/property/_update",
     assessment_create: "/property-services/assessment/_create",
   },
+
+  dss: {
+    dashboardConfig: "/dashboard-analytics/dashboard/getDashboardConfig",
+    getCharts: "/dashboard-analytics/dashboard/getChartV2"
+  }
 };
 
 export default Urls;

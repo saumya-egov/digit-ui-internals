@@ -22,7 +22,7 @@ export const SelectPaymentType = (props) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   // const menu = ["AXIS"];
   const { consumerCode, businessService } = useParams();
   const tenantId = state?.tenantId || __tenantId || Digit.ULBService.getCurrentTenantId();
@@ -52,8 +52,8 @@ export const SelectPaymentType = (props) => {
           },
         ],
         user: {
-          name: billDetails.payerName,
-          mobileNumber: billDetails.mobileNumber,
+          name: userInfo?.info?.name,
+          mobileNumber: userInfo?.info?.mobileNumber,
           tenantId: tenantId,
         },
         // success
@@ -85,7 +85,7 @@ export const SelectPaymentType = (props) => {
   if (authorization === "true" && !userInfo.access_token) {
     // console.log("find query params", __tenantId, authorization, authorization === "true",!userInfo.access_token, authorization === "true" && !userInfo.access_token)
     // console.log("find encoded url",encodeURI(pathname))
-    return <Redirect to={`/digit-ui/citizen/login?from=${encodeURI(pathname)}`} />;
+    return <Redirect to={`/digit-ui/citizen/login?from=${encodeURIComponent(pathname+search)}`} />;
   }
 
   return (

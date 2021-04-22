@@ -1,9 +1,10 @@
-import { Card, CardSubHeader, Header, LinkButton, Loader, Row, StatusTable } from "@egovernments/digit-ui-react-components";
+import { Card, CardSubHeader, Header, LinkButton, Loader, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import PropertyDocument from "../../../pageComponents/PropertyDocument";
 import { propertyCardBodyStyle } from "../../../utils";
+import { Link } from "react-router-dom";
 
 const PropertyInformation = () => {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ const PropertyInformation = () => {
   }
   let flrno,
     i = 0;
-  flrno = property?.units[0].floorNo;
+  flrno = units && units[0]?.floorNo;
   const ActionButton = ({ jumpTo }) => {
     const { t } = useTranslation();
     const history = useHistory();
@@ -37,24 +38,32 @@ const PropertyInformation = () => {
   return (
     <React.Fragment>
       <Header>{t("PT_PROPERTY_INFORMATION")}</Header>
-      <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 10em)" }}>
+      <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 12em)" }}>
         <Card>
           <StatusTable>
             <Row label={t("PT_PROPERTY_PTUID")} text={`${property.propertyId || "NA"}`} textStyle={{ whiteSpace: "pre" }} />
-            <Row label={t("Total Property Due")} text={"3223"} />
+            <Row label={t("Total Property Due")} text={"NA"} />
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
           <StatusTable>
             <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${property.address?.pincode || "NA"}`} />
             <Row label={t("PT_COMMON_CITY")} text={`${property.address?.city || "NA"}`} />
-            <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={t("PB_AMRITSAR_REVENUE_SUN04")} />
+            <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={`${t(property?.address?.locality?.name)}` || "NA"} />
             <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${property.address?.street || "NA"}`} />
             <Row label={t("PT_PROPERTY_ADDRESS_COLONY_NAME")} text={`${property.address?.buildingName || "NA"}`} />
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ASSESSMENT_DETAILS_HEADER")}</CardSubHeader>
           <StatusTable>
-            <Row label={t("PT_ASSESMENT_INFO_USAGE_TYPE")} text={`${property.usageCategory || "NA"}`} />
-            <Row label={t("PT_COMMON_PROPERTY_TYPE")} text={`${t(property?.propertyType.toLowerCase().split(".")[1])}` || "NA"} />
+            <Row
+              label={t("PT_ASSESMENT_INFO_USAGE_TYPE")}
+              text={
+                `${t(
+                  (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
+                    (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory)
+                )}` || "NA"
+              }
+            />
+            <Row label={t("PT_COMMON_PROPERTY_TYPE")} text={`${t(`COMMON_PROPTYPE_BUILTUP_${property?.propertyType.split(".")[1]}`)}` || "NA"} />
             <Row label={t("PT_ASSESMENT1_PLOT_SIZE")} text={`${property.landArea || "NA"}`} />
             <Row label={t("PT_ASSESMENT_INFO_NO_OF_FLOOR")} text={`${property.noOfFloors || "NA"}`} />
           </StatusTable>
@@ -132,7 +141,7 @@ const PropertyInformation = () => {
                     <Row label={t("PT_COMMON_GENDER_LABEL")} text={`${owner?.gender ? owner?.gender.toLowerCase() : "NA"}`} />
                     <Row
                       label={t("PT_FORM3_OWNERSHIP_TYPE")}
-                      text={`${property?.ownershipCategory ? t(property?.ownershipCategory.toLowerCase().split(".")[1]) : "NA"}`}
+                      text={`${property?.ownershipCategory ? t(`PT_OWNERSHIP_${property?.ownershipCategory}`) : "NA"}`}
                     />
                     <Row label={t("PT_FORM3_MOBILE_NUMBER")} text={`${t(owner?.mobileNumber)}` || "NA"} />
                     <Row label={t("PT_MUTATION_AUTHORISED_EMAIL")} text={`${t("NA")}`} />
@@ -145,11 +154,20 @@ const PropertyInformation = () => {
           <CardSubHeader>{t("PT_COMMON_DOCS")}</CardSubHeader>
           <div>
             {Array.isArray(docs) ? (
-              docs.length > 0 && <PropertyDocument documents={docs}></PropertyDocument>
+              docs.length > 0 && <PropertyDocument property={property}></PropertyDocument>
             ) : (
               <StatusTable>
                 <Row text="PT_NO_DOCUMENTS_MSG" />
               </StatusTable>
+            )}
+          </div>
+          <div>
+            {property?.status === "ACTIVE" && (
+              <div style={{ marginTop: "24px", position: "fixed", bottom: "0px", width: "100%", marginLeft: "-6%" }}>
+                <Link to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/update=true/${property.propertyId}` }}>
+                  <SubmitBar label={t("PT_UPDATE_PROPERTY_BUTTON")} />
+                </Link>
+              </div>
             )}
           </div>
         </Card>

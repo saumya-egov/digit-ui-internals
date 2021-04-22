@@ -64,6 +64,11 @@ import usePtApplicationActions from "./pt/useApplicationActions";
 import usePtMDMS from "./pt/useMDMS";
 import usePropertyAssessment from "./pt/usePropertyAssessment";
 
+import useDssMdms from "./dss/useMDMS";
+import useDashboardConfig from "./dss/useDashboardConfig";
+import useDSSDashboard from "./dss/useDSSDashboard";
+import useGetChart from "./dss/useGetChart";
+
 const pgr = {
   useComplaintDetails,
   useComplaintsList,
@@ -117,6 +122,13 @@ const pt = {
   usePropertyAssessment,
 };
 
+const dss = {
+  useMDMS: useDssMdms,
+  useDashboardConfig,
+  useDSSDashboard,
+  useGetChart
+};
+
 const Hooks = {
   useSessionStorage,
   useQueryParams,
@@ -139,6 +151,7 @@ const Hooks = {
   pgr,
   fsm,
   pt,
+  dss,
 };
 
 export default Hooks;

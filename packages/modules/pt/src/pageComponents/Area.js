@@ -13,9 +13,14 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   } else {
     [floorarea, setfloorarea] = useState(formData.landarea?.floorarea);
   }
+  const [unitareaerror, setunitareaerror] = useState(null);
 
   function setPropertyfloorarea(e) {
     setfloorarea(e.target.value);
+    setunitareaerror(null);
+    if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY" && parseInt(formData?.units[index]?.builtUpArea) < e.target.value) {
+      setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
+    }
   }
 
   const goNext = () => {
@@ -34,18 +39,6 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
 
       let floordet = { ...unit, floorarea };
       onSelect(config.key, floordet, false, index);
-      /*   onSelect(config.key, floordet, false, index);
-      if (formData?.noOfFloors?.i18nKey === "PT_GROUND_PLUS_ONE_OPTION" && index < 1 && index > -1) {
-        let newIndex1 = parseInt(index) + 1;
-        onSelect("is-this-floor-self-occupied", {}, false, newIndex1, true);
-      } else if (formData?.noOfFloors?.i18nKey === "PT_GROUND_PLUS_TWO_OPTION" && index < 2 && index > -1) {
-        let newIndex2 = parseInt(index) + 1;
-        onSelect("is-this-floor-self-occupied", {}, false, newIndex2, true);
-      } else if ((formData?.noOofBasements?.i18nKey === "PT_ONE_BASEMENT_OPTION" || formData?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION") && index > -1) {
-        onSelect("is-this-floor-self-occupied", {}, false, "-1", true);
-      } else if (formData?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION" && index != -2) {
-        onSelect("is-this-floor-self-occupied", {}, false, "-2", true);
-      } */
     } else {
       if (
         (formData?.isResdential?.i18nKey === "PT_COMMON_YES" || formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_NONRESIDENTIAL") &&
@@ -78,7 +71,15 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   }
 
   return (
-    <FormStep config={config} onChange={onChange} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!floorarea}>
+    <FormStep
+      config={config}
+      onChange={onChange}
+      forcedError={t(unitareaerror)}
+      onSelect={goNext}
+      onSkip={onSkip}
+      t={t}
+      isDisabled={unitareaerror || !floorarea}
+    >
       <CardLabel>{`${t("PT_PLOT_SIZE_SQUARE_FEET_LABEL")}*`}</CardLabel>
       <TextInput
         t={t}
