@@ -106,18 +106,16 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
-          <div className="field">
-            <Dropdown
-              className="form-field"
-              isMandatory={config.isMandatory}
-              selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
-              disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1}
-              option={getDropdwonForProperty(ownerShipdropDown)}
-              select={selectedValue}
-              optionKey="i18nKey"
-              t={t}
-            />
-          </div>
+          <Dropdown
+            className="form-field"
+            isMandatory={config.isMandatory}
+            selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
+            disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1}
+            option={getDropdwonForProperty(ownerShipdropDown)}
+            select={selectedValue}
+            optionKey="i18nKey"
+            t={t}
+          />
         </LabelFieldPair>
       );
     });

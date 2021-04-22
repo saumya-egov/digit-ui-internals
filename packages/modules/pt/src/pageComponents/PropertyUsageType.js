@@ -84,18 +84,16 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
-          <div className="field">
-            <Dropdown
-              className="form-field"
-              isMandatory={config.isMandatory}
-              selected={usageCategoryMajorMenu(usagecat)?.length === 1 ? usageCategoryMajorMenu(usagecat)[0] : usageCategoryMajor}
-              disable={usageCategoryMajorMenu(usagecat)?.length === 1}
-              option={usageCategoryMajorMenu(usagecat)}
-              select={selectPropertyPurpose}
-              optionKey="i18nKey"
-              t={t}
-            />
-          </div>
+          <Dropdown
+            className="form-field"
+            isMandatory={config.isMandatory}
+            selected={usageCategoryMajorMenu(usagecat)?.length === 1 ? usageCategoryMajorMenu(usagecat)[0] : usageCategoryMajor}
+            disable={usageCategoryMajorMenu(usagecat)?.length === 1}
+            option={usageCategoryMajorMenu(usagecat)}
+            select={selectPropertyPurpose}
+            optionKey="i18nKey"
+            t={t}
+          />
         </LabelFieldPair>
       );
     });

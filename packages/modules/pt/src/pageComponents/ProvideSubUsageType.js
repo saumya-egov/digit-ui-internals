@@ -129,18 +129,16 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
-          <div className="field">
-            <Dropdown
-              className="form-field"
-              isMandatory={config.isMandatory}
-              selected={getSubUsagedata(subusageoption)?.length === 1 ? [0] : SubUsageType}
-              disable={getSubUsagedata(subusageoption)?.length === 1}
-              option={getSubUsagedata(subusageoption)}
-              select={selectSelfOccupied}
-              optionKey="i18nKey"
-              t={t}
-            />
-          </div>
+          <Dropdown
+            className="form-field"
+            isMandatory={config.isMandatory}
+            selected={getSubUsagedata(subusageoption)?.length === 1 ? [0] : SubUsageType}
+            disable={getSubUsagedata(subusageoption)?.length === 1}
+            option={getSubUsagedata(subusageoption)}
+            select={selectSelfOccupied}
+            optionKey="i18nKey"
+            t={t}
+          />
         </LabelFieldPair>
       );
     });

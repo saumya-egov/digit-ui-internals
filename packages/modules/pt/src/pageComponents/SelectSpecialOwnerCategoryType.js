@@ -23,7 +23,7 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
 
   useEffect(() => {
     if (userType === "employee") {
-      onSelect(config.key, ownerType);
+      onSelect(config.key, { ...formData[config.key], ownerType });
     }
   }, [ownerType]);
 
@@ -44,18 +44,16 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
-          <div className="field">
-            <Dropdown
-              className="form-field"
-              isMandatory={config.isMandatory}
-              selected={Menu?.length === 1 ? Menu[0] : ownerType}
-              disable={Menu?.length === 1}
-              option={Menu}
-              select={setTypeOfOwner}
-              optionKey="i18nKey"
-              t={t}
-            />
-          </div>
+          <Dropdown
+            className="form-field"
+            isMandatory={config.isMandatory}
+            selected={Menu?.length === 1 ? Menu[0] : ownerType}
+            disable={Menu?.length === 1}
+            option={Menu}
+            select={setTypeOfOwner}
+            optionKey="i18nKey"
+            t={t}
+          />
         </LabelFieldPair>
       );
     });

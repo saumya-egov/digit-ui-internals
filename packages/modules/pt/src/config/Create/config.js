@@ -190,6 +190,13 @@ export const newConfig = [
       },
       {
         type: "component",
+        isMandatory: true,
+        component: "Area",
+        key: "landarea",
+        withoutLabel: true,
+      },
+      {
+        type: "component",
         route: "area",
         isMandatory: true,
         component: "Area",
@@ -203,6 +210,7 @@ export const newConfig = [
         withoutLabel: true,
         //nextStep: "provide-sub-usage-type-of-rented-area",
         nextStep: { yes: "rental-details", no: "provide-sub-usage-type-of-rented-area", vacant: "map" },
+        hideInEmployee: true,
       },
       {
         type: "component",
@@ -217,6 +225,12 @@ export const newConfig = [
         },
         nextStep: "number-of-basements@0",
         key: "noOfFloors",
+        withoutLabel: true,
+      },
+      {
+        type: "component",
+        component: "Units",
+        key: "units",
         withoutLabel: true,
       },
       {

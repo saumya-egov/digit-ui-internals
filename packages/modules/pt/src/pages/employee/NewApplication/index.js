@@ -12,11 +12,22 @@ const NewApplication = ({ parentUrl, heading }) => {
   const defaultValues = {};
   const onFormValueChange = (setValue, formData) => {
     console.log("%c 🌧️: onFormValueChange -> formData ", "font-size:16px;background-color:#25ab81;color:white;", formData);
+    // TODO: add all the below fields as required
+    // locality
+    // property usage type
+    // property type
+    // Guardian name
+    // mobile number
+    // relationship
+    // special category
+    // all document types document are required
+
+    // for vacant property type plot size is required
+    // for other property type plot size is optional but units is required
     if (
       formData?.address?.city?.code &&
       formData?.address?.locality?.code &&
       formData?.usageCategoryMajor?.code &&
-      formData?.usageCategoryMinor?.subuagecode &&
       formData?.PropertyType?.code &&
       formData?.units &&
       formData?.noOfFloors?.i18nKey &&

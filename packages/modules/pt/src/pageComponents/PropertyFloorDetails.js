@@ -60,18 +60,16 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
             {t(input.label)}
             {config.isMandatory ? " * " : null}
           </CardLabel>
-          <div className="field">
-            <Dropdown
-              className="form-field"
-              isMandatory={config.isMandatory}
-              selected={menu?.length === 1 ? menu[0] : FloorDetails}
-              disable={menu?.length === 1}
-              option={menu}
-              select={selectFloorDetails}
-              optionKey="i18nKey"
-              t={t}
-            />
-          </div>
+          <Dropdown
+            className="form-field"
+            isMandatory={config.isMandatory}
+            selected={menu?.length === 1 ? menu[0] : FloorDetails}
+            disable={menu?.length === 1}
+            option={menu}
+            select={selectFloorDetails}
+            optionKey="i18nKey"
+            t={t}
+          />
         </LabelFieldPair>
       );
     });

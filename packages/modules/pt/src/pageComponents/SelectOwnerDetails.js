@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
@@ -35,8 +35,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
 
   const goNext = () => {
     let owner = formData.owners && formData.owners[index];
-    let ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship, email };
-    onSelect(config.key, ownerStep, false, index);
+    let ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship, emailId: email };
+    onSelect(config.key, { ...formData[config.key], ...ownerStep }, false, index);
   };
 
   const onSkip = () => onSelect();
@@ -123,54 +123,34 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
         </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>{`${t("PT_FORM3_RELATIONSHIP")}*`}</CardLabel>
-          <div className="field">
-            <RadioButtons
-              t={t}
-              optionsKey="i18nKey"
-              name="relationship"
-              options={GuardianOptions}
-              value={relationship}
-              selectedOption={relationship}
-              onSelect={setGuardianName}
-              isDependent={true}
-              labelKey="PT_RELATION"
-            />
-          </div>
+          <Dropdown
+            className="form-field"
+            selected={relationship?.length === 1 ? relationship[0] : relationship}
+            disable={relationship?.length === 1}
+            option={GuardianOptions}
+            select={setGuardianName}
+            optionKey="i18nKey"
+            t={t}
+            name="relationship"
+          />
         </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
-          <div className="field">
-            <RadioButtons
-              t={t}
-              options={options}
-              optionsKey="code"
-              name="gender"
-              value={gender}
-              selectedOption={gender}
-              onSelect={setGenderName}
-              isDependent={true}
-              labelKey="PT_COMMON_GENDER"
-            />
-          </div>
+          <Dropdown
+            className="form-field"
+            selected={gender?.length === 1 ? gender[0] : gender}
+            disable={gender?.length === 1}
+            option={options}
+            select={setGenderName}
+            optionKey="code"
+            t={t}
+            name="gender"
+          />
         </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>{`${t("PT_OWNER_EMAIL")}*`}</CardLabel>
           <div className="field">
-            <TextInput
-              t={t}
-              type={"email"}
-              isMandatory={false}
-              optionKey="i18nKey"
-              name="email"
-              value={email}
-              onChange={setOwnerEmail}
-              {...(validation = {
-                isRequired: true,
-                pattern: "^[a-zA-Z-.`' ]*$",
-                type: "tel",
-                title: t("PT_EMAIL_ERROR_MESSAGE"),
-              })}
-            />
+            <TextInput t={t} type={"email"} isMandatory={false} optionKey="i18nKey" name="email" value={email} onChange={setOwnerEmail} />
           </div>
         </LabelFieldPair>
       </div>
