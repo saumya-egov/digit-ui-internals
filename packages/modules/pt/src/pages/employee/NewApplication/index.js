@@ -20,7 +20,8 @@ const NewApplication = ({ parentUrl, heading }) => {
       formData?.PropertyType?.code &&
       formData?.units &&
       formData?.noOfFloors?.i18nKey &&
-      formData?.owners?.code
+      formData?.owners?.code &&
+      formData?.ownershipCategory?.code
     ) {
       setSubmitValve(true);
     } else {
