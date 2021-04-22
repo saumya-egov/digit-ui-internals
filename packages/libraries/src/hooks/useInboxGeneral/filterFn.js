@@ -9,6 +9,12 @@ export const filterFunctions = {
 
     const { propertyIds, mobileNumber, limit, offset, sortBy, sortOrder, total, applicationStatus, services } = filtersArg || {};
 
+    if (filtersArg?.propertyIds) {
+      searchFilters.propertyIds = propertyIds;
+    }
+    if (filtersArg?.oldpropertyids) {
+      searchFilters.oldpropertyids = filtersArg?.oldpropertyids;
+    }
     if (applicationStatus && applicationStatus?.[0]) {
       workflowFilters.applicationStatus = applicationStatus.map((status) => status.code).join(",");
     }

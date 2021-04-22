@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox } from "@egovernments/digit-ui-react-components";
+import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox, Localities } from "@egovernments/digit-ui-react-components";
 import { useSelector } from "react-redux";
 import { ApplyFilterBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
@@ -21,14 +21,15 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
     },
   ];
 
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
   const onServiceSelect = (e, label) => {
     if (e.target.checked) onFilterChange({ services: [...searchParams.services, label] });
     else onFilterChange({ services: searchParams.services.filter((o) => o !== label) });
   };
 
-  const translateState = (state) => {
-    console.log(state);
-    return state.state;
+  const selectLocality = (d) => {
+    onFilterChange({ locality: [...searchParams?.locality, d] });
   };
 
   return (
@@ -63,6 +64,23 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
               ]}
             />
             <div>
+              <div className="filter-label">{t("ES_INBOX_LOCALITY")}:</div>
+              <Localities selectLocality={selectLocality} tenantId={tenantId} boundaryType="revenue" />
+              <div className="tag-container">
+                {searchParams?.locality?.map((locality, index) => {
+                  return (
+                    <RemoveableTag
+                      key={index}
+                      text={locality.name}
+                      onClick={() => {
+                        onFilterChange({ locality: searchParams?.locality.filter((loc) => loc.code !== locality.code) });
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <div>
               <div className="filter-label">{t("ES_PT_APP_TYPE")}</div>
               {ApplicationTypeMenu.map((e, index) => {
                 const checked = searchParams?.services?.includes(e.value);
@@ -80,7 +98,6 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
             <div>
               <Status
                 businessServices={searchParams.services}
-                translateState={translateState}
                 onAssignmentChange={(e, status) => {
                   if (e.target.checked) onFilterChange({ applicationStatus: [...searchParams?.applicationStatus, status] });
                   else onFilterChange({ applicationStatus: searchParams?.applicationStatus.filter((e) => e.code !== status.code) });

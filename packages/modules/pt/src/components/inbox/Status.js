@@ -3,7 +3,7 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import StatusCount from "./StatusCount";
 
-const Status = ({ onAssignmentChange, searchParams, businessServices, translateState }) => {
+const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
   const { t } = useTranslation();
 
   const [moreStatus, showMoreStatus] = useState(false);
@@ -11,6 +11,10 @@ const Status = ({ onAssignmentChange, searchParams, businessServices, translateS
   const { data: statusData, isLoading } = Digit.Hooks.useApplicationStatusGeneral({ businessServices }, {});
 
   const { userRoleStates, otherRoleStates } = statusData || {};
+
+  const translateState = (state) => {
+    return `ES_PT_STATUS_${state.state}`;
+  };
 
   useEffect(() => {
     console.log(statusData, "status data");
@@ -23,15 +27,18 @@ const Status = ({ onAssignmentChange, searchParams, businessServices, translateS
   return (
     <div className="status-container">
       <div className="filter-label">{t("ES_INBOX_STATUS")}</div>
-      {userRoleStates?.map((option, index) => (
-        <StatusCount
-          businessServices={businessServices}
-          key={index}
-          onAssignmentChange={onAssignmentChange}
-          status={{ name: translateState(option), code: option.applicationStatus }}
-          searchParams={searchParams}
-        />
-      ))}
+      {userRoleStates?.map((option, index) => {
+        console.log(option, "state in status");
+        return (
+          <StatusCount
+            businessServices={businessServices}
+            key={index}
+            onAssignmentChange={onAssignmentChange}
+            status={{ name: translateState(option), code: option.applicationStatus }}
+            searchParams={searchParams}
+          />
+        );
+      })}
       {moreStatus &&
         otherRoleStates?.map((option, index) => {
           return (

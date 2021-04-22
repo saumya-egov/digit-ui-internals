@@ -16,6 +16,7 @@ import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBill
 import useBoundaryLocalities from "./useLocalities";
 import useCommonMDMS from "./useMDMS";
 import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
+import useApplicationStatusGeneral from "./useStatusGeneral";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -134,6 +135,7 @@ const Hooks = {
   useEmployeeSearch,
   useBoundaryLocalities,
   useCommonMDMS,
+  useApplicationStatusGeneral,
   pgr,
   fsm,
   pt,

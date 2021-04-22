@@ -2,12 +2,12 @@ const inboxSearchFields = {
   PT: [
     {
       label: "ES_SEARCH_UNIQUE_PROPERTY_ID",
-      name: "propertyId",
+      name: "propertyIds",
       roles: [],
     },
     {
       label: "ES_SEARCH_EXISTING_PROPERTY_ID",
-      name: "propertyId",
+      name: "oldpropertyids",
       roles: [],
     },
     {

@@ -10,7 +10,12 @@ const Inbox = ({
   parentRoute,
   businessService = "PT",
   initialStates = {
-    searchParams: { uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" }, services: ["PT.CREATE"], applicationStatus: [] },
+    searchParams: {
+      uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
+      services: ["PT.CREATE"],
+      applicationStatus: [],
+      locality: [],
+    },
   },
   filterComponent = "PT_INBOX_FILTER",
 }) => {
@@ -32,15 +37,7 @@ const Inbox = ({
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
 
-  const {
-    isLoading: hookLoading,
-    searchResponseKey,
-    businessIdsParamForSearch,
-    businessIdAliasForSearch,
-    data,
-    searchFields,
-    ...rest
-  } = Digit.Hooks.useInboxGeneral({
+  const { isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = Digit.Hooks.useInboxGeneral({
     tenantId,
     businessService,
     isInbox,
