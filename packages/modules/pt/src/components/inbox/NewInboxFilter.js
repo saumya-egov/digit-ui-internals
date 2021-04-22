@@ -97,6 +97,7 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
             </div>
             <div>
               <Status
+                searchParams={searchParams}
                 businessServices={searchParams.services}
                 onAssignmentChange={(e, status) => {
                   if (e.target.checked) onFilterChange({ applicationStatus: [...searchParams?.applicationStatus, status] });

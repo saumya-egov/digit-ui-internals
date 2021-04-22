@@ -5,6 +5,7 @@ import { PTService } from "../../services/elements/PT";
 import { TableConfig } from "./tableConfig";
 import { filterFunctions } from "./filterFn";
 import { getSearchFields } from "./searchFields";
+import { useEffect } from "react";
 
 const inboxConfig = (tenantId, filters) => ({
   PT: {
@@ -69,21 +70,35 @@ const useInboxGeneral = ({
 
   let { workflowFilters, searchFilters } = fetchFilters(filters);
 
-  const { data: processInstances, isFetching: wfFetching, isSuccess: wfSuccess } = useQuery(
+  const { data: processInstances, isLoading: wfFetching, isSuccess: wfSuccess } = useQuery(
     ["WORKFLOW_INBOX", businessService, workflowFilters],
     () =>
-      Digit.WorkflowService.getAllApplication(tenantId, { businessService: services.join(), ...workflowFilters })
+      Digit.WorkflowService.getAllApplication(tenantId, { businessServices: services.join(), ...workflowFilters })
         .then(rawWfHandler)
         .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
-    { enabled: isInbox, ...wfConfig }
+    {
+      enabled: isInbox,
+      onError: (err) => console.log(err, "error in wf"),
+      onSettled: (e) => {
+        console.log("settled ", e);
+      },
+      select: (d) => {
+        console.log(d, "data inside select");
+        return d.ProcessInstances;
+      },
+      ...wfConfig,
+    }
   );
+  useEffect(() => {
+    console.log(wfFetching, ">>>>>>>>");
+  }, [wfFetching]);
 
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
 
   if (isInbox && applicationNoFromWF && !searchFilters[businessIdAliasForSearch])
     searchFilters = { ...searchFilters, [businessIdsParamForSearch]: applicationNoFromWF };
 
-  const { _searchFn } = inboxConfig(tenantId, searchFilters)[businessService];
+  const { _searchFn } = inboxConfig(tenantId, { ...searchFilters })[businessService];
 
   /**
    * Convert Wf Array to Object
@@ -93,8 +108,10 @@ const useInboxGeneral = ({
     return { ...object, [item["businessId"]]: item };
   }, {});
 
+  if (wfSuccess) console.log(!isInbox || (!wfFetching && wfSuccess), searchFilters, "before Search");
+
   const searchResult = useQuery(
-    ["SEARCH_INBOX", businessService, searchFilters],
+    ["SEARCH_INBOX", businessService, searchFilters, workflowFilters],
     () =>
       _searchFn()
         .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
@@ -137,6 +154,7 @@ const useInboxGeneral = ({
     businessIdAliasForSearch,
     tableConfig: TableConfig(t)[businessService],
     searchFields: getSearchFields(isInbox)[businessService],
+    wfFetching,
   };
 };
 

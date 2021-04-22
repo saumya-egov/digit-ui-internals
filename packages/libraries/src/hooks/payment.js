@@ -9,9 +9,9 @@ export const useFetchCitizenBillsForBuissnessService = ({ businessService, ...fi
   if (!params["mobileNumber"]) delete params["mobileNumber"];
 
   const { isLoading, error, isError, data, status } = useQuery(
-    ["citizenBillsForBuisnessService", businessService],
-    () => Digit.PaymentService.fetchBill(tenantId, params),
-    config
+    ["citizenBillsForBuisnessService", businessService, { ...params }],
+    () => Digit.PaymentService.fetchBill(tenantId, { ...params }),
+    { ...config }
   );
   return {
     isLoading,

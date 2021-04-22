@@ -12,6 +12,16 @@ const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const mobileView = innerWidth <= 640;
+
+  const inboxInitialState = {
+    searchParams: {
+      uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
+      services: ["PT.CREATE"],
+      applicationStatus: [],
+      locality: [],
+    },
+  };
+
   return (
     <Switch>
       <React.Fragment>
@@ -23,7 +33,10 @@ const EmployeeApp = ({ path, url, userType }) => {
             / <span>{location.pathname === "/digit-ui/employee/pt/inbox" ? t("ES_TITLE_INBOX") : "PT"}</span>
           </p>
           <PrivateRoute exact path={`${path}/`} component={() => <PTLinks matchPath={path} userType={userType} />} />
-          <PrivateRoute path={`${path}/inbox`} component={() => <Inbox parentRoute={path} isInbox={true} />} />
+          <PrivateRoute
+            path={`${path}/inbox`}
+            component={() => <Inbox parentRoute={path} businessService="PT" initialState={inboxInitialState} isInbox={true} />}
+          />
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
           <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
           <PrivateRoute path={`${path}/property-details/:id`} component={() => <PropertyDetails parentRoute={path} />} />

@@ -6,19 +6,7 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
-const Inbox = ({
-  parentRoute,
-  businessService = "PT",
-  initialStates = {
-    searchParams: {
-      uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
-      services: ["PT.CREATE"],
-      applicationStatus: [],
-      locality: [],
-    },
-  },
-  filterComponent = "PT_INBOX_FILTER",
-}) => {
+const Inbox = ({ parentRoute, businessService = "PT", initialStates = {}, filterComponent = "PT_INBOX_FILTER", wfConfig }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo.info.roles;
@@ -42,10 +30,11 @@ const Inbox = ({
     businessService,
     isInbox,
     filters: { ...searchParams, ...paginationParams, sortParams },
+    wfConfig,
   });
 
   useEffect(() => {
-    // console.log("data from the hook", hookLoading, rest);
+    console.log("data from the hook", hookLoading, rest);
   }, [hookLoading, rest]);
 
   useEffect(() => {
@@ -82,16 +71,15 @@ const Inbox = ({
       return (
         // <MobileInbox
         //   data={data}
-        //   isLoading={isInbox ? isLoading || isIdle : isSearchLoading}
-        //   isSearch={isSearch}
-        //   searchFields={getSearchFields(userRoles)}
+        //   isLoading={hookLoading}
+        //   isSearch={!isInbox}
+        //   searchFields={searchFields}
         //   onFilterChange={handleFilterChange}
-        //   onSearch={onSearch}
+        //   onSearch={handleFilterChange}
         //   onSort={handleSort}
         //   parentRoute={parentRoute}
         //   searchParams={searchParams}
         //   sortParams={sortParams}
-        //   removeParam={removeParam}
         //   linkPrefix={`${parentRoute}/application-details/`}
         // />
         <div></div>

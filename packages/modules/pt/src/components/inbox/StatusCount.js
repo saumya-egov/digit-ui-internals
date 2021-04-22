@@ -26,7 +26,10 @@ const StatusCount = ({ status, searchParams, onAssignmentChange, businessService
   return (
     <CheckBox
       onChange={(e) => onAssignmentChange(e, status)}
-      checked={searchParams?.applicationStatus.some((e) => e.code === status.code) ? true : false}
+      checked={(() => {
+        //IIFE
+        return searchParams?.applicationStatus.some((e) => e.code === status.code);
+      })()}
       label={`${t(status.name)} (${data?.[0]?.totalCount ? data?.[0]?.totalCount : 0})`}
     />
   );

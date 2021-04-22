@@ -18,7 +18,7 @@ export const filterFunctions = {
     if (applicationStatus && applicationStatus?.[0]) {
       workflowFilters.applicationStatus = applicationStatus.map((status) => status.code).join(",");
     }
-    if (filtersArg?.locality) {
+    if (filtersArg?.locality?.length) {
       searchFilters.locality = filtersArg?.locality.map((item) => item.code.split("_").pop()).join(",");
     }
     if (filtersArg?.uuid && filtersArg?.uuid.code === "ASSIGNED_TO_ME") {
@@ -37,7 +37,7 @@ export const filterFunctions = {
       searchFilters.sortOrder = sortOrder;
     }
     if (services) {
-      workflowFilters.businessService = services.join();
+      workflowFilters.businessServices = services.join();
     }
     if (limit) {
       searchFilters.limit = limit;

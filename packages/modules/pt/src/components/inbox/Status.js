@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import StatusCount from "./StatusCount";
@@ -13,12 +13,8 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
   const { userRoleStates, otherRoleStates } = statusData || {};
 
   const translateState = (state) => {
-    return `ES_PT_STATUS_${state.state}`;
+    return `ES_PT_STATUS_${state.state || "CREATED"}`;
   };
-
-  useEffect(() => {
-    console.log(statusData, "status data");
-  }, [statusData]);
 
   if (isLoading) {
     return <Loader />;
