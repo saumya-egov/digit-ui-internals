@@ -18,6 +18,7 @@ function PropertyDocuments({ documents }) {
     Digit.UploadServices.Filefetch(filesArray, tenantId.split(".")[0]).then((res) => {
       setPdfFiles(res?.data);
     });
+    return () => setPdfFiles({});
   }, []);
 
   return (

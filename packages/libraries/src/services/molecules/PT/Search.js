@@ -16,13 +16,6 @@ export const PTSearch = {
 
     const employeeResponse = [
       {
-        title: "ES_TITLE_APPLICATION_DETAILS",
-        values: [
-          { title: "CS_FILE_DESLUDGING_APPLICATION_NO", value: response?.acknowldgementNumber },
-          { title: "ES_APPLICATION_CHANNEL", value: `ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_${response?.channel}` },
-        ],
-      },
-      {
         title: "ES_APPLICATION_DETAILS_PROPERTY_ADDRESS",
         values: [
           { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: response?.address?.pincode },

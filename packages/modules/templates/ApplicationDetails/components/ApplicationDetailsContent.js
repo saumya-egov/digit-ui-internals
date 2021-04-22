@@ -17,6 +17,7 @@ import TLCaption from "./TLCaption";
 import { Link } from "react-router-dom";
 import PropertyDocuments from "./PropertyDocuments";
 import PropertyFloors from "./PropertyFloors";
+import PropertyEstimates from "./PropertyEstimates";
 
 function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService }) {
   const { t } = useTranslation();
@@ -99,6 +100,9 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
           </StatusTable>
           {detail?.additionalDetails?.floors && <PropertyFloors floors={detail?.additionalDetails?.floors} />}
           {detail?.additionalDetails?.documents && <PropertyDocuments documents={detail?.additionalDetails?.documents} />}
+          {detail?.additionalDetails?.taxHeadEstimatesCalculation && (
+            <PropertyEstimates taxHeadEstimatesCalculation={detail?.additionalDetails?.taxHeadEstimatesCalculation} />
+          )}
         </React.Fragment>
       ))}
       <BreakLine />

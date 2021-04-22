@@ -8,6 +8,7 @@ import {
   useFetchPayment,
   usePaymentUpdate,
   useFetchCitizenBillsForBuissnessService,
+  useFetchBillsForBuissnessService,
   useGetPaymentRulesForBusinessServices,
   useDemandSearch,
 } from "./payment";
@@ -123,6 +124,7 @@ const Hooks = {
   useFetchPayment,
   usePaymentUpdate,
   useFetchCitizenBillsForBuissnessService,
+  useFetchBillsForBuissnessService,
   useGetPaymentRulesForBusinessServices,
   useWorkflowDetails,
   useInitStore,

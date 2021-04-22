@@ -19,9 +19,19 @@ const ApplicationDetails = (props) => {
   const [displayMenu, setDisplayMenu] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [showToast, setShowToast] = useState(null);
 
-  const { applicationDetails, isLoading, isDataLoading, applicationData, mutate, workflowDetails, assessmentMutate, businessService } = props;
+  const {
+    applicationDetails,
+    showToast,
+    setShowToast,
+    isLoading,
+    isDataLoading,
+    applicationData,
+    mutate,
+    workflowDetails,
+    businessService,
+    closeToast,
+  } = props;
 
   useEffect(() => {
     if (showToast) {
@@ -76,32 +86,12 @@ const ApplicationDetails = (props) => {
     setShowModal(false);
   };
 
-  const closeToast = () => {
-    setShowToast(null);
-  };
-
   const submitAction = (data) => {
     if (selectedAction === "ASSESS_PROPERTY") {
-      if (history?.location?.pathname?.includes("assessment-details")) {
-        assessmentMutate(
-          { Assessment: data?.Assessment },
-          {
-            onError: (error, variables) => {
-              setShowToast({ key: "error", action: error });
-              setTimeout(closeToast, 5000);
-            },
-            onSuccess: (data, variables) => {
-              setShowToast({ key: "success", action: selectedAction });
-              setTimeout(closeToast, 5000);
-            },
-          }
-        );
-      } else {
-        return history.push({
-          pathname: `/digit-ui/employee/pt/assessment-details/${applicationNumber}/${data?.Assessment?.financialYear}`,
-          state: data,
-        });
-      }
+      history.push({
+        pathname: `/digit-ui/employee/pt/assessment-details/${applicationNumber}`,
+        state: data,
+      });
     } else {
       mutate(data, {
         onError: (error, variables) => {
