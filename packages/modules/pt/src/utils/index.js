@@ -78,9 +78,9 @@ export const setAddressDetails = (data) => {
     locality: {
       code: address?.locality?.code || "NA",
       area: address?.locality?.name,
-    }
+    },
   };
-  data.tenantId = data?.tenantId || "pb.amritsar";
+
   data.address = propAddress;
   return data;
 };

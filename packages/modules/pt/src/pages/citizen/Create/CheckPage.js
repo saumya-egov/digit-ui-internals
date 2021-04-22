@@ -56,7 +56,7 @@ const CheckPage = ({ onSubmit, value = {} }) => {
     isEditProperty,
     isUpdateProperty,
   } = value;
-  const typeOfApplication = !isEditProperty || !isUpdateProperty ? `new-application` : `edit-application`;
+  const typeOfApplication = !isEditProperty && !isUpdateProperty ? `new-application` : `edit-application`;
   let flatplotsize;
   if (isPropertyselfoccupied(selfOccupied?.i18nKey)) {
     flatplotsize = parseInt(landarea?.floorarea);
