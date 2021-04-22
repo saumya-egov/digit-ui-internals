@@ -72,10 +72,9 @@ const useInboxGeneral = ({
 
   const { data: processInstances, isLoading: wfFetching, isSuccess: wfSuccess } = useQuery(
     ["WORKFLOW_INBOX", businessService, workflowFilters],
-    () =>
-      Digit.WorkflowService.getAllApplication(tenantId, { businessServices: services.join(), ...workflowFilters })
-        .then(rawWfHandler)
-        .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
+    () => Digit.WorkflowService.getAllApplication(tenantId, { businessServices: services.join(), ...workflowFilters }),
+    // .then(rawWfHandler)
+    // .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
     {
       enabled: isInbox,
       onError: (err) => console.log(err, "error in wf"),
@@ -90,8 +89,8 @@ const useInboxGeneral = ({
     }
   );
   useEffect(() => {
-    console.log(wfFetching, ">>>>>>>>");
-  }, [wfFetching]);
+    console.log(wfFetching, processInstances, "inside useEffect");
+  }, [wfFetching, processInstances]);
 
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
 
