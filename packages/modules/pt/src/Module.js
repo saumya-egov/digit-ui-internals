@@ -29,6 +29,7 @@ import SelectSpecialOwnerCategoryType from "./pageComponents/SelectSpecialOwnerC
 import SelectSpecialProofIdentity from "./pageComponents/SelectSpecialProofIdentity";
 import Units from "./pageComponents/Units";
 import SelectAltContactNumber from "./pageComponents/SelectAltContactNumber";
+import SelectDocuments from "./pageComponents/SelectDocuments";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
 import CitizenApp from "./pages/citizen";
 
@@ -78,6 +79,7 @@ const componentsToRegister = {
   TransferDetails,
   Units,
   SelectAltContactNumber,
+  SelectDocuments,
 };
 
 const addComponentsToRegistry = () => {

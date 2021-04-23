@@ -192,7 +192,7 @@ function Unit({
           <Dropdown
             className="form-field"
             selected={unit?.occupancyType}
-            disable={false}
+            disable={selfOccupiedData?.length === 1}
             option={selfOccupiedData}
             select={selectSelfOccupied}
             optionKey="i18nKey"

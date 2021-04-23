@@ -539,4 +539,15 @@ export const newConfig = [
       },
     ],
   },
+  {
+    head: "ES_NEW_APPLICATION_DOCUMENTS_REQUIRED",
+    body: [
+      {
+        component: "SelectDocuments",
+        withoutLabel: true,
+        key: "documents",
+        type: "component",
+      },
+    ],
+  },
 ];

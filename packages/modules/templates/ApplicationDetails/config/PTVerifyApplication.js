@@ -11,6 +11,7 @@ export const configPTVerifyApplication = ({
   uploadedFile,
   setUploadedFile,
 }) => {
+  console.log("%c 🏌️‍♂️: uploadedFile ", "font-size:16px;background-color:#befb98;color:black;", uploadedFile);
   return {
     label: {
       heading: `ES_PT_ACTION_TITLE_${action}`,
