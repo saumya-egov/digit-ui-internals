@@ -4,6 +4,8 @@ import { FormComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { getVehicleType } from "../../../utils";
 
+const isConventionalSpecticTank = (tankDimension) => tankDimension === "lbd";
+
 const EditForm = ({ tenantId, applicationData, channelMenu, vehicleMenu, sanitationMenu }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -81,11 +83,15 @@ const EditForm = ({ tenantId, applicationData, channelMenu, vehicleMenu, sanitat
       formData?.tripData?.amountPerTrip
     ) {
       setSubmitValve(true);
-      if (
-        parseInt(formData?.pitDetail?.height) * parseInt(formData?.pitDetail?.length) * parseInt(formData?.pitDetail?.width) > 0 &&
-        !formData?.pitType
-      ) {
-        setSubmitValve(false);
+      const pitDetailValues = formData?.pitDetail ? Object.values(formData?.pitDetail).filter((value) => value > 0) : null;
+      if (formData?.pitType) {
+        if (pitDetailValues === null || pitDetailValues?.length === 0) {
+          setSubmitValve(true);
+        } else if (isConventionalSpecticTank(formData?.pitType?.dimension) && pitDetailValues?.length >= 3) {
+          setSubmitValve(true);
+        } else if (!isConventionalSpecticTank(formData?.pitType?.dimension) && pitDetailValues?.length >= 2) {
+          setSubmitValve(true);
+        } else setSubmitValve(false);
       }
     } else {
       setSubmitValve(false);

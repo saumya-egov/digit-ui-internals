@@ -58,6 +58,14 @@ import { PrivateRoute } from "./atoms/PrivateRoute";
 import {
   GetApp,
   ArrowLeft,
+  ArrowDown,
+  DownloadIcon,
+  FilterIcon,
+  PrintIcon,
+  Ellipsis,
+  RefreshIcon,
+  Poll,
+  Details,
   HomeIcon,
   LanguageIcon,
   LogoutIcon,
@@ -66,6 +74,7 @@ import {
   SortUp,
   ShippingTruck,
   CloseSvg,
+  UpwardArrow,
   PropertyHouse,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
@@ -177,6 +186,7 @@ export {
   CitizenInfoLabel,
   SearchIconSvg,
   ArrowRightInbox,
+  ArrowDown,
   SortDown,
   SortUp,
   ShippingTruck,
@@ -197,4 +207,12 @@ export {
   ResponseComposer,
   PitDimension,
   Modal,
+  UpwardArrow,
+  DownloadIcon,
+  Ellipsis,
+  RefreshIcon,
+  Poll,
+  Details,
+  FilterIcon,
+  PrintIcon,
 };

@@ -21,14 +21,18 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   const [builtupplotsizeeroor, setbuiltupplotsizeeroor] = useState(null);
   function setPropertyplotSize(e) {
     setplotSize(e.target.value);
+    setbuiltupplotsizeeroor(null);
+
+    if (e.target.value && parseInt(builtUpArea) > parseInt(e.target.value)) {
+      setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
+    }
   }
   function setPropertybuiltUpArea(e) {
     setbuiltUpArea(e.target.value);
     setbuiltupplotsizeeroor(null);
-    console.log(e.target.value);
     if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_INDEPENDENTPROPERTY" && index != "0") {
       if (formData?.units[0]?.plotSize && parseInt(e.target.value) > parseInt(formData?.units[0]?.plotSize)) {
-        setbuiltupplotsizeeroor("wrong built up area");
+        setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
       }
     } else {
       if (plotSize && parseInt(e.target.value) > parseInt(plotSize)) {
@@ -48,10 +52,16 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
   const goNext = () => {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     if (!isNaN(index)) {
-      let unit = formData.units && formData.units[index];
-      let floordet = { plotSize, builtUpArea };
-      sessionStorage.setItem("propertyArea", "multiple");
-      onSelect(config.key, floordet, "", index);
+      let unit = (formData.units && formData.units[index]) || null;
+      if (unit !== null) {
+        unit["builtUpArea"] = builtUpArea;
+        unit["plotSize"] = plotSize;
+        onSelect(config.key, unit, "", index);
+      } else {
+        let floordet = { plotSize, builtUpArea };
+        sessionStorage.setItem("propertyArea", "multiple");
+        onSelect(config.key, floordet, "", index);
+      }
     } else {
       sessionStorage.setItem("propertyArea", "multiple");
       onSelect("floordetails", { plotSize, builtUpArea });

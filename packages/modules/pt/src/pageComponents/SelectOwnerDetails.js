@@ -13,6 +13,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     formData.owners && formData.owners[index] && formData.owners[index].fatherOrHusbandName
   );
   const [relationship, setRelationship] = useState(formData.owners && formData.owners[index] && formData.owners[index].relationship);
+  const isUpdateProperty = formData?.isUpdateProperty || false;
 
   function setOwnerName(e) {
     setName(e.target.value);
@@ -171,6 +172,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="name"
           value={name}
           onChange={setOwnerName}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -189,6 +191,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           onSelect={setGenderName}
           isDependent={true}
           labelKey="PT_COMMON_GENDER"
+          disabled={isUpdateProperty}
         />
         <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
         <TextInput
@@ -199,6 +202,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="mobileNumber"
           value={mobileNumber}
           onChange={setMobileNo}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "[6-9]{1}[0-9]{9}",
@@ -215,6 +219,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="fatherOrHusbandName"
           value={fatherOrHusbandName}
           onChange={setGuardiansName}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -233,6 +238,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           onSelect={setGuardianName}
           isDependent={true}
           labelKey="PT_RELATION"
+          disabled={isUpdateProperty}
         />
       </div>
     </FormStep>

@@ -11,9 +11,15 @@ const useMDMS = (tenantId, moduleCode, type, config = {}, payload = []) => {
     });
   };
 
+  const useReceiptKey = () => {
+    return useQuery("RECEIPT_KEY", () => MdmsService.getReceiptKey(tenantId, moduleCode, type));
+  };
+
   switch (type) {
     case "PaymentGateway":
       return usePaymentGateway();
+    case "ReceiptKey":
+      return useReceiptKey();
   }
 };
 

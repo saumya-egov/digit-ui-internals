@@ -23,6 +23,13 @@ export const SuccessfulPayment = (props) => {
     { enabled: allowFetchBill, retry: false, staleTime: Infinity }
   );
 
+  const { data: receiptKeyData } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey");
+  let generatePdfKey = "consolidatedreceipt";
+  if (receiptKeyData) {
+    generatePdfKey =
+      receiptKeyData["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt";
+  }
+
   const payments = data?.payments;
 
   useEffect(() => {
@@ -79,7 +86,7 @@ export const SuccessfulPayment = (props) => {
     const state = tenantId?.split(".")[0];
     let response = { filestoreIds: [payments.Payments[0]?.fileStoreId] };
     if (!paymentData?.fileStoreId) {
-      response = await Digit.PaymentService.generatePdf(state, { Payments: [payments.Payments[0]] });
+      response = await Digit.PaymentService.generatePdf(state, { Payments: [payments.Payments[0]] }, generatePdfKey);
     }
     const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: response.filestoreIds[0] });
     if (fileStore && fileStore[response.filestoreIds[0]]) {

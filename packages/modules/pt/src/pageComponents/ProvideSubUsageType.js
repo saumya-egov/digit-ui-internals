@@ -152,7 +152,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
           <RadioOrSelect
             isMandatory={config.isMandatory}
             selectedOption={SubUsageType}
-            options={getSubUsagedata(subusageoption) || {}}
+            options={data || {}}
             t={t}
             optionKey="i18nKey"
             onSelect={selectSelfOccupied}
