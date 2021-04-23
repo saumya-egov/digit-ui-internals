@@ -80,7 +80,7 @@ export const setAddressDetails = (data) => {
       area: address?.locality?.name,
     },
   };
-
+  data.tenantId = data?.tenantId || "pb.amritsar";
   data.address = propAddress;
   return data;
 };
@@ -222,6 +222,7 @@ export const getnumberoffloors = (data) => {
   } else if (data?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION") {
     return parseInt(unitlenght) + 2;
   }
+  return parseInt(unitlenght);
 };
 
 export const getusageCategory = (data, i) => {
