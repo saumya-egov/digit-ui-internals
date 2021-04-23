@@ -84,7 +84,7 @@ const useInboxGeneral = ({
       enabled: isInbox,
       select: (d) => {
         console.log(d, "data inside select");
-        return d.ProcessInstances;
+        return d;
       },
       ...wfConfig,
     }
@@ -94,6 +94,8 @@ const useInboxGeneral = ({
   }, [wfFetching, processInstances]);
 
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
+
+  console.log(applicationNoFromWF, "hello");
 
   if (isInbox && applicationNoFromWF && !searchFilters[businessIdAliasForSearch])
     searchFilters = { ...searchFilters, [businessIdsParamForSearch]: applicationNoFromWF };

@@ -23,7 +23,7 @@ const EmployeeApp = ({ path, url, userType }) => {
     },
   };
 
-  const combineTaxDueInSearchData = async (searchData) => {
+  const combineTaxDueInSearchData = async (searchData, _break, _next) => {
     let returnData;
     const tenantId = Digit.ULBService.getCurrentTenantId();
     let businessService = ["PT"].join();
@@ -35,15 +35,14 @@ const EmployeeApp = ({ path, url, userType }) => {
       res.Bill.forEach((e) => {
         obj[e.consumerCode] = e.totalAmount;
       });
-
-      returnData = searchData.map((e) => ({ ...e, due_tax: obj[e.propertyId] || 0 }));
+      returnData = searchData.map((e) => ({ ...e, due_tax: "₹ " + (obj[e.propertyId] || 0) }));
     } catch (er) {
       const err = er?.response?.data;
-      if (err?.Errors?.[0].code === "EG_BS_BILL_NO_DEMANDS_FOUND") {
-        returnData = searchData.map((e) => ({ ...e, due_tax: 0 }));
+      if (["EG_BS_BILL_NO_DEMANDS_FOUND", "EMPTY_DEMANDS"].includes(err?.Errors?.[0].code)) {
+        returnData = searchData.map((e) => ({ ...e, due_tax: "₹ " + 0 }));
       }
     }
-    return returnData;
+    return _next(returnData);
   };
 
   const searchMW = [{ combineTaxDueInSearchData }];

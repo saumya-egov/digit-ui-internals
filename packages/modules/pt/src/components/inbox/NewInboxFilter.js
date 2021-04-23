@@ -1,7 +1,6 @@
 import React from "react";
 import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox, Localities, SubmitBar } from "@egovernments/digit-ui-react-components";
-import { useSelector } from "react-redux";
-import { ApplyFilterBar } from "@egovernments/digit-ui-react-components";
+
 import { useTranslation } from "react-i18next";
 
 import Status from "./Status";
