@@ -78,7 +78,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
 
   const getCode = () => {
     for (i = 0; i < subusageoption.length; i++) {
-      if (subusageoption[i]?.code.split(".").pop() === SubUsageType.i18nKey.split("_").pop()) {
+      if (subusageoption[i]?.code.split(".").pop() === SubUsageType?.i18nKey.split("_").pop()) {
         return subusageoption[i]?.code;
       }
     }
