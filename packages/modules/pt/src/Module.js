@@ -27,8 +27,11 @@ import SelectOwnerShipDetails from "./pageComponents/SelectOwnerShipDetails";
 import SelectProofIdentity from "./pageComponents/SelectProofIdentity";
 import SelectSpecialOwnerCategoryType from "./pageComponents/SelectSpecialOwnerCategoryType";
 import SelectSpecialProofIdentity from "./pageComponents/SelectSpecialProofIdentity";
+import Units from "./pageComponents/Units";
+import SelectAltContactNumber from "./pageComponents/SelectAltContactNumber";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
 import CitizenApp from "./pages/citizen";
+
 import PropertyInformation from "./pages/citizen/MyProperties/propertyInformation";
 import PTWFCaption from "./pageComponents/PTWFCaption";
 import PTWFReason from "./pageComponents/PTWFReason";
@@ -38,6 +41,7 @@ import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
 
 import EmployeeApp from "./pages/employee";
 import PTCard from "./components/PTCard";
+import InboxFilter from "./components/inbox/NewInboxFilter";
 
 const componentsToRegister = {
   PropertyTax,
@@ -72,6 +76,8 @@ const componentsToRegister = {
   ProvideFloorNo,
   propertyOwnerHistory,
   TransferDetails,
+  Units,
+  SelectAltContactNumber,
 };
 
 const addComponentsToRegistry = () => {
@@ -81,12 +87,11 @@ const addComponentsToRegistry = () => {
 };
 
 export const PTModule = ({ userType, tenants }) => {
-  const moduleCode = "PT";
-  addComponentsToRegistry();
-  console.log(moduleCode, "module integrated");
-  Digit.SessionStorage.set("PT_TENANTS", tenants);
-
   const { path, url } = useRouteMatch();
+
+  addComponentsToRegistry();
+
+  Digit.SessionStorage.set("PT_TENANTS", tenants);
 
   if (userType === "employee") {
     return <EmployeeApp path={path} url={url} userType={userType} />;
@@ -117,4 +122,5 @@ export const PTComponents = {
   PTCard,
   PTModule,
   PTLinks,
+  PT_INBOX_FILTER: (props) => <InboxFilter {...props} />,
 };
