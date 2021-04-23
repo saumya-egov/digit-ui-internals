@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import PropertyDocument from "../../../pageComponents/PropertyDocument";
-import { propertyCardBodyStyle } from "../../../utils";
+import { getPropertyTypeLocale, propertyCardBodyStyle } from "../../../utils";
 import { Link } from "react-router-dom";
 
 const PropertyInformation = () => {
@@ -46,11 +46,11 @@ const PropertyInformation = () => {
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
           <StatusTable>
-            <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${property.address?.pincode || "NA"}`} />
-            <Row label={t("PT_COMMON_CITY")} text={`${property.address?.city || "NA"}`} />
-            <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={`${t(property?.address?.locality?.name)}` || "NA"} />
-            <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${property.address?.street || "NA"}`} />
             <Row label={t("PT_PROPERTY_ADDRESS_COLONY_NAME")} text={`${property.address?.buildingName || "NA"}`} />
+            <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${property.address?.street || "NA"}`} />
+            <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={`${t(property?.address?.locality?.name)}` || "NA"} />
+            <Row label={t("PT_COMMON_CITY")} text={`${property.address?.city || "NA"}`} />
+            <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${property.address?.pincode || "NA"}`} />
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ASSESSMENT_DETAILS_HEADER")}</CardSubHeader>
           <StatusTable>
@@ -63,8 +63,8 @@ const PropertyInformation = () => {
                 )}` || "NA"
               }
             />
-            <Row label={t("PT_COMMON_PROPERTY_TYPE")} text={`${t(`COMMON_PROPTYPE_BUILTUP_${property?.propertyType.split(".")[1]}`)}` || "NA"} />
-            <Row label={t("PT_ASSESMENT1_PLOT_SIZE")} text={`${property.landArea || "NA"}`} />
+            <Row label={t("PT_COMMON_PROPERTY_TYPE")} text={`${t(getPropertyTypeLocale(property?.propertyType))}` || "NA"} />
+            <Row label={t("PT_ASSESMENT1_PLOT_SIZE")} text={`${property.landArea} sq.ft` || "NA"} />
             <Row label={t("PT_ASSESMENT_INFO_NO_OF_FLOOR")} text={`${property.noOfFloors || "NA"}`} />
           </StatusTable>
           {/* <CardSubHeader>{t("Ground Floor")}</CardSubHeader>
@@ -91,13 +91,13 @@ const PropertyInformation = () => {
               units.map((unit, index) => (
                 <div key={index}>
                   {(flrno !== unit?.floorNo ? (i = 1) : (i = i + 1)) && i === 1 && (
-                    <CardSubHeader>{`${t("PROPERTYTAX_FLOOR_")}${unit?.floorNo}`}</CardSubHeader>
+                    <CardSubHeader>{t(`PROPERTYTAX_FLOOR_${unit?.floorNo}`)}</CardSubHeader>
                   )}
                   <div style={{ border: "groove" }}>
                     <CardSubHeader>
                       {t("Unit")} {i}
                     </CardSubHeader>
-                    {(true ? (flrno = unit?.floorNo) : console.log("")) && (
+                    {(flrno = unit?.floorNo) > -3 && (
                       <StatusTable>
                         <Row
                           label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")}
@@ -110,7 +110,7 @@ const PropertyInformation = () => {
                           }
                         />
                         <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t("PROPERTYTAX_OCCUPANCYTYPE_" + unit?.occupancyType)}` || "NA"} />
-                        <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${unit?.constructionDetail?.builtUpArea || "NA"}`} />
+                        <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${`${unit?.constructionDetail?.builtUpArea} sq.ft` || "NA"}`} />
                       </StatusTable>
                     )}
                   </div>
