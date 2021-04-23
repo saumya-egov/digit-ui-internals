@@ -27,6 +27,8 @@ import SelectOwnerShipDetails from "./pageComponents/SelectOwnerShipDetails";
 import SelectProofIdentity from "./pageComponents/SelectProofIdentity";
 import SelectSpecialOwnerCategoryType from "./pageComponents/SelectSpecialOwnerCategoryType";
 import SelectSpecialProofIdentity from "./pageComponents/SelectSpecialProofIdentity";
+import Units from "./pageComponents/Units";
+import SelectAltContactNumber from "./pageComponents/SelectAltContactNumber";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
 import CitizenApp from "./pages/citizen";
 
@@ -74,6 +76,8 @@ const componentsToRegister = {
   ProvideFloorNo,
   propertyOwnerHistory,
   TransferDetails,
+  Units,
+  SelectAltContactNumber,
 };
 
 const addComponentsToRegistry = () => {
