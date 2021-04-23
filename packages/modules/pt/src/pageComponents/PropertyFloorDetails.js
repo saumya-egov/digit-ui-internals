@@ -16,14 +16,17 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
     {
       //i18nKey: "Ground Floor Only",
       i18nKey: "PT_GROUND_FLOOR_OPTION",
+      code: 0,
     },
     {
       //i18nKey: "Ground +1",
       i18nKey: "PT_GROUND_PLUS_ONE_OPTION",
+      code: 1,
     },
     {
       //i18nKey: "Ground +2",
       i18nKey: "PT_GROUND_PLUS_TWO_OPTION",
+      code: 2,
     },
   ];
 
@@ -47,7 +50,7 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
     {
       label: "BPA_SCRUTINY_DETAILS_NUMBER_OF_FLOORS_LABEL",
       type: "text",
-      name: "propertyType",
+      name: "noOfFloors",
       validation: {},
     },
   ];

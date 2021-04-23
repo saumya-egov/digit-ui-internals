@@ -68,7 +68,6 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               type={"text"}
               t={t}
               isMandatory={false}
-              optionKey="i18nKey"
               name="mobileNumber"
               value={mobileNumber}
               onChange={setMobileNo}
@@ -81,14 +80,13 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             />
           </div>
         </LabelFieldPair>
-        {/* <LabelFieldPair>
+        <LabelFieldPair>
           <CardLabel>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
           <div className="field">
             <TextInput
               t={t}
               type={"text"}
               isMandatory={false}
-              optionKey="i18nKey"
               name="name"
               value={name}
               onChange={setOwnerName}
@@ -100,7 +98,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               })}
             />
           </div>
-        </LabelFieldPair> */}
+        </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}*`}</CardLabel>
           <div className="field">
@@ -108,12 +106,10 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               t={t}
               type={"text"}
               isMandatory={false}
-              optionKey="i18nKey"
               name="fatherOrHusbandName"
               value={fatherOrHusbandName}
               onChange={setGuardiansName}
               {...(validation = {
-                isRequired: true,
                 pattern: "^[a-zA-Z-.`' ]*$",
                 type: "tel",
                 title: t("PT_NAME_ERROR_MESSAGE"),

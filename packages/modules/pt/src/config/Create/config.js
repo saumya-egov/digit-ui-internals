@@ -451,6 +451,12 @@ export const newConfig = [
       },
       {
         type: "component",
+        component: "SelectAltContactNumber",
+        key: "owners",
+        withoutLabel: true,
+      },
+      {
+        type: "component",
         route: "special-owner-category-proof",
         isMandatory: true,
         component: "SelectSpecialProofIdentity",

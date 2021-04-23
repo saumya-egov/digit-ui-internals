@@ -132,7 +132,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
           <Dropdown
             className="form-field"
             isMandatory={config.isMandatory}
-            selected={getSubUsagedata(subusageoption)?.length === 1 ? [0] : SubUsageType}
+            selected={getSubUsagedata(subusageoption)?.length === 1 ? getSubUsagedata(subusageoption)[0] : SubUsageType}
             disable={getSubUsagedata(subusageoption)?.length === 1}
             option={getSubUsagedata(subusageoption)}
             select={selectSelfOccupied}
