@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
  * @param {businessServive} neccessory
  */
 
-const useApplicationStatusGeneral = ({ businessServices, tenantId }, config) => {
+const useApplicationStatusGeneral = ({ businessServices = [], tenantId }, config) => {
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
 
   const userInfo = Digit.UserService.getUser();

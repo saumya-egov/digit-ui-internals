@@ -77,10 +77,6 @@ const useInboxGeneral = ({
     // .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
     {
       enabled: isInbox,
-      onError: (err) => console.log(err, "error in wf"),
-      onSettled: (e) => {
-        console.log("settled ", e);
-      },
       select: (d) => {
         console.log(d, "data inside select");
         return d.ProcessInstances;

@@ -35,7 +35,7 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute exact path={`${path}/`} component={() => <PTLinks matchPath={path} userType={userType} />} />
           <PrivateRoute
             path={`${path}/inbox`}
-            component={() => <Inbox parentRoute={path} businessService="PT" initialState={inboxInitialState} isInbox={true} />}
+            component={() => <Inbox parentRoute={path} businessService="PT" initialStates={inboxInitialState} isInbox={true} />}
           />
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
           <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
