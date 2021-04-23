@@ -26,6 +26,10 @@ const inboxConfig = (tenantId, filters) => ({
   },
 });
 
+const defaultCombineResponse = ({ totalCount, ...d }, wf) => {
+  return { totalCount, searchData: { ...d }, workflowData: { ...wf } };
+};
+
 /**
  *
  * @param {*} data
@@ -56,7 +60,7 @@ const useInboxGeneral = ({
   filters,
   rawWfHandler = (d) => d,
   rawSearchHandler = ({ totalCount, ...data }, searchKey, businessIdAlias) => ({ [searchKey]: data[searchKey].map((e) => ({ totalCount, ...e })) }),
-  combineResponse = ({ totalCount, ...d }, wf) => ({ totalCount, searchData: { ...d }, workflowData: { ...wf } }),
+  combineResponse = defaultCombineResponse,
   isInbox = true,
   wfConfig = {},
   searchConfig = {},
@@ -72,9 +76,10 @@ const useInboxGeneral = ({
 
   const { data: processInstances, isLoading: wfFetching, isSuccess: wfSuccess } = useQuery(
     ["WORKFLOW_INBOX", businessService, workflowFilters],
-    () => Digit.WorkflowService.getAllApplication(tenantId, { businessServices: services.join(), ...workflowFilters }),
-    // .then(rawWfHandler)
-    // .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
+    () =>
+      Digit.WorkflowService.getAllApplication(tenantId, { businessServices: services.join(), ...workflowFilters })
+        .then(rawWfHandler)
+        .then((data) => callMiddlewares(data.ProcessInstances, middlewaresWf)),
     {
       enabled: isInbox,
       select: (d) => {
@@ -100,13 +105,11 @@ const useInboxGeneral = ({
    */
 
   const processInstanceBuisnessIdMap = processInstances?.reduce((object, item) => {
-    return { ...object, [item["businessId"]]: item };
+    return { ...object, [item?.["businessId"]]: item };
   }, {});
 
-  if (wfSuccess) console.log(!isInbox || (!wfFetching && wfSuccess), searchFilters, "before Search");
-
   const searchResult = useQuery(
-    ["SEARCH_INBOX", businessService, searchFilters, workflowFilters],
+    ["SEARCH_INBOX", businessService, searchFilters, workflowFilters, isInbox],
     () =>
       _searchFn()
         .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
@@ -127,7 +130,7 @@ const useInboxGeneral = ({
       select: (d) => {
         return d.map((searchResult) => ({
           totalCount: d.totalCount,
-          ...combineResponse(searchResult, processInstanceBuisnessIdMap[searchResult[businessIdAliasForSearch]]),
+          ...combineResponse(searchResult, processInstanceBuisnessIdMap?.[searchResult?.[businessIdAliasForSearch]]),
         }));
       },
       ...searchConfig,

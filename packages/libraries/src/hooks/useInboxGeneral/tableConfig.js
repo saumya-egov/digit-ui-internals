@@ -40,7 +40,7 @@ export const TableConfig = (t) => ({
     searchColumns: (props) => [
       {
         Header: t("ES_INBOX_UNIQUE_PROPERTY_ID"),
-        accessor: "searchData.propertyId",
+        // accessor: "searchData.propertyId",
         disableSortBy: true,
         Cell: ({ row }) => {
           return (
@@ -57,42 +57,40 @@ export const TableConfig = (t) => ({
       {
         Header: t("ES_INBOX_OWNER_NAME"),
         disableSortBy: true,
-        // accessor: (row) => GetCell(row.citizen?.name || ""),
-        accessor: (row) => GetCell(row["owner"]),
+        Cell: ({ row }) => {
+          return GetCell(`${row.original?.searchData["owners"]?.[0].name}`);
+        },
       },
       {
         Header: t("ES_INBOX_LOCALITY"),
-        // accessor: (row) => GetCell(t(Digit.Utils.locale.getRevenueLocalityCode(row.address.locality.code, row.tenantId))),
-        accessor: (row) => GetCell(row["locality"]),
+
+        Cell: ({ row }) => GetCell(`${row.original?.searchData?.address?.locality?.name}`),
         disableSortBy: true,
       },
       {
         Header: t("ES_SEARCH_PROPERTY_STATUS"),
-        // accessor: (row) => {
-        //   return GetCell(t(`CS_COMMON_FSM_${row.applicationStatus}`));
-        // },
-        accessor: (row) => {
-          return GetCell(row["propertyStatus"]);
+        Cell: ({ row }) => {
+          return GetCell(row.original?.searchData?.status);
         },
         disableSortBy: true,
       },
       {
         Header: t("ES_SEARCH_TAX_DUE"),
-        // accessor: (row) => {
-        //   return GetCell(t(`CS_COMMON_FSM_${row.applicationStatus}`));
-        // },
-        accessor: (row) => {
-          return GetCell(row["taxDue"]);
+        Cell: ({ row }) => {
+          return GetCell(row.original?.searchData?.due_tax);
         },
         disableSortBy: true,
       },
       {
         Header: t("ES_SEARCH_ACTION"),
-        // accessor: (row) => {
-        //   return GetCell(t(`CS_COMMON_FSM_${row.applicationStatus}`));
-        // },
-        accessor: (row) => {
-          return GetCell(row["action"]);
+        Cell: ({ row }) => {
+          return (
+            <div>
+              <span className="link">
+                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>{t("ES_PT_COLLECT_TAX")}</Link>
+              </span>
+            </div>
+          );
         },
         disableSortBy: true,
       },

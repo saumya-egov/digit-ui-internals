@@ -6,16 +6,27 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
-const Inbox = ({ parentRoute, businessService = "PT", initialStates = {}, filterComponent = "PT_INBOX_FILTER", wfConfig }) => {
+const Inbox = ({
+  parentRoute,
+  businessService = "PT",
+  initialStates = {},
+  filterComponent,
+  isInbox,
+  rawWfHandler,
+  rawSearchHandler,
+  combineResponse,
+  wfConfig,
+  searchConfig,
+  middlewaresWf,
+  middlewareSearch,
+}) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const userInfo = Digit.UserService.getUser();
-  const userRoles = userInfo.info.roles;
 
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
-  const [isInbox, setIsInbox] = useState(true);
+
   const [searchParams, setSearchParams] = useState(() => {
     return initialStates.searchParams || {};
   });
@@ -30,11 +41,17 @@ const Inbox = ({ parentRoute, businessService = "PT", initialStates = {}, filter
     businessService,
     isInbox,
     filters: { ...searchParams, ...paginationParams, sortParams },
+    rawWfHandler,
+    rawSearchHandler,
+    combineResponse,
     wfConfig,
+    searchConfig,
+    middlewaresWf,
+    middlewareSearch,
   });
 
   useEffect(() => {
-    console.log("data from the hook", hookLoading, rest);
+    console.log("data from the hook", hookLoading, rest, data);
   }, [hookLoading, rest]);
 
   useEffect(() => {
@@ -108,7 +125,6 @@ const Inbox = ({ parentRoute, businessService = "PT", initialStates = {}, filter
             searchParams={searchParams}
             sortParams={sortParams}
             totalRecords={Number(data?.[0]?.totalCount)}
-            setIsInbox={setIsInbox}
             filterComponent={filterComponent}
           />
         </div>

@@ -23,14 +23,12 @@ const searchFieldsForSearch = {
   PT: [
     {
       label: "ES_INBOX_UNIQUE_PROPERTY_ID",
-      name: "applicationNos",
+      name: "propertyIds",
       roles: [],
     },
     {
       label: "ES_SEARCH_EXISTING_PROPERTY_ID",
-      name: "mobileNumber",
-      maxlength: 10,
-      pattern: "[6-9][0-9]{9}",
+      name: "oldpropertyids",
       title: "ES_SEARCH_APPLICATION_MOBILE_INVALID",
       roles: [],
     },
@@ -38,6 +36,7 @@ const searchFieldsForSearch = {
       label: "ES_SEARCH_APPLICATION_MOBILE_NO",
       name: "mobileNumber",
       maxlength: 10,
+      pattern: "[6-9][0-9]{9}",
       roles: [],
     },
   ],

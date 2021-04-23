@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
 import InboxLinks from "./inbox/InboxLink";
 import ApplicationTable from "./inbox/ApplicationTable";
-import Filter from "./inbox/Filter";
 import SearchApplication from "./inbox/search";
 
 const DesktopInbox = ({ tableConfig, ...props }) => {
@@ -14,12 +13,16 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
 
   // searchData, workFlowData
 
-  const columns = React.useMemo(() => tableConfig.inboxColumns(props) || [], []);
+  const columns = React.useMemo(() => (props.isSearch ? tableConfig.searchColumns(props) : tableConfig.inboxColumns(props) || []), []);
+
+  useEffect(() => {
+    console.log(data, columns, "inside desktop inbox....");
+  }, [data, columns]);
 
   let result;
   if (props.isLoading) {
     result = <Loader />;
-  } else if (props.isSearch || props?.data?.length === 0) {
+  } else if (data?.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
@@ -32,11 +35,11 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
           ))}
       </Card>
     );
-  } else if (props?.data?.length > 0) {
+  } else if (data?.length > 0) {
     result = (
       <ApplicationTable
         t={t}
-        data={props.data}
+        data={data}
         columns={columns}
         getCellProps={(cellInfo) => {
           return {

@@ -22,6 +22,31 @@ const EmployeeApp = ({ path, url, userType }) => {
     },
   };
 
+  const combineTaxDueInSearchData = async (searchData) => {
+    let returnData;
+    const tenantId = Digit.ULBService.getCurrentTenantId();
+    let businessService = ["PT"].join();
+    let consumerCode = searchData.map((e) => e.propertyId).join();
+    try {
+      const res = await Digit.PaymentService.fetchBill(tenantId, { consumerCode, businessService });
+      console.log(res, "in middleware");
+      let obj = {};
+      res.Bill.forEach((e) => {
+        obj[e.consumerCode] = e.totalAmount;
+      });
+
+      returnData = searchData.map((e) => ({ ...e, due_tax: obj[e.propertyId] || 0 }));
+    } catch (er) {
+      const err = er?.response?.data;
+      if (err?.Errors?.[0].code === "EG_BS_BILL_NO_DEMANDS_FOUND") {
+        returnData = searchData.map((e) => ({ ...e, due_tax: 0 }));
+      }
+    }
+    return returnData;
+  };
+
+  const searchMW = [{ combineTaxDueInSearchData }];
+
   return (
     <Switch>
       <React.Fragment>
@@ -35,7 +60,9 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute exact path={`${path}/`} component={() => <PTLinks matchPath={path} userType={userType} />} />
           <PrivateRoute
             path={`${path}/inbox`}
-            component={() => <Inbox parentRoute={path} businessService="PT" initialStates={inboxInitialState} isInbox={true} />}
+            component={() => (
+              <Inbox parentRoute={path} businessService="PT" filterComponent="PT_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
+            )}
           />
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
           <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
@@ -43,7 +70,12 @@ const EmployeeApp = ({ path, url, userType }) => {
           {/* <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} /> */}
           {/* <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} /> */}
           {/* <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} /> */}
-          <PrivateRoute path={`${path}/search`} component={() => <Inbox parentRoute={path} isSearch={true} />} />
+          <PrivateRoute
+            path={`${path}/search`}
+            component={() => (
+              <Inbox parentRoute={path} businessService="PT" middlewareSearch={searchMW} initialStates={inboxInitialState} isInbox={false} />
+            )}
+          />
         </div>
       </React.Fragment>
     </Switch>
