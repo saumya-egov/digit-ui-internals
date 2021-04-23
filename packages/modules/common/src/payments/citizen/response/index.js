@@ -23,12 +23,10 @@ export const SuccessfulPayment = (props) => {
     { enabled: allowFetchBill, retry: false, staleTime: Infinity }
   );
 
-  const { data: receiptKeyData } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey");
-  let generatePdfKey = "consolidatedreceipt";
-  if (receiptKeyData) {
-    generatePdfKey =
-      receiptKeyData["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt";
-  }
+  const { data: generatePdfKey } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey", {
+    select: (data) =>
+      data["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt",
+  });
 
   const payments = data?.payments;
 
@@ -124,7 +122,7 @@ export const SuccessfulPayment = (props) => {
         successful={true}
       />
       {business_service !== "PT" ? <CardText>{t("CS_PAYMENT_SUCCESSFUL_DESCRIPTION")}</CardText> : <React.Fragment></React.Fragment>}{" "}
-      <React.Fragment>
+      {generatePdfKey ? (
         <div className="primary-label-btn d-grid" onClick={printReciept}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
             <path d="M0 0h24v24H0z" fill="none" />
@@ -132,7 +130,7 @@ export const SuccessfulPayment = (props) => {
           </svg>
           {t("COMMON_PRINT_RECEIPT")}
         </div>
-      </React.Fragment>
+      ) : null}
       <StatusTable>
         <Row rowContainerStyle={rowContainerStyle} last label={t(label)} text={applicationNo} />
         {/** TODO : move this key and value into the hook based on business Service */}
