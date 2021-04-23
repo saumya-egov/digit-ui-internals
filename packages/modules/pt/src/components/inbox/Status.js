@@ -22,7 +22,9 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
 
   return (
     <div className="status-container">
-      <div className="filter-label">{t("ES_INBOX_STATUS")}</div>
+      <div className="filter-label" style={{ fontWeight: "normal" }}>
+        {t("ES_INBOX_STATUS")}
+      </div>
       {userRoleStates?.map((option, index) => {
         console.log(option, "state in status");
         return (

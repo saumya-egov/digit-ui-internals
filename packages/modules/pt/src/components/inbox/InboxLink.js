@@ -14,15 +14,15 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       roles: ["PT_DOC_VERIFIER"],
     },
     {
-      text: "ES_TITLE_NEW_DESULDGING_APPLICATION",
-      link: "/digit-ui/employee/fsm/new-application",
-      businessService: "FSM",
-      roles: ["FSM_CREATOR_EMP"],
+      text: "ES_TITLE_NEW_REGISTRATION",
+      link: "/digit-ui/employee/pt/new-application",
+      businessService: "PT",
+      roles: ["PT_CEMP"],
     },
     {
       text: "ES_TITILE_SEARCH_APPLICATION",
-      link: `/digit-ui/employee/fsm/search`,
-      businessService: "FSM",
+      link: `/digit-ui/employee/pt/search`,
+      businessService: "PT",
       roles: [],
     },
   ];
