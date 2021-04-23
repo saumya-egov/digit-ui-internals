@@ -35,11 +35,12 @@ export const WorkflowService = {
         action: id.action,
         state: businessServiceResponse?.find((state) => state.uuid === id.nextState),
       }));
-      
+
       /* To check state is updatable and provide edit option*/
-      const currentState = businessServiceResponse?.find((state) => state.uuid === processInstances[0]?.state.uuid)
+      const currentState = businessServiceResponse?.find((state) => state.uuid === processInstances[0]?.state.uuid);
       if (currentState && currentState?.isStateUpdatable) {
-        nextActions.push({ action: "EDIT", state: currentState })
+        if (moduleCode === "FSM" || moduleCode === "FSM_VEHICLE_TRIP" || moduleCode === "PGR") null;
+        else nextActions.push({ action: "EDIT", state: currentState });
       }
 
       const actionRolePair = nextActions?.map((action) => ({

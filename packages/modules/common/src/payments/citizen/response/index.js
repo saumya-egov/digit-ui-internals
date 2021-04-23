@@ -27,6 +27,7 @@ export const SuccessfulPayment = (props) => {
     select: (data) =>
       data["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt",
   });
+  console.log("find generatePdfKey", generatePdfKey);
 
   const payments = data?.payments;
 
@@ -83,6 +84,7 @@ export const SuccessfulPayment = (props) => {
     const tenantId = paymentData?.tenantId;
     const state = tenantId?.split(".")[0];
     let response = { filestoreIds: [payments.Payments[0]?.fileStoreId] };
+    debugger;
     if (!paymentData?.fileStoreId) {
       response = await Digit.PaymentService.generatePdf(state, { Payments: [payments.Payments[0]] }, generatePdfKey);
     }
