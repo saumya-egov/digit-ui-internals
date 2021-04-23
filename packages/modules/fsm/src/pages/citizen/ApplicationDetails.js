@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Card, KeyNote, LinkButton, Loader } from "@egovernments/digit-ui-react-components";
+import { Header, Card, KeyNote, LinkButton, Loader, MultiLink } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import getPDFData from "../../getPDFData";
 import { getVehicleType } from "../../utils";
@@ -45,7 +45,7 @@ const ApplicationDetails = () => {
     <React.Fragment>
       <Header>{t("CS_FSM_APPLICATION_DETAIL_TITLE_APPLICATION_DETAILS")}</Header>
       <Card style={{ position: "relative" }}>
-        <LinkButton
+        {/* <LinkButton
           label={
             <div className="application-details-link-button">
               <span>
@@ -58,7 +58,8 @@ const ApplicationDetails = () => {
           }
           style={{ position: "absolute", top: 0, right: 20 }}
           onClick={handleDownloadPdf}
-        />
+        /> */}
+        <MultiLink />
 
         {application?.applicationDetails?.map(({ title, value, child, caption, map }, index) => {
           return (
