@@ -28,6 +28,10 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
       i18nKey: "PT_GROUND_PLUS_TWO_OPTION",
       code: 2,
     },
+    {
+      i18nKey: "NONE",
+      code: "NONE",
+    },
   ];
 
   const onSkip = () => onSelect();

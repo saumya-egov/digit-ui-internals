@@ -8,8 +8,8 @@ const NewApplication = () => {
   const { t } = useTranslation();
   const [canSubmit, setSubmitValve] = useState(false);
   const defaultValues = {};
+
   const onFormValueChange = (setValue, formData) => {
-    console.log("%c 🌧️: onFormValueChange -> formData ", "font-size:16px;background-color:#25ab81;color:white;", formData);
     if (
       formData?.address?.city?.code &&
       formData?.address?.locality?.code &&
@@ -18,7 +18,9 @@ const NewApplication = () => {
       formData?.owners?.name &&
       formData?.owners?.mobileNumber &&
       formData?.usageCategoryMajor?.code &&
-      formData?.usageCategoryMinor?.subuagecode
+      formData?.usageCategoryMinor?.subuagecode &&
+      formData?.owners?.ownerType?.code &&
+      formData?.documents?.documents?.length === formData?.documents?.propertyTaxDocumentsLength
     ) {
       if (formData?.ownershipCategory?.code !== "INDIVIDUAL.SINGLEOWNER" && formData?.owners?.altContactNumber) {
         if (formData?.PropertyType?.code !== "VACANT" && formData?.noOfFloors?.i18nKey) {
@@ -39,15 +41,13 @@ const NewApplication = () => {
   const { mutate } = Digit.Hooks.pt.usePropertyAPI(tenantId);
 
   const onSubmit = (data) => {
-    console.log("%c 🎯: onSubmit -> data ", "font-size:16px;background-color:#75bbab;color:white;", data);
     const formData = {
       tenantId,
       address: {
         ...data?.address,
         city: data?.address?.city?.name,
       },
-      usageCategoryMajor: data?.usageCategoryMajor?.code,
-      usageCategoryMinor: data?.usageCategoryMinor?.subuagecode,
+      usageCategory: data?.usageCategoryMinor?.subuagecode ? data?.usageCategoryMinor?.subuagecode : data?.usageCategoryMajor?.code,
       landArea: data?.landarea,
       propertyType: data?.PropertyType?.code,
       noOfFloors: data?.noOfFloors?.code,
@@ -55,43 +55,19 @@ const NewApplication = () => {
       owners: [
         {
           ...data?.owners,
-          ownerType: "NONE", // required
+          ownerType: data?.owners?.ownerType.code,
+          gender: data?.owners?.gender.code,
+          relationship: data?.owners?.relationship.code,
         },
       ],
       channel: "CFC_COUNTER", // required
       creationReason: "CREATE", // required
       source: "MUNICIPAL_RECORDS", // required
-      usageCategory: data?.usageCategoryMajor?.code,
       superBuiltUpArea: data?.landarea,
-      units: data?.units,
-      // documents: [
-      //   {
-      //     documentType: "OWNER.ADDRESSPROOF.GASBILL",
-      //     fileStoreId: "8bf79e21-7086-46e7-b453-102940281229",
-      //     documentUid: "8bf79e21-7086-46e7-b453-102940281229",
-      //   },
-      //   {
-      //     documentType: "OWNER.IDENTITYPROOF.DRIVING",
-      //     fileStoreId: "ed947eb9-cd50-4d1e-aa53-e767ebf49ee6",
-      //     documentUid: "ed947eb9-cd50-4d1e-aa53-e767ebf49ee6",
-      //   },
-      //   {
-      //     documentType: "OWNER.REGISTRATIONPROOF.FAMILYSETTLEMENT",
-      //     fileStoreId: "79634d5a-e203-4154-b541-9678cc194f54",
-      //     documentUid: "79634d5a-e203-4154-b541-9678cc194f54",
-      //   },
-      //   {
-      //     documentType: "OWNER.USAGEPROOF.ELECTRICITYBILL",
-      //     fileStoreId: "2cace5f5-9249-41b1-b98a-d3a39510f4c9",
-      //     documentUid: "2cace5f5-9249-41b1-b98a-d3a39510f4c9",
-      //   },
-      //   {
-      //     documentType: "OWNER.CONSTRUCTIONPROOF.BPACERTIFICATE",
-      //     fileStoreId: "a812a304-a734-46da-b03d-7290d40d0dd4",
-      //     documentUid: "a812a304-a734-46da-b03d-7290d40d0dd4",
-      //   },
-      // ],
+      units: data?.units[0]?.usageCategory ? data?.units : [],
+      documents: data?.documents?.documents,
     };
+    console.log("%c 🚡: onSubmit -> formData ", "font-size:16px;background-color:#aedadd;color:black;", formData);
 
     mutate(
       { Property: formData },

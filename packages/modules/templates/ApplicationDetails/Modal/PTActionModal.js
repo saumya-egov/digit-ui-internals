@@ -181,7 +181,7 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
         console.log("default case");
         break;
     }
-  }, [action, fieldInspectors, approvers, financialYears, selectedFinancialYear]);
+  }, [action, fieldInspectors, approvers, financialYears, selectedFinancialYear, uploadedFile]);
 
   return action && config.form ? (
     <Modal

@@ -12,7 +12,7 @@ const PropertyDetails = () => {
   const [showToast, setShowToast] = useState(null);
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
-  const { isLoading: fetchBillLoading, data: fetchBillData } = Digit.Hooks.useFetchBillsForBuissnessService({
+  const { data: fetchBillData } = Digit.Hooks.useFetchBillsForBuissnessService({
     businessService: "PT",
     consumerCode: applicationNumber,
   });
@@ -66,10 +66,6 @@ const PropertyDetails = () => {
         ],
       },
     };
-  }
-
-  if (fetchBillLoading) {
-    return <Loader />;
   }
 
   return (
