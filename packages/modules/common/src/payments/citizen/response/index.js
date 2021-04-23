@@ -24,8 +24,12 @@ export const SuccessfulPayment = (props) => {
   );
 
   const { data: generatePdfKey } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey", {
-    select: (data) =>
-      data["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt",
+    select: (data) => {
+      const pdfKey =
+        data["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt";
+      console.log("find inside select", pdfKey);
+      return pdfKey;
+    },
   });
   console.log("find generatePdfKey", generatePdfKey);
 
