@@ -45,8 +45,10 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   ];
 
   const GuardianOptions = [
+    { name: "Mother", code: "MOTHER", i18nKey: "PT_RELATION_MOTHER" },
     { name: "Father", code: "FATHER", i18nKey: "PT_RELATION_FATHER" },
-    { name: "Husband", code: "HUSBAND", i18nKey: "PT_RELATION_HUSBAND" },
+    { name: "Husband/Wife", code: "HUSBANDWIFE", i18nKey: "PT_RELATION_HUSBANDWIFE" },
+    { name: "Other", code: "OTHER", i18nKey: "PT_RELATION_OTHER" },
   ];
 
   return (
@@ -67,7 +69,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="name"
           value={name}
           onChange={setOwnerName}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -76,18 +78,18 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           })}
         />
         <CardLabel>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
-        <RadioButtons 
-          t={t} 
-          options={options} 
-          optionsKey="code" 
-          name="gender" 
-          value={gender} 
-          selectedOption={gender} 
-          onSelect={setGenderName} 
-          isDependent = {true}
-          labelKey = "PT_COMMON_GENDER"
-          disabled = {isUpdateProperty}
-          />
+        <RadioButtons
+          t={t}
+          options={options}
+          optionsKey="code"
+          name="gender"
+          value={gender}
+          selectedOption={gender}
+          onSelect={setGenderName}
+          isDependent={true}
+          labelKey="PT_COMMON_GENDER"
+          disabled={isUpdateProperty}
+        />
         <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
         <TextInput
           type={"text"}
@@ -97,7 +99,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="mobileNumber"
           value={mobileNumber}
           onChange={setMobileNo}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "[6-9]{1}[0-9]{9}",
@@ -114,7 +116,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           name="fatherOrHusbandName"
           value={fatherOrHusbandName}
           onChange={setGuardiansName}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -131,9 +133,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           value={relationship}
           selectedOption={relationship}
           onSelect={setGuardianName}
-          isDependent = {true}
-          labelKey = "PT_RELATION"
-          disabled = {isUpdateProperty}
+          isDependent={true}
+          labelKey="PT_RELATION"
+          disabled={isUpdateProperty}
         />
       </div>
     </FormStep>
