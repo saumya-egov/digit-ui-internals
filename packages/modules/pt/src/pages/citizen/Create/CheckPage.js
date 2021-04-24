@@ -1,5 +1,15 @@
-import { Card, CardHeader, CardSubHeader, CardText, LinkButton, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import {
+  Card,
+  CardHeader,
+  CardSubHeader,
+  CardText,
+  CheckBox,
+  LinkButton,
+  Row,
+  StatusTable,
+  SubmitBar,
+} from "@egovernments/digit-ui-react-components";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import {
@@ -72,11 +82,16 @@ const CheckPage = ({ onSubmit, value = {} }) => {
   if (isPropertyIndependent(PropertyType?.i18nKey)) {
     flatplotsize = parseInt(propertyArea?.builtUpArea) + parseInt(propertyArea?.plotSize);
   }
+
+  const [agree, setAgree] = useState(false);
+  const setdeclarationhandler = () => {
+    setAgree(!agree);
+  };
   return (
     <Card>
-      <CardHeader>{t("CS_CHECK_CHECK_YOUR_ANSWERS")}</CardHeader>
+      <CardHeader>{t("PT_CHECK_CHECK_YOUR_ANSWERS")}</CardHeader>
       <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 15em)" }}>
-        <CardText>{t("CS_CHECK_CHECK_YOUR_ANSWERS_TEXT")}</CardText>
+        <CardText>{t("PT_CHECK_CHECK_YOUR_ANSWERS_TEXT")}</CardText>
         <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
         <StatusTable>
           <Row
@@ -513,8 +528,13 @@ const CheckPage = ({ onSubmit, value = {} }) => {
             </div>
           )}
         </div>
+        <CheckBox
+          label={t("PT_FINAL_DECLARATION_MESSAGE")}
+          onChange={setdeclarationhandler}
+          //disabled={!agree}
+        />
       </div>
-      <SubmitBar label="Submit" onSubmit={onSubmit} />
+      <SubmitBar label="Submit" onSubmit={onSubmit} disabled={!agree} />
     </Card>
   );
 };

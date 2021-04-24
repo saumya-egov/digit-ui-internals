@@ -6,7 +6,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   const allCities = Digit.Hooks.pt.useTenants();
   let tenantId = Digit.ULBService.getCurrentTenantId();
   let isEditProperty = formData?.isEditProperty || false;
-  if(formData?.isUpdateProperty) isEditProperty = true;
+  if (formData?.isUpdateProperty) isEditProperty = true;
   const { pincode, city } = formData?.address || "";
   const cities =
     userType === "employee"
@@ -89,7 +89,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
         <LabelFieldPair>
           <CardLabel className="card-label-smaller">
             {t("MYCITY_CODE_LABEL")}
-            {config.isMandatory ? " * " : null}
+            {/* {config.isMandatory ? " * " : null} */}
           </CardLabel>
           <Dropdown
             className="form-field"
@@ -105,7 +105,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
         <LabelFieldPair>
           <CardLabel className="card-label-smaller">
             {t("PT_LOCALITY_LABEL")}
-            {config.isMandatory ? " * " : null}
+            {/* {config.isMandatory ? " * " : null} */}
           </CardLabel>
           <Dropdown
             className="form-field"
@@ -124,9 +124,9 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 23em)" }}>
-        <CardLabel>{`${t("MYCITY_CODE_LABEL")} *`}</CardLabel>
+        <CardLabel>{`${t("MYCITY_CODE_LABEL")} `}</CardLabel>
         <RadioOrSelect options={cities} selectedOption={selectedCity} optionKey="code" onSelect={selectCity} t={t} />
-        {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} *`}</CardLabel>}
+        {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
         {selectedCity && localities && (
           <RadioOrSelect
             isMandatory={config.isMandatory}

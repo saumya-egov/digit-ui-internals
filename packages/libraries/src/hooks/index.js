@@ -8,6 +8,7 @@ import {
   useFetchPayment,
   usePaymentUpdate,
   useFetchCitizenBillsForBuissnessService,
+  useFetchBillsForBuissnessService,
   useGetPaymentRulesForBusinessServices,
   useDemandSearch,
 } from "./payment";
@@ -15,6 +16,8 @@ import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
 import useBoundaryLocalities from "./useLocalities";
 import useCommonMDMS from "./useMDMS";
+import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
+import useApplicationStatusGeneral from "./useStatusGeneral";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -63,6 +66,7 @@ import usePtApplicationDetail from "./pt/useApplicationDetail";
 import usePtApplicationActions from "./pt/useApplicationActions";
 import usePtMDMS from "./pt/useMDMS";
 import usePropertyAssessment from "./pt/usePropertyAssessment";
+import usePtCalculationEstimate from "./pt/usePtCalculationEstimate";
 
 import useDssMdms from "./dss/useMDMS";
 import useDashboardConfig from "./dss/useDashboardConfig";
@@ -121,6 +125,7 @@ const pt = {
   useApplicationActions: usePtApplicationActions,
   useMDMS: usePtMDMS,
   usePropertyAssessment,
+  usePtCalculationEstimate,
 };
 
 const dss = {
@@ -136,6 +141,7 @@ const Hooks = {
   useFetchPayment,
   usePaymentUpdate,
   useFetchCitizenBillsForBuissnessService,
+  useFetchBillsForBuissnessService,
   useGetPaymentRulesForBusinessServices,
   useWorkflowDetails,
   useInitStore,
@@ -144,9 +150,11 @@ const Hooks = {
   useUserSearch,
   useApplicationsForBusinessServiceSearch,
   useDemandSearch,
+  useInboxGeneral,
   useEmployeeSearch,
   useBoundaryLocalities,
   useCommonMDMS,
+  useApplicationStatusGeneral,
   pgr,
   fsm,
   pt,
