@@ -82,6 +82,7 @@ import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
 import RoundedLabel from "./atoms/RoundedLabel";
 import BreadCrumb from "./atoms/BreadCrumb";
 import DatePicker from "./atoms/DatePicker";
+import MultiLink from "./atoms/MultiLink";
 
 import { SearchIconSvg } from "./atoms/svgindex";
 
@@ -192,6 +193,7 @@ export {
   ShippingTruck,
   CloseSvg,
   PropertyHouse,
+  MultiLink,
   // Molecule
   InputCard,
   FormStep,

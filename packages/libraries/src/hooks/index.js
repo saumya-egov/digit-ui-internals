@@ -54,6 +54,8 @@ import useVehiclesSearch from "./fsm/useVehiclesSearch";
 import useConfig from "./fsm/useConfig";
 import useVendorDetail from "./fsm/useVendorDetail";
 import useSlum from "./fsm/useSlum";
+import usePaymentHistory from "./fsm/usePaymentHistory";
+
 import useEmployeeSearch from "./useEmployeeSearch";
 
 import usePropertyMDMS from "./pt/usePropertyMDMS";
@@ -109,6 +111,7 @@ const fsm = {
   useVehiclesSearch,
   useConfig,
   useSlum,
+  usePaymentHistory,
 };
 
 const pt = {

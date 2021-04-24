@@ -266,12 +266,18 @@ const UpwardArrow = () => (
   </svg>
 );
 
-const DownloadIcon = ({ styles }) => (
-  <svg style={{ ...styles }} width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+const DownloadIcon = ({ styles, className }) => (
+  <svg style={{ ...styles }} width="19" height="24" viewBox="0 0 19 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
     <path
       d="M18.8337 8.5H13.5003V0.5H5.50033V8.5H0.166992L9.50033 17.8333L18.8337 8.5ZM0.166992 20.5V23.1667H18.8337V20.5H0.166992Z"
       fill="#505A5F"
     />
+  </svg>
+);
+
+const PrimaryDownlaodIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#f47738">
+    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
   </svg>
 );
 
@@ -384,4 +390,5 @@ export {
   Details,
   PrintIcon,
   PropertyHouse,
+  PrimaryDownlaodIcon,
 };
