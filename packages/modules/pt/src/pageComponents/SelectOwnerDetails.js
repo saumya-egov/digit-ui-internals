@@ -183,18 +183,18 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           })}
         />
         <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
-        <RadioButtons 
-          t={t} 
-          options={options} 
-          optionsKey="code" 
-          name="gender" 
-          value={gender} 
-          selectedOption={gender} 
-          onSelect={setGenderName} 
-          isDependent = {true}
-          labelKey = "PT_COMMON_GENDER"
-          disabled = {isUpdateProperty}
-          />
+        <RadioButtons
+          t={t}
+          options={options}
+          optionsKey="code"
+          name="gender"
+          value={gender}
+          selectedOption={gender}
+          onSelect={setGenderName}
+          isDependent={true}
+          labelKey="PT_COMMON_GENDER"
+          disabled={isUpdateProperty}
+        />
         <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}`}</CardLabel>
         <TextInput
           type={"text"}

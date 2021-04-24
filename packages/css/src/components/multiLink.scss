@@ -1,0 +1,31 @@
+.multilink-labelWrap{
+    top: 73px;
+    @apply flex items-center align-middle text-center m-md absolute right-0
+}
+
+.multilink-link-button{
+    margin: 0;
+    @apply text-heading-s text-primary-light
+}
+
+.multilink-optionWrap{
+    @apply absolute shadow-card bg-white m-md z-10;
+
+    .multilink-option{
+        &:hover{
+            @apply bg-grey-mid cursor-pointer;
+        }
+        @apply p-md;
+    }
+}
+
+@screen dt {
+    .multilink-labelWrap{
+        right: 20%;
+    }
+
+    .multilink-optionWrap{
+        right: 20%;
+        top: 110px;
+    }
+}

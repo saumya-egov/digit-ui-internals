@@ -483,7 +483,6 @@ export const convertToProperty = (data = {}) => {
   data = setAddressDetails(data);
   data = setPropertyDetails(data);
 
-
   const formdata = {
     Property: {
       tenantId: data.tenantId,
