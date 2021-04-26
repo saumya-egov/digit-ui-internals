@@ -69,6 +69,7 @@ export const setAddressDetails = (data) => {
   let { address } = data;
 
   let propAddress = {
+    ...address,
     pincode: address?.pincode,
     landmark: address?.landmark,
     city: address?.city?.name,
@@ -79,7 +80,7 @@ export const setAddressDetails = (data) => {
       area: address?.locality?.name,
     },
   };
-  data.tenantId = data?.tenantId || "pb.amritsar";
+
   data.address = propAddress;
   return data;
 };
@@ -98,8 +99,8 @@ export const setOwnerDetails = (data) => {
       let document = [];
       if (owners[0]?.documents["proofIdentity"]?.fileStoreId) {
         document.push({
-          fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
-          documentType: owners[0].documents["proofIdentity"].documentType || "",
+          fileStoreId: owners[0]?.documents["proofIdentity"]?.fileStoreId || "",
+          documentType: owners[0]?.documents["proofIdentity"]?.documentType || "",
         });
       }
       owner.push({
@@ -120,14 +121,14 @@ export const setOwnerDetails = (data) => {
         let document = [];
         if (ownr?.ownerType?.code != "NONE") {
           document.push({
-            fileStoreId: ownr.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: ownr.documents["specialProofIdentity"].documentType || "",
+            fileStoreId: ownr?.documents["specialProofIdentity"]?.fileStoreId || "",
+            documentType: ownr?.documents["specialProofIdentity"]?.documentType || "",
           });
         }
         if (ownr?.documents["proofIdentity"]?.fileStoreId) {
           document.push({
-            fileStoreId: ownr.documents["proofIdentity"].fileStoreId || "",
-            documentType: ownr.documents["proofIdentity"].documentType || "",
+            fileStoreId: ownr?.documents["proofIdentity"]?.fileStoreId || "",
+            documentType: ownr?.documents["proofIdentity"]?.documentType || "",
           });
         }
         owner.push({
@@ -161,14 +162,14 @@ export const setDocumentDetails = (data) => {
     owners.map((owner) => {
       if (owner.documents && owner.documents["proofIdentity"]) {
         documents.push({
-          fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
-          documentType: owner.documents["proofIdentity"].documentType || "",
+          fileStoreId: owner?.documents["proofIdentity"].fileStoreId || "",
+          documentType: owner?.documents["proofIdentity"].documentType || "",
         });
       }
       if (owner.documents && owner.documents["specialProofIdentity"]) {
         documents.push({
-          fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
-          documentType: owner.documents["specialProofIdentity"].documentType || "",
+          fileStoreId: owner?.documents["specialProofIdentity"]?.fileStoreId || "",
+          documentType: owner?.documents["specialProofIdentity"]?.documentType || "",
         });
       }
     });
@@ -186,10 +187,14 @@ const getUsageType = (data) => {
 
 const getFloorNumber = (data) => {
   let floorcode = data?.Floorno?.i18nKey;
-  if (floorcode.charAt(floorcode.length - 3) === "_") {
+  if (floorcode.charAt(floorcode.length - 3) === "_" && floorcode.charAt(floorcode.length - 2) === "_") {
     return "-" + floorcode.charAt(floorcode.length - 1);
   } else {
-    return floorcode.charAt(floorcode.length - 1);
+    if (floorcode.charAt(floorcode.length - 2) !== "_") {
+      return floorcode.charAt(floorcode.length - 2) + floorcode.charAt(floorcode.length - 1);
+    } else {
+      return floorcode.charAt(floorcode.length - 1);
+    }
   }
 };
 
@@ -208,6 +213,16 @@ export const getSuperBuiltUparea = (data) => {
     }
   }
   return builtUpArea;
+};
+
+export const getnumberoffloors = (data) => {
+  let unitlenght = data?.units?.length;
+  if (data?.noOofBasements?.i18nKey === "PT_ONE_BASEMENT_OPTION") {
+    return parseInt(unitlenght) + 1;
+  } else if (data?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION") {
+    return parseInt(unitlenght) + 2;
+  }
+  return parseInt(unitlenght);
 };
 
 export const getusageCategory = (data, i) => {
@@ -307,7 +322,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
   ) {
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
+      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i].builtUpArea) - parseInt(unitsdata[i].UnOccupiedArea),
       },
@@ -316,7 +331,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
     });
     unit.push({
       occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
+      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i]?.UnOccupiedArea),
       },
@@ -329,7 +344,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
   ) {
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
+      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i]?.builtUpArea),
       },
@@ -340,7 +355,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
     if (unitsdata[i]?.selfOccupied?.i18nKey === "PT_PARTIALLY_RENTED_OUT") {
       unit.push({
         occupancyType: "SELFOCCUPIED",
-        floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
+        floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
         constructionDetail: {
           builtUpArea: parseInt(unitsdata[i]?.floorarea),
         },
@@ -351,7 +366,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
     unit.push({
       occupancyType: unitsdata[i].selfOccupied?.code,
       arv: unitsdata[i].AnnualRent,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
+      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
       constructionDetail: {
         builtUpArea: parseInt(unitsdata[i]?.RentArea),
       },
@@ -361,7 +376,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
     if (unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
       unit.push({
         occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
-        floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i + 1,
+        floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
         constructionDetail: {
           builtUpArea: parseInt(unitsdata[i]?.UnOccupiedArea),
         },
@@ -392,6 +407,7 @@ export const getunitsindependent = (data) => {
 };
 
 export const setPropertyDetails = (data) => {
+  let unitleghtvalue = getnumberoffloors(data);
   let propertyDetails = {};
   if (data?.PropertyType?.code?.includes("VACANT")) {
     propertyDetails = {
@@ -413,11 +429,12 @@ export const setPropertyDetails = (data) => {
     };
   } else if (data?.PropertyType?.code?.includes("INDEPENDENTPROPERTY")) {
     /*  update this case tulika*/
+    let unitleghtvalue = getnumberoffloors(data);
     propertyDetails = {
       units: getunitsindependent(data),
       landArea: data?.units[0]?.plotSize,
       propertyType: data?.PropertyType?.code,
-      noOfFloors: 1,
+      noOfFloors: unitleghtvalue,
       superBuiltUpArea: null,
       usageCategory: getUsageType(data),
     };
@@ -461,7 +478,6 @@ export const convertToProperty = (data = {}) => {
   let unit = data?.units;
   let basement1 = Array.isArray(data?.units) && data?.units["-1"] ? data?.units["-1"] : null;
   let basement2 = Array.isArray(data?.units) && data?.units["-2"] ? data?.units["-2"] : null;
-
   data = setDocumentDetails(data);
   data = setOwnerDetails(data);
   data = setAddressDetails(data);

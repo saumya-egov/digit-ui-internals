@@ -77,10 +77,11 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       t={t}
       forcedError={t(builtupplotsizeeroor)}
       isDisabled={builtupplotsizeeroor || (!builtUpArea && (!plotSize || !builtUpArea))}
+      showErrorBelowChildren={true}
     >
       {(index === "0" || isNaN(index)) && (
         <div>
-          <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}*`}</CardLabel>
+          <CardLabel>{`${t("PT_FLOOR_DETAILS_PLOT_SIZE_LABEL")}`}</CardLabel>
           <TextInput
             t={t}
             type={"number"}
@@ -93,7 +94,7 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
           />
         </div>
       )}
-      <CardLabel>{`${t("PT_FLOOR_DETAILS_BUILT_UP_AREA_LABEL")}*`}</CardLabel>
+      <CardLabel>{`${t("PT_FLOOR_DETAILS_BUILT_UP_AREA_LABEL")}`}</CardLabel>
       <TextInput
         t={t}
         type={"number"}

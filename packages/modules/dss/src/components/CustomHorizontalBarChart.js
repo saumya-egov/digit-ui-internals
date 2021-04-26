@@ -56,7 +56,7 @@ const CustomHorizontalBarChart = ({
         <Tooltip />
       </BarChart>
     </ResponsiveContainer>
-  )
+  );
 };
 
 export default CustomHorizontalBarChart;

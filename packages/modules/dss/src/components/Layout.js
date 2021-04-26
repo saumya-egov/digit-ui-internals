@@ -12,7 +12,7 @@ let index = 1;
 
 const Layout = ({ rowData }) => {
   const renderChart = (chart, key) => {
-    switch(chart.chartType) {
+    switch (chart.chartType) {
       case "table":
         return (
           <CustomTable data={chart} key={key} />
@@ -22,9 +22,7 @@ const Layout = ({ rowData }) => {
           <CustomPieChart data={chart} key={key} />
         );
       case "line":
-        return (
-          <CustomAreaChart data={chart} />
-        )
+        return <CustomAreaChart data={chart} />;
       case "horizontalBar":
         return (
           <CustomHorizontalBarChart data={chart} />
@@ -32,10 +30,10 @@ const Layout = ({ rowData }) => {
       default:
         return <CustomTable />;
     }
-  }
+  };
 
   const renderVisualizer = (visualizer, key) => {
-    switch(visualizer.vizType) {
+    switch (visualizer.vizType) {
       case "metric-collection":
         return (
           <GenericChart header={visualizer.name} className="metricsTable">
@@ -44,7 +42,8 @@ const Layout = ({ rowData }) => {
         );
       case "chart":
         return (
-          <GenericChart header={visualizer.name}
+          <GenericChart
+            header={visualizer.name}
             showDownload={visualizer?.charts?.[0].chartType === "table"}
             showSearch={visualizer?.charts?.[0].chartType === "table"}
           >
@@ -70,14 +69,8 @@ const Layout = ({ rowData }) => {
           />
         )
     }
-  }
-  return (
-    <div className="chart-row">
-      {rowData.vizArray.map((chart, key) => (
-        renderVisualizer(chart, key)
-      ))}
-    </div>
-  )
+  };
+  return <div className="chart-row">{rowData.vizArray.map((chart, key) => renderVisualizer(chart, key))}</div>;
 };
 
 export default Layout;

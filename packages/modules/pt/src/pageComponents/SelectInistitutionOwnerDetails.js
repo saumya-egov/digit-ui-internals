@@ -91,7 +91,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
       isDisabled={!inistitutionName || !inistitutetype || !name || !designation || !mobileNumber || !altContactNumber}
     >
       <div style={cardBodyStyle}>
-        <CardLabel>{`${t("PT_COMMON_INSTITUTION_NAME")}*`}</CardLabel>
+        <CardLabel>{`${t("PT_COMMON_INSTITUTION_NAME")}`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -99,14 +99,14 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="institutionName"
           onChange={setInistitution}
           value={inistitutionName}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })}
         />
-        <CardLabel>{`${t("PT_TYPE_OF_INSTITUTION")}*`}</CardLabel>
+        <CardLabel>{`${t("PT_TYPE_OF_INSTITUTION")}`}</CardLabel>
         <Dropdown
           t={t}
           isMandatory={false}
@@ -114,10 +114,10 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           selected={inistitutetype}
           optionKey="code"
           select={setTypeOfInistituteName}
-          disabled = {isUpdateProperty}
+          disabled={isUpdateProperty}
         />
         <CardHeader>{t("PT_AUTH_PERSON_DETAILS")}</CardHeader>
-        <CardLabel>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
+        <CardLabel>{`${t("PT_OWNER_NAME")}`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -125,14 +125,14 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="name"
           onChange={setInistituteName}
           value={name}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })}
         />
-        <CardLabel>{`${t("PT_COMMON_AUTHORISED_PERSON_DESIGNATION")}*`}</CardLabel>
+        <CardLabel>{`${t("PT_COMMON_AUTHORISED_PERSON_DESIGNATION")}`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -140,14 +140,14 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="designation"
           onChange={setDesignationName}
           value={designation}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
             title: t("PT_DESIGNATION_ERROR_MESSAGE"),
           })}
         />
-        <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
+        <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -156,7 +156,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           onChange={setMobileNo}
           value={mobileNumber}
           type={"tel"}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "[6-9]{1}[0-9]{9}",
@@ -164,7 +164,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
             title: t("CORE_COMMON_APPLICANT_ALT_NUMBER_INVALID"),
           })}
         />
-        <CardLabel>{`${t("PT_OWNERSHIP_INFO_TEL_PHONE_NO")}*`}</CardLabel>
+        <CardLabel>{`${t("PT_OWNERSHIP_INFO_TEL_PHONE_NO")}`}</CardLabel>
         <TextInput
           isMandatory={false}
           optionKey="i18nKey"
@@ -173,7 +173,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           onChange={setAltContactNo}
           value={altContactNumber}
           type={"number"}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[0-9]{10,11}$",
@@ -190,7 +190,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           onChange={setEmail}
           type="email"
           value={emailId}
-          disable = {isUpdateProperty}
+          disable={isUpdateProperty}
           // {...(validation = {
           //   isRequired: true,
           //   type: "email",

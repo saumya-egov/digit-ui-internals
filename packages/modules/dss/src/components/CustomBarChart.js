@@ -4,13 +4,7 @@ import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { ResponsiveContainer, Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
 
-const CustomLabel = ({
-  x,
-  y,
-  name,
-  stroke,
-  value,
-}) => {
+const CustomLabel = ({ x, y, name, stroke, value }) => {
   return (
     <>
       <text x={x} y={y} dx={-62} dy={10} fill={stroke}>
@@ -20,8 +14,8 @@ const CustomLabel = ({
         {name}
       </text>
     </>
-  )
-}
+  );
+};
 
 const CustomBarChart = ({
   xDataKey = "value",

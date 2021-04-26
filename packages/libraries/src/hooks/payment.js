@@ -9,7 +9,28 @@ export const useFetchCitizenBillsForBuissnessService = ({ businessService, ...fi
   if (!params["mobileNumber"]) delete params["mobileNumber"];
 
   const { isLoading, error, isError, data, status } = useQuery(
-    ["citizenBillsForBuisnessService", businessService],
+    ["citizenBillsForBuisnessService", businessService, { ...params }],
+    () => Digit.PaymentService.fetchBill(tenantId, { ...params }),
+    { refetchOnMount: true, ...config }
+  );
+  return {
+    isLoading,
+    error,
+    isError,
+    data,
+    status,
+    revalidate: () => queryClient.invalidateQueries(["citizenBillsForBuisnessService", businessService]),
+  };
+};
+
+export const useFetchBillsForBuissnessService = ({ businessService, ...filters }, config = {}) => {
+  const queryClient = useQueryClient();
+  const { tenantId } = Digit.UserService.getUser()?.info || {};
+
+  const params = { businessService, ...filters };
+
+  const { isLoading, error, isError, data, status } = useQuery(
+    ["billsForBuisnessService", businessService],
     () => Digit.PaymentService.fetchBill(tenantId, params),
     config
   );
@@ -19,7 +40,7 @@ export const useFetchCitizenBillsForBuissnessService = ({ businessService, ...fi
     isError,
     data,
     status,
-    revalidate: () => queryClient.invalidateQueries(["citizenBillsForBuisnessService", businessService]),
+    revalidate: () => queryClient.invalidateQueries(["billsForBuisnessService", businessService]),
   };
 };
 

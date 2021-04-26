@@ -8,9 +8,7 @@ const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
   const { pathname } = useLocation();
   const presentInModifyApplication = pathname.includes("modify");
   let isEditProperty = formData?.isEditProperty || false;
-  if(formData?.isUpdateProperty) isEditProperty = true;
-  ;
-
+  if (formData?.isUpdateProperty) isEditProperty = true;
   const inputs = [
     {
       label: "CORE_COMMON_PINCODE",
@@ -44,7 +42,7 @@ const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
         onSelect(config.key, { ...formData.address, city, pincode: e.target.value, slum: null });
       } else {
         onSelect(config.key, { ...formData.address, pincode: e.target.value });
-        setPincodeServicability("CS_COMMON_PINCODE_NOT_SERVICABLE");
+        setPincodeServicability("PT_COMMON_PINCODE_NOT_SERVICABLE");
       }
     }
   }
@@ -54,7 +52,7 @@ const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
     if (foundValue) {
       onSelect(config.key, { pincode });
     } else {
-      setPincodeServicability("CS_COMMON_PINCODE_NOT_SERVICABLE");
+      setPincodeServicability("PT_COMMON_PINCODE_NOT_SERVICABLE");
     }
   };
 
