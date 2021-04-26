@@ -14,13 +14,19 @@ const Layout = ({ rowData }) => {
   const renderChart = (chart, key) => {
     switch (chart.chartType) {
       case "table":
-        return <CustomTable />;
+        return (
+          <CustomTable data={chart} key={key} />
+        )
       case "donut":
-        return <CustomPieChart data={chart} />;
+        return (
+          <CustomPieChart data={chart} key={key} />
+        );
       case "line":
         return <CustomAreaChart data={chart} />;
       case "horizontalBar":
-        return <CustomHorizontalBarChart />;
+        return (
+          <CustomHorizontalBarChart data={chart} />
+        )
       default:
         return <CustomTable />;
     }
@@ -48,24 +54,20 @@ const Layout = ({ rowData }) => {
       case "performing-metric":
         return (
           <GenericChart header={visualizer.name}>
-            <CustomBarChart fillColor={index++ % 2 ? "#00703C" : "#D4351C"} />
+            <CustomBarChart data={visualizer?.charts?.[0]}
+              fillColor={(index++) % 2 ? "#00703C" : "#D4351C"}
+            />
           </GenericChart>
         );
       case "collection":
       case "module":
-        return <Summary key={key} ttile={visualizer.name} data={visualizer} />;
-      case "pie":
         return (
-          <GenericChart header={visualizer.name}>
-            <CustomPieChart />
-          </GenericChart>
-        );
-      case "table":
-        return (
-          <GenericChart header={visualizer.name} showSearch={true} showDownload={true}>
-            <CustomTable />
-          </GenericChart>
-        );
+          <Summary
+            key={key}
+            ttile={visualizer.name}
+            data={visualizer}
+          />
+        )
     }
   };
   return <div className="chart-row">{rowData.vizArray.map((chart, key) => renderVisualizer(chart, key))}</div>;

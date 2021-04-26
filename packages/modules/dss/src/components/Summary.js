@@ -68,44 +68,6 @@ const Summary = ({
             ))}
           </div>
         </div>
-        {/* <div className="wrapper-child">
-          <div className="blocks">
-            <p>{ title }</p>
-          </div>
-          <div className="blocks">
-            <div>
-              <p>Today</p>
-              <p>{ todayValue }</p>
-            </div>
-            <div>
-              <p>This Month</p>
-              <p>{ monthValue }</p>
-            </div>
-            <div>
-              <p>Target</p>
-              <p>{ target }</p>
-            </div>
-          </div>
-        </div>
-        <div className="wrapper-child">
-          <div className="blocks">
-            <p>Tasks</p>
-          </div>
-          <div className="blocks">
-            <div>
-              <p>Today</p>
-              <p>{ task }</p>
-            </div>
-            <div>
-              <p>This Month</p>
-              <p>{ monthlyTask }</p>
-            </div>
-            <div>
-              <p>Target</p>
-              <p>{ sla }</p>
-            </div>
-          </div>
-        </div>  */}
         <div className="wrapper-child">
           <div className="blocks cell-text" style={{ justifyContent: "space-around" }}>
             <p style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>

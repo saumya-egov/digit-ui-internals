@@ -20,6 +20,7 @@ import { ArrowBack, ArrowForward, SortUp, SortDown } from "./svgindex";
 const noop = () => {};
 
 const Table = ({
+  className = "table",
   t,
   data,
   columns,
@@ -101,7 +102,7 @@ const Table = ({
 
   return (
     <React.Fragment>
-      <table className="table" {...getTableProps()}>
+      <table className={className} {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>

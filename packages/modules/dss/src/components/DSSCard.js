@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ArrowRightInbox, ShippingTruck } from "@egovernments/digit-ui-react-components";
@@ -11,23 +11,26 @@ const ArrowRight = ({ to }) => (
 
 const DSSCard = () => {
   const { t } = useTranslation();
+  const ADMIN = Digit.UserService.hasAccess("FSM_ADMIN") || Digit.UserService.hasAccess("EMPLOYEE ADMIN") || false;
   return (
-    <div className="employeeCard card-home">
-      <div className="complaint-links-container">
-        <div className="header">
-          <span className="logo">
-            <ShippingTruck />
-          </span>
-          <span className="text">{t("ES_TITLE_DSS")}</span>
+    <>
+      {ADMIN ? <div className="employeeCard card-home">
+        <div className="complaint-links-container">
+          <div className="header">
+            <span className="logo">
+              <ShippingTruck />
+            </span>
+            <span className="text">{t("ES_TITLE_DSS")}</span>
+          </div>
+          <div className="body">
+            <span className="link">
+              <Link to={`/digit-ui/employee/dss/overview`}>{t("ES_TITLE_DSS_OVERVIEW")}</Link>
+              {<ArrowRight to={`/digit-ui/employee/dss/overview`} />}
+            </span>
+          </div>
         </div>
-        <div className="body">
-          <span className="link">
-            <Link to={`/digit-ui/employee/dss/overview`}>{t("ES_TITLE_DSS_OVERVIEW")}</Link>
-            {<ArrowRight to={`/digit-ui/employee/dss/overview`} />}
-          </span>
-        </div>
-      </div>
-    </div>
+      </div> : null}
+    </>
   );
 };
 
