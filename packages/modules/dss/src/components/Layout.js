@@ -15,11 +15,11 @@ const Layout = ({ rowData }) => {
     switch(chart.chartType) {
       case "table":
         return (
-          <CustomTable />
+          <CustomTable data={chart} key={key} />
         )
       case "donut":
         return (
-          <CustomPieChart data={chart} />
+          <CustomPieChart data={chart} key={key} />
         );
       case "line":
         return (
@@ -27,7 +27,7 @@ const Layout = ({ rowData }) => {
         )
       case "horizontalBar":
         return (
-          <CustomHorizontalBarChart />
+          <CustomHorizontalBarChart data={chart} />
         )
       default:
         return <CustomTable />;
@@ -55,7 +55,9 @@ const Layout = ({ rowData }) => {
       case "performing-metric":
         return (
           <GenericChart header={visualizer.name}>
-            <CustomBarChart fillColor={(index++) % 2 ? "#00703C" : "#D4351C"} />
+            <CustomBarChart data={visualizer?.charts?.[0]}
+              fillColor={(index++) % 2 ? "#00703C" : "#D4351C"}
+            />
           </GenericChart>
         );
       case "collection":
@@ -66,18 +68,6 @@ const Layout = ({ rowData }) => {
             ttile={visualizer.name}
             data={visualizer}
           />
-        )
-      case "pie":
-        return (
-          <GenericChart header={visualizer.name}>
-            <CustomPieChart />
-          </GenericChart>
-        );
-      case "table":
-        return (
-          <GenericChart header={visualizer.name} showSearch={true} showDownload={true}>
-            <CustomTable />
-          </GenericChart>
         )
     }
   }
