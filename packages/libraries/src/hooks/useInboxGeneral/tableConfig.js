@@ -67,7 +67,7 @@ export const TableConfig = (t) => ({
           return (
             <div>
               <span className="link">
-                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>{t("ES_PT_COLLECT_TAXz")}</Link>
+                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>{t("ES_PT_COLLECT_TAX")}</Link>
               </span>
             </div>
           );
