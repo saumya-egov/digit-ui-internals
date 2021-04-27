@@ -99,6 +99,7 @@ const Inbox = ({
           sortParams={sortParams}
           linkPrefix={`${parentRoute}/application-details/`}
           tableConfig={rest?.tableConfig}
+          filterComponent={filterComponent}
         />
         // <div></div>
       );
