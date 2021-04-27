@@ -34,6 +34,23 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
     },
   ];
 
+  const employeeMenu = [
+    {
+      //i18nKey: "Ground +1",
+      i18nKey: "PT_GROUND_PLUS_ONE_OPTION",
+      code: 1,
+    },
+    {
+      //i18nKey: "Ground +2",
+      i18nKey: "PT_GROUND_PLUS_TWO_OPTION",
+      code: 2,
+    },
+    {
+      i18nKey: "NONE",
+      code: "NONE",
+    },
+  ];
+
   const onSkip = () => onSelect();
 
   function selectFloorDetails(value) {
@@ -70,9 +87,9 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
           <Dropdown
             className="form-field"
             isMandatory={config.isMandatory}
-            selected={menu?.length === 1 ? menu[0] : FloorDetails}
-            disable={menu?.length === 1}
-            option={menu}
+            selected={employeeMenu?.length === 1 ? employeeMenu[0] : FloorDetails}
+            disable={employeeMenu?.length === 1}
+            option={employeeMenu}
             select={selectFloorDetails}
             optionKey="i18nKey"
             t={t}
