@@ -36,11 +36,12 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
 
   const goNext = () => {
     let owner = formData.owners && formData.owners[index];
+    let ownerStep;
     if (userType === "employee") {
-      let ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship, emailId: email };
+      ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship, emailId: email };
       onSelect(config.key, { ...formData[config.key], ...ownerStep }, false, index);
     } else {
-      let ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };
+      ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };
       onSelect(config.key, ownerStep, false, index);
     }
   };
