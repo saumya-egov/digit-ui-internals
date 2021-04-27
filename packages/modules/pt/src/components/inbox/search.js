@@ -2,18 +2,27 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+// import _ from "lodash";
 
-const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams, isInboxPage }) => {
+const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams, isInboxPage, defaultSearchParams }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, reset, watch, control } = useForm({
     defaultValues: searchParams,
   });
   const mobileView = innerWidth <= 640;
 
+  // console.log(_.isEqual(defaultSearchParams, searchParams), { defaultSearchParams, searchParams }, "params are defaulted");
+
   const onSubmitInput = (data) => {
     if (!data.mobileNumber) {
       delete data.mobileNumber;
     }
+
+    data.delete = [];
+
+    searchFields.forEach((field) => {
+      if (!data[field.name]) data.delete.push(field.name);
+    });
 
     onSearch(data);
     if (type === "mobile") {
@@ -24,7 +33,13 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
   function clearSearch() {
     const resetValues = searchFields.reduce((acc, field) => ({ ...acc, [field?.name]: "" }), {});
     reset(resetValues);
-    onSearch({});
+    const _newParams = { ...searchParams };
+    _newParams.delete = [];
+    searchFields.forEach((e) => {
+      _newParams.delete.push(e?.name);
+    });
+
+    onSearch({ ..._newParams });
   }
 
   const clearAll = (mobileView) => {

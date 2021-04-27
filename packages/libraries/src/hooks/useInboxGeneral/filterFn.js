@@ -1,9 +1,8 @@
 export const filterFunctions = {
   PT: (filtersArg) => {
-    console.log("filterArgs are", filtersArg);
-
     let { uuid } = Digit.UserService.getUser()?.info || {};
 
+    console.log(filtersArg.propertyIds);
     const searchFilters = {};
     const workflowFilters = {};
 
@@ -45,6 +44,7 @@ export const filterFunctions = {
     if (offset) {
       searchFilters.offset = offset;
     }
+
     return { searchFilters, workflowFilters };
   },
 };

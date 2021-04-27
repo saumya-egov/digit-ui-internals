@@ -26,7 +26,6 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
         {t("ES_INBOX_STATUS")}
       </div>
       {userRoleStates?.map((option, index) => {
-        console.log(option, "state in status");
         return (
           <StatusCount
             businessServices={businessServices}
