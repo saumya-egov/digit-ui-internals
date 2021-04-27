@@ -17,6 +17,8 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
           menu.push({ i18nKey: "COMMON_PROPTYPE_" + proptype[i].code.replaceAll(".", "_"), code: proptype[i].code });
       }
     }
+    menu.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
+    //console.log(menu);
     return menu;
   }
 

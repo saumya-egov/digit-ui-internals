@@ -40,6 +40,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
         });
       }
     }
+    data.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
     return data;
   }
 

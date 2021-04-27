@@ -17,13 +17,13 @@ const IsAnyPartOfThisFloorUnOccupied = ({ t, config, onSelect, userType, formDat
 
   const data = [
     {
-      //i18nKey: "No",
-      i18nKey: "PT_COMMON_NO",
+      //i18nKey: "Yes",
+      i18nKey: "PT_COMMON_YES",
       code: "UNOCCUPIED",
     },
     {
-      //i18nKey: "Yes",
-      i18nKey: "PT_COMMON_YES",
+      //i18nKey: "No",
+      i18nKey: "PT_COMMON_NO",
       code: "UNOCCUPIED",
     },
   ];
