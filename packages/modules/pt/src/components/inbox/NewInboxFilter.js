@@ -4,7 +4,7 @@ import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox, L
 import { useTranslation } from "react-i18next";
 
 import Status from "./Status";
-// import _ from "lodash-es";
+import _ from "lodash";
 
 const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props }) => {
   const { t } = useTranslation();
@@ -140,7 +140,7 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props })
             </div>
             <div>
               <SubmitBar
-                // disabled={_.isEqual(_searchParams, searchParams)}
+                disabled={_.isEqual(_searchParams, searchParams)}
                 onSubmit={() => onFilterChange(_searchParams)}
                 label={t("ES_COMMON_APPLY")}
               />
