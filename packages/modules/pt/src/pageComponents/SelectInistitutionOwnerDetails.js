@@ -63,6 +63,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
         .forEach((linkedCategory) => {
           institutedropDown.push(formDropdown(SubOwnerShipCategory[linkedCategory]));
         });
+    institutedropDown.sort((a, b) => a.label.localeCompare(b.label));
     return institutedropDown;
   };
 
