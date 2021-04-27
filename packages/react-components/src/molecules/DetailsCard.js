@@ -19,7 +19,10 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
       <div>
         {data.map((object, itemIndex) => {
           return (
-            <Link key={itemIndex} to={`${linkPrefix}${object[serviceRequestIdKey]}`}>
+            <Link
+              key={itemIndex}
+              to={`${linkPrefix}${typeof serviceRequestIdKey === "function" ? serviceRequestIdKey(object) : object[serviceRequestIdKey]}`}
+            >
               <div className="details-container">
                 {Object.keys(object).map((name, index) => {
                   return <Details label={name} name={object[name]} key={index} />;
@@ -37,7 +40,10 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
       {data.map((object, itemIndex) => {
         if (serviceRequestIdKey && linkPrefix) {
           return (
-            <Link key={itemIndex} to={`${linkPrefix}${object[serviceRequestIdKey]}`}>
+            <Link
+              key={itemIndex}
+              to={`${linkPrefix}${typeof serviceRequestIdKey === "function" ? serviceRequestIdKey(object) : object[serviceRequestIdKey]}`}
+            >
               <div className="details-container">
                 {Object.keys(object).map((name, index) => {
                   return <Details label={name} name={object[name]} key={index} />;

@@ -83,19 +83,13 @@ const useInboxGeneral = ({
     {
       enabled: isInbox,
       select: (d) => {
-        console.log(d, "data inside select");
         return d;
       },
       ...wfConfig,
     }
   );
-  useEffect(() => {
-    console.log(wfFetching, processInstances, "inside useEffect");
-  }, [wfFetching, processInstances]);
 
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
-
-  console.log(applicationNoFromWF, "hello");
 
   if (isInbox && applicationNoFromWF && !searchFilters[businessIdAliasForSearch])
     searchFilters = { ...searchFilters, [businessIdsParamForSearch]: applicationNoFromWF };
@@ -130,6 +124,7 @@ const useInboxGeneral = ({
     {
       enabled: !isInbox || (!wfFetching && wfSuccess),
       select: (d) => {
+        console.log(d.length + " records fetched", "inside select");
         return d.map((searchResult) => ({
           totalCount: d.totalCount,
           ...combineResponse(searchResult, processInstanceBuisnessIdMap?.[searchResult?.[businessIdAliasForSearch]]),

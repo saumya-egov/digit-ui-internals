@@ -1,14 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox, Localities, SubmitBar } from "@egovernments/digit-ui-react-components";
 
 import { useTranslation } from "react-i18next";
 
 import Status from "./Status";
+// import _ from "lodash-es";
 
-const Filter = ({ searchParams, onFilterChange, ...props }) => {
+const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props }) => {
   const { t } = useTranslation();
-  const clearAll = () => {};
 
+  const [_searchParams, setSearchParams] = useState(() => searchParams);
+
+  const localParamChange = (filterParam) => {
+    let keys_to_delete = filterParam.delete;
+    let _new = { ..._searchParams, ...filterParam };
+    if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
+    delete filterParam.delete;
+    setSearchParams({ ..._new });
+  };
+
+  const clearAll = () => {
+    setSearchParams(defaultSearchParams);
+    onFilterChange(defaultSearchParams);
+  };
   const ApplicationTypeMenu = [
     {
       label: "ES_PT_NEW_PROPERTY",
@@ -23,12 +37,12 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const onServiceSelect = (e, label) => {
-    if (e.target.checked) onFilterChange({ services: [...searchParams.services, label] });
-    else onFilterChange({ services: searchParams.services.filter((o) => o !== label) });
+    if (e.target.checked) localParamChange({ services: [..._searchParams.services, label] });
+    else localParamChange({ services: _searchParams.services.filter((o) => o !== label) });
   };
 
   const selectLocality = (d) => {
-    onFilterChange({ locality: [...searchParams?.locality, d] });
+    localParamChange({ locality: [..._searchParams?.locality, d] });
   };
 
   return (
@@ -69,8 +83,8 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
           </div>
           <div>
             <RadioButtons
-              onSelect={(d) => onFilterChange({ uuid: d })}
-              selectedOption={searchParams?.uuid}
+              onSelect={(d) => localParamChange({ uuid: d })}
+              selectedOption={_searchParams?.uuid}
               t={t}
               optionsKey="name"
               options={[
@@ -84,13 +98,13 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
               </div>
               <Localities selectLocality={selectLocality} tenantId={tenantId} boundaryType="revenue" />
               <div className="tag-container">
-                {searchParams?.locality?.map((locality, index) => {
+                {_searchParams?.locality?.map((locality, index) => {
                   return (
                     <RemoveableTag
                       key={index}
                       text={locality.name}
                       onClick={() => {
-                        onFilterChange({ locality: searchParams?.locality.filter((loc) => loc.code !== locality.code) });
+                        localParamChange({ locality: _searchParams?.locality.filter((loc) => loc.code !== locality.code) });
                       }}
                     />
                   );
@@ -102,7 +116,7 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
                 {t("ES_PT_APP_TYPE")}
               </div>
               {ApplicationTypeMenu.map((e, index) => {
-                const checked = searchParams?.services?.includes(e.value);
+                const checked = _searchParams?.services?.includes(e.value);
                 return (
                   <CheckBox
                     key={index + "service"}
@@ -116,15 +130,21 @@ const Filter = ({ searchParams, onFilterChange, ...props }) => {
             </div>
             <div>
               <Status
-                searchParams={searchParams}
-                businessServices={searchParams.services}
+                _searchParams={_searchParams}
+                businessServices={_searchParams.services}
                 onAssignmentChange={(e, status) => {
-                  if (e.target.checked) onFilterChange({ applicationStatus: [...searchParams?.applicationStatus, status] });
-                  else onFilterChange({ applicationStatus: searchParams?.applicationStatus.filter((e) => e.code !== status.code) });
+                  if (e.target.checked) localParamChange({ applicationStatus: [..._searchParams?.applicationStatus, status] });
+                  else localParamChange({ applicationStatus: _searchParams?.applicationStatus.filter((e) => e.code !== status.code) });
                 }}
               />
             </div>
-            <div>{false && <SubmitBar label={t("ES_COMMON_APPLY")} />}</div>
+            <div>
+              <SubmitBar
+                // disabled={_.isEqual(_searchParams, searchParams)}
+                onSubmit={() => onFilterChange(_searchParams)}
+                label={t("ES_COMMON_APPLY")}
+              />
+            </div>
           </div>
         </div>
       </div>

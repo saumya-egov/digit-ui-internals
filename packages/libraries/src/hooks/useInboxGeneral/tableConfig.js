@@ -8,34 +8,9 @@ const GetSlaCell = (value) => {
   return value < 0 ? <span className="sla-cell-error">{value}</span> : <span className="sla-cell-success">{value}</span>;
 };
 
+const GetMobCell = (value) => <span className="sla-cell">{value}</span>;
+
 export const TableConfig = (t) => ({
-  FSM: {
-    searchColumns: (props) => [{}],
-    inboxColumns: (props) => [
-      {
-        Header: t("ES_INBOX_APPLICATION_NO"),
-        accessor: "searchData.applicationNo",
-        disableSortBy: true,
-        Cell: ({ row, value }) => {
-          return (
-            <div>
-              <span className="link">
-                <Link to={`${props.parentRoute}/${"application-details"}/${value}`}>{value}</Link>
-              </span>
-            </div>
-          );
-        },
-      },
-      {
-        Header: t("ES_INBOX_SLA_DAYS_REMAINING"),
-        accessor: "workflowData.businesssServiceSla",
-        disableSortBy: true,
-        Cell: ({ row, value }) => {
-          return GetSlaCell(value);
-        },
-      },
-    ],
-  },
   PT: {
     searchColumns: (props) => [
       {
@@ -53,6 +28,7 @@ export const TableConfig = (t) => ({
             </div>
           );
         },
+        mobileCell: (original) => GetMobCell(original?.searchData?.["propertyId"]),
       },
       {
         Header: t("ES_INBOX_OWNER_NAME"),
@@ -60,12 +36,14 @@ export const TableConfig = (t) => ({
         Cell: ({ row }) => {
           return GetCell(`${row.original?.searchData["owners"]?.[0].name}`);
         },
+        mobileCell: (original) => GetMobCell(original?.searchData?.["owners"]?.[0].name),
       },
       {
         Header: t("ES_INBOX_LOCALITY"),
 
         Cell: ({ row }) => GetCell(`${row.original?.searchData?.address?.locality?.name}`),
         disableSortBy: true,
+        mobileCell: (original) => GetMobCell(original?.searchData?.address?.locality?.name),
       },
       {
         Header: t("ES_SEARCH_PROPERTY_STATUS"),
@@ -73,6 +51,7 @@ export const TableConfig = (t) => ({
           return GetCell(row.original?.searchData?.status);
         },
         disableSortBy: true,
+        mobileCell: (original) => GetMobCell(original?.searchData?.status),
       },
       {
         Header: t("ES_SEARCH_TAX_DUE"),
@@ -80,6 +59,7 @@ export const TableConfig = (t) => ({
           return GetCell(row.original?.searchData?.due_tax);
         },
         disableSortBy: true,
+        mobileCell: (original) => GetMobCell(original?.searchData?.due_tax),
       },
       {
         Header: t("ES_SEARCH_ACTION"),
@@ -87,12 +67,13 @@ export const TableConfig = (t) => ({
           return (
             <div>
               <span className="link">
-                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>{t("ES_PT_COLLECT_TAX")}</Link>
+                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>{t("ES_PT_COLLECT_TAXz")}</Link>
               </span>
             </div>
           );
         },
         disableSortBy: true,
+        // mobileCell: (original) => GetMobCell(original?.searchData?.["propertyId"]),
       },
     ],
     inboxColumns: (props) => [
@@ -109,17 +90,20 @@ export const TableConfig = (t) => ({
             </div>
           );
         },
+        mobileCell: (original) => GetMobCell(original?.searchData?.["propertyId"]),
       },
       {
         Header: t("ES_INBOX_OWNER"),
         Cell: ({ row }) => {
           // console.log(row.original?.searchData["owner"]);
-          return GetCell(`${row.original?.searchData["owners"]?.[0].name}`);
+          return GetCell(`${row.original?.searchData?.["owners"]?.[0].name}`);
         },
+        mobileCell: (original) => GetMobCell(original?.searchData?.["owners"]?.[0].name),
       },
       {
         Header: t("ES_INBOX_APPLICATION_TYPE"),
         Cell: ({ row }) => GetCell(`${row.original?.searchData["propertyType"]}`),
+        mobileCell: (original) => GetMobCell(original?.searchData?.["propertyType"]),
       },
       {
         Header: t("ES_INBOX_STATUS"),
@@ -127,6 +111,7 @@ export const TableConfig = (t) => ({
           const wf = row.original?.workflowData;
           return GetCell(t(`PT_INBOX_STATUS_${wf?.state?.["state"]}`));
         },
+        mobileCell: (original) => GetMobCell(original?.workflowData?.state?.["state"]),
       },
       {
         Header: t("ES_INBOX_SLA_DAYS_REMAINING"),
@@ -135,7 +120,9 @@ export const TableConfig = (t) => ({
           const math = Math.round(wf.businesssServiceSla / (24 * 60 * 60 * 1000)) || "-";
           return GetSlaCell(math);
         },
+        mobileCell: (original) => GetSlaCell(Math.round(original?.workflowData?.["businesssServiceSla"] / (24 * 60 * 60 * 1000))),
       },
     ],
+    serviceRequestIdKey: (original) => original?.[t("ES_INBOX_UNIQUE_PROPERTY_ID")]?.props?.children,
   },
 });
