@@ -6,10 +6,10 @@ import InboxLinks from "./inbox/InboxLink";
 import ApplicationTable from "./inbox/ApplicationTable";
 import SearchApplication from "./inbox/search";
 
-const DesktopInbox = ({ tableConfig, ...props }) => {
+const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
-  const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent("PT_INBOX_FILTER"));
+  const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
 
   // searchData, workFlowData
 

@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { Card, DetailsCard, Loader, PopUp, SearchAction } from "@egovernments/digit-ui-react-components";
 import { FilterAction } from "@egovernments/digit-ui-react-components";
-import Filter from "./Filter";
 import SearchApplication from "./search";
 import SortBy from "./SortBy";
 
@@ -21,19 +20,15 @@ export const ApplicationCard = ({
   sortParams,
   linkPrefix,
   removeParam,
+  filterComponent,
 }) => {
   const [type, setType] = useState(isSearch ? "SEARCH" : "");
   const [popup, setPopup] = useState(isSearch ? true : false);
-  const [params, setParams] = useState(searchParams);
   const [_sortparams, setSortParams] = useState(sortParams);
+  const [FilterComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
 
-  const selectParams = (param) => {
-    setParams((o) => ({ ...o, ...param }));
-  };
-
-  const onSearchPara = (param) => {
-    onFilterChange({ ...params, ...param });
-    setType("");
+  const onSearchFilter = (params) => {
+    onFilterChange(params);
     setPopup(false);
   };
 
@@ -44,7 +39,6 @@ export const ApplicationCard = ({
   const handlePopupClose = () => {
     setPopup(false);
     setType("");
-    setParams(searchParams);
     setSortParams(sortParams);
   };
 
@@ -103,16 +97,7 @@ export const ApplicationCard = ({
         <PopUp>
           {type === "FILTER" && (
             <div className="popup-module">
-              {
-                <Filter
-                  onFilterChange={selectParams}
-                  onClose={handlePopupClose}
-                  onSearch={onSearchPara}
-                  type="mobile"
-                  searchParams={params}
-                  removeParam={removeParam}
-                />
-              }
+              {<FilterComp onFilterChange={onSearchFilter} Close={handlePopupClose} type="mobile" searchParams={searchParams} />}
             </div>
           )}
           {type === "SORT" && (
