@@ -17,13 +17,13 @@ const IsAnyPartOfThisFloorUnOccupied = ({ t, config, onSelect, userType, formDat
 
   const data = [
     {
-      //i18nKey: "No",
-      i18nKey: "PT_COMMON_NO",
+      //i18nKey: "Yes",
+      i18nKey: "PT_COMMON_YES",
       code: "UNOCCUPIED",
     },
     {
-      //i18nKey: "Yes",
-      i18nKey: "PT_COMMON_YES",
+      //i18nKey: "No",
+      i18nKey: "PT_COMMON_NO",
       code: "UNOCCUPIED",
     },
   ];
@@ -52,17 +52,17 @@ const IsAnyPartOfThisFloorUnOccupied = ({ t, config, onSelect, userType, formDat
       if (IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_NO") {
         if (formData?.noOfFloors?.i18nKey === "PT_GROUND_PLUS_ONE_OPTION" && index < 1 && index > -1) {
           let newIndex1 = parseInt(index) + 1;
-          onSelect("floordetails", {}, false, newIndex1, true);
+          onSelect("floordetails", {}, true, newIndex1, true);
         } else if (formData?.noOfFloors?.i18nKey === "PT_GROUND_PLUS_TWO_OPTION" && index < 2 && index > -1) {
           let newIndex2 = parseInt(index) + 1;
-          onSelect("floordetails", {}, false, newIndex2, true);
+          onSelect("floordetails", {}, true, newIndex2, true);
         } else if (
           (formData?.noOofBasements?.i18nKey === "PT_ONE_BASEMENT_OPTION" || formData?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION") &&
           index > -1
         ) {
-          onSelect("floordetails", {}, false, "-1", true);
+          onSelect("floordetails", {}, true, "-1", true);
         } else if (formData?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION" && index != -2) {
-          onSelect("floordetails", {}, false, "-2", true);
+          onSelect("floordetails", {}, true, "-2", true);
         }
       }
     } else {

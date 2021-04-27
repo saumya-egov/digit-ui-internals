@@ -44,7 +44,7 @@ const PropertyBasementsDetails = ({ t, config, onSelect, userType, formData }) =
           onSelect={setBasementDetails}
         />
       </FormStep>
-      {BasementDetails && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_BASEMENT_NUMBER_INFO_MSG", BasementDetails)} />}
+      {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_BASEMENT_NUMBER_INFO_MSG", BasementDetails)} />}
     </React.Fragment>
   );
 };
