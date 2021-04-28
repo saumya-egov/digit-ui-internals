@@ -63,7 +63,7 @@ export const BillList = ({ billsList, currentPath, businessService }) => {
     <React.Fragment>
       <div className="static">
         <div className="static-wrapper">
-          <Header>{t("CS_TITLE_MY_BILLS")}</Header>
+          <Header>{t("CS_TITLE_MY_BILLS") + ` (${applicationList.length})`}</Header>
           {applicationList?.length > 0 &&
             getKeyNotesConfig &&
             applicationList.map((bill, index) => (

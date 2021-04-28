@@ -15,4 +15,6 @@ function getDate(timestamp) {
   return yyyy + "-" + mm + "-" + dd;
 }
 
-export { getDate };
+const monthNames = ["Jan", "Feb", "March", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export { getDate, monthNames };
