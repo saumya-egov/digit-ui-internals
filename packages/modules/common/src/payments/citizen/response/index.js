@@ -124,11 +124,11 @@ export const SuccessfulPayment = (props) => {
       {business_service !== "PT" ? <CardText>{t("CS_PAYMENT_SUCCESSFUL_DESCRIPTION")}</CardText> : <React.Fragment></React.Fragment>}{" "}
       {generatePdfKey ? (
         <div className="primary-label-btn d-grid" onClick={printReciept}>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-            <path d="M0 0h24v24H0z" fill="none" />
-            <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" />
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#f47738">
+            <path d="M0 0h24v24H0V0z" fill="none" />
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-8 2V5h2v6h1.17L12 13.17 9.83 11H11zm-6 7h14v2H5z" />
           </svg>
-          {t("COMMON_PRINT_RECEIPT")}
+          {t("COMMON_DOWNLOAD_THE_RECEIPT")}
         </div>
       ) : null}
       <StatusTable>

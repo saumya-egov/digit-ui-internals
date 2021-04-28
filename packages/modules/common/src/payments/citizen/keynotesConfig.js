@@ -1,6 +1,6 @@
 import React from "react";
 
-export const getKeyNotesConfig = (businessService) => {
+export const getKeyNotesConfig = (businessService, t) => {
   const businessId = businessService?.toLowerCase().split(".")[0];
 
   switch (businessId) {

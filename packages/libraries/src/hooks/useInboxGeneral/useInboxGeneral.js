@@ -6,6 +6,7 @@ import { TableConfig } from "./tableConfig";
 import { filterFunctions } from "./filterFn";
 import { getSearchFields } from "./searchFields";
 import { useEffect } from "react";
+import { convertToLocale } from "@egovernments/digit-ui-module-pt/src/utils";
 
 const inboxConfig = (tenantId, filters) => ({
   PT: {
@@ -43,6 +44,7 @@ const defaultCatchSearch = (Err) => {
     )
   )
     return [];
+  console.log(Err?.response?.data, " this is error");
   throw Err;
 };
 
