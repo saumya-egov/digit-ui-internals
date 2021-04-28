@@ -14,7 +14,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
   const { data, isLoading } = state?.bill ? { isLoading: false } : Digit.Hooks.useFetchPayment({ tenantId, businessService, consumerCode });
   const { minAmountPayable, isAdvanceAllowed } = paymentRules;
 
-  const billDetails = (bill?.billDetails.length && bill?.billDetails[0]) || [];
+  const billDetails = bill?.billDetails?.sort((a, b) => b.fromPeriod - a.fromPeriod)?.[0] || [];
   const Arrears =
     bill?.billDetails
       ?.sort((a, b) => b.fromPeriod - a.fromPeriod)
