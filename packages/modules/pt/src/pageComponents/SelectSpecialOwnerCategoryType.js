@@ -9,6 +9,7 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
   const isUpdateProperty = formData?.isUpdateProperty || false;
   const [ownerType, setOwnerType] = useState(formData.owners && formData.owners[index] && formData.owners[index].ownerType);
   const { data: Menu, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "OwnerType");
+  Menu ? Menu.sort((a, b) => a.name.localeCompare(b.name)) : "";
 
   const onSkip = () => onSelect();
 

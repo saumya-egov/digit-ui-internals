@@ -1,3 +1,5 @@
+import React from "react";
+
 export const getKeyNotesConfig = (businessService) => {
   const businessId = businessService?.toLowerCase().split(".")[0];
 
@@ -7,7 +9,17 @@ export const getKeyNotesConfig = (businessService) => {
         "my-bill": [
           {
             keyValue: "CS_COMMON_AMOUNT_DUE",
-            keyPath: ["totalAmount", (d) => "₹" + d.toFixed(2)],
+            keyPath: [
+              (d) => {
+                const overdueBy = new Date().getTime() - new Date(d.billDetails[0]?.toPeriod).getTime();
+                return (
+                  <React.Fragment>
+                    {"₹" + d["totalAmount"].toFixed(2)}
+                    <span style={{ fontSize: "16px", fontWeight: "normal" }}>{` ( overdue By ${Math.floor(overdueBy / (86400 * 1000))} days)`}</span>
+                  </React.Fragment>
+                );
+              },
+            ],
             fallback: "N/A",
             noteStyle: { fontWeight: "bold", fontSize: "24px", paddingTop: "5px" },
           },
@@ -27,13 +39,30 @@ export const getKeyNotesConfig = (businessService) => {
             fallback: "CS_APPLICATION_TYPE_DESLUDGING",
           },
           {
+            keyValue: "CS_PAYMENT_BILLING_PERIOD",
+            keyPath: [
+              "billDetails",
+              (d) => {
+                console.log(d, "in bill details");
+                const { fromPeriod, toPeriod } = d[0];
+                if (fromPeriod && toPeriod) {
+                  let from = new Date(fromPeriod).getFullYear().toString();
+                  let to = new Date(toPeriod).getFullYear().toString();
+                  return "FY " + from + "-" + to;
+                } else return "N/A";
+              },
+            ],
+            fallback: "N/A",
+          },
+          {
             keyValue: "PT_DUE_DATE",
             keyPath: [
               "billDetails",
               (d) => {
                 if (!d[0]?.toPeriod) return "N/A";
                 const date = new Date(d[0]?.toPeriod);
-                return `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`;
+                const month = Digit.Utils.date.monthNames[date.getMonth()];
+                return `${date.getDate()} ${month} ${date.getFullYear()}`;
               },
             ],
             fallback: "N/A",

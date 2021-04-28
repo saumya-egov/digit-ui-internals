@@ -111,7 +111,7 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
           onSelect={selectFloorDetails}
         />
       </FormStep>
-      {FloorDetails && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_FLOOR_NUMBER_INFO_MSG", FloorDetails)} />}
+      {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_FLOOR_NUMBER_INFO_MSG", FloorDetails)} />}
     </React.Fragment>
   );
 };

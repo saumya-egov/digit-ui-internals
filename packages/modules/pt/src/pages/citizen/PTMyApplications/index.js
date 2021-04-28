@@ -9,8 +9,11 @@ export const PTMyApplications = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ tenantId });
+  let filter = window.location.href.split("/").pop();
+  let filters =
+    filter === "limit:50" ? { limit: 50, sortOrder: "ASC", sortBy: "createdTime" } : { limit: 4, sortOrder: "ASC", sortBy: "createdTime" };
 
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, filters);
   if (isLoading) {
     return <Loader />;
   }
@@ -28,7 +31,19 @@ export const PTMyApplications = () => {
             </div>
           ))}
         {!applicationsList?.length > 0 && <p style={{ marginLeft: "16px", marginTop: "16px" }}>{t("PT_NO_APPLICATION_FOUND_MSG")}</p>}
+
+        {filter !== "limit:50" && (
+          <div>
+            <p style={{ marginLeft: "16px", marginTop: "16px" }}>
+              {t("PT_LOAD_MORE_MSG")}{" "}
+              <span className="link">
+                <Link to="/digit-ui/citizen/pt/property/my-applications/limit:50">{t("PT_COMMON_CLICK_HERE")}</Link>
+              </span>
+            </p>
+          </div>
+        )}
       </div>
+
       <p style={{ marginLeft: "16px", marginTop: "16px" }}>
         {t("PT_TEXT_NOT_ABLE_TO_FIND_THE_APPLICATION")}{" "}
         <span className="link">

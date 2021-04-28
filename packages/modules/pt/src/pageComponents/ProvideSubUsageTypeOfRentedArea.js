@@ -40,6 +40,7 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
         });
       }
     }
+    data.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
     return data;
   }
 

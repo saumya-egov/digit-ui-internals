@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FormStep, RadioButtons, CitizenInfoLabel, LabelFieldPair, CardLabel, Dropdown } from "@egovernments/digit-ui-react-components";
+import { cardBodyStyle } from "../utils";
 
 const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   const [usageCategoryMajor, setPropertyPurpose] = useState(formData?.usageCategoryMajor);
