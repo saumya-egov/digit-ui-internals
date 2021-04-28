@@ -12,7 +12,6 @@ const NewApplication = () => {
   const history = useHistory();
 
   const onFormValueChange = (setValue, formData) => {
-    setSubmitValve(true);
     if (
       formData?.address?.city?.code &&
       formData?.address?.locality?.code &&
@@ -24,13 +23,15 @@ const NewApplication = () => {
       formData?.usageCategoryMinor?.subuagecode &&
       formData?.owners?.ownerType?.code &&
       formData?.documents?.documents?.length === formData?.documents?.propertyTaxDocumentsLength &&
-      formData?.noOfFloors?.i18nKey
+      formData?.landarea
     ) {
       if (formData?.ownershipCategory?.code !== "INDIVIDUAL.SINGLEOWNER" && formData?.owners?.altContactNumber) {
-        if (
-          (formData?.PropertyType?.code === "VACANT" && formData?.landarea?.length > 0) ||
-          (formData?.PropertyType?.code !== "VACANT" && formData?.units[0]?.usageCategory)
-        ) {
+        const filteredUnitsArray = formData?.units?.filter(
+          (unit) => unit?.constructionDetail?.builtUpArea && unit?.floorNo && unit?.occupancyType && unit?.usageCategory
+        );
+        if (formData?.PropertyType?.code === "VACANT") {
+          setSubmitValve(true);
+        } else if (formData?.PropertyType?.code !== "VACANT" && filteredUnitsArray?.length >= formData?.noOfFloors?.code) {
           setSubmitValve(true);
         } else {
           setSubmitValve(false);

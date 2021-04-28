@@ -12,6 +12,10 @@ import {
 const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
   const [FloorDetails, setFloorDetails] = useState(formData?.noOfFloors);
 
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
+  const { data: Menu = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Floor") || {};
+
   const menu = [
     {
       //i18nKey: "Ground Floor Only",
@@ -34,22 +38,7 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
     },
   ];
 
-  const employeeMenu = [
-    {
-      //i18nKey: "Ground +1",
-      i18nKey: "PT_GROUND_PLUS_ONE_OPTION",
-      code: 1,
-    },
-    {
-      //i18nKey: "Ground +2",
-      i18nKey: "PT_GROUND_PLUS_TWO_OPTION",
-      code: 2,
-    },
-    {
-      i18nKey: "NONE",
-      code: "NONE",
-    },
-  ];
+  const employeeMenu = Menu?.PropertyTax?.Floor?.filter((floor) => floor?.code > 0) || [];
 
   const onSkip = () => onSelect();
 
@@ -91,7 +80,7 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
             disable={employeeMenu?.length === 1}
             option={employeeMenu}
             select={selectFloorDetails}
-            optionKey="i18nKey"
+            optionKey="name"
             t={t}
           />
         </LabelFieldPair>
