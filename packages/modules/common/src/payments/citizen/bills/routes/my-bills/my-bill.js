@@ -17,7 +17,7 @@ const MyBill = ({ bill, currentPath, businessService, getKeyNotesConfig }) => {
     <React.Fragment>
       {typeof getKeyNotesConfig === "function" && (
         <Card>
-          {getKeyNotesConfig(businessService)["my-bill"].map((obj, index) => {
+          {getKeyNotesConfig(businessService, t)["my-bill"].map((obj, index) => {
             const value = obj.keyPath.reduce((acc, key) => {
               if (typeof key === "function") acc = key(acc);
               else acc = acc[key];
