@@ -18,17 +18,17 @@ const BillSumary = ({ billAccountDetails, total, businessService, arrears }) => 
             );
           })}
 
-        {arrears ? (
+        {
           <div className="bill-account-details">
             <div className="label">{t("COMMON_ARREARS")}</div>
-            <div className="value">₹ {arrears}</div>
+            <div className="value">₹ {arrears?.toFixed?.(2) || Number(0).toFixed(2)}</div>
           </div>
-        ) : null}
+        }
 
         <hr className="underline" />
         <div className="amount-details">
           <div className="label">{t("CS_PAYMENT_TOTAL_AMOUNT")}</div>
-          <div className="value">₹ {Number(total)?.toFixed(2)}</div>
+          <div className="value">₹ {Number(total)}</div>
         </div>
       </div>
     </React.Fragment>

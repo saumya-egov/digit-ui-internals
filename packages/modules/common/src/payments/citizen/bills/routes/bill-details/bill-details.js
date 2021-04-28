@@ -109,7 +109,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
             )}
             {formError === "CS_CANT_PAY_BELOW_MIN_AMOUNT" ? (
               <span className="card-label-error">
-                {t(formError)}: {minAmountPayable}
+                {t(formError)}: {"₹" + minAmountPayable}
               </span>
             ) : (
               <span className="card-label-error">{t(formError)}</span>
