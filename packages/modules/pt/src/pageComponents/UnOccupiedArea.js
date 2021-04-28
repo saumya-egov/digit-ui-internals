@@ -40,6 +40,13 @@ const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
         setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
       }
     }
+    if (
+      formData?.PropertyType?.code === "BUILTUP.SHAREDPROPERTY" &&
+      parseInt(formData?.floordetails?.builtUpArea) <
+        parseInt(e.target.value) + parseInt(formData?.landarea?.floorarea || "0") + parseInt(formData?.Constructiondetails?.RentArea || "0")
+    ) {
+      setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
+    }
   }
 
   const getheaderCaption = () => {
