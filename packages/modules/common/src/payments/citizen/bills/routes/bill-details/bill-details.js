@@ -11,11 +11,14 @@ const BillDetails = ({ paymentRules, businessService }) => {
   const { consumerCode } = useParams();
   const [bill, setBill] = useState(state?.bill);
   const tenantId = state?.tenantId || Digit.UserService.getUser().info.tenantId;
-  const { data, isLoading } = state?.bill ? { isLoading: false } : Digit.Hooks.useFetchPayment({ tenantId, businessService: "PT", consumerCode });
+  const { data, isLoading } = state?.bill ? { isLoading: false } : Digit.Hooks.useFetchPayment({ tenantId, businessService, consumerCode });
   const { minAmountPayable, isAdvanceAllowed } = paymentRules;
 
   const billDetails = (bill?.billDetails.length && bill?.billDetails[0]) || [];
-  const Arrears = bill?.billDetails?.reduce((total, current, index) => (index == 0 ? total : total + current.amount), 0) || 0;
+  const Arrears =
+    bill?.billDetails
+      ?.sort((a, b) => b.fromPeriod - a.fromPeriod)
+      ?.reduce((total, current, index) => (index === 0 ? total : total + current.amount), 0) || 0;
 
   const { key, label } = Digit.Hooks.useApplicationsForBusinessServiceSearch({ businessService }, { enabled: false });
 
