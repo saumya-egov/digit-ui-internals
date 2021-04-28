@@ -68,7 +68,7 @@ const AssessmentDetails = () => {
       { Assessment: AssessmentData },
       {
         onError: (error, variables) => {
-          setShowToast({ key: "error", action: error });
+          setShowToast({ key: "error", action: error?.response?.data?.Errors[0]?.message || error });
           setTimeout(closeToast, 5000);
         },
         onSuccess: (data, variables) => {
