@@ -32,7 +32,7 @@ const PTSelectGeolocation = ({ t, config, onSelect, formData = {} }) => {
       skip={onSkip}
       t={t}
       position={geoLocation}
-      onSave={() => onSelect(config.key, { geoLocation, pincode }, false)}
+      onSave={() => onSelect(config.key, { geoLocation, pincode })}
       onChange={(code, location) => onChange(code, location)}
       disabled={pincode === "" || isEditProperty}
       forcedError={t(pincodeServicability)}

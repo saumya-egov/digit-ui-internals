@@ -54,6 +54,12 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
         setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
       }
     }
+    if (
+      formData?.PropertyType?.code === "BUILTUP.SHAREDPROPERTY" &&
+      parseInt(formData?.floordetails?.builtUpArea) < parseInt(e.target.value) + parseInt(formData?.landarea?.floorarea || "0")
+    ) {
+      setunitareaerror("PT_RENTED_AREA_LESS_THAN_BUILTUP");
+    }
   }
   function setPropertyAnnualRent(e) {
     setAnnualRent(e.target.value);
