@@ -12,7 +12,7 @@ const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
     [UnOccupiedArea, setUnOccupiedArea] = useState(formData?.UnOccupiedArea?.UnOccupiedArea);
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     let index = window.location.href.split("/").pop();
     if (userType !== "employee" && formData?.IsAnyPartOfThisFloorUnOccupied?.i18nKey === "PT_COMMON_NO") {
@@ -26,7 +26,7 @@ const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
         onSelect(config.key, {}, true, index);
       }
     }
-  });
+  }); */
 
   let validation = {};
   const [unitareaerror, setunitareaerror] = useState(null);

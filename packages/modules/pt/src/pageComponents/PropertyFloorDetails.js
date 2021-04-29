@@ -32,10 +32,10 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
       i18nKey: "PT_GROUND_PLUS_TWO_OPTION",
       code: 2,
     },
-    {
+    /* {
       i18nKey: "NONE",
       code: "NONE",
-    },
+    }, */ //in case of independent roperty floor can't be none, if it is then user need to select vacant type.
   ];
 
   const employeeMenu = Menu?.PropertyTax?.Floor?.filter((floor) => floor?.code > 0) || [];
