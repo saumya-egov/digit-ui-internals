@@ -287,7 +287,7 @@ export const getunits = (data) => {
           builtUpArea: parseInt(data?.landarea?.floorarea),
         },
         tenantId: data.tenantId,
-        usageCategory: getusageCategory(data),
+        usageCategory: data?.subusagetype?.subuagecode,
       });
     }
     unit.push({
@@ -360,7 +360,7 @@ export const getunitarray = (i, unitsdata, unit, data) => {
           builtUpArea: parseInt(unitsdata[i]?.floorarea),
         },
         tenantId: data.tenantId,
-        usageCategory: getusageCategory(data, i),
+        usageCategory: unitsdata[i].subuagecode,
       });
     }
     unit.push({

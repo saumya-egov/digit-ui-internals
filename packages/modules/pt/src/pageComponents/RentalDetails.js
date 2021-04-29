@@ -25,12 +25,12 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
       : "";
   }
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       /* let index = window.location.href.charAt(window.location.href.length - 1);
       let unit = formData.units && formData.units[index];
-      onSelect(config.key, unit, true, index); */
+      onSelect(config.key, unit, true, index); 
 
       if (!isNaN(index)) {
         //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -41,7 +41,7 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
         onSelect(config.key, {}, true, index);
       }
     }
-  });
+  }); */
 
   const [unitareaerror, setunitareaerror] = useState(null);
   const [areanotzeroerror, setareanotzeroerror] = useState(null);
