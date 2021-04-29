@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FormStep, UploadFile, CardLabelDesc, Dropdown } from "@egovernments/digit-ui-react-components";
+import { FormStep, UploadFile, CardLabelDesc, Dropdown, CardLabel } from "@egovernments/digit-ui-react-components";
 
 const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
@@ -109,6 +109,7 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
     >
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_TYPES`)}</CardLabelDesc>
       <CardLabelDesc>{t(`PT_UPLOAD_RESTRICTIONS_SIZE`)}</CardLabelDesc>
+      <CardLabel>{`${t("PT_CATEGORY_DOCUMENT_TYPE")}`}</CardLabel>
       <Dropdown
           t={t}
           isMandatory={false}
@@ -116,6 +117,7 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
           selected={dropdownValue}
           optionKey="i18nKey"
           select={setTypeOfDropdownValue}
+          placeholder={t(`PT_MUTATION_SELECT_DOC_LABEL`)}
         />
       <UploadFile
         extraStyleName={"propertyCreate"}
