@@ -23,6 +23,9 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
     if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY" && parseInt(formData?.units[index]?.builtUpArea) < e.target.value) {
       setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
     }
+    if (formData?.PropertyType?.code === "BUILTUP.SHAREDPROPERTY" && parseInt(formData?.floordetails?.builtUpArea) < e.target.value) {
+      setunitareaerror("PT_SELFOCCUPIED_AREA_LESS_THAN_BUILTUP");
+    }
   }
 
   const goNext = () => {

@@ -1,13 +1,16 @@
 import React from "react";
 import LinkButton from "./LinkButton";
 import { PrimaryDownlaodIcon } from "./svgindex";
+import { useTranslation } from "react-i18next";
 
 const MultiLink = ({ onHeadClick, displayOptions = false, options }) => {
+  const { t } = useTranslation();
+
   return (
     <div>
       <div className="multilink-labelWrap" onClick={onHeadClick}>
         <PrimaryDownlaodIcon />
-        <LinkButton label="CS_COMMON_DOWNLOAD" className="multilink-link-button" />
+        <LinkButton label={t("CS_COMMON_DOWNLOAD")} className="multilink-link-button" />
       </div>
       {displayOptions ? (
         <div className="multilink-optionWrap">

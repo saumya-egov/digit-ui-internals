@@ -12,10 +12,7 @@ const PTApplicationDetails = () => {
   const { acknowledgementIds } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const coreData = Digit.Hooks.useCoreData();
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({
-    tenantId,
-    filters: { acknowledgementIds },
-  });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, { filters: { acknowledgementIds } });
 
   const application = data?.Properties[0];
   let units = [];

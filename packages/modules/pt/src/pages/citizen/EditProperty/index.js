@@ -29,11 +29,11 @@ const getPropertyEditDetails = (data = {}) => {
       owner.documents &&
         owner.documents.map((doc) => {
           if (doc.documentType.includes("SPECIALCATEGORYPROOF")) {
-            doc.documentType = { code: doc.documentType}
+            doc.documentType = { code: doc.documentType };
             document["specialProofIdentity"] = doc;
           }
           if (doc.documentType.includes("IDENTITYPROOF")) {
-            doc.documentType = { code: doc.documentType}
+            doc.documentType = { code: doc.documentType };
             document["proofIdentity"] = doc;
           }
         });
@@ -63,7 +63,7 @@ const getPropertyEditDetails = (data = {}) => {
   }
   data.address.pincode = data?.address?.pincode;
   let addressDocs = data?.documents?.filter((doc) => doc.documentType.includes("ADDRESSPROOF"));
-  addressDocs[0].documentType = { code: addressDocs[0].documentType }
+  addressDocs[0].documentType = { code: addressDocs[0].documentType };
   if (data?.address?.documents) {
     data.address.documents["ProofOfAddress"] = addressDocs[0];
   } else {
@@ -129,8 +129,7 @@ const EditProperty = ({ parentRoute }) => {
   const propertyIds = window.location.href.split("/").pop();
   let application = {};
   const typeOfProperty = window.location.href.includes("update=true");
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({
-    tenantId,
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, {
     filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
   });
   sessionStorage.setItem("isEditApplication", false);
