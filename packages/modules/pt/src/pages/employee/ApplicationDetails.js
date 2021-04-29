@@ -45,6 +45,12 @@ const ApplicationDetails = () => {
             roles: ["PT_CEMP"],
             tenantId: "pb",
           },
+          {
+            action: "UPDATE",
+            auditDetails: null,
+            roles: ["PT_CEMP"],
+            tenantId: "pb",
+          },
         ],
       },
     };
