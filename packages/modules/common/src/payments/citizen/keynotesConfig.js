@@ -16,9 +16,9 @@ export const getKeyNotesConfig = (businessService, t) => {
                 return (
                   <React.Fragment>
                     {"₹" + d["totalAmount"]}
-                    <span style={{ fontSize: "16px", fontWeight: "normal" }}>{` ( ${t("CS_PAYMENT_OVERDUE")} ${days} ${t(
-                      days === 1 ? "CS_COMMON_DAY" : "CS_COMMON_DAYS"
-                    )})`}</span>
+                    <span className={days >= 0 ? "card-label-error" : ""} style={{ fontSize: "16px", fontWeight: "normal" }}>{` ( ${t(
+                      "CS_PAYMENT_OVERDUE"
+                    )} ${days} ${t(days === 1 ? "CS_COMMON_DAY" : "CS_COMMON_DAYS")})`}</span>
                   </React.Fragment>
                 );
               },
