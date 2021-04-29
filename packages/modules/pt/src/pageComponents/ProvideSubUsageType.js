@@ -24,24 +24,39 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   let data = [];
 
   function getSubUsagedata(subusageoption) {
-    for (i = 0; i < subusageoption.length; i++) {
-      if (
-        Array.isArray(subusageoption) &&
-        subusageoption.length > 0 &&
-        subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] &&
-        subusageoption[i].code.split(".").length == 4
-      ) {
-        data.push({
-          i18nKey:
-            "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" +
-            subusageoption[i].code.split(".")[1] +
-            "_" +
-            subusageoption[i].code.split(".")[subusageoption[i].code.split(".").length - 1],
-        });
+    if (userType === "employee") {
+      return subusageoption
+        ?.map((item) => {
+          if (item?.code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] && item?.code.split(".").length == 4) {
+            return {
+              i18nKey:
+                "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" + item?.code.split(".")[1] + "_" + item?.code.split(".")[item?.code.split(".").length - 1],
+            };
+          }
+          return { filter: true };
+        })
+        ?.filter((item) => !item?.filter)
+        ?.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
+    } else {
+      for (i = 0; i < subusageoption.length; i++) {
+        if (
+          Array.isArray(subusageoption) &&
+          subusageoption.length > 0 &&
+          subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] &&
+          subusageoption[i].code.split(".").length == 4
+        ) {
+          data.push({
+            i18nKey:
+              "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" +
+              subusageoption[i].code.split(".")[1] +
+              "_" +
+              subusageoption[i].code.split(".")[subusageoption[i].code.split(".").length - 1],
+          });
+        }
       }
+      data.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
+      return data;
     }
-    data.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
-    return data;
   }
 
   useEffect(() => {
