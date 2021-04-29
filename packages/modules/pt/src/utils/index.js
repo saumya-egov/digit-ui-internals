@@ -287,7 +287,10 @@ export const getunits = (data) => {
           builtUpArea: parseInt(data?.landarea?.floorarea),
         },
         tenantId: data.tenantId,
-        usageCategory: data?.subusagetype?.subuagecode,
+        usageCategory:
+          data?.isResdential?.i18nKey === "PT_COMMON_YES" || data?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS"
+            ? data?.isResdential?.code
+            : data?.subusagetype?.subuagecode,
       });
     }
     unit.push({
@@ -360,7 +363,10 @@ export const getunitarray = (i, unitsdata, unit, data) => {
           builtUpArea: parseInt(unitsdata[i]?.floorarea),
         },
         tenantId: data.tenantId,
-        usageCategory: unitsdata[i].subuagecode,
+        usageCategory:
+          data?.isResdential?.i18nKey === "PT_COMMON_YES" || data?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS"
+            ? data?.isResdential?.code
+            : unitsdata[i].subuagecode,
       });
     }
     unit.push({
