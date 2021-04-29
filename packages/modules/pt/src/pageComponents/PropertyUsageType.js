@@ -14,17 +14,28 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   let menu = [];
 
   function usageCategoryMajorMenu(usagecat) {
-    for (i = 0; i < 10; i++) {
-      if (
-        Array.isArray(usagecat) &&
-        usagecat.length > 0 &&
-        usagecat[i].code.split(".")[0] == "NONRESIDENTIAL" &&
-        usagecat[i].code.split(".").length == 2
-      ) {
-        menu.push({ i18nKey: "PROPERTYTAX_BILLING_SLAB_" + usagecat[i].code.split(".")[1], code: usagecat[i].code });
+    if (userType === "employee") {
+      return usagecat
+        ?.map((item) => {
+          if (item?.code.split(".")[0] == "NONRESIDENTIAL" && item?.code.split(".").length == 2) {
+            return { i18nKey: "PROPERTYTAX_BILLING_SLAB_" + item?.code.split(".")[1], code: item?.code };
+          }
+          return { filter: true };
+        })
+        ?.filter((item) => !item?.filter);
+    } else {
+      for (i = 0; i < 10; i++) {
+        if (
+          Array.isArray(usagecat) &&
+          usagecat.length > 0 &&
+          usagecat[i].code.split(".")[0] == "NONRESIDENTIAL" &&
+          usagecat[i].code.split(".").length == 2
+        ) {
+          menu.push({ i18nKey: "PROPERTYTAX_BILLING_SLAB_" + usagecat[i].code.split(".")[1], code: usagecat[i].code });
+        }
       }
+      return menu;
     }
-    return menu;
   }
 
   /*  menu = [
