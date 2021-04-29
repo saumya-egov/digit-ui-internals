@@ -10,10 +10,10 @@ export const PTMyApplications = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   let filter = window.location.href.split("/").pop();
-  let filters =
-    filter === "limit:50" ? { limit: 50, sortOrder: "ASC", sortBy: "createdTime" } : { limit: 4, sortOrder: "ASC", sortBy: "createdTime" };
+  let filter1 =
+    filter === "limit:50" ? { limit: "50", sortOrder: "ASC", sortBy: "createdTime" } : { limit: "4", sortOrder: "ASC", sortBy: "createdTime" };
 
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, filters);
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ filters: filter1 }, { filters: filter1 });
   if (isLoading) {
     return <Loader />;
   }

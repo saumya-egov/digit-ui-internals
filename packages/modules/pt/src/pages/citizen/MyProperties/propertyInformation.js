@@ -11,7 +11,7 @@ const PropertyInformation = () => {
   const { propertyIds } = useParams();
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ tenantId, filters: { propertyIds } });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, { filters: { propertyIds } });
 
   const property = data?.Properties[0] || " ";
   let docs = [];
