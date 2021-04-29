@@ -51,9 +51,17 @@ const ApplicationDetails = () => {
   const downloadPaymentReceipt = async () => {
     // console.log("print payment receipt", paymentsHistory)
     const receiptFile = { filestoreIds: [paymentsHistory.Payments[0]?.fileStoreId] };
-    const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: receiptFile.filestoreIds[0] });
-    window.open(fileStore[receiptFile.filestoreIds[0]], "_blank");
-    setShowOptions(false);
+
+    if (!receiptFile?.fileStoreIds?.[0]) {
+      const newResponse = await Digit.PaymentService.generatePdf(state, { Payments: [paymentsHistory.Payments[0]] }, "fsm-receipt");
+      const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: newResponse.filestoreIds[0] });
+      window.open(fileStore[newResponse.filestoreIds[0]], "_blank");
+      setShowOptions(false);
+    } else {
+      const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: receiptFile.filestoreIds[0] });
+      window.open(fileStore[receiptFile.filestoreIds[0]], "_blank");
+      setShowOptions(false);
+    }
   };
 
   const dowloadOptions =

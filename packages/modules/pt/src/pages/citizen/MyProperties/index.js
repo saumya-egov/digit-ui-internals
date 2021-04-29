@@ -9,7 +9,7 @@ export const MyProperties = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ tenantId });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId);
 
   if (isLoading) {
     return <Loader />;

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const getKeyNotesConfig = (businessService) => {
+export const getKeyNotesConfig = (businessService, t) => {
   const businessId = businessService?.toLowerCase().split(".")[0];
 
   switch (businessId) {
@@ -12,10 +12,13 @@ export const getKeyNotesConfig = (businessService) => {
             keyPath: [
               (d) => {
                 const overdueBy = new Date().getTime() - new Date(d.billDetails[0]?.toPeriod).getTime();
+                const days = Math.floor(overdueBy / (86400 * 1000));
                 return (
                   <React.Fragment>
-                    {"₹" + d["totalAmount"].toFixed(2)}
-                    <span style={{ fontSize: "16px", fontWeight: "normal" }}>{` ( overdue By ${Math.floor(overdueBy / (86400 * 1000))} days)`}</span>
+                    {"₹" + d["totalAmount"]}
+                    <span style={{ fontSize: "16px", fontWeight: "normal" }}>{` ( ${t("CS_PAYMENT_OVERDUE")} ${days} ${t(
+                      days === 1 ? "CS_COMMON_DAY" : "CS_COMMON_DAYS"
+                    )})`}</span>
                   </React.Fragment>
                 );
               },
