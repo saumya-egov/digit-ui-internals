@@ -11,15 +11,21 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   let i;
   let menu = [];
   function getPropertyTypeMenu(proptype) {
-    if (Array.isArray(proptype) && proptype.length > 0) {
-      for (i = 0; i < proptype.length; i++) {
-        if (i != 1 && i != 4 && Array.isArray(proptype) && proptype.length > 0)
-          menu.push({ i18nKey: "COMMON_PROPTYPE_" + proptype[i].code.replaceAll(".", "_"), code: proptype[i].code });
+    if (userType === "employee") {
+      return proptype
+        ?.map((item) => ({ i18nKey: "COMMON_PROPTYPE_" + item?.code.replaceAll(".", "_"), code: item?.code }))
+        ?.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
+    } else {
+      if (Array.isArray(proptype) && proptype.length > 0) {
+        for (i = 0; i < proptype.length; i++) {
+          if (i != 1 && i != 4 && Array.isArray(proptype) && proptype.length > 0)
+            menu.push({ i18nKey: "COMMON_PROPTYPE_" + proptype[i].code.replaceAll(".", "_"), code: proptype[i].code });
+        }
       }
+      menu.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
+      //console.log(menu);
+      return menu;
     }
-    menu.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
-    //console.log(menu);
-    return menu;
   }
 
   const onSkip = () => onSelect();
