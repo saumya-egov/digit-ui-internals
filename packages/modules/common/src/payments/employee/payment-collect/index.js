@@ -6,7 +6,7 @@ import { useQueryClient } from "react-query";
 import { useCardPaymentDetails } from "./card";
 import { useChequeDetails, ChequeDetailsComponent } from "./cheque";
 import isEqual from "lodash/isEqual";
-import BillDetails from "./billDetails";
+import BillDetails, { BillDetailsFormConfig } from "./billDetails";
 
 export const CollectPayment = (props) => {
   // const { formData, addParams } = props;
@@ -222,7 +222,10 @@ export const CollectPayment = (props) => {
     payerMobile: bill?.mobileNumber || formState?.payerMobile || "",
   });
 
-  const getFormConfig = () => config.concat(formConfigMap[formState?.paymentMode?.code] || []);
+  const getFormConfig = () => {
+    const conf = config.concat(formConfigMap[formState?.paymentMode?.code] || []);
+    return BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf);
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -230,9 +233,9 @@ export const CollectPayment = (props) => {
 
   return (
     <React.Fragment>
-      <Card>
+      {/* <Card>
         <BillDetails {...{ consumerCode, bill, businessService }} />
-      </Card>
+      </Card> */}
       <FormComposer
         cardStyle={{ paddingBottom: "100px" }}
         heading={t("PAYMENT_COLLECT")}

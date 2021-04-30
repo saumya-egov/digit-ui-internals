@@ -33,7 +33,7 @@ const RadioButtons = (props) => {
           );
         } else if (props?.optionsKey && props?.isDependent) {
           return (
-            <div key={ind}>
+            <div style={props.innerStyles} key={ind}>
               <span className="radio-btn-wrap">
                 <input
                   className="radio-btn"
@@ -50,7 +50,7 @@ const RadioButtons = (props) => {
           );
         } else {
           return (
-            <div key={ind}>
+            <div style={props.innerStyles} key={ind}>
               <span className="radio-btn-wrap">
                 <input
                   className="radio-btn"
