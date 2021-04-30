@@ -1,0 +1,19 @@
+.scroll-table-wrapper{
+    margin-left: 110px;
+    @apply overflow-x-scroll overflow-y-visible pb-sm text-center;
+
+    .scroll-table-width-wrapper{
+        width: calc(100% - 110px);
+        @apply overflow-x-scroll;
+    }
+    
+    .first-col{
+        width:110px; 
+        @apply absolute left-0;
+    }
+    
+    .last-col{
+        width:110px; 
+        @apply absolute right-0;
+    }
+}
