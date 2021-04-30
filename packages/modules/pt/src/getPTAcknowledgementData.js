@@ -77,17 +77,60 @@ const getAssessmentInfo = (application, t) => {
     { title: t("PT_ASSESMENT_INFO_NO_OF_FLOOR"), value: t(application?.noOfFloors) || "N/A" },
   ];
   application.units = application?.units?.filter((unit) => unit.active == true) || [];
+  console.log(application.units);
+  let flrno,
+    i = 0;
+  flrno = application.units && application.units[0]?.floorNo;
   application.units.map((unit) => {
     let doc = [
-      { title: t("PT_ASSESSMENT_UNIT_USAGE_TYPE"), value: t(getPropertySubUsageTypeLocale(unit?.usageCategory)) || "N/A" },
-      { title: t("PT_ASSESMENT_INFO_OCCUPLANCY"), value: t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) || "N/A" },
-      { title: t("PT_FORM2_BUILT_AREA"), value: t(unit?.constructionDetail?.builtUpArea) || "N/A" },
       {
-        title: t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ? t("PT_FORM2_TOTAL_ANNUAL_RENT") : t(""),
-        value: t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ? t(unit?.arv) : t(""),
+        title: (flrno !== unit?.floorNo ? (i = 1) : (i = i + 1)) && i === 1 ? t(`PROPERTYTAX_FLOOR_${unit?.floorNo}`) : "",
+      },
+      {
+        title: t(""),
+      },
+      {
+        title: t(""),
+      },
+      {
+        title: t(""),
+      },
+      { title: t(`Unit${i}`) },
+      {
+        title: t(""),
+      },
+      {
+        title: t(""),
+      },
+      {
+        title: t(""),
+      },
+      {
+        title: (flrno = unit?.floorNo) > -3 ? t("PT_ASSESSMENT_UNIT_USAGE_TYPE") : "",
+        value: (flrno = unit?.floorNo) > -3 ? t(getPropertySubUsageTypeLocale(unit?.usageCategory)) || "N/A" : "",
+      },
+      {
+        title: (flrno = unit?.floorNo) > -3 ? t("PT_ASSESMENT_INFO_OCCUPLANCY") : "",
+        value: (flrno = unit?.floorNo) > -3 ? t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) || "N/A" : "",
+      },
+      {
+        title: (flrno = unit?.floorNo) > -3 ? t("PT_FORM2_BUILT_AREA") : "",
+        value: (flrno = unit?.floorNo) > -3 ? t(unit?.constructionDetail?.builtUpArea) || "N/A" : "",
+      },
+      {
+        title:
+          (flrno = unit?.floorNo) > -3
+            ? t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented"
+              ? t("PT_FORM2_TOTAL_ANNUAL_RENT")
+              : t("")
+            : "",
+        value: (flrno = unit?.floorNo) > -3 ? (t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ? t(unit?.arv) : t("")) : "",
       },
     ];
+
     values.push(...doc);
+    debugger;
+    console.log(values);
   });
   return {
     title: t("PT_ASSESMENT_INFO_SUB_HEADER"),
@@ -96,6 +139,11 @@ const getAssessmentInfo = (application, t) => {
 };
 
 const getPTAcknowledgementData = async (application, tenantInfo, t) => {
+  application.units = application?.units?.filter((unit) => unit.active == true) || [];
+  console.log(application.units);
+  let flrno,
+    i = 0;
+  flrno = application.units && application.units[0]?.floorNo;
   const filesArray = application?.documents?.map((value) => value?.fileStoreId);
   const res = await Digit.UploadServices.Filefetch(filesArray, application?.tenantId.split(".")[0]);
   return {
