@@ -80,6 +80,69 @@ const getPropertyEditDetails = (data = {}) => {
   }
   data.documents["ProofOfAddress"] = addressDocs && Array.isArray(addressDocs) && addressDocs.length > 0 && addressDocs[0];
 
+  const getunitobjectforInd = (data, ob, flrno) => {
+    let totbuiltarea = 0;
+    let selfoccupiedtf = false,
+      rentedtf = false,
+      unoccupiedtf = false;
+    ob["plotSize"] = `${data?.landArea}`;
+    data?.units &&
+      data?.units.map((unit1, index) => {
+        if (unit1?.floorNo == flrno && unit1?.occupancyType === "RENTED") {
+          rentedtf = true;
+          ob["AnnualRent"] = `${unit1.arv}` || "";
+          ob["RentArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
+        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "UNOCCUPIED") {
+          unoccupiedtf = true;
+          ob["UnOccupiedArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
+        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "SELFOCCUPIED") {
+          selfoccupiedtf = true;
+          ob["floorarea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
+        }
+        ob["SubUsageTypeOfRentedArea"] =
+          unit1?.floorNo == flrno
+            ? {
+                i18nKey: `COMMON_PROPSUBUSGTYPE_${(
+                  unit1.usageCategory.split(".")[0] +
+                  `_${unit1.usageCategory.split(".")[1]}` +
+                  `_${unit1.usageCategory.split(".").pop()}`
+                ).replaceAll(".", "_")}`,
+
+                Subusagetypeofrentedareacode: unit1.usageCategory,
+              }
+            : "";
+        ob["SubUsageType"] = {
+          i18nKey:
+            unit1?.floorNo == flrno
+              ? `COMMON_PROPSUBUSGTYPE_${(
+                  unit1.usageCategory.split(".")[0] +
+                  `_${unit1.usageCategory.split(".")[1]}` +
+                  `_${unit1.usageCategory.split(".").pop()}`
+                ).replaceAll(".", "_")}`
+              : "",
+        };
+      });
+    ob["selfOccupied"] =
+      rentedtf == true
+        ? selfoccupiedtf == true
+          ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
+          : {
+              i18nKey: "PT_FULLY_RENTED_OUT",
+              code: "RENTED",
+            }
+        : {
+            i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
+            code: "SELFOCCUPIED",
+          };
+    ob["IsAnyPartOfThisFloorUnOccupied"] =
+      unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
+    ob["builtUpArea"] = `${totbuiltarea}`;
+
+    return ob;
+  };
   // asessment details
   if (data?.channel === "CFC_COUNTER") {
     if (data?.propertyType === "VACANT") {
@@ -152,6 +215,7 @@ const getPropertyEditDetails = (data = {}) => {
       console.log("inside independent property");
       let nooffloor = 0,
         noofbasemement = 0;
+      let floornumbers = [];
       data.isResdential =
         data?.usageCategory === "RESIDENTIAL"
           ? { code: "RESIDENTIAL", i18nKey: "PT_COMMON_YES" }
@@ -160,50 +224,78 @@ const getPropertyEditDetails = (data = {}) => {
       data.PropertyType = { code: data?.propertyType, i18nKey: `COMMON_PROPTYPE_BUILTUP_${data.propertyType.split(".").pop()}` };
       data?.units &&
         data?.units.map((unit, index) => {
-          if (unit.floorNo === 0 || unit.floorNo === 1 || unit.floorNo === 2) {
+          floornumbers.push(unit.floorNo);
+          /* if (unit.floorNo === 0 || unit.floorNo === 1 || unit.floorNo === 2) {
+            debugger;
             nooffloor = nooffloor + 1;
           } else if (unit.floorNo === -1 || unit.floorNo === -2) {
+            debugger;
             noofbasemement = noofbasemement + 1;
-          }
+          } */
         });
-      let unitedit = new Array(nooffloor + noofbasemement).fill({});
+      data.noOfFloors = floornumbers.includes(2)
+        ? { i18nKey: "PT_GROUND_PLUS_TWO_OPTION", code: 2 }
+        : floornumbers.includes(1)
+        ? { i18nKey: "PT_GROUND_PLUS_ONE_OPTION", code: 1 }
+        : { i18nKey: "PT_GROUND_FLOOR_OPTION", code: 0 };
+      data.noOofBasements = floornumbers.includes(-2)
+        ? { i18nKey: "PT_TWO_BASEMENT_OPTION" }
+        : floornumbers.includes(-1)
+        ? { i18nKey: "PT_ONE_BASEMENT_OPTION" }
+        : { i18nKey: "PT_NO_BASEMENT_OPTION" };
+      //debugger;
+      //console.log(data);
+      //let unitedit = new Array(nooffloor + noofbasemement).fill({});
+      let unitedit = [];
+      let ob = {};
+      let flooradded = [];
+      let flrno;
+      let totbuiltarea = 0;
+      //console.log("unitedit");
+      //console.log(unitedit);
       data?.units &&
         data?.units.map((unit, index) => {
+          ob = {};
+          totbuiltarea = 0;
           let selfoccupiedtf = false,
             rentedtf = false,
             unoccupiedtf = false;
           if (unit.floorNo == 0) {
-            unit.plotSize = data?.landArea;
-            data?.units &&
+            flrno = unit.floorNo;
+            ob = getunitobjectforInd(data, ob, flrno);
+            /* ob["plotSize"] = `${data?.landArea}`;
+            data?.units && 
               data?.units.map((unit1, index) => {
                 if (unit1?.occupancyType === "RENTED") {
                   rentedtf = true;
-                  unit.AnnualRent = unit1.arv || "";
-                  unit.RentArea = unit1?.constructionDetail?.builtUpArea;
+                  ob["AnnualRent"] = `${unit1.arv}` || "";
+                  ob["RentArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+                  totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
                 } else if (unit1?.occupancyType === "UNOCCUPIED") {
                   unoccupiedtf = true;
-                  unit.UnOccupiedArea = unit1.constructionDetail?.builtUpArea;
+                  ob["UnOccupiedArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+                  totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
                 } else if (unit1?.occupancyType === "SELFOCCUPIED") {
                   selfoccupiedtf = true;
-                  unit.floorarea = unit1?.builtUpArea;
+                  ob["floorarea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+                  totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
                 }
-                data.Subusagetypeofrentedarea = {
-                  SubUsageTypeOfRentedArea: {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${unit1.usageCategory
-                      .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
+                ob["SubUsageTypeOfRentedArea"] = {
+                    i18nKey: `COMMON_PROPSUBUSGTYPE_${(unit1.usageCategory
+                      .split(".")[0]+`_${unit1.usageCategory.split(".")[1]}`+`_${(unit1.usageCategory.split(".").pop())}`)
                       .replaceAll(".", "_")}`,
-                  },
+                  
                   Subusagetypeofrentedareacode: unit1.usageCategory,
                 };
-                data.subusagetype = {
-                  SubUsageType: {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${unit1.usageCategory
-                      .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
+                ob["SubUsageType"] = {
+                    i18nKey: `COMMON_PROPSUBUSGTYPE_${(unit1.usageCategory
+                      .split(".")[0]+`_${unit1.usageCategory.split(".")[1]}`+`_${(unit1.usageCategory.split(".").pop())}`)
                       .replaceAll(".", "_")}`,
-                  },
+                  
                 };
+                
               });
-            unit.selfOccupied =
+            ob["selfOccupied"] =
               rentedtf == true
                 ? selfoccupiedtf == true
                   ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
@@ -215,10 +307,13 @@ const getPropertyEditDetails = (data = {}) => {
                     i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
                     code: "SELFOCCUPIED",
                   };
-            data.IsAnyPartOfThisFloorUnOccupied =
+            ob["IsAnyPartOfThisFloorUnOccupied"] =
               unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
+              ob["builtUpArea"] = `${totbuiltarea}`; */
           } else if (unit.floorNo == 1) {
-            unit.plotSize = data?.landArea;
+            flrno = unit.floorNo;
+            ob = getunitobjectforInd(data, ob, flrno);
+            /*unit.plotSize = data?.landArea;
             data?.units &&
               data?.units.map((unit1, index) => {
                 if (unit1?.occupancyType === "RENTED") {
@@ -261,8 +356,8 @@ const getPropertyEditDetails = (data = {}) => {
                     code: "SELFOCCUPIED",
                   };
             data.IsAnyPartOfThisFloorUnOccupied =
-              unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
-          } else if (unit.floorNo == 2) {
+              unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };*/
+          } /*else if (unit.floorNo == 2) {
             unit.plotSize = data?.landArea;
             data?.units &&
               data?.units.map((unit1, index) => {
@@ -308,10 +403,15 @@ const getPropertyEditDetails = (data = {}) => {
             unit.IsAnyPartOfThisFloorUnOccupied =
               unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
           }
-          unitedit.push(unit);
+          unitedit.push(unit);*/
+          console.log("ob");
+          console.log(ob);
+          !flooradded.includes(unit.floorNo) ? unitedit.push(ob) : console.log("skipping push");
+          flooradded.push(flrno);
         });
       console.log("unitedit");
       console.log(unitedit);
+      data.units = unitedit;
     }
   } else {
     if (data?.additionalDetails?.propertyType?.code === "VACANT") {
