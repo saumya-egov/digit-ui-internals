@@ -20,7 +20,7 @@ export const SuccessfulPayment = (props) => {
 
   const { data: billData, isLoading: isBillDataLoading } = Digit.Hooks.useFetchPayment(
     { tenantId, consumerCode, businessService: business_service },
-    { enabled: allowFetchBill, retry: false, staleTime: Infinity }
+    { enabled: allowFetchBill, retry: false, staleTime: Infinity, refetchOnWindowFocus: false }
   );
 
   const { data: generatePdfKey } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey", {
