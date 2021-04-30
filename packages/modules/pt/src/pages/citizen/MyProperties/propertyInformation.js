@@ -24,6 +24,22 @@ const PropertyInformation = () => {
   let owners = [];
   owners = property?.owners;
   units = property?.units;
+  units &&
+    units.sort((x, y) => {
+      let a = x.floorNo,
+        b = y.floorNo;
+      if (x.floorNo < 0) {
+        a = x.floorNo * -20;
+      }
+      if (y.floorNo < 0) {
+        b = y.floorNo * -20;
+      }
+      if (a > b) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   if (isLoading) {
     return <Loader />;
   }
