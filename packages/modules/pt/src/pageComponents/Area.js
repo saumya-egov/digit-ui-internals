@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 
 const Area = ({ t, config, onSelect, value, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
+  console.log(formData);
   let index = window.location.href.split("/").pop();
   let validation = {};
   const onSkip = () => onSelect();
