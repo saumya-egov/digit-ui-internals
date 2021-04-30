@@ -146,9 +146,42 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
       </StatusTable>
       {showDetails ? (
         <React.Fragment>
-          <div style={{ maxWidth: "95%", display: "inline-block", textAlign: "right" }}>
-            <div style={{ display: "flex", padding: "10px", paddingLeft: "unset", maxWidth: "95%" }}>
-              <div style={{ backgroundColor: "#EEEEEE", boxShadow: "2px 0px 3px 2px #D6D5D4", position: "relative" }}>
+          <div class="scroll-table-wrapper">
+            <div class="scroll-table-width-wrapper">
+              <table>
+                <tr>
+                  <th class="first-col">Financial year</th>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY UIOPASDFGHJK LZXCVBNM</td>
+                  <th class="last-col">1</th>
+                </tr>
+                <tr>
+                  <th class="first-col">2</th>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY UIOPASDFGHJK LZXCVBNM</td>
+                  <th class="last-col">1</th>
+                </tr>
+                <tr>
+                  <th class="first-col">3</th>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY LZXCVBNM</td>
+                  <td>QWERTY UIOPASDFGHJK LZXCVBNM</td>
+                  <th class="last-col">1</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+          {/* <div style={{ maxWidth: "95%", display: "inline-block", textAlign: "right" }}>
+            <div style={{ display: "flex", padding: "10px", paddingLeft: "unset", maxWidth: "95%" }}> */}
+          {/* <div style={{ backgroundColor: "#EEEEEE", boxShadow: "2px 0px 3px 2px #D6D5D4", position: "relative" }}>
                 <table>
                   <thead>
                     <tr>
@@ -193,7 +226,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
                   </tbody>
                 </table>
               </div>
-              <div style={{ backgroundColor: "#EEEEEE", boxShadow: "-2px 0px 3px 2px #D6D5D4", position: "relative" }}>
+              <div style={{ backgroundColor: "#EEEEEE", boxShadow: "-2px 0px 3px 2px #D6D5D4", position: "relative" }}> 
                 <table>
                   <thead>
                     <tr>
@@ -215,7 +248,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
             <div style={{ float: "right" }} onClick={() => setShowDetails(false)} className="filter-button">
               {t("ES_COMMON_HIDE_DETAILS")}
             </div>
-          </div>
+          </div> */}
         </React.Fragment>
       ) : (
         <div style={{}} onClick={() => setShowDetails(true)} className="filter-button">
