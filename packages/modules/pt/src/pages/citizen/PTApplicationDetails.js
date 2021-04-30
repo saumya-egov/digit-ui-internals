@@ -20,6 +20,22 @@ const PTApplicationDetails = () => {
   const application = data?.Properties[0];
   let units = [];
   units = application?.units;
+  units &&
+    units.sort((x, y) => {
+      let a = x.floorNo,
+        b = y.floorNo;
+      if (x.floorNo < 0) {
+        a = x.floorNo * -20;
+      }
+      if (y.floorNo < 0) {
+        b = y.floorNo * -20;
+      }
+      if (a > b) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   let owners = [];
   owners = application?.owners;
   let docs = [];
