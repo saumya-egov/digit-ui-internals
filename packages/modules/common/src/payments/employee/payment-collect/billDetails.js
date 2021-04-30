@@ -150,7 +150,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
             <div class="scroll-table-width-wrapper">
               <table>
                 <tr>
-                  <th class="first-col">1</th>
+                  <th class="first-col">Financial year</th>
                   <td>QWERTY LZXCVBNM</td>
                   <td>QWERTY LZXCVBNM</td>
                   <td>QWERTY LZXCVBNM</td>
