@@ -77,7 +77,6 @@ const getAssessmentInfo = (application, t) => {
     { title: t("PT_ASSESMENT_INFO_NO_OF_FLOOR"), value: t(application?.noOfFloors) || "N/A" },
   ];
   application.units = application?.units?.filter((unit) => unit.active == true) || [];
-  console.log(application.units);
   let flrno,
     i = 0;
   flrno = application.units && application.units[0]?.floorNo;
@@ -129,8 +128,6 @@ const getAssessmentInfo = (application, t) => {
     ];
 
     values.push(...doc);
-    debugger;
-    console.log(values);
   });
   return {
     title: t("PT_ASSESMENT_INFO_SUB_HEADER"),
@@ -139,11 +136,6 @@ const getAssessmentInfo = (application, t) => {
 };
 
 const getPTAcknowledgementData = async (application, tenantInfo, t) => {
-  application.units = application?.units?.filter((unit) => unit.active == true) || [];
-  console.log(application.units);
-  let flrno,
-    i = 0;
-  flrno = application.units && application.units[0]?.floorNo;
   const filesArray = application?.documents?.map((value) => value?.fileStoreId);
   const res = await Digit.UploadServices.Filefetch(filesArray, application?.tenantId.split(".")[0]);
   return {
