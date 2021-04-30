@@ -146,6 +146,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
       </StatusTable>
       {showDetails ? (
         <React.Fragment>
+          //
           <div style={{ maxWidth: "95%", display: "inline-block", textAlign: "right" }}>
             <div style={{ display: "flex", padding: "10px", paddingLeft: "unset", maxWidth: "95%" }}>
               <div style={{ backgroundColor: "#EEEEEE", boxShadow: "2px 0px 3px 2px #D6D5D4", position: "relative" }}>
@@ -171,7 +172,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
                       {yearWiseBills?.[0]?.billAccountDetails
                         ?.sort((a, b) => a.order - b.order)
                         ?.map((head, index) => (
-                          <th style={thStyle} key={index}>
+                          <th style={{ ...thStyle }} key={index}>
                             {t(head.taxHeadCode)}
                           </th>
                         ))}
