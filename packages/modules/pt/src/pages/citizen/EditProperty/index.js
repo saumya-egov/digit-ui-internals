@@ -80,7 +80,7 @@ const getPropertyEditDetails = (data = {}) => {
   }
   data.documents["ProofOfAddress"] = addressDocs && Array.isArray(addressDocs) && addressDocs.length > 0 && addressDocs[0];
 
-  const getunitobjectforInd = (data, ob, flrno, extraunits) => {
+  const getunitobjectforInd = (data, ob, flrno, extraunits, unitedit) => {
     let totbuiltarea = 0;
     let selfoccupiedtf = false,
       rentedtf = false,
@@ -89,16 +89,17 @@ const getPropertyEditDetails = (data = {}) => {
     data?.units &&
       data?.units.map((unit1, index) => {
         //to remove multiple units
-        /* if (
-          (unit1?.occupancyType === "RENTED" && rentedtf == true) ||
-          (unit1?.occupancyType === "UNOCCUPIED" && unoccupiedtf == true) ||
-          (unit1?.occupancyType === "SELFOCCUPIED" && selfoccupiedtf == true)
-        ) {
-          extraunits.push(unit1);
-        }  */ if (
+        if (
           unit1?.floorNo == flrno &&
-          unit1?.occupancyType === "RENTED"
+          ((unit1?.occupancyType === "RENTED" && rentedtf == true) ||
+            (unit1?.occupancyType === "UNOCCUPIED" && unoccupiedtf == true) ||
+            (unit1?.occupancyType === "SELFOCCUPIED" && selfoccupiedtf == true) ||
+            flrno > unitedit.length)
         ) {
+          if (!extraunits.includes(unit1)) {
+            extraunits.push(unit1);
+          }
+        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "RENTED") {
           rentedtf = true;
           ob["AnnualRent"] = `${unit1.arv}` || "";
           ob["RentArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
@@ -230,12 +231,13 @@ const getPropertyEditDetails = (data = {}) => {
           : { code: "NONRESIDENTIAL", i18nKey: "PT_COMMON_NO" };
       data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
       data.PropertyType = { code: data?.propertyType, i18nKey: `COMMON_PROPTYPE_BUILTUP_${data.propertyType.split(".").pop()}` };
-      data?.units &&
+      /* data?.units &&
         data?.units.map((unit, index) => {
           //to remove the condition when only unoccupied unit is there
           if (!unit?.occupancyType.includes("UNOCCUPIED")) {
             floornumbers.push(unit.floorNo);
           }
+
         });
       data.noOfFloors = floornumbers.includes(2)
         ? { i18nKey: "PT_GROUND_PLUS_TWO_OPTION", code: 2 }
@@ -246,7 +248,7 @@ const getPropertyEditDetails = (data = {}) => {
         ? { i18nKey: "PT_TWO_BASEMENT_OPTION" }
         : floornumbers.includes(-1)
         ? { i18nKey: "PT_ONE_BASEMENT_OPTION" }
-        : { i18nKey: "PT_NO_BASEMENT_OPTION" };
+        : { i18nKey: "PT_NO_BASEMENT_OPTION" }; */
       //debugger;
       //console.log(data);
       let unitedit = [];
@@ -266,7 +268,7 @@ const getPropertyEditDetails = (data = {}) => {
             unoccupiedtf = false;
           if (unit.floorNo == 0 || unit.floorNo == 1 || unit.floorNo == 2 || unit.floorNo == -1 || unit.floorNo == -2) {
             flrno = unit.floorNo;
-            ob = getunitobjectforInd(data, ob, flrno, extraunits);
+            ob = getunitobjectforInd(data, ob, flrno, extraunits, unitedit);
             if (ob.selfOccupied == "") {
               extraunits.push(unit);
             }
@@ -278,15 +280,27 @@ const getPropertyEditDetails = (data = {}) => {
           }
           console.log("ob");
           console.log(ob);
-          !flooradded.includes(unit.floorNo) && unit.floorNo > -1 && unit.floorNo < 3 && ob.selfOccupied !== "" && ob != {}
+          !flooradded.includes(unit.floorNo) && ob.builtUpArea > 0 && unit.floorNo > -1 && unit.floorNo < 3 && ob.selfOccupied !== "" && ob != {}
             ? unitedit.push(ob)
             : console.log("skipping push");
-          unit.floorNo == -1 && ob != {} && ob.selfOccupied !== "" ? (unitedit["-1"] = ob) : console.log("skiiping basement 1");
-          unit.floorNo == -2 && ob != {} && ob.selfOccupied !== "" ? (unitedit["-2"] = ob) : console.log("skiiping basement 2");
+          unit.floorNo == -1 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-1"] = ob) : console.log("skiiping basement 1");
+          unit.floorNo == -2 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-2"] = ob) : console.log("skiiping basement 2");
           flooradded.push(flrno);
           console.log("unitedit");
           console.log(unitedit);
         });
+
+      data.noOfFloors =
+        unitedit.length == 3
+          ? { i18nKey: "PT_GROUND_PLUS_TWO_OPTION", code: 2 }
+          : unitedit.length == 2
+          ? { i18nKey: "PT_GROUND_PLUS_ONE_OPTION", code: 1 }
+          : { i18nKey: "PT_GROUND_FLOOR_OPTION", code: 0 };
+      data.noOofBasements = unitedit["-2"]
+        ? { i18nKey: "PT_TWO_BASEMENT_OPTION" }
+        : unitedit["-1"]
+        ? { i18nKey: "PT_ONE_BASEMENT_OPTION" }
+        : { i18nKey: "PT_NO_BASEMENT_OPTION" };
 
       console.log("extraunits");
       console.log(extraunits);
