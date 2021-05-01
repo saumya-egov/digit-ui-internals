@@ -80,7 +80,7 @@ const getPropertyEditDetails = (data = {}) => {
   }
   data.documents["ProofOfAddress"] = addressDocs && Array.isArray(addressDocs) && addressDocs.length > 0 && addressDocs[0];
 
-  const getunitobjectforInd = (data, ob, flrno) => {
+  const getunitobjectforInd = (data, ob, flrno, extraunits) => {
     let totbuiltarea = 0;
     let selfoccupiedtf = false,
       rentedtf = false,
@@ -88,10 +88,26 @@ const getPropertyEditDetails = (data = {}) => {
     ob["plotSize"] = `${data?.landArea}`;
     data?.units &&
       data?.units.map((unit1, index) => {
-        if (unit1?.floorNo == flrno && unit1?.occupancyType === "RENTED") {
+        //to remove multiple units
+        if (
+          (unit1?.occupancyType === "RENTED" && rentedtf == true) ||
+          (unit1?.occupancyType === "UNOCCUPIED" && unoccupiedtf == true) ||
+          (unit1?.occupancyType === "SELFOCCUPIED" && selfoccupiedtf == true)
+        ) {
+          extraunits.push(unit1);
+        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "RENTED") {
           rentedtf = true;
           ob["AnnualRent"] = `${unit1.arv}` || "";
           ob["RentArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          ob["SubUsageTypeOfRentedArea"] = {
+            i18nKey: `COMMON_PROPSUBUSGTYPE_${(
+              unit1.usageCategory.split(".")[0] +
+              `_${unit1.usageCategory.split(".")[1]}` +
+              `_${unit1.usageCategory.split(".").pop()}`
+            ).replaceAll(".", "_")}`,
+
+            Subusagetypeofrentedareacode: unit1.usageCategory,
+          };
           totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
         } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "UNOCCUPIED") {
           unoccupiedtf = true;
@@ -100,43 +116,32 @@ const getPropertyEditDetails = (data = {}) => {
         } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "SELFOCCUPIED") {
           selfoccupiedtf = true;
           ob["floorarea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          ob["SubUsageType"] = {
+            i18nKey: `COMMON_PROPSUBUSGTYPE_${(
+              unit1.usageCategory.split(".")[0] +
+              `_${unit1.usageCategory.split(".")[1]}` +
+              `_${unit1.usageCategory.split(".").pop()}`
+            ).replaceAll(".", "_")}`,
+          };
           totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
         }
-        ob["SubUsageTypeOfRentedArea"] =
-          unit1?.floorNo == flrno
-            ? {
-                i18nKey: `COMMON_PROPSUBUSGTYPE_${(
-                  unit1.usageCategory.split(".")[0] +
-                  `_${unit1.usageCategory.split(".")[1]}` +
-                  `_${unit1.usageCategory.split(".").pop()}`
-                ).replaceAll(".", "_")}`,
-
-                Subusagetypeofrentedareacode: unit1.usageCategory,
-              }
-            : "";
-        ob["SubUsageType"] = {
-          i18nKey:
-            unit1?.floorNo == flrno
-              ? `COMMON_PROPSUBUSGTYPE_${(
-                  unit1.usageCategory.split(".")[0] +
-                  `_${unit1.usageCategory.split(".")[1]}` +
-                  `_${unit1.usageCategory.split(".").pop()}`
-                ).replaceAll(".", "_")}`
-              : "",
-        };
       });
-    ob["selfOccupied"] =
-      rentedtf == true
-        ? selfoccupiedtf == true
-          ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
+    if (unoccupiedtf == true && rentedtf == false && selfoccupiedtf == false) {
+      ob["selfOccupied"] = "";
+    } else {
+      ob["selfOccupied"] =
+        rentedtf == true
+          ? selfoccupiedtf == true
+            ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
+            : {
+                i18nKey: "PT_FULLY_RENTED_OUT",
+                code: "RENTED",
+              }
           : {
-              i18nKey: "PT_FULLY_RENTED_OUT",
-              code: "RENTED",
-            }
-        : {
-            i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
-            code: "SELFOCCUPIED",
-          };
+              i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
+              code: "SELFOCCUPIED",
+            };
+    }
     ob["IsAnyPartOfThisFloorUnOccupied"] =
       unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
     ob["builtUpArea"] = `${totbuiltarea}`;
@@ -224,14 +229,10 @@ const getPropertyEditDetails = (data = {}) => {
       data.PropertyType = { code: data?.propertyType, i18nKey: `COMMON_PROPTYPE_BUILTUP_${data.propertyType.split(".").pop()}` };
       data?.units &&
         data?.units.map((unit, index) => {
-          floornumbers.push(unit.floorNo);
-          /* if (unit.floorNo === 0 || unit.floorNo === 1 || unit.floorNo === 2) {
-            debugger;
-            nooffloor = nooffloor + 1;
-          } else if (unit.floorNo === -1 || unit.floorNo === -2) {
-            debugger;
-            noofbasemement = noofbasemement + 1;
-          } */
+          //to remove the condition when only unoccupied unit is there
+          if (!unit?.occupancyType.includes("UNOCCUPIED")) {
+            floornumbers.push(unit.floorNo);
+          }
         });
       data.noOfFloors = floornumbers.includes(2)
         ? { i18nKey: "PT_GROUND_PLUS_TWO_OPTION", code: 2 }
@@ -245,11 +246,11 @@ const getPropertyEditDetails = (data = {}) => {
         : { i18nKey: "PT_NO_BASEMENT_OPTION" };
       //debugger;
       //console.log(data);
-      //let unitedit = new Array(nooffloor + noofbasemement).fill({});
       let unitedit = [];
       let ob = {};
       let flooradded = [];
       let flrno;
+      let extraunits = [];
       let totbuiltarea = 0;
       //console.log("unitedit");
       //console.log(unitedit);
@@ -260,158 +261,38 @@ const getPropertyEditDetails = (data = {}) => {
           let selfoccupiedtf = false,
             rentedtf = false,
             unoccupiedtf = false;
-          if (unit.floorNo == 0) {
+          if (unit.floorNo == 0 || unit.floorNo == 1 || unit.floorNo == 2 || unit.floorNo == -1 || unit.floorNo == -2) {
             flrno = unit.floorNo;
-            ob = getunitobjectforInd(data, ob, flrno);
-            /* ob["plotSize"] = `${data?.landArea}`;
-            data?.units && 
-              data?.units.map((unit1, index) => {
-                if (unit1?.occupancyType === "RENTED") {
-                  rentedtf = true;
-                  ob["AnnualRent"] = `${unit1.arv}` || "";
-                  ob["RentArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
-                  totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
-                } else if (unit1?.occupancyType === "UNOCCUPIED") {
-                  unoccupiedtf = true;
-                  ob["UnOccupiedArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
-                  totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
-                } else if (unit1?.occupancyType === "SELFOCCUPIED") {
-                  selfoccupiedtf = true;
-                  ob["floorarea"] = `${unit1?.constructionDetail?.builtUpArea}`;
-                  totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
-                }
-                ob["SubUsageTypeOfRentedArea"] = {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${(unit1.usageCategory
-                      .split(".")[0]+`_${unit1.usageCategory.split(".")[1]}`+`_${(unit1.usageCategory.split(".").pop())}`)
-                      .replaceAll(".", "_")}`,
-                  
-                  Subusagetypeofrentedareacode: unit1.usageCategory,
-                };
-                ob["SubUsageType"] = {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${(unit1.usageCategory
-                      .split(".")[0]+`_${unit1.usageCategory.split(".")[1]}`+`_${(unit1.usageCategory.split(".").pop())}`)
-                      .replaceAll(".", "_")}`,
-                  
-                };
-                
-              });
-            ob["selfOccupied"] =
-              rentedtf == true
-                ? selfoccupiedtf == true
-                  ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
-                  : {
-                      i18nKey: "PT_FULLY_RENTED_OUT",
-                      code: "RENTED",
-                    }
-                : {
-                    i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
-                    code: "SELFOCCUPIED",
-                  };
-            ob["IsAnyPartOfThisFloorUnOccupied"] =
-              unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
-              ob["builtUpArea"] = `${totbuiltarea}`; */
-          } else if (unit.floorNo == 1) {
-            flrno = unit.floorNo;
-            ob = getunitobjectforInd(data, ob, flrno);
-            /*unit.plotSize = data?.landArea;
-            data?.units &&
-              data?.units.map((unit1, index) => {
-                if (unit1?.occupancyType === "RENTED") {
-                  rentedtf = true;
-                  unit.AnnualRent = unit1.arv || "";
-                  unit.RentArea = unit1?.constructionDetail?.builtUpArea;
-                } else if (unit1?.occupancyType === "UNOCCUPIED") {
-                  unoccupiedtf = true;
-                  unit.UnOccupiedArea = unit1.constructionDetail?.builtUpArea;
-                } else if (unit1?.occupancyType === "SELFOCCUPIED") {
-                  selfoccupiedtf = true;
-                  unit.floorarea = unit1?.builtUpArea;
-                }
-                data.Subusagetypeofrentedarea = {
-                  SubUsageTypeOfRentedArea: {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${unit1.usageCategory
-                      .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
-                      .replaceAll(".", "_")}`,
-                  },
-                  Subusagetypeofrentedareacode: unit1.usageCategory,
-                };
-                data.subusagetype = {
-                  SubUsageType: {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${unit1.usageCategory
-                      .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
-                      .replaceAll(".", "_")}`,
-                  },
-                };
-              });
-            unit.selfOccupied =
-              rentedtf == true
-                ? selfoccupiedtf == true
-                  ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
-                  : {
-                      i18nKey: "PT_FULLY_RENTED_OUT",
-                      code: "RENTED",
-                    }
-                : {
-                    i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
-                    code: "SELFOCCUPIED",
-                  };
-            data.IsAnyPartOfThisFloorUnOccupied =
-              unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };*/
-          } /*else if (unit.floorNo == 2) {
-            unit.plotSize = data?.landArea;
-            data?.units &&
-              data?.units.map((unit1, index) => {
-                if (unit1?.occupancyType === "RENTED") {
-                  rentedtf = true;
-                  unit.AnnualRent = unit1.arv || "";
-                  unit.RentArea = unit1?.constructionDetail?.builtUpArea;
-                } else if (unit1?.occupancyType === "UNOCCUPIED") {
-                  unoccupiedtf = true;
-                  unit.UnOccupiedArea = unit1.constructionDetail?.builtUpArea;
-                } else if (unit1?.occupancyType === "SELFOCCUPIED") {
-                  selfoccupiedtf = true;
-                  unit.floorarea = unit1?.builtUpArea;
-                }
-                unit.Subusagetypeofrentedarea = {
-                  SubUsageTypeOfRentedArea: {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${unit1.usageCategory
-                      .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
-                      .replaceAll(".", "_")}`,
-                  },
-                  Subusagetypeofrentedareacode: unit1.usageCategory,
-                };
-                unit.subusagetype = {
-                  SubUsageType: {
-                    i18nKey: `COMMON_PROPSUBUSGTYPE_${unit1.usageCategory
-                      .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
-                      .replaceAll(".", "_")}`,
-                  },
-                };
-              });
-            unit.selfOccupied =
-              rentedtf == true
-                ? selfoccupiedtf == true
-                  ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
-                  : {
-                      i18nKey: "PT_FULLY_RENTED_OUT",
-                      code: "RENTED",
-                    }
-                : {
-                    i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
-                    code: "SELFOCCUPIED",
-                  };
-            unit.IsAnyPartOfThisFloorUnOccupied =
-              unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
+            ob = getunitobjectforInd(data, ob, flrno, extraunits);
+            if (ob.selfOccupied == "") {
+              extraunits.push(unit);
+            }
+          } else {
+            extraunits.push(unit);
           }
-          unitedit.push(unit);*/
+          if (ob == {}) {
+            extraunits.push(unit);
+          }
           console.log("ob");
           console.log(ob);
-          !flooradded.includes(unit.floorNo) ? unitedit.push(ob) : console.log("skipping push");
+          !flooradded.includes(unit.floorNo) && unit.floorNo > -1 && unit.floorNo < 3 && ob.selfOccupied !== "" && ob != {}
+            ? unitedit.push(ob)
+            : console.log("skipping push");
+          unit.floorNo == -1 && ob != {} && ob.selfOccupied !== "" ? (unitedit["-1"] = ob) : console.log("skiiping basement 1");
+          unit.floorNo == -2 && ob != {} && ob.selfOccupied !== "" ? (unitedit["-2"] = ob) : console.log("skiiping basement 2");
           flooradded.push(flrno);
+          console.log("unitedit");
+          console.log(unitedit);
         });
-      console.log("unitedit");
-      console.log(unitedit);
+
+      console.log("extraunits");
+      console.log(extraunits);
       data.units = unitedit;
+      data.units = data?.units.concat(extraunits);
+      unitedit["-1"] ? (data.units["-1"] = unitedit["-1"]) : "";
+      unitedit["-2"] ? (data.units["-2"] = unitedit["-2"]) : "";
+      console.log("units");
+      console.log(data.units);
     }
   } else {
     if (data?.additionalDetails?.propertyType?.code === "VACANT") {
@@ -470,358 +351,11 @@ const EditProperty = ({ parentRoute }) => {
   const propertyIds = window.location.href.split("/").pop();
   let application = {};
   const typeOfProperty = window.location.href.includes("update=true");
-  /* const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, {
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, {
     filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
-  }); */
+  });
   sessionStorage.setItem("isEditApplication", false);
-  let data = {};
   useEffect(() => {
-    data = {
-      Properties: [
-        {
-          id: "ff891c02-3aa0-4a7f-9e09-615547a61ba6",
-          propertyId: "PB-PT-2021-04-29-016354",
-          surveyId: null,
-          linkedProperties: null,
-          tenantId: "pb.amritsar",
-          accountId: "7830332f-0f39-4ab0-b239-8af4e6cf126a",
-          oldPropertyId: null,
-          status: "INWORKFLOW",
-          address: {
-            tenantId: "pb.amritsar",
-            doorNo: null,
-            plotNo: null,
-            id: "6dca595d-de1c-444b-840f-af0fd83a8cc0",
-            landmark: null,
-            city: "Amritsar",
-            district: null,
-            region: null,
-            state: null,
-            country: null,
-            pincode: null,
-            buildingName: null,
-            street: null,
-            locality: {
-              code: "SUN04",
-              name: "Ajit Nagar - Area1",
-              label: "Locality",
-              latitude: null,
-              longitude: null,
-              area: "Area1",
-              children: [],
-              materializedPath: null,
-            },
-            geoLocation: {
-              latitude: null,
-              longitude: null,
-            },
-            additionalDetails: null,
-          },
-          acknowldgementNumber: "PB-AC-2021-04-29-016131",
-          propertyType: "BUILTUP.INDEPENDENTPROPERTY",
-          ownershipCategory: "INDIVIDUAL.SINGLEOWNER",
-          owners: [
-            {
-              id: 22772,
-              uuid: "89275e09-5129-4a66-bfa3-638935c4aebb",
-              userName: "401fbff1-1541-4a58-9898-2462ef2e3c4f",
-              password: null,
-              salutation: null,
-              name: "abc",
-              gender: "Male",
-              mobileNumber: "9876543210",
-              emailId: null,
-              altContactNumber: null,
-              pan: null,
-              aadhaarNumber: null,
-              permanentAddress: "Ajit Nagar - Area1, amritsar",
-              permanentCity: null,
-              permanentPinCode: null,
-              correspondenceCity: null,
-              correspondencePinCode: null,
-              correspondenceAddress: null,
-              active: true,
-              dob: null,
-              pwdExpiryDate: null,
-              locale: null,
-              type: "CITIZEN",
-              signature: null,
-              accountLocked: null,
-              roles: [
-                {
-                  id: null,
-                  name: "Citizen",
-                  code: "CITIZEN",
-                  tenantId: null,
-                },
-              ],
-              fatherOrHusbandName: "def",
-              bloodGroup: null,
-              identificationMark: null,
-              photo: null,
-              createdBy: "7830332f-0f39-4ab0-b239-8af4e6cf126a",
-              createdDate: 1619688414986,
-              lastModifiedBy: "7830332f-0f39-4ab0-b239-8af4e6cf126a",
-              lastModifiedDate: 1619688414986,
-              tenantId: "pb.amritsar",
-              ownerInfoUuid: "815bc198-446d-4f82-b329-9bf5edcafa4e",
-              isPrimaryOwner: null,
-              ownerShipPercentage: null,
-              ownerType: "NONE",
-              institutionId: null,
-              status: "ACTIVE",
-              documents: null,
-              relationship: "FATHER",
-            },
-          ],
-          institution: null,
-          creationReason: "CREATE",
-          usageCategory: "NONRESIDENTIAL.COMMERCIAL",
-          noOfFloors: 5,
-          landArea: 1100,
-          superBuiltUpArea: null,
-          source: "MUNICIPAL_RECORDS",
-          channel: "CFC_COUNTER",
-          documents: [
-            {
-              id: "4594857d-e70e-4b19-acfe-4f9f9f3fa015",
-              documentType: "OWNER.ADDRESSPROOF.ELECTRICITYBILL",
-              fileStoreId: "a1d354a2-bf7a-4e3f-acf0-175fa0c9e42f",
-              documentUid: "a1d354a2-bf7a-4e3f-acf0-175fa0c9e42f",
-              auditDetails: null,
-              status: "ACTIVE",
-            },
-            {
-              id: "865c6473-3005-4efd-afd7-572acb40a1e3",
-              documentType: "OWNER.IDENTITYPROOF.AADHAAR",
-              fileStoreId: "f0389a1b-b975-4790-ad14-1943e36747e2",
-              documentUid: "f0389a1b-b975-4790-ad14-1943e36747e2",
-              auditDetails: null,
-              status: "ACTIVE",
-            },
-            {
-              id: "e9e610db-f297-437e-901a-14d9eed8c426",
-              documentType: "OWNER.REGISTRATIONPROOF.COURTDECREE",
-              fileStoreId: "1ceaba35-056b-4567-876a-58859544bb91",
-              documentUid: "1ceaba35-056b-4567-876a-58859544bb91",
-              auditDetails: null,
-              status: "ACTIVE",
-            },
-            {
-              id: "761a7f5e-c6ea-4e8a-ad63-03336913bb5f",
-              documentType: "OWNER.USAGEPROOF.TRADELICENCE",
-              fileStoreId: "753816e7-452d-4686-b8ac-8396f2eae319",
-              documentUid: "753816e7-452d-4686-b8ac-8396f2eae319",
-              auditDetails: null,
-              status: "ACTIVE",
-            },
-            {
-              id: "de9ba0b0-d0f9-4a79-87b1-a95800f43c41",
-              documentType: "OWNER.CONSTRUCTIONPROOF.BPACERTIFICATE",
-              fileStoreId: "59eda26c-7c63-4526-84f8-8c6a0c5633b1",
-              documentUid: "59eda26c-7c63-4526-84f8-8c6a0c5633b1",
-              auditDetails: null,
-              status: "ACTIVE",
-            },
-            {
-              id: "90497467-d3f7-4f15-9d2f-a6ce6214c9fc",
-              documentType: "OWNER.OCCUPANCYPROOF.RENTAGREEMENT",
-              fileStoreId: "b7682ea5-760f-4bbe-b48c-db69ca85a8ae",
-              documentUid: "b7682ea5-760f-4bbe-b48c-db69ca85a8ae",
-              auditDetails: null,
-              status: "ACTIVE",
-            },
-          ],
-          units: [
-            {
-              id: "d4f6a969-0257-45f8-8110-bf88c3855939",
-              tenantId: "pb.amritsar",
-              floorNo: 0,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "SELFOCCUPIED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 25.56,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: null,
-            },
-            {
-              id: "c523b946-aeab-408c-89c3-72c88498a1a0",
-              tenantId: "pb.amritsar",
-              floorNo: 1,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "SELFOCCUPIED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 11.67,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: null,
-            },
-            {
-              id: "416a45b1-1dbe-41ef-b89f-2a644440e927",
-              tenantId: "pb.amritsar",
-              floorNo: 7,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "RENTED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 13.33,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: 1200,
-            },
-            {
-              id: "cea4d169-844e-499c-92eb-857bc2215248",
-              tenantId: "pb.amritsar",
-              floorNo: -1,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "SELFOCCUPIED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 12.22,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: null,
-            },
-            {
-              id: "721857e6-2d3e-4657-af5d-ad61b5d43c9a",
-              tenantId: "pb.amritsar",
-              floorNo: -2,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "SELFOCCUPIED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 13.33,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: null,
-            },
-            {
-              id: "62e6cb6c-de65-4d84-9e38-52543e9cfcd3",
-              tenantId: "pb.amritsar",
-              floorNo: 0,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "SELFOCCUPIED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 25.56,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: null,
-            },
-            {
-              id: "dc579372-92d8-4df9-aba2-5d68aadb7014",
-              tenantId: "pb.amritsar",
-              floorNo: 0,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "UNOCCUPIED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 25.56,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: null,
-            },
-            {
-              id: "2581845f-2b81-4f91-b34b-9a618f74d99a",
-              tenantId: "pb.amritsar",
-              floorNo: -1,
-              unitType: "ACRESTAURANT",
-              usageCategory: "NONRESIDENTIAL.COMMERCIAL.FOODJOINTS.ACRESTAURANT",
-              occupancyType: "RENTED",
-              active: true,
-              occupancyDate: null,
-              constructionDetail: {
-                carpetArea: null,
-                builtUpArea: 13.33,
-                plinthArea: null,
-                superBuiltUpArea: null,
-                constructionType: null,
-                constructionDate: null,
-                dimensions: null,
-              },
-              additionalDetails: null,
-              auditDetails: null,
-              arv: 12000,
-            },
-          ],
-          additionalDetails: null,
-          auditDetails: {
-            createdBy: "7830332f-0f39-4ab0-b239-8af4e6cf126a",
-            lastModifiedBy: "7830332f-0f39-4ab0-b239-8af4e6cf126a",
-            createdTime: 1619688414779,
-            lastModifiedTime: 1619688414779,
-          },
-          workflow: null,
-        },
-      ],
-    };
-    console.log(data.Properties[0]);
     application = data?.Properties[0];
     if (data && application) {
       application = data?.Properties[0];
