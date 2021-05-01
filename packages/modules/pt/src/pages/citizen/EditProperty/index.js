@@ -89,13 +89,16 @@ const getPropertyEditDetails = (data = {}) => {
     data?.units &&
       data?.units.map((unit1, index) => {
         //to remove multiple units
-        if (
+        /* if (
           (unit1?.occupancyType === "RENTED" && rentedtf == true) ||
           (unit1?.occupancyType === "UNOCCUPIED" && unoccupiedtf == true) ||
           (unit1?.occupancyType === "SELFOCCUPIED" && selfoccupiedtf == true)
         ) {
           extraunits.push(unit1);
-        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "RENTED") {
+        }  */ if (
+          unit1?.floorNo == flrno &&
+          unit1?.occupancyType === "RENTED"
+        ) {
           rentedtf = true;
           ob["AnnualRent"] = `${unit1.arv}` || "";
           ob["RentArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
@@ -351,9 +354,13 @@ const EditProperty = ({ parentRoute }) => {
   const propertyIds = window.location.href.split("/").pop();
   let application = {};
   const typeOfProperty = window.location.href.includes("update=true");
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, {
-    filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
-  });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(
+    { filters: typeOfProperty ? { propertyIds } : { acknowledgementIds } },
+    {
+      filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
+    }
+  );
+  console.log(data);
   sessionStorage.setItem("isEditApplication", false);
   useEffect(() => {
     application = data?.Properties[0];
