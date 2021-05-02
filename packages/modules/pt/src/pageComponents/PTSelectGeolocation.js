@@ -37,6 +37,7 @@ const PTSelectGeolocation = ({ t, config, onSelect, formData = {} }) => {
       disabled={pincode === "" || isEditProperty}
       forcedError={t(pincodeServicability)}
       cardBodyStyle={cardBodyStyle}
+      isPTDefault={true}
     />
   );
 };
