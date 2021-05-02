@@ -160,7 +160,7 @@ const PropertyInformation = () => {
                     <CardSubHeader>
                       {t("Unit")} {i}
                     </CardSubHeader>
-                    {(flrno = unit?.floorNo) > -3 && (
+                    {(flrno = unit?.floorNo) > -5 && (
                       <StatusTable>
                         <Row
                           label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")}
