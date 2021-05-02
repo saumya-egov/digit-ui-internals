@@ -345,6 +345,7 @@ export const getunits = (data) => {
       });
     }
   }
+  data?.extraunitFPB ? (unit = unit.concat(data?.extraunitFPB)) : "";
   return unit;
 };
 
@@ -441,7 +442,6 @@ export const getunitsindependent = (data) => {
   if (isthere2Basement(data?.noOofBasements?.i18nKey)) {
     unit = getunitarray("-2", unitsdata, unit, data);
   }
-  console.log(unit);
   return unit;
 };
 

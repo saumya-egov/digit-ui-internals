@@ -11,9 +11,6 @@ import { stringReplaceAll } from "../../../utils";
 
 const getPropertyEditDetails = (data = {}) => {
   // converting owners details
-  //debugger;
-  console.log("inside");
-  console.log(data);
 
   if (data?.ownershipCategory === "INSTITUTIONALPRIVATE" || data?.ownershipCategory === "INSTITUTIONALGOVERNMENT") {
     let document = [];
@@ -155,7 +152,6 @@ const getPropertyEditDetails = (data = {}) => {
   // asessment details
   if (data?.channel === "CFC_COUNTER") {
     if (data?.propertyType === "VACANT") {
-      console.log("vacant");
       data.PropertyType = { code: data?.propertyType, i18nKey: `COMMON_PROPTYPE_${data.propertyType}` };
       data.isResdential =
         data?.usageCategory === "RESIDENTIAL"
@@ -164,6 +160,7 @@ const getPropertyEditDetails = (data = {}) => {
       data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
       data.landarea = { floorarea: data?.landArea };
     } else if (data?.propertyType === "BUILTUP.SHAREDPROPERTY") {
+      let extraunitsFPB = [];
       let selfoccupiedtf = false,
         rentedtf = false,
         unoccupiedtf = false;
@@ -185,24 +182,47 @@ const getPropertyEditDetails = (data = {}) => {
         },
         Subusagetypeofrentedareacode: data?.units[0]?.usageCategory,
       };
-      data.subusagetype = {
+      /* data.subusagetype = {
         SubUsageType: {
           i18nKey: `COMMON_PROPSUBUSGTYPE_${data?.units[0]?.usageCategory
             .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
             .replaceAll(".", "_")}`,
         },
-      };
+      }; */
       data?.units &&
         data?.units.map((unit, index) => {
-          if (unit?.occupancyType === "RENTED") {
+          if (
+            (unit?.occupancyType === "RENTED" && rentedtf == true && unit.floorNo == data?.units[0].floorNo) ||
+            (unit?.occupancyType === "UNOCCUPIED" && unoccupiedtf == true && unit.floorNo == data?.units[0].floorNo) ||
+            (unit?.occupancyType === "SELFOCCUPIED" && selfoccupiedtf == true && unit.floorNo == data?.units[0].floorNo)
+          ) {
+            if (!extraunitsFPB.includes(unit)) {
+              extraunitsFPB.push(unit);
+            }
+          } else if (unit?.occupancyType === "RENTED" && unit.floorNo == data?.units[0].floorNo) {
             rentedtf = true;
             data.Constructiondetails = { RentArea: unit?.constructionDetail?.builtUpArea, AnnualRent: unit?.arv };
-          } else if (unit?.occupancyType === "UNOCCUPIED") {
+            data.Subusagetypeofrentedarea = {
+              SubUsageTypeOfRentedArea: {
+                i18nKey: `COMMON_PROPSUBUSGTYPE_${unit?.usageCategory.slice(0, unit?.usageCategory.lastIndexOf(".")).replaceAll(".", "_")}`,
+              },
+              Subusagetypeofrentedareacode: unit?.usageCategory,
+            };
+          } else if (unit?.occupancyType === "UNOCCUPIED" && unit.floorNo == data?.units[0].floorNo) {
             unoccupiedtf = true;
             data.UnOccupiedArea = { UnOccupiedArea: unit?.constructionDetail?.builtUpArea };
-          } else if (unit?.occupancyType === "SELFOCCUPIED") {
+          } else if (unit?.occupancyType === "SELFOCCUPIED" && unit.floorNo == data?.units[0].floorNo) {
             selfoccupiedtf = true;
             data.landarea = { floorarea: unit?.constructionDetail?.builtUpArea };
+            data.subusagetype = {
+              SubUsageType: {
+                i18nKey: `COMMON_PROPSUBUSGTYPE_${unit?.usageCategory.slice(0, unit?.usageCategory.lastIndexOf(".")).replaceAll(".", "_")}`,
+              },
+            };
+          } else {
+            if (!extraunitsFPB.includes(unit)) {
+              extraunitsFPB.push(unit);
+            }
           }
         });
       data.selfOccupied =
@@ -220,8 +240,8 @@ const getPropertyEditDetails = (data = {}) => {
       data.IsAnyPartOfThisFloorUnOccupied =
         unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
       data.floordetails = { plotSize: 1000, builtUpArea: data?.superBuiltUpArea };
+      data["extraunitFPB"] = extraunitsFPB;
     } else if (data?.propertyType === "BUILTUP.INDEPENDENTPROPERTY") {
-      console.log("inside independent property");
       let nooffloor = 0,
         noofbasemement = 0;
       let floornumbers = [];
@@ -249,16 +269,30 @@ const getPropertyEditDetails = (data = {}) => {
         : floornumbers.includes(-1)
         ? { i18nKey: "PT_ONE_BASEMENT_OPTION" }
         : { i18nKey: "PT_NO_BASEMENT_OPTION" }; */
-      //debugger;
-      //console.log(data);
       let unitedit = [];
       let ob = {};
       let flooradded = [];
       let flrno;
       let extraunits = [];
       let totbuiltarea = 0;
-      //console.log("unitedit");
-      //console.log(unitedit);
+
+      data.units &&
+        data.units.sort((x, y) => {
+          let a = x.floorNo,
+            b = y.floorNo;
+          if (x.floorNo < 0) {
+            a = x.floorNo * -20;
+          }
+          if (y.floorNo < 0) {
+            b = y.floorNo * -20;
+          }
+          if (a > b) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+
       data?.units &&
         data?.units.map((unit, index) => {
           ob = {};
@@ -278,16 +312,18 @@ const getPropertyEditDetails = (data = {}) => {
           if (ob == {}) {
             extraunits.push(unit);
           }
-          console.log("ob");
-          console.log(ob);
+          //console.log(ob);
           !flooradded.includes(unit.floorNo) && ob.builtUpArea > 0 && unit.floorNo > -1 && unit.floorNo < 3 && ob.selfOccupied !== "" && ob != {}
             ? unitedit.push(ob)
-            : console.log("skipping push");
-          unit.floorNo == -1 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-1"] = ob) : console.log("skiiping basement 1");
-          unit.floorNo == -2 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-2"] = ob) : console.log("skiiping basement 2");
+            : console.log("");
+          unit.floorNo == -1 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-1"] = ob) : console.log("");
+          if (unitedit["-1"] && unit.floorNo == -2 && !extraunits.includes(unit)) {
+            unit.floorNo == -2 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-2"] = ob) : console.log("");
+          } else if (!unitedit["-1"] && unit.floorNo == -2 && !extraunits.includes(unit)) {
+            extraunits.push(unit);
+          }
           flooradded.push(flrno);
-          console.log("unitedit");
-          console.log(unitedit);
+          //console.log(unitedit);
         });
 
       data.noOfFloors =
@@ -302,14 +338,10 @@ const getPropertyEditDetails = (data = {}) => {
         ? { i18nKey: "PT_ONE_BASEMENT_OPTION" }
         : { i18nKey: "PT_NO_BASEMENT_OPTION" };
 
-      console.log("extraunits");
-      console.log(extraunits);
       data.units = unitedit;
       data.units = data?.units.concat(extraunits);
       unitedit["-1"] ? (data.units["-1"] = unitedit["-1"]) : "";
       unitedit["-2"] ? (data.units["-2"] = unitedit["-2"]) : "";
-      console.log("units");
-      console.log(data.units);
     }
   } else {
     if (data?.additionalDetails?.propertyType?.code === "VACANT") {
@@ -352,7 +384,6 @@ const getPropertyEditDetails = (data = {}) => {
       data.units["-2"] = data?.additionalDetails?.basement2;
     }
   }
-  console.log(data);
   return data;
 };
 const EditProperty = ({ parentRoute }) => {
@@ -374,7 +405,6 @@ const EditProperty = ({ parentRoute }) => {
       filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
     }
   );
-  console.log(data);
   sessionStorage.setItem("isEditApplication", false);
   useEffect(() => {
     application = data?.Properties[0];

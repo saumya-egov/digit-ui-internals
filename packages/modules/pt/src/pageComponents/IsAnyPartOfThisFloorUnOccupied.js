@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
 
 const IsAnyPartOfThisFloorUnOccupied = ({ t, config, onSelect, userType, formData }) => {
-  console.log(formData);
   let index = window.location.href.split("/").pop();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
