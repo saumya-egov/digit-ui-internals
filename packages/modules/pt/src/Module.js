@@ -107,19 +107,14 @@ export const PTLinks = ({ matchPath, userType }) => {
   useEffect(() => {
     clearParams();
   }, []);
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId);
-  const { Properties: myproperties } = data || [];
 
   return (
     <React.Fragment>
       <Header>{t("ACTION_TEST_PROPERTY_TAX")}</Header>
       <div className="d-grid">
         <HomeLink to={`${matchPath}/property/new-application`}>{t("PT_CREATE_PROPERTY")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-properties`}>{`${t("PT_MY_PROPERTIES")}${myproperties ? `(${myproperties.length})` : ""}`}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-applications`}>{`${t("PT_MY_APPLICATION")}${
-          myproperties ? `(${myproperties.length})` : ""
-        }`}</HomeLink>
+        <HomeLink to={`${matchPath}/property/my-properties`}>{t("PT_MY_PROPERTIES")}</HomeLink>
+        <HomeLink to={`${matchPath}/property/my-applications`}>{t("PT_MY_APPLICATION")}</HomeLink>
       </div>
     </React.Fragment>
   );
