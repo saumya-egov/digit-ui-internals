@@ -65,6 +65,16 @@ const fsmAccess = () => {
   return FSM_ACCESS.length > 0;
 };
 
+const ptAccess = () => {
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo.info.roles.map((roleData) => roleData.code);
+  const ptRoles = ["PT_APPROVER", "PT_CEMP", "PT_DOC_VERIFIER", "PT_FIELD_INSPECTOR"];
+
+  const PT_ACCESS = userRoles.filter((role) => ptRoles.includes(role));
+
+  return PT_ACCESS.length > 0;
+};
+
 export default {
   pdf: PDFUtil,
   browser: BrowserUtil,
@@ -77,4 +87,5 @@ export default {
   pgrAccess,
   fsmAccess,
   dss,
+  ptAccess,
 };

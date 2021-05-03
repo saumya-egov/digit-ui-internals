@@ -12,6 +12,10 @@ import {
 const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
   const [FloorDetails, setFloorDetails] = useState(formData?.noOfFloors);
 
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
+  const { data: Menu = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Floor") || {};
+
   const menu = [
     {
       //i18nKey: "Ground Floor Only",
@@ -28,11 +32,13 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
       i18nKey: "PT_GROUND_PLUS_TWO_OPTION",
       code: 2,
     },
-    {
+    /* {
       i18nKey: "NONE",
       code: "NONE",
-    },
+    }, */ //in case of independent roperty floor can't be none, if it is then user need to select vacant type.
   ];
+
+  const employeeMenu = Menu?.PropertyTax?.Floor?.filter((floor) => floor?.code > 0) || [];
 
   const onSkip = () => onSelect();
 
@@ -70,11 +76,11 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
           <Dropdown
             className="form-field"
             isMandatory={config.isMandatory}
-            selected={menu?.length === 1 ? menu[0] : FloorDetails}
-            disable={menu?.length === 1}
-            option={menu}
+            selected={employeeMenu?.length === 1 ? employeeMenu[0] : FloorDetails}
+            disable={employeeMenu?.length === 1}
+            option={employeeMenu}
             select={selectFloorDetails}
-            optionKey="i18nKey"
+            optionKey="name"
             t={t}
           />
         </LabelFieldPair>
@@ -94,7 +100,7 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
           onSelect={selectFloorDetails}
         />
       </FormStep>
-      {FloorDetails && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_FLOOR_NUMBER_INFO_MSG", FloorDetails)} />}
+      {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_FLOOR_NUMBER_INFO_MSG", FloorDetails)} />}
     </React.Fragment>
   );
 };

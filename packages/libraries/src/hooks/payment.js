@@ -11,7 +11,14 @@ export const useFetchCitizenBillsForBuissnessService = ({ businessService, ...fi
   const { isLoading, error, isError, data, status } = useQuery(
     ["citizenBillsForBuisnessService", businessService, { ...params }],
     () => Digit.PaymentService.fetchBill(tenantId, { ...params }),
-    { refetchOnMount: true, ...config }
+    {
+      refetchOnMount: true,
+      retry: (failureCount, error) => {
+        if (error?.response?.data?.Errors?.[0]?.code === "EG_BS_BILL_NO_DEMANDS_FOUND") return false;
+        else return failureCount < 3;
+      },
+      ...config,
+    }
   );
   return {
     isLoading,

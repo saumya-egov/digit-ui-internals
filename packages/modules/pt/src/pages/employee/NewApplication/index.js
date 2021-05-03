@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FormComposer } from "@egovernments/digit-ui-react-components";
+import { FormComposer, Toast } from "@egovernments/digit-ui-react-components";
 import { newConfig } from "../../../config/Create/config";
+import { useHistory } from "react-router-dom";
 
 const NewApplication = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [canSubmit, setSubmitValve] = useState(false);
   const defaultValues = {};
+  const history = useHistory();
 
   const onFormValueChange = (setValue, formData) => {
     if (
@@ -20,12 +22,16 @@ const NewApplication = () => {
       formData?.usageCategoryMajor?.code &&
       formData?.usageCategoryMinor?.subuagecode &&
       formData?.owners?.ownerType?.code &&
-      formData?.documents?.documents?.length === formData?.documents?.propertyTaxDocumentsLength
+      formData?.documents?.documents?.length === formData?.documents?.propertyTaxDocumentsLength &&
+      formData?.landarea
     ) {
       if (formData?.ownershipCategory?.code !== "INDIVIDUAL.SINGLEOWNER" && formData?.owners?.altContactNumber) {
-        if (formData?.PropertyType?.code !== "VACANT" && formData?.noOfFloors?.i18nKey) {
+        const filteredUnitsArray = formData?.units?.filter(
+          (unit) => unit?.constructionDetail?.builtUpArea && unit?.floorNo && unit?.occupancyType && unit?.usageCategory
+        );
+        if (formData?.PropertyType?.code === "VACANT") {
           setSubmitValve(true);
-        } else if (formData?.PropertyType?.code === "VACANT" && formData?.landarea?.length > 0) {
+        } else if (formData?.PropertyType?.code !== "VACANT" && filteredUnitsArray?.length >= formData?.noOfFloors?.code) {
           setSubmitValve(true);
         } else {
           setSubmitValve(false);
@@ -37,8 +43,6 @@ const NewApplication = () => {
       setSubmitValve(false);
     }
   };
-
-  const { mutate } = Digit.Hooks.pt.usePropertyAPI(tenantId);
 
   const onSubmit = (data) => {
     const formData = {
@@ -63,23 +67,13 @@ const NewApplication = () => {
       channel: "CFC_COUNTER", // required
       creationReason: "CREATE", // required
       source: "MUNICIPAL_RECORDS", // required
-      superBuiltUpArea: data?.landarea,
+      superBuiltUpArea: null,
       units: data?.units[0]?.usageCategory ? data?.units : [],
       documents: data?.documents?.documents,
+      applicationStatus: "CREATE",
     };
-    console.log("%c 🚡: onSubmit -> formData ", "font-size:16px;background-color:#aedadd;color:black;", formData);
 
-    mutate(
-      { Property: formData },
-      {
-        onError: (error, variables) => {
-          console.log("%c 🔏: onSubmit -> error ", "font-size:16px;background-color:#b6d3e4;color:black;", error);
-        },
-        onSuccess: (data, variables) => {
-          console.log("%c 👷‍♂️: onSubmit -> data ", "font-size:16px;background-color:#b76d44;color:white;", data);
-        },
-      }
-    );
+    history.push("/digit-ui/employee/pt/response", { Property: formData });
   };
   const configs = newConfig;
 

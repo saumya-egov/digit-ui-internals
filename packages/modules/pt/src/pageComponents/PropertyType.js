@@ -1,23 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { FormStep, RadioButtons, CardLabel, LabelFieldPair, Dropdown } from "@egovernments/digit-ui-react-components";
+import { FormStep, RadioButtons, CardLabel, LabelFieldPair, Dropdown,Loader } from "@egovernments/digit-ui-react-components";
+import { stringReplaceAll } from "../utils";
 
 const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   const [BuildingType, setBuildingType] = useState(formData?.PropertyType);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
-  const { data: Menu = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "PTPropertyType") || {};
+  const { data: Menu = {} ,isLoading} = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "PTPropertyType") || {};
   let proptype = [];
   proptype = Menu?.PropertyTax?.PropertyType;
   let i;
   let menu = [];
   function getPropertyTypeMenu(proptype) {
-    if (Array.isArray(proptype) && proptype.length > 0) {
-      for (i = 0; i < proptype.length; i++) {
-        if (i != 1 && i != 4 && Array.isArray(proptype) && proptype.length > 0)
-          menu.push({ i18nKey: "COMMON_PROPTYPE_" + proptype[i].code.replaceAll(".", "_"), code: proptype[i].code });
+    if (userType === "employee") {
+      return proptype
+        ?.map((item) => ({ i18nKey: "COMMON_PROPTYPE_" + stringReplaceAll(item?.code,".", "_"), code: item?.code }))
+        ?.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
+    } else {
+      if (Array.isArray(proptype) && proptype.length > 0) {
+        for (i = 0; i < proptype.length; i++) {
+          if (i != 1 && i != 4 && Array.isArray(proptype) && proptype.length > 0)
+            menu.push({ i18nKey: "COMMON_PROPTYPE_" + stringReplaceAll(proptype[i].code,".", "_"), code: proptype[i].code });
+        }
       }
+      menu.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
+      //console.log(menu);
+      return menu;
     }
-    return menu;
   }
 
   const onSkip = () => onSelect();
@@ -46,7 +55,9 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
       validation: {},
     },
   ];
-
+  if (isLoading) {
+    return <Loader />;
+  }
   if (userType === "employee") {
     return inputs?.map((input, index) => {
       return (

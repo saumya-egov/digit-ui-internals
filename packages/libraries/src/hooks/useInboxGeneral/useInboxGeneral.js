@@ -30,6 +30,22 @@ const defaultCombineResponse = ({ totalCount, ...d }, wf) => {
   return { totalCount, searchData: { ...d }, workflowData: { ...wf } };
 };
 
+const defaultRawSearchHandler = ({ totalCount, ...data }, searchKey, businessIdAlias) => {
+  return { [searchKey]: data[searchKey].map((e) => ({ totalCount, ...e })) };
+};
+
+const defaultCatchSearch = (Err) => {
+  if (
+    Err?.response?.data?.Errors?.some(
+      (e) =>
+        e.code === "EG_PT_INVALID_SEARCH" &&
+        e.message === " Search is not allowed on empty Criteria, Atleast one criteria should be provided with tenantId for EMPLOYEE"
+    )
+  )
+    return [];
+  throw Err;
+};
+
 /**
  *
  * @param {*} data
@@ -59,13 +75,14 @@ const useInboxGeneral = ({
   businessService,
   filters,
   rawWfHandler = (d) => d,
-  rawSearchHandler = ({ totalCount, ...data }, searchKey, businessIdAlias) => ({ [searchKey]: data[searchKey].map((e) => ({ totalCount, ...e })) }),
+  rawSearchHandler = defaultRawSearchHandler,
   combineResponse = defaultCombineResponse,
   isInbox = true,
   wfConfig = {},
   searchConfig = {},
   middlewaresWf = [],
   middlewareSearch = [],
+  catchSearch = defaultCatchSearch,
 }) => {
   const client = useQueryClient();
   const { t } = useTranslation();
@@ -83,19 +100,13 @@ const useInboxGeneral = ({
     {
       enabled: isInbox,
       select: (d) => {
-        console.log(d, "data inside select");
         return d;
       },
       ...wfConfig,
     }
   );
-  useEffect(() => {
-    console.log(wfFetching, processInstances, "inside useEffect");
-  }, [wfFetching, processInstances]);
 
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
-
-  console.log(applicationNoFromWF, "hello");
 
   if (isInbox && applicationNoFromWF && !searchFilters[businessIdAliasForSearch])
     searchFilters = { ...searchFilters, [businessIdsParamForSearch]: applicationNoFromWF };
@@ -116,20 +127,11 @@ const useInboxGeneral = ({
       _searchFn()
         .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
         .then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch))
-        .catch((Err) => {
-          if (
-            Err?.response?.data?.Errors?.some(
-              (e) =>
-                e.code === "EG_PT_INVALID_SEARCH" &&
-                e.message === " Search is not allowed on empty Criteria, Atleast one criteria should be provided with tenantId for EMPLOYEE"
-            )
-          )
-            return [];
-          throw Err;
-        }),
+        .catch(catchSearch),
     {
       enabled: !isInbox || (!wfFetching && wfSuccess),
       select: (d) => {
+        console.log(d.length + " records fetched", "inside select");
         return d.map((searchResult) => ({
           totalCount: d.totalCount,
           ...combineResponse(searchResult, processInstanceBuisnessIdMap?.[searchResult?.[businessIdAliasForSearch]]),

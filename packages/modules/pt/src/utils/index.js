@@ -4,7 +4,9 @@ export const checkForNotNull = (value = "") => {
 };
 
 export const convertDotValues = (value = "") => {
-  return (checkForNotNull(value) && ((value.replaceAll && value.replaceAll(".", "_")) || (value.replace && value.replace(".", "_")))) || "NA";
+  return (
+    (checkForNotNull(value) && ((value.replaceAll && value.replaceAll(".", "_")) || (value.replace && stringReplaceAll(value, ".", "_")))) || "NA"
+  );
 };
 
 export const convertToLocale = (value = "", key = "") => {
@@ -100,7 +102,7 @@ export const setOwnerDetails = (data) => {
       if (owners[0]?.documents["proofIdentity"]?.fileStoreId) {
         document.push({
           fileStoreId: owners[0]?.documents["proofIdentity"]?.fileStoreId || "",
-          documentType: owners[0]?.documents["proofIdentity"]?.documentType || "",
+          documentType: owners[0]?.documents["proofIdentity"]?.documentType?.code || "",
         });
       }
       owner.push({
@@ -122,13 +124,13 @@ export const setOwnerDetails = (data) => {
         if (ownr?.ownerType?.code != "NONE") {
           document.push({
             fileStoreId: ownr?.documents["specialProofIdentity"]?.fileStoreId || "",
-            documentType: ownr?.documents["specialProofIdentity"]?.documentType || "",
+            documentType: ownr?.documents["specialProofIdentity"]?.documentType?.code || "",
           });
         }
         if (ownr?.documents["proofIdentity"]?.fileStoreId) {
           document.push({
             fileStoreId: ownr?.documents["proofIdentity"]?.fileStoreId || "",
-            documentType: ownr?.documents["proofIdentity"]?.documentType || "",
+            documentType: ownr?.documents["proofIdentity"]?.documentType?.code || "",
           });
         }
         owner.push({
@@ -153,24 +155,52 @@ export const setOwnerDetails = (data) => {
 export const setDocumentDetails = (data) => {
   const { address, owners } = data;
   let documents = [];
-  documents.push({
-    fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
-    documentType: address?.documents["ProofOfAddress"]?.documentType || "",
-  });
+  if (address?.documents["ProofOfAddress"]?.id) {
+    documents.push({
+      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
+      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
+      id: address?.documents["ProofOfAddress"]?.id || "",
+      status: address?.documents["ProofOfAddress"]?.status || "",
+    });
+  } else {
+    documents.push({
+      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
+      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
+    });
+  }
+
   owners &&
     owners.length > 0 &&
     owners.map((owner) => {
       if (owner.documents && owner.documents["proofIdentity"]) {
-        documents.push({
-          fileStoreId: owner?.documents["proofIdentity"].fileStoreId || "",
-          documentType: owner?.documents["proofIdentity"].documentType || "",
-        });
+        if (owner?.documents["proofIdentity"]?.id) {
+          documents.push({
+            fileStoreId: owner?.documents["proofIdentity"].fileStoreId || "",
+            documentType: owner?.documents["proofIdentity"].documentType?.code || "",
+            id: owner?.documents["proofIdentity"]?.id || "",
+            status: owner?.documents["proofIdentity"]?.status || "",
+          });
+        } else {
+          documents.push({
+            fileStoreId: owner?.documents["proofIdentity"].fileStoreId || "",
+            documentType: owner?.documents["proofIdentity"].documentType?.code || "",
+          });
+        }
       }
       if (owner.documents && owner.documents["specialProofIdentity"]) {
-        documents.push({
-          fileStoreId: owner?.documents["specialProofIdentity"]?.fileStoreId || "",
-          documentType: owner?.documents["specialProofIdentity"]?.documentType || "",
-        });
+        if (owner?.documents["specialProofIdentity"]?.id) {
+          documents.push({
+            fileStoreId: owner?.documents["specialProofIdentity"]?.fileStoreId || "",
+            documentType: owner?.documents["specialProofIdentity"]?.documentType?.code || "",
+            id: owner?.documents["specialProofIdentity"]?.id || "",
+            status: owner?.documents["specialProofIdentity"]?.status || "",
+          });
+        } else {
+          documents.push({
+            fileStoreId: owner?.documents["specialProofIdentity"]?.fileStoreId || "",
+            documentType: owner?.documents["specialProofIdentity"]?.documentType?.code || "",
+          });
+        }
       }
     });
   data.documents = documents;
@@ -287,7 +317,10 @@ export const getunits = (data) => {
           builtUpArea: parseInt(data?.landarea?.floorarea),
         },
         tenantId: data.tenantId,
-        usageCategory: getusageCategory(data),
+        usageCategory:
+          data?.isResdential?.i18nKey === "PT_COMMON_YES" || data?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS"
+            ? data?.isResdential?.code
+            : data?.subusagetype?.subuagecode,
       });
     }
     unit.push({
@@ -312,11 +345,14 @@ export const getunits = (data) => {
       });
     }
   }
+  data?.extraunitFPB ? (unit = unit.concat(data?.extraunitFPB)) : "";
   return unit;
 };
 
 export const getunitarray = (i, unitsdata, unit, data) => {
-  if (
+  if (unitsdata[i].active === true) {
+    unit.push(unitsdata[i]);
+  } else if (
     unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
     unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "PT_COMMON_YES"
   ) {
@@ -360,7 +396,10 @@ export const getunitarray = (i, unitsdata, unit, data) => {
           builtUpArea: parseInt(unitsdata[i]?.floorarea),
         },
         tenantId: data.tenantId,
-        usageCategory: getusageCategory(data, i),
+        usageCategory:
+          data?.isResdential?.i18nKey === "PT_COMMON_YES" || data?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS"
+            ? data?.isResdential?.code
+            : unitsdata[i].subuagecode,
       });
     }
     unit.push({
@@ -534,14 +573,14 @@ export const setUpdateOwnerDetails = (data = []) => {
       if (owners[0]?.documents["proofIdentity"]?.fileStoreId && owners[0].documents["proofIdentity"].id) {
         document.push({
           fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
-          documentType: owners[0].documents["proofIdentity"].documentType || "",
+          documentType: owners[0].documents["proofIdentity"].documentType?.code || "",
           id: owners[0].documents["proofIdentity"].id || "",
           status: owners[0].documents["proofIdentity"].status || "",
         });
       } else {
         document.push({
           fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
-          documentType: owners[0].documents["proofIdentity"].documentType || "",
+          documentType: owners[0].documents["proofIdentity"].documentType?.code || "",
         });
       }
       data.owners.forEach((owner) => {
@@ -564,14 +603,14 @@ export const setUpdateOwnerDetails = (data = []) => {
         if (owner.documents["specialProofIdentity"].id) {
           document.push({
             fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: owner.documents["specialProofIdentity"].documentType || "",
+            documentType: owner.documents["specialProofIdentity"].documentType?.code || "",
             id: owner.documents["specialProofIdentity"].id || "",
             status: owner.documents["specialProofIdentity"].status || "",
           });
         } else {
           document.push({
             fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: owner.documents["specialProofIdentity"].documentType || "",
+            documentType: owner.documents["specialProofIdentity"].documentType?.code || "",
           });
         }
       }
@@ -579,22 +618,50 @@ export const setUpdateOwnerDetails = (data = []) => {
         if (owner.documents["proofIdentity"].id) {
           document.push({
             fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
-            documentType: owner.documents["proofIdentity"].documentType || "",
+            documentType: owner.documents["proofIdentity"].documentType?.code || "",
             id: owner.documents["proofIdentity"].id || "",
             status: owner.documents["proofIdentity"].status || "",
           });
         } else {
           document.push({
             fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
-            documentType: owner.documents["proofIdentity"].documentType || "",
+            documentType: owner.documents["proofIdentity"].documentType?.code || "",
           });
         }
       }
       owner.gender = owner?.gender?.code;
       owner.ownerType = owner?.ownerType?.code;
       owner.relationship = owner?.relationship?.code;
+      owner.documents = document;
     });
   }
+  return data;
+};
+export const setUpdatedDocumentDetails = (data) => {
+  const { address, owners } = data;
+  let documents = [];
+  if (address?.documents["ProofOfAddress"]?.id) {
+    documents.push({
+      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
+      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
+      id: address?.documents["ProofOfAddress"]?.id || "",
+      status: address?.documents["ProofOfAddress"]?.status || "",
+    });
+  } else {
+    documents.push({
+      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
+      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
+    });
+  }
+
+  owners &&
+    owners.length > 0 &&
+    owners.map((owner) => {
+      owner.documents.map((document) => {
+        documents.push(document);
+      });
+    });
+  data.documents = documents;
   return data;
 };
 export const convertToUpdateProperty = (data = {}) => {
@@ -603,6 +670,7 @@ export const convertToUpdateProperty = (data = {}) => {
   let propertyType = data.PropertyType;
   data = setAddressDetails(data);
   data = setUpdateOwnerDetails(data);
+  data = setUpdatedDocumentDetails(data);
   data = setPropertyDetails(data);
 
   const formdata = {
@@ -723,4 +791,12 @@ export const convertEpochToDate = (dateEpoch) => {
   } else {
     return null;
   }
+};
+
+export const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
+  if (searcher == "") return str;
+  while (str.includes(searcher)) {
+    str = str.replace(searcher, replaceWith);
+  }
+  return str;
 };

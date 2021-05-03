@@ -6,10 +6,10 @@ import InboxLinks from "./inbox/InboxLink";
 import ApplicationTable from "./inbox/ApplicationTable";
 import SearchApplication from "./inbox/search";
 
-const DesktopInbox = ({ tableConfig, ...props }) => {
+const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
-  const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent("PT_INBOX_FILTER"));
+  const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
 
   // searchData, workFlowData
 
@@ -70,7 +70,14 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
         <div className="filters-container">
           <InboxLinks parentRoute={props.parentRoute} businessService={props.businessService} />
           <div>
-            {<FilterComponent onFilterChange={props.onFilterChange} searchParams={props.searchParams} type="desktop" />}
+            {
+              <FilterComponent
+                defaultSearchParams={props.defaultSearchParams}
+                onFilterChange={props.onFilterChange}
+                searchParams={props.searchParams}
+                type="desktop"
+              />
+            }
             {/* <Filter
               businessService={props.businessService}
               searchParams={props.searchParams}
@@ -83,7 +90,14 @@ const DesktopInbox = ({ tableConfig, ...props }) => {
         </div>
       )}
       <div style={{ flex: 1 }}>
-        <SearchApplication onSearch={props.onSearch} type="desktop" searchFields={props.searchFields} isInboxPage={!props?.isSearch} />
+        <SearchApplication
+          defaultSearchParams={props.defaultSearchParams}
+          onSearch={props.onSearch}
+          type="desktop"
+          searchFields={props.searchFields}
+          isInboxPage={!props?.isSearch}
+          searchParams={props.searchParams}
+        />
         <div className="result" style={{ marginLeft: !props?.isSearch ? "24px" : "", flex: 1 }}>
           {result}
         </div>

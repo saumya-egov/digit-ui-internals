@@ -1,5 +1,5 @@
+import { CardLabel, FormStep, TextInput } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
-import { FormStep, CardLabel, TextInput, CardHeader, Card, CardText } from "@egovernments/digit-ui-react-components";
 
 const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -19,17 +19,22 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
     [builtUpArea, setbuiltUpArea] = useState(formData.floordetails?.builtUpArea);
   }
   const [builtupplotsizeeroor, setbuiltupplotsizeeroor] = useState(null);
+  const [areanotzeroerror, setareanotzeroerror] = useState(null);
   function setPropertyplotSize(e) {
     setplotSize(e.target.value);
     setbuiltupplotsizeeroor(null);
-
+    setareanotzeroerror(null);
     if (e.target.value && parseInt(builtUpArea) > parseInt(e.target.value)) {
       setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
+    }
+    if (parseInt(e.target.value) == 0) {
+      setareanotzeroerror("PT_AREA_NOT_0_MSG");
     }
   }
   function setPropertybuiltUpArea(e) {
     setbuiltUpArea(e.target.value);
     setbuiltupplotsizeeroor(null);
+    setareanotzeroerror(null);
     if (formData?.PropertyType?.i18nKey === "COMMON_PROPTYPE_BUILTUP_INDEPENDENTPROPERTY" && index != "0") {
       if (formData?.units[0]?.plotSize && parseInt(e.target.value) > parseInt(formData?.units[0]?.plotSize)) {
         setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
@@ -38,6 +43,9 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       if (plotSize && parseInt(e.target.value) > parseInt(plotSize)) {
         setbuiltupplotsizeeroor("PT_BUILTUPAREA_PLOTSIZE_ERROR_MSG");
       }
+    }
+    if (parseInt(e.target.value) == 0) {
+      setareanotzeroerror("PT_AREA_NOT_0_MSG");
     }
   }
 
@@ -75,8 +83,8 @@ const GroundFloorDetails = ({ t, config, onSelect, value, userType, formData }) 
       onSelect={goNext}
       onSkip={onSkip}
       t={t}
-      forcedError={t(builtupplotsizeeroor)}
-      isDisabled={builtupplotsizeeroor || (!builtUpArea && (!plotSize || !builtUpArea))}
+      forcedError={t(builtupplotsizeeroor) || t(areanotzeroerror)}
+      isDisabled={builtupplotsizeeroor || areanotzeroerror || (!builtUpArea && (!plotSize || !builtUpArea))}
       showErrorBelowChildren={true}
     >
       {(index === "0" || isNaN(index)) && (

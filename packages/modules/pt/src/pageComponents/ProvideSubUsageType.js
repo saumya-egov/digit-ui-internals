@@ -24,26 +24,42 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   let data = [];
 
   function getSubUsagedata(subusageoption) {
-    for (i = 0; i < subusageoption.length; i++) {
-      if (
-        Array.isArray(subusageoption) &&
-        subusageoption.length > 0 &&
-        subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] &&
-        subusageoption[i].code.split(".").length == 4
-      ) {
-        data.push({
-          i18nKey:
-            "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" +
-            subusageoption[i].code.split(".")[1] +
-            "_" +
-            subusageoption[i].code.split(".")[subusageoption[i].code.split(".").length - 1],
-        });
+    if (userType === "employee") {
+      return subusageoption
+        ?.map((item) => {
+          if (item?.code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] && item?.code.split(".").length == 4) {
+            return {
+              i18nKey:
+                "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" + item?.code.split(".")[1] + "_" + item?.code.split(".")[item?.code.split(".").length - 1],
+            };
+          }
+          return { filter: true };
+        })
+        ?.filter((item) => !item?.filter)
+        ?.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
+    } else {
+      for (i = 0; i < subusageoption.length; i++) {
+        if (
+          Array.isArray(subusageoption) &&
+          subusageoption.length > 0 &&
+          subusageoption[i].code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] &&
+          subusageoption[i].code.split(".").length == 4
+        ) {
+          data.push({
+            i18nKey:
+              "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" +
+              subusageoption[i].code.split(".")[1] +
+              "_" +
+              subusageoption[i].code.split(".")[subusageoption[i].code.split(".").length - 1],
+          });
+        }
       }
+      data.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
+      return data;
     }
-    return data;
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_OTHERS") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -57,9 +73,9 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
         onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
       }
     }
-  }, [!isNaN(index) ? formData?.units[index]?.SubUsageType?.i18nKey : formData?.SubUsageType?.i18nKey]);
+  }, [!isNaN(index) ? formData?.units[index]?.SubUsageType?.i18nKey : formData?.SubUsageType?.i18nKey]); */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -74,7 +90,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
         onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
       }
     }
-  });
+  }); */
 
   const getCode = () => {
     for (i = 0; i < subusageoption.length; i++) {
@@ -93,14 +109,25 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   function goNext() {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     let subuagecode = getCode();
+
     if (!isNaN(index)) {
       let unit = formData.units && formData.units[index];
       let floordet = { ...unit, SubUsageType, subuagecode };
+      if (unit?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
+        sessionStorage.setItem("subusagetypevar", "yes");
+      } else {
+        sessionStorage.setItem("subusagetypevar", "no");
+      }
       onSelect(config.key, floordet, false, index);
     } else {
       if (userType === "employee") {
         onSelect(config.key, { SubUsageType, subuagecode });
       } else {
+        if (formData?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
+          sessionStorage.setItem("subusagetypevar", "yes");
+        } else {
+          sessionStorage.setItem("subusagetypevar", "no");
+        }
         onSelect("subusagetype", { SubUsageType, subuagecode });
       }
     }

@@ -11,7 +11,7 @@ const Successful = (props) => {
       <header>{props.props.message}</header>
       <div>
         {/* <img src={success} alt="successfull submition"/> */}
-        <SuccessSvg />
+        {props?.props?.svg || <SuccessSvg />}
         <h2>{props?.props?.complaintNumber ? "Complaint No." : props.props.info}</h2>
         <p>{props?.props?.complaintNumber ? props?.props?.complaintNumber : props?.props?.applicationNumber}</p>
       </div>
@@ -27,6 +27,8 @@ const Error = (props) => {
       <header>{props.props.message}</header>
       <ErrorSvg />
       {/* <img src={error} alt="error while submition"/> */}
+      <h2>{props?.props?.complaintNumber ? "Complaint No." : props.props.info}</h2>
+      <p>{props?.props?.complaintNumber ? props?.props?.complaintNumber : props?.props?.applicationNumber}</p>
     </div>
   );
 };

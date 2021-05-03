@@ -40,10 +40,11 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
         });
       }
     }
+    data.sort((a, b) => t(a.i18nKey).localeCompare(t(b.i18nKey)));
     return data;
   }
 
-  useEffect(() => {
+  /*   useEffect(() => {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     let index = window.location.href.split("/").pop();
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey == "PROPERTYTAX_BILLING_SLAB_OTHERS") {
@@ -59,9 +60,9 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
         onSelect(config.key, { i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_OTHERS_CREMATION/BURIAL" }, true, index);
       }
     }
-  }, [!isNaN(index) ? formData?.units[index]?.SubUsageTypeOfRentedArea?.i18nKey : formData?.SubUsageTypeOfRentedArea?.i18nKey]);
+  }, [!isNaN(index) ? formData?.units[index]?.SubUsageTypeOfRentedArea?.i18nKey : formData?.SubUsageTypeOfRentedArea?.i18nKey]); */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (userType !== "employee" && formData?.usageCategoryMajor?.i18nKey === "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -76,9 +77,9 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
         onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true, index);
       }
     }
-  });
+  }); */
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       if (!isNaN(index)) {
@@ -90,7 +91,7 @@ const ProvideSubUsageTypeOfRentedArea = ({ t, config, onSelect, userType, formDa
         onSelect(config.key, {}, true, index);
       }
     }
-  });
+  }); */
 
   const getCode = () => {
     for (i = 0; i < subusageoption.length; i++) {

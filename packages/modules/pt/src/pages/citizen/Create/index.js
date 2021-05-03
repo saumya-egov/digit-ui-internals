@@ -46,6 +46,8 @@ const CreateProperty = ({ parentRoute }) => {
         } else {
           nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
         }
+      } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}/${index}`;
       } else if (nextStep[sessionStorage.getItem("area")]) {
         // nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
 
@@ -62,8 +64,14 @@ const CreateProperty = ({ parentRoute }) => {
       }
     }
     if (typeof nextStep == "object" && nextStep != null && isMultiple == false) {
-      if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
+      if (
+        nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] &&
+        (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] == "map" ||
+          nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] == "un-occupied-area")
+      ) {
         nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
+      } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}`;
       } else if (nextStep[sessionStorage.getItem("area")]) {
         nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
       } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {

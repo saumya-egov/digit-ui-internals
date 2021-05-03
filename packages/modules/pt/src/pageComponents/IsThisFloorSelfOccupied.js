@@ -14,9 +14,9 @@ const IsThisFloorSelfOccupied = ({ t, config, onSelect, userType, formData }) =>
   }
   const data = [
     {
-      //i18nKey: "Yes, It is fully Self Occupied",
-      i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
-      code: "SELFOCCUPIED",
+      //i18nKey: "Fully rented out",
+      i18nKey: "PT_FULLY_RENTED_OUT",
+      code: "RENTED",
     },
     {
       //i18nKey: "Partially rented out",
@@ -24,9 +24,9 @@ const IsThisFloorSelfOccupied = ({ t, config, onSelect, userType, formData }) =>
       code: "RENTED",
     },
     {
-      //i18nKey: "Fully rented out",
-      i18nKey: "PT_FULLY_RENTED_OUT",
-      code: "RENTED",
+      //i18nKey: "Yes, It is fully Self Occupied",
+      i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
+      code: "SELFOCCUPIED",
     },
   ];
   const onSkip = () => onSelect();

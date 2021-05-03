@@ -168,6 +168,7 @@ function createContent(details, phoneNumber) {
             fontSize: 9,
             margin,
             color: "#1a1a1a",
+            width: "25%",
           });
         });
         data.push({ columns: column1 });
@@ -195,6 +196,7 @@ function createContentForDetailsWithLengthOfTwo(values, data, column1, column2, 
         fontSize: 9,
         margin: [-25, 5, 0, 0],
         color: "#1a1a1a",
+        width: "25%",
       });
     } else {
       column1.push({
@@ -206,8 +208,9 @@ function createContentForDetailsWithLengthOfTwo(values, data, column1, column2, 
       column2.push({
         text: value.value,
         fontSize: 9,
-        margin: [-115, 5, 0, 0],
+        margin: [15, 5, 0, 0],
         color: "#1a1a1a",
+        width: "25%",
       });
     }
   });
@@ -229,6 +232,7 @@ function createContentForDetailsWithLengthOfOneAndThree(values, data, column1, c
         fontSize: 9,
         color: "#1a1a1a",
         margin: values.length > 1 ? [-25, 5, 0, 0] : [-25, 5, 0, 0],
+        width: "25%",
       });
     } else if (index === 2) {
       column1.push({
@@ -240,8 +244,9 @@ function createContentForDetailsWithLengthOfOneAndThree(values, data, column1, c
       column2.push({
         text: value.value,
         fontSize: 9,
-        margin: [-60, 5, 0, 0],
+        margin: [26, 5, 0, 0],
         color: "#1a1a1a",
+        width: "25%",
       });
     } else {
       column1.push({
@@ -253,8 +258,9 @@ function createContentForDetailsWithLengthOfOneAndThree(values, data, column1, c
       column2.push({
         text: value.value,
         fontSize: 9,
-        margin: [-28, 5, 0, 0],
+        margin: [15, 5, 0, 0],
         color: "#1a1a1a",
+        width: "25%",
       });
     }
   });

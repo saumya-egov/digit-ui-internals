@@ -7,12 +7,18 @@ import { Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from 
 import { newConfig } from "../../../config/Create/config";
 import CheckPage from "../Create/CheckPage";
 import PTAcknowledgement from "../Create/PTAcknowledgement";
+import { stringReplaceAll } from "../../../utils";
 
 const getPropertyEditDetails = (data = {}) => {
   // converting owners details
+
   if (data?.ownershipCategory === "INSTITUTIONALPRIVATE" || data?.ownershipCategory === "INSTITUTIONALGOVERNMENT") {
     let document = [];
-    if (data?.owners[0]?.documents[0]?.documentType == "IDENTITYPROOF") {
+    if (data?.owners[0]?.documents[0]?.documentType.includes("IDENTITYPROOF")) {
+      data.owners[0].documents[0].documentType = {
+        code: data?.owners[0]?.documents[0].documentType,
+        i18nKey: stringReplaceAll(data?.owners[0]?.documents[0].documentType, ".", "_"),
+      };
       document["proofIdentity"] = data?.owners[0]?.documents[0];
     }
     (data.owners[0].designation = data?.institution?.designation),
@@ -27,10 +33,12 @@ const getPropertyEditDetails = (data = {}) => {
       let document = [];
       owner.documents &&
         owner.documents.map((doc) => {
-          if (doc.documentType == "SPECIAL_CATEGORY_PROOF") {
+          if (doc.documentType && typeof doc.documentType == "string" && doc.documentType.includes("SPECIALCATEGORYPROOF")) {
+            doc.documentType = { code: doc.documentType, i18nKey: stringReplaceAll(doc.documentType, ".", "_") };
             document["specialProofIdentity"] = doc;
           }
-          if (doc.documentType == "IDENTITYPROOF") {
+          if (doc.documentType && typeof doc.documentType == "string" && doc.documentType.includes("IDENTITYPROOF")) {
+            doc.documentType = { code: doc.documentType, i18nKey: stringReplaceAll(doc.documentType, ".", "_") };
             document["proofIdentity"] = doc;
           }
         });
@@ -59,7 +67,8 @@ const getPropertyEditDetails = (data = {}) => {
     data.address.geoLocation = {};
   }
   data.address.pincode = data?.address?.pincode;
-  let addressDocs = data?.documents?.filter((doc) => doc.documentType == "ADDRESSPROOF");
+  let addressDocs = data?.documents?.filter((doc) => doc.documentType.includes("ADDRESSPROOF"));
+  addressDocs[0].documentType = { code: addressDocs[0].documentType, i18nKey: stringReplaceAll(addressDocs[0].documentType, ".", "_") };
   if (data?.address?.documents) {
     data.address.documents["ProofOfAddress"] = addressDocs[0];
   } else {
@@ -68,48 +77,313 @@ const getPropertyEditDetails = (data = {}) => {
   }
   data.documents["ProofOfAddress"] = addressDocs && Array.isArray(addressDocs) && addressDocs.length > 0 && addressDocs[0];
 
-  // asessment details
-  if (data?.additionalDetails?.propertyType?.code === "VACANT") {
-    data.PropertyType = data?.additionalDetails?.propertyType;
-    data.isResdential = data?.additionalDetails?.isResdential;
-    data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
-    data.landarea = { floorarea: data?.landArea };
-  } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.SHAREDPROPERTY") {
-    data.isResdential = data?.additionalDetails?.isResdential;
-    data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
-    data.PropertyType = data?.additionalDetails?.propertyType;
-    data.Floorno =
-      data?.units[0]?.floorNo < 0
-        ? { i18nKey: `PROPERTYTAX_FLOOR__${data?.units[0]?.floorNo * -1}` }
-        : { i18nKey: `PROPERTYTAX_FLOOR_${data?.units[0]?.floorNo}` };
-    data.selfOccupied = data?.additionalDetails?.selfOccupied;
-    data.Subusagetypeofrentedarea = data?.additionalDetails?.Subusagetypeofrentedarea;
-    data.subusagetype = data?.additionalDetails?.subusagetype;
-    data.IsAnyPartOfThisFloorUnOccupied = data?.additionalDetails?.IsAnyPartOfThisFloorUnOccupied;
+  const getunitobjectforInd = (data, ob, flrno, extraunits, unitedit) => {
+    let totbuiltarea = 0;
+    let selfoccupiedtf = false,
+      rentedtf = false,
+      unoccupiedtf = false;
+    ob["plotSize"] = `${data?.landArea}`;
     data?.units &&
-      data?.units.map((unit, index) => {
-        if (unit?.occupancyType === "RENTED") {
-          data.Constructiondetails = { RentArea: unit?.constructionDetail?.builtUpArea, AnnualRent: unit?.arv };
-        } else if (unit?.occupancyType === "UNOCCUPIED") {
-          data.UnOccupiedArea = { UnOccupiedArea: unit?.constructionDetail?.builtUpArea };
-        } else if (unit?.occupancyType === "SELFOCCUPIED") {
-          data.landarea = { floorarea: unit?.constructionDetail?.builtUpArea };
+      data?.units.map((unit1, index) => {
+        //to remove multiple units
+        if (
+          unit1?.floorNo == flrno &&
+          ((unit1?.occupancyType === "RENTED" && rentedtf == true) ||
+            (unit1?.occupancyType === "UNOCCUPIED" && unoccupiedtf == true) ||
+            (unit1?.occupancyType === "SELFOCCUPIED" && selfoccupiedtf == true) ||
+            flrno > unitedit.length)
+        ) {
+          if (!extraunits.includes(unit1)) {
+            extraunits.push(unit1);
+          }
+        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "RENTED") {
+          rentedtf = true;
+          ob["AnnualRent"] = `${unit1.arv}` || "";
+          ob["RentArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          ob["SubUsageTypeOfRentedArea"] = {
+            i18nKey: `COMMON_PROPSUBUSGTYPE_${(
+              unit1.usageCategory.split(".")[0] +
+              `_${unit1.usageCategory.split(".")[1]}` +
+              `_${unit1.usageCategory.split(".").pop()}`
+            ).replaceAll(".", "_")}`,
+
+            Subusagetypeofrentedareacode: unit1.usageCategory,
+          };
+          totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
+        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "UNOCCUPIED") {
+          unoccupiedtf = true;
+          ob["UnOccupiedArea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
+        } else if (unit1?.floorNo == flrno && unit1?.occupancyType === "SELFOCCUPIED") {
+          selfoccupiedtf = true;
+          ob["floorarea"] = `${unit1?.constructionDetail?.builtUpArea}`;
+          ob["SubUsageType"] = {
+            i18nKey: `COMMON_PROPSUBUSGTYPE_${(
+              unit1.usageCategory.split(".")[0] +
+              `_${unit1.usageCategory.split(".")[1]}` +
+              `_${unit1.usageCategory.split(".").pop()}`
+            ).replaceAll(".", "_")}`,
+          };
+          totbuiltarea = totbuiltarea + parseInt(unit1?.constructionDetail?.builtUpArea);
         }
       });
-    data.floordetails = { plotSize: data?.landArea, builtUpArea: data?.additionalDetails?.builtUpArea };
-  } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
-    data.isResdential = data?.additionalDetails?.isResdential;
-    data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
-    data.PropertyType = data?.additionalDetails?.propertyType;
-    data.noOfFloors = data?.additionalDetails?.noOfFloors;
-    data.noOofBasements = data?.additionalDetails?.noOofBasements;
-    data.units = data?.additionalDetails?.unit;
-    data.units[0].selfOccupied = data?.additionalDetails?.unit[0]?.selfOccupied;
-    data.units["-1"] = data?.additionalDetails?.basement1;
-    data.units["-2"] = data?.additionalDetails?.basement2;
-  }
+    if (unoccupiedtf == true && rentedtf == false && selfoccupiedtf == false) {
+      ob["selfOccupied"] = "";
+    } else {
+      ob["selfOccupied"] =
+        rentedtf == true
+          ? selfoccupiedtf == true
+            ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
+            : {
+                i18nKey: "PT_FULLY_RENTED_OUT",
+                code: "RENTED",
+              }
+          : {
+              i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
+              code: "SELFOCCUPIED",
+            };
+    }
+    ob["IsAnyPartOfThisFloorUnOccupied"] =
+      unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
+    ob["builtUpArea"] = `${totbuiltarea}`;
 
-  console.log(data);
+    return ob;
+  };
+  // asessment details
+  if (data?.channel === "CFC_COUNTER") {
+    if (data?.propertyType === "VACANT") {
+      data.PropertyType = { code: data?.propertyType, i18nKey: `COMMON_PROPTYPE_${data.propertyType}` };
+      data.isResdential =
+        data?.usageCategory === "RESIDENTIAL"
+          ? { code: "RESIDENTIAL", i18nKey: "PT_COMMON_YES" }
+          : { code: "NONRESIDENTIAL", i18nKey: "PT_COMMON_NO" };
+      data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+      data.landarea = { floorarea: data?.landArea };
+    } else if (data?.propertyType === "BUILTUP.SHAREDPROPERTY") {
+      let extraunitsFPB = [];
+      let selfoccupiedtf = false,
+        rentedtf = false,
+        unoccupiedtf = false;
+      data.isResdential =
+        data?.usageCategory === "RESIDENTIAL"
+          ? { code: "RESIDENTIAL", i18nKey: "PT_COMMON_YES" }
+          : { code: "NONRESIDENTIAL", i18nKey: "PT_COMMON_NO" };
+      data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+      data.PropertyType = { code: data?.propertyType, i18nKey: `COMMON_PROPTYPE_BUILTUP_${data.propertyType.split(".").pop()}` };
+      data.Floorno =
+        data?.units[0]?.floorNo < 0
+          ? { i18nKey: `PROPERTYTAX_FLOOR__${data?.units[0]?.floorNo * -1}` }
+          : { i18nKey: `PROPERTYTAX_FLOOR_${data?.units[0]?.floorNo}` };
+      data.Subusagetypeofrentedarea = {
+        SubUsageTypeOfRentedArea: {
+          i18nKey: `COMMON_PROPSUBUSGTYPE_${data?.units[0]?.usageCategory
+            .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
+            .replaceAll(".", "_")}`,
+        },
+        Subusagetypeofrentedareacode: data?.units[0]?.usageCategory,
+      };
+      /* data.subusagetype = {
+        SubUsageType: {
+          i18nKey: `COMMON_PROPSUBUSGTYPE_${data?.units[0]?.usageCategory
+            .slice(0, data?.units[0]?.usageCategory.lastIndexOf("."))
+            .replaceAll(".", "_")}`,
+        },
+      }; */
+      data?.units &&
+        data?.units.map((unit, index) => {
+          if (
+            (unit?.occupancyType === "RENTED" && rentedtf == true && unit.floorNo == data?.units[0].floorNo) ||
+            (unit?.occupancyType === "UNOCCUPIED" && unoccupiedtf == true && unit.floorNo == data?.units[0].floorNo) ||
+            (unit?.occupancyType === "SELFOCCUPIED" && selfoccupiedtf == true && unit.floorNo == data?.units[0].floorNo)
+          ) {
+            if (!extraunitsFPB.includes(unit)) {
+              extraunitsFPB.push(unit);
+            }
+          } else if (unit?.occupancyType === "RENTED" && unit.floorNo == data?.units[0].floorNo) {
+            rentedtf = true;
+            data.Constructiondetails = { RentArea: unit?.constructionDetail?.builtUpArea, AnnualRent: unit?.arv };
+            data.Subusagetypeofrentedarea = {
+              SubUsageTypeOfRentedArea: {
+                i18nKey: `COMMON_PROPSUBUSGTYPE_${unit?.usageCategory.slice(0, unit?.usageCategory.lastIndexOf(".")).replaceAll(".", "_")}`,
+              },
+              Subusagetypeofrentedareacode: unit?.usageCategory,
+            };
+          } else if (unit?.occupancyType === "UNOCCUPIED" && unit.floorNo == data?.units[0].floorNo) {
+            unoccupiedtf = true;
+            data.UnOccupiedArea = { UnOccupiedArea: unit?.constructionDetail?.builtUpArea };
+          } else if (unit?.occupancyType === "SELFOCCUPIED" && unit.floorNo == data?.units[0].floorNo) {
+            selfoccupiedtf = true;
+            data.landarea = { floorarea: unit?.constructionDetail?.builtUpArea };
+            data.subusagetype = {
+              SubUsageType: {
+                i18nKey: `COMMON_PROPSUBUSGTYPE_${unit?.usageCategory.slice(0, unit?.usageCategory.lastIndexOf(".")).replaceAll(".", "_")}`,
+              },
+            };
+          } else {
+            if (!extraunitsFPB.includes(unit)) {
+              extraunitsFPB.push(unit);
+            }
+          }
+        });
+      data.selfOccupied =
+        rentedtf == true
+          ? selfoccupiedtf == true
+            ? { i18nKey: "PT_PARTIALLY_RENTED_OUT", code: "RENTED" }
+            : {
+                i18nKey: "PT_FULLY_RENTED_OUT",
+                code: "RENTED",
+              }
+          : {
+              i18nKey: "PT_YES_IT_IS_SELFOCCUPIED",
+              code: "SELFOCCUPIED",
+            };
+      data.IsAnyPartOfThisFloorUnOccupied =
+        unoccupiedtf == true ? { i18nKey: "PT_COMMON_YES", code: "UNOCCUPIED" } : { i18nKey: "PT_COMMON_NO", code: "UNOCCUPIED" };
+      data.floordetails = { plotSize: 1000, builtUpArea: data?.superBuiltUpArea };
+      data["extraunitFPB"] = extraunitsFPB;
+    } else if (data?.propertyType === "BUILTUP.INDEPENDENTPROPERTY") {
+      let nooffloor = 0,
+        noofbasemement = 0;
+      let floornumbers = [];
+      data.isResdential =
+        data?.usageCategory === "RESIDENTIAL"
+          ? { code: "RESIDENTIAL", i18nKey: "PT_COMMON_YES" }
+          : { code: "NONRESIDENTIAL", i18nKey: "PT_COMMON_NO" };
+      data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+      data.PropertyType = { code: data?.propertyType, i18nKey: `COMMON_PROPTYPE_BUILTUP_${data.propertyType.split(".").pop()}` };
+      /* data?.units &&
+        data?.units.map((unit, index) => {
+          //to remove the condition when only unoccupied unit is there
+          if (!unit?.occupancyType.includes("UNOCCUPIED")) {
+            floornumbers.push(unit.floorNo);
+          }
+
+        });
+      data.noOfFloors = floornumbers.includes(2)
+        ? { i18nKey: "PT_GROUND_PLUS_TWO_OPTION", code: 2 }
+        : floornumbers.includes(1)
+        ? { i18nKey: "PT_GROUND_PLUS_ONE_OPTION", code: 1 }
+        : { i18nKey: "PT_GROUND_FLOOR_OPTION", code: 0 };
+      data.noOofBasements = floornumbers.includes(-2)
+        ? { i18nKey: "PT_TWO_BASEMENT_OPTION" }
+        : floornumbers.includes(-1)
+        ? { i18nKey: "PT_ONE_BASEMENT_OPTION" }
+        : { i18nKey: "PT_NO_BASEMENT_OPTION" }; */
+      let unitedit = [];
+      let ob = {};
+      let flooradded = [];
+      let flrno;
+      let extraunits = [];
+      let totbuiltarea = 0;
+
+      data.units &&
+        data.units.sort((x, y) => {
+          let a = x.floorNo,
+            b = y.floorNo;
+          if (x.floorNo < 0) {
+            a = x.floorNo * -20;
+          }
+          if (y.floorNo < 0) {
+            b = y.floorNo * -20;
+          }
+          if (a > b) {
+            return 1;
+          } else {
+            return -1;
+          }
+        });
+
+      data?.units &&
+        data?.units.map((unit, index) => {
+          ob = {};
+          totbuiltarea = 0;
+          let selfoccupiedtf = false,
+            rentedtf = false,
+            unoccupiedtf = false;
+          if (unit.floorNo == 0 || unit.floorNo == 1 || unit.floorNo == 2 || unit.floorNo == -1 || unit.floorNo == -2) {
+            flrno = unit.floorNo;
+            ob = getunitobjectforInd(data, ob, flrno, extraunits, unitedit);
+            if (ob.selfOccupied == "") {
+              extraunits.push(unit);
+            }
+          } else {
+            extraunits.push(unit);
+          }
+          if (ob == {}) {
+            extraunits.push(unit);
+          }
+          //console.log(ob);
+          !flooradded.includes(unit.floorNo) && ob.builtUpArea > 0 && unit.floorNo > -1 && unit.floorNo < 3 && ob.selfOccupied !== "" && ob != {}
+            ? unitedit.push(ob)
+            : console.log("");
+          unit.floorNo == -1 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-1"] = ob) : console.log("");
+          if (unitedit["-1"] && unit.floorNo == -2 && !extraunits.includes(unit)) {
+            unit.floorNo == -2 && ob != {} && ob.selfOccupied !== "" && ob.builtUpArea > 0 ? (unitedit["-2"] = ob) : console.log("");
+          } else if (!unitedit["-1"] && unit.floorNo == -2 && !extraunits.includes(unit)) {
+            extraunits.push(unit);
+          }
+          flooradded.push(flrno);
+          //console.log(unitedit);
+        });
+
+      data.noOfFloors =
+        unitedit.length == 3
+          ? { i18nKey: "PT_GROUND_PLUS_TWO_OPTION", code: 2 }
+          : unitedit.length == 2
+          ? { i18nKey: "PT_GROUND_PLUS_ONE_OPTION", code: 1 }
+          : { i18nKey: "PT_GROUND_FLOOR_OPTION", code: 0 };
+      data.noOofBasements = unitedit["-2"]
+        ? { i18nKey: "PT_TWO_BASEMENT_OPTION" }
+        : unitedit["-1"]
+        ? { i18nKey: "PT_ONE_BASEMENT_OPTION" }
+        : { i18nKey: "PT_NO_BASEMENT_OPTION" };
+
+      data.units = unitedit;
+      data.units = data?.units.concat(extraunits);
+      unitedit["-1"] ? (data.units["-1"] = unitedit["-1"]) : "";
+      unitedit["-2"] ? (data.units["-2"] = unitedit["-2"]) : "";
+    }
+  } else {
+    if (data?.additionalDetails?.propertyType?.code === "VACANT") {
+      data.PropertyType = data?.additionalDetails?.propertyType;
+      data.isResdential = data?.additionalDetails?.isResdential;
+      data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+      data.landarea = { floorarea: data?.landArea };
+    } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.SHAREDPROPERTY") {
+      data.isResdential = data?.additionalDetails?.isResdential;
+      data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+      data.PropertyType = data?.additionalDetails?.propertyType;
+      data.Floorno =
+        data?.units[0]?.floorNo < 0
+          ? { i18nKey: `PROPERTYTAX_FLOOR__${data?.units[0]?.floorNo * -1}` }
+          : { i18nKey: `PROPERTYTAX_FLOOR_${data?.units[0]?.floorNo}` };
+      data.selfOccupied = data?.additionalDetails?.selfOccupied;
+      data.Subusagetypeofrentedarea = data?.additionalDetails?.Subusagetypeofrentedarea;
+      data.subusagetype = data?.additionalDetails?.subusagetype;
+      data.IsAnyPartOfThisFloorUnOccupied = data?.additionalDetails?.IsAnyPartOfThisFloorUnOccupied;
+      data?.units &&
+        data?.units.map((unit, index) => {
+          if (unit?.occupancyType === "RENTED") {
+            data.Constructiondetails = { RentArea: unit?.constructionDetail?.builtUpArea, AnnualRent: unit?.arv };
+          } else if (unit?.occupancyType === "UNOCCUPIED") {
+            data.UnOccupiedArea = { UnOccupiedArea: unit?.constructionDetail?.builtUpArea };
+          } else if (unit?.occupancyType === "SELFOCCUPIED") {
+            data.landarea = { floorarea: unit?.constructionDetail?.builtUpArea };
+          }
+        });
+      data.floordetails = { plotSize: data?.landArea, builtUpArea: data?.additionalDetails?.builtUpArea };
+    } else if (data?.additionalDetails?.propertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
+      data.isResdential = data?.additionalDetails?.isResdential;
+      data.usageCategoryMajor = { code: data?.usageCategory, i18nKey: `PROPERTYTAX_BILLING_SLAB_${data?.usageCategory?.split(".").pop()}` };
+      data.PropertyType = data?.additionalDetails?.propertyType;
+      data.noOfFloors = data?.additionalDetails?.noOfFloors;
+      data.noOofBasements = data?.additionalDetails?.noOofBasements;
+      data.units = data?.additionalDetails?.unit;
+      data.units[0].selfOccupied = data?.additionalDetails?.unit[0]?.selfOccupied;
+      data.units["-1"] = data?.additionalDetails?.basement1;
+      data.units["-2"] = data?.additionalDetails?.basement2;
+    }
+  }
   return data;
 };
 const EditProperty = ({ parentRoute }) => {
@@ -125,12 +399,13 @@ const EditProperty = ({ parentRoute }) => {
   const propertyIds = window.location.href.split("/").pop();
   let application = {};
   const typeOfProperty = window.location.href.includes("update=true");
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({
-    tenantId,
-    filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
-  });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(
+    { filters: typeOfProperty ? { propertyIds } : { acknowledgementIds } },
+    {
+      filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
+    }
+  );
   sessionStorage.setItem("isEditApplication", false);
-
   useEffect(() => {
     application = data?.Properties[0];
     if (data && application) {
@@ -180,6 +455,8 @@ const EditProperty = ({ parentRoute }) => {
         } else {
           nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
         }
+      } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}/${index}`;
       } else if (nextStep[sessionStorage.getItem("area")]) {
         // nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
 
@@ -198,6 +475,8 @@ const EditProperty = ({ parentRoute }) => {
     if (typeof nextStep == "object" && nextStep != null && isMultiple == false) {
       if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
         nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
+      } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
+        nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}`;
       } else if (nextStep[sessionStorage.getItem("area")]) {
         nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
       } else if (nextStep[sessionStorage.getItem("IsThisFloorSelfOccupied")]) {

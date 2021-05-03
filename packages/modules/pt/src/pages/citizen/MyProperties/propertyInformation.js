@@ -1,17 +1,48 @@
 import { Card, CardSubHeader, Header, LinkButton, Loader, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import PropertyDocument from "../../../pageComponents/PropertyDocument";
 import { getPropertyTypeLocale, propertyCardBodyStyle } from "../../../utils";
-import { Link } from "react-router-dom";
+
+const setBillData = async (tenantId, propertyIds, updatefetchBillData, updateCanFetchBillData) => {
+  const assessmentData =await Digit.PTService.assessmentSearch({tenantId,filters:{propertyIds}});
+  console.log(assessmentData,'assessmentData');
+  let billData ={}
+  if(assessmentData?.Assessments?.length>0){
+    billData= await Digit.PaymentService.fetchBill(tenantId, {
+      businessService: "PT",
+      consumerCode: propertyIds,
+    });
+  }
+  
+  updatefetchBillData(billData)
+  updateCanFetchBillData({
+    loading: false,
+    loaded: true,
+    canLoad: true
+  })
+}
+
+const getBillAmount = (fetchBillData = null) => {
+  if (fetchBillData == null) return 'NA';
+  return fetchBillData ? fetchBillData?.Bill && fetchBillData.Bill[0] ? fetchBillData.Bill[0]?.totalAmount : 'NA' : 'NA';
+}
 
 const PropertyInformation = () => {
   const { t } = useTranslation();
   const { propertyIds } = useParams();
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ tenantId, filters: { propertyIds } });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ filters: { propertyIds } }, { filters: { propertyIds } });
+
+
+  const [billData, updateCanFetchBillData] = useState({
+    loading: false,
+    loaded: false,
+    canLoad: false
+  });
+  const [fetchBillData, updatefetchBillData] = useState({});
 
   const property = data?.Properties[0] || " ";
   let docs = [];
@@ -20,9 +51,41 @@ const PropertyInformation = () => {
   let owners = [];
   owners = property?.owners;
   units = property?.units;
+  units &&
+    units.sort((x, y) => {
+      let a = x.floorNo,
+        b = y.floorNo;
+      if (x.floorNo < 0) {
+        a = x.floorNo * -20;
+      }
+      if (y.floorNo < 0) {
+        b = y.floorNo * -20;
+      }
+      if (a > b) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   if (isLoading) {
     return <Loader />;
   }
+  if (property?.status == "ACTIVE" && !billData.loading && !billData.loaded && !billData.canLoad) {
+    updateCanFetchBillData({
+      loading: false,
+      loaded: false,
+      canLoad: true
+    });
+  }
+  if (billData?.canLoad && !billData.loading && !billData.loaded) {
+    updateCanFetchBillData({
+      loading: true,
+      loaded: false,
+      canLoad: true
+    });
+    setBillData(property?.tenantId||tenantId, propertyIds, updatefetchBillData, updateCanFetchBillData);
+  }
+
   let flrno,
     i = 0;
   flrno = units && units[0]?.floorNo;
@@ -42,7 +105,7 @@ const PropertyInformation = () => {
         <Card>
           <StatusTable>
             <Row label={t("PT_PROPERTY_PTUID")} text={`${property.propertyId || "NA"}`} textStyle={{ whiteSpace: "pre" }} />
-            <Row label={t("Total Property Due")} text={"NA"} />
+            <Row label={t("CS_COMMON_TOTAL_AMOUNT_DUE")} text={`${getBillAmount(fetchBillData)}`} />
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
           <StatusTable>
@@ -59,7 +122,7 @@ const PropertyInformation = () => {
               text={
                 `${t(
                   (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
-                    (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory)
+                  (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory)
                 )}` || "NA"
               }
             />
@@ -97,15 +160,15 @@ const PropertyInformation = () => {
                     <CardSubHeader>
                       {t("Unit")} {i}
                     </CardSubHeader>
-                    {(flrno = unit?.floorNo) > -3 && (
+                    {(flrno = unit?.floorNo) > -5 && (
                       <StatusTable>
                         <Row
                           label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")}
                           text={
                             `${t(
                               (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
-                                (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory) +
-                                (property.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
+                              (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory) +
+                              (property.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
                             )}` || "NA"
                           }
                         />

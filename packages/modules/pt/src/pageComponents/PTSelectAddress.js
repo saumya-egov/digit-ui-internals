@@ -125,12 +125,18 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 23em)" }}>
         <CardLabel>{`${t("MYCITY_CODE_LABEL")} `}</CardLabel>
-        <RadioOrSelect options={cities} selectedOption={selectedCity} optionKey="code" onSelect={selectCity} t={t} />
+        <RadioOrSelect
+          options={cities.sort((a, b) => a.name.localeCompare(b.name))}
+          selectedOption={selectedCity}
+          optionKey="code"
+          onSelect={selectCity}
+          t={t}
+        />
         {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
         {selectedCity && localities && (
           <RadioOrSelect
             isMandatory={config.isMandatory}
-            options={localities}
+            options={localities.sort((a, b) => a.name.localeCompare(b.name))}
             selectedOption={selectedLocality}
             optionKey="i18nkey"
             onSelect={selectLocality}

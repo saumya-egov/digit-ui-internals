@@ -350,7 +350,7 @@ const LocationSearch = (props) => {
           lat: 31.6160638,
           lng: 74.8978579,
         };
-        initAutocomplete(props.onChange, defaultLatLong);
+        !props.isPTDefault ? initAutocomplete(props.onChange, defaultLatLong) : console.log("PT No Default Location");
       };
 
       const initMaps = () => {

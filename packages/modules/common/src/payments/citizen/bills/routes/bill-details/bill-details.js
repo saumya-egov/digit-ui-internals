@@ -1,8 +1,9 @@
+import { Card, CardSubHeader, Header, KeyNote, Loader, RadioButtons, SubmitBar, TextInput } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
-import { Card, KeyNote, Header, RadioButtons, CardSubHeader, TextInput, SubmitBar, Loader, ArrowLeft } from "@egovernments/digit-ui-react-components";
-import BillSumary from "./bill-summary";
-import { useHistory, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import ArrearSummary from "./arrear-summary";
+import BillSumary from "./bill-summary";
 
 const BillDetails = ({ paymentRules, businessService }) => {
   const { t } = useTranslation();
@@ -11,11 +12,14 @@ const BillDetails = ({ paymentRules, businessService }) => {
   const { consumerCode } = useParams();
   const [bill, setBill] = useState(state?.bill);
   const tenantId = state?.tenantId || Digit.UserService.getUser().info.tenantId;
-  const { data, isLoading } = state?.bill ? { isLoading: false } : Digit.Hooks.useFetchPayment({ tenantId, businessService: "PT", consumerCode });
+  const { data, isLoading } = state?.bill ? { isLoading: false } : Digit.Hooks.useFetchPayment({ tenantId, businessService, consumerCode });
   const { minAmountPayable, isAdvanceAllowed } = paymentRules;
 
-  const billDetails = (bill?.billDetails.length && bill?.billDetails[0]) || [];
-  const Arrears = bill?.billDetails?.reduce((total, current, index) => (index == 0 ? total : total + current.amount), 0) || 0;
+  const billDetails = bill?.billDetails?.sort((a, b) => b.fromPeriod - a.fromPeriod)?.[0] || [];
+  const Arrears =
+    bill?.billDetails
+      ?.sort((a, b) => b.fromPeriod - a.fromPeriod)
+      ?.reduce((total, current, index) => (index === 0 ? total : total + current.amount), 0) || 0;
 
   const { key, label } = Digit.Hooks.useApplicationsForBusinessServiceSearch({ businessService }, { enabled: false });
 
@@ -86,6 +90,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
           <KeyNote keyValue={t(label)} note={consumerCode} />
           <KeyNote keyValue={t("CS_PAYMENT_BILLING_PERIOD")} note={getBillingPeriod()} />
           <BillSumary billAccountDetails={getBillBreakDown()} total={getTotal()} businessService={businessService} arrears={Arrears} />
+          <ArrearSummary bill={bill} />
         </div>
         <div className="bill-payment-amount">
           <hr className="underline" />
@@ -105,11 +110,11 @@ const BillDetails = ({ paymentRules, businessService }) => {
             {paymentType !== t("CS_PAYMENT_FULL_AMOUNT") ? (
               <TextInput className="text-indent-xl" onChange={(e) => onChangeAmount(e.target.value)} value={amount} disable={getTotal() === 0} />
             ) : (
-              <TextInput className="text-indent-xl" value={getTotal()} onChange={() => {}} disable={true} />
+              <TextInput className="text-indent-xl" value={getTotal()} onChange={() => { }} disable={true} />
             )}
             {formError === "CS_CANT_PAY_BELOW_MIN_AMOUNT" ? (
               <span className="card-label-error">
-                {t(formError)}: {minAmountPayable}
+                {t(formError)}: {"₹" + minAmountPayable}
               </span>
             ) : (
               <span className="card-label-error">{t(formError)}</span>

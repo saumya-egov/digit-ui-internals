@@ -84,7 +84,7 @@ import RoundedLabel from "./atoms/RoundedLabel";
 import BreadCrumb from "./atoms/BreadCrumb";
 import DatePicker from "./atoms/DatePicker";
 import MultiLink from "./atoms/MultiLink";
-
+import InfoBanner from "./atoms/InfoBanner";
 import { SearchIconSvg } from "./atoms/svgindex";
 
 import RemoveableTag from "./molecules/RemoveableTag";
@@ -176,6 +176,7 @@ export {
   LabelFieldPair,
   BreadCrumb,
   DatePicker,
+  InfoBanner,
   // Icons
   GetApp,
   ArrowLeft,

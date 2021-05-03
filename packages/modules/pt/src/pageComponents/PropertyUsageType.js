@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FormStep, RadioButtons, CitizenInfoLabel, LabelFieldPair, CardLabel, Dropdown } from "@egovernments/digit-ui-react-components";
+import { cardBodyStyle } from "../utils";
 
 const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   const [usageCategoryMajor, setPropertyPurpose] = useState(formData?.usageCategoryMajor);
@@ -13,17 +14,28 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   let menu = [];
 
   function usageCategoryMajorMenu(usagecat) {
-    for (i = 0; i < 10; i++) {
-      if (
-        Array.isArray(usagecat) &&
-        usagecat.length > 0 &&
-        usagecat[i].code.split(".")[0] == "NONRESIDENTIAL" &&
-        usagecat[i].code.split(".").length == 2
-      ) {
-        menu.push({ i18nKey: "PROPERTYTAX_BILLING_SLAB_" + usagecat[i].code.split(".")[1], code: usagecat[i].code });
+    if (userType === "employee") {
+      return usagecat
+        ?.map((item) => {
+          if (item?.code.split(".")[0] == "NONRESIDENTIAL" && item?.code.split(".").length == 2) {
+            return { i18nKey: "PROPERTYTAX_BILLING_SLAB_" + item?.code.split(".")[1], code: item?.code };
+          }
+          return { filter: true };
+        })
+        ?.filter((item) => !item?.filter);
+    } else {
+      for (i = 0; i < 10; i++) {
+        if (
+          Array.isArray(usagecat) &&
+          usagecat.length > 0 &&
+          usagecat[i].code.split(".")[0] == "NONRESIDENTIAL" &&
+          usagecat[i].code.split(".").length == 2
+        ) {
+          menu.push({ i18nKey: "PROPERTYTAX_BILLING_SLAB_" + usagecat[i].code.split(".")[1], code: usagecat[i].code });
+        }
       }
+      return menu;
     }
-    return menu;
   }
 
   /*  menu = [
@@ -40,12 +52,12 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
 
   const onSkip = () => onSelect();
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (userType !== "employee" && formData?.isResdential?.i18nKey === "PT_COMMON_YES" && formData?.usageCategoryMajor?.i18nKey !== "RESIDENTIAL") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true);
     }
-  }, [formData?.usageCategoryMajor?.i18nKey]);
+  }, [formData?.usageCategoryMajor?.i18nKey]); */
 
   function selectPropertyPurpose(value) {
     setPropertyPurpose(value);

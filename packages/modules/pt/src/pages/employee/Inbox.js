@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQueryClient } from "react-query";
 import { Header } from "@egovernments/digit-ui-react-components";
 
 import DesktopInbox from "../../components/DesktopInbox";
@@ -68,10 +67,11 @@ const Inbox = ({
 
   const handleFilterChange = (filterParam) => {
     let keys_to_delete = filterParam.delete;
-    let _new = { ...searchParams };
+    console.log(keys_to_delete);
+    let _new = { ...searchParams, ...filterParam };
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     delete filterParam.delete;
-    setSearchParams({ ..._new, ...filterParam });
+    setSearchParams({ ..._new });
   };
 
   const handleSort = useCallback((args) => {
@@ -86,20 +86,22 @@ const Inbox = ({
   if (rest?.data?.length !== null) {
     if (isMobile) {
       return (
-        // <MobileInbox
-        //   data={data}
-        //   isLoading={hookLoading}
-        //   isSearch={!isInbox}
-        //   searchFields={searchFields}
-        //   onFilterChange={handleFilterChange}
-        //   onSearch={handleFilterChange}
-        //   onSort={handleSort}
-        //   parentRoute={parentRoute}
-        //   searchParams={searchParams}
-        //   sortParams={sortParams}
-        //   linkPrefix={`${parentRoute}/application-details/`}
-        // />
-        <div></div>
+        <MobileInbox
+          data={data}
+          isLoading={hookLoading}
+          isSearch={!isInbox}
+          searchFields={searchFields}
+          onFilterChange={handleFilterChange}
+          onSearch={handleFilterChange}
+          onSort={handleSort}
+          parentRoute={parentRoute}
+          searchParams={searchParams}
+          sortParams={sortParams}
+          linkPrefix={`${parentRoute}/application-details/`}
+          tableConfig={rest?.tableConfig}
+          filterComponent={filterComponent}
+        />
+        // <div></div>
       );
     } else {
       return (
@@ -110,6 +112,7 @@ const Inbox = ({
             data={data}
             tableConfig={rest?.tableConfig}
             isLoading={hookLoading}
+            defaultSearchParams={initialStates.searchParams}
             isSearch={!isInbox}
             onFilterChange={handleFilterChange}
             searchFields={searchFields}
