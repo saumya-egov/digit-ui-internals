@@ -13,7 +13,6 @@
   .switch-wrapper {
     display: flex;
     justify-content: space-between;
-    max-width: 150px;
 
     .radio-switch {
       display: none;
@@ -26,7 +25,8 @@
 
     label {
       border: 1px solid;
-      padding: 6px;
+      padding: 6px 10px;
+      display: block;
       border-color: rgba(70, 70, 70, var(--border-opacity));
     }
   }

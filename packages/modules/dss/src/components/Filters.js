@@ -43,7 +43,7 @@ const Filters = () => {
         <div>ULBs</div>
         <Dropdown option={ULBS} optionKey="name" select={selectULB} />
       </div>
-      <div className="filters-input">
+      <div className="filters-input" style={{ flexBasis: "16%" }}>
         <Switch onSelect={handleFilterChange} />
       </div>
       {/* <SubmitBar label={"Apply"} /> */}

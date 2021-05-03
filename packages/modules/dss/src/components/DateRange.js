@@ -1,10 +1,15 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { ArrowDown, Modal, ButtonSelector } from "@egovernments/digit-ui-react-components";
 import { DateRangePicker } from "react-date-range";
 import { format } from "date-fns";
 
+function isEndDateFocused(focusNumber) {
+  return focusNumber === 1;
+}
+
 const DateRange = ({ values, onFilterChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [focusedRange, setFocusedRange] = useState([0, 0]);
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -27,13 +32,20 @@ const DateRange = ({ values, onFilterChange }) => {
   const handleSelect = ({ selection }) => {
     console.log(selection, "ranges");
     setSelectionRange(selection);
+    if (isEndDateFocused(focusedRange[1])) {
+      handleSubmit(selection);
+    }
   };
+
+  const handleFocusChange = focusedRange => {
+    setFocusedRange(focusedRange)
+  }
 
   const handleClose = () => {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (selectionRange) => {
     const startDate = selectionRange?.startDate.getTime();
     const endDate = selectionRange?.endDate.getTime();
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
@@ -49,23 +61,18 @@ const DateRange = ({ values, onFilterChange }) => {
           <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
           <ArrowDown onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
-        {isModalOpen && <div className="options-card" style={{ overflow: "visible" }}>
-          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
+        {isModalOpen && <div className="options-card" style={{ overflow: "visible", width: "unset", maxWidth: "unset" }}>
+          <DateRangePicker
+            focusedRange={focusedRange}
+            ranges={[selectionRange]}
+            onChange={handleSelect}
+            onRangeFocusChange={handleFocusChange}
+            showSelectionPreview={true}
+            moveRangeOnFirstSelection={false}
+          />
         </div>
         }
       </div>
-      {/* {isModalOpen && (
-        <Modal
-          actionCancelLabel={"Cancel"}
-          actionCancelOnSubmit={handleClose}
-          actionSaveLabel={"Select"}
-          closeModal={handleClose}
-          actionSaveOnSubmit={handleSubmit}
-          popupStyles={{ width: "569px" }}
-        >
-          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
-        </Modal>
-      )} */}
     </>
   );
 };

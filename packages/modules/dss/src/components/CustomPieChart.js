@@ -80,13 +80,15 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     return <Loader />;
   }
   return (
-    <ResponsiveContainer width="99%" height={500}>
-      <PieChart width="100%" height="100%">
+    <ResponsiveContainer width="99%" height={300}>
+      <PieChart>
         <Pie
           data={response?.responseData?.data?.[0]?.plots}
           dataKey={dataKey}
-          innerRadius={60}
-          outerRadius={80}
+          cy={100}
+          innerRadius={40}
+          outerRadius={60}
+          margin={{ bottom: 0, top: 5 }}
           fill="#8884d8"
           label={true}
           labelLine={false}
