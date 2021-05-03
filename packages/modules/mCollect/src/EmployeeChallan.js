@@ -11,7 +11,7 @@ class EmployeeChallan extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <div style={{ width: "30%", fontFamily: "Times New Roman", color: "#FF0000" }}>
+        <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
           <Header>CHALLAN DETAILS </Header>
         </div>
         <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 12em)", margin: "30px" }}>
@@ -25,7 +25,7 @@ class EmployeeChallan extends React.Component {
               <Row label={"SGST"} text={`${"₹20"}` || "NA"} />
               <Row label={"Round Off"} text={`${"₹0"}` || "NA"} />
               <hr />
-              <Row label={<b>Total Due Amount</b>} text={<b>{"₹5090"}`</b> || "NA"} />
+              <Row label={<b>Total Due Amount</b>} text={<b>{"₹5090"}</b> || "NA"} />
             </StatusTable>
             <Card>
               <CardSubHeader>{"SERVICE DETAILS"}</CardSubHeader>
