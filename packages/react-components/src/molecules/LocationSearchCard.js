@@ -23,6 +23,7 @@ const LocationSearchCard = ({
   position,
   disabled,
   cardBodyStyle = {},
+  isPTDefault,
 }) => {
   let isDisabled = false || disabled;
   const onLocationChange = (val, location) => {
@@ -40,7 +41,7 @@ const LocationSearchCard = ({
           {cardText}
         </CardText>
 
-        <LocationSearch onChange={onLocationChange} position={position} />
+        <LocationSearch onChange={onLocationChange} position={position} isPTDefault={isPTDefault} />
         {forcedError && <CardLabelError>{t(forcedError)}</CardLabelError>}
       </div>
       <SubmitBar label={nextText} onSubmit={onSave} disabled={isDisabled} />
@@ -58,6 +59,7 @@ LocationSearchCard.propTypes = {
   onSave: PropTypes.func,
   onChange: PropTypes.func,
   position: PropTypes.any,
+  isPTDefault: PropTypes.any,
 };
 
 LocationSearchCard.defaultProps = {
@@ -69,6 +71,7 @@ LocationSearchCard.defaultProps = {
   onSave: null,
   onChange: () => {},
   position: undefined,
+  isPTDefault: false,
 };
 
 export default LocationSearchCard;

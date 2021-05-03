@@ -204,7 +204,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
-            type: "tel",
+            type: "text",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })}
         />
@@ -251,7 +251,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
-            type: "tel",
+            type: "text",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })}
         />

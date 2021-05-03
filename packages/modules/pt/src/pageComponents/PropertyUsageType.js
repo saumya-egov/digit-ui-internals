@@ -52,12 +52,12 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
 
   const onSkip = () => onSelect();
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (userType !== "employee" && formData?.isResdential?.i18nKey === "PT_COMMON_YES" && formData?.usageCategoryMajor?.i18nKey !== "RESIDENTIAL") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       onSelect(config.key, { i18nKey: "PROPERTYTAX_BILLING_SLAB_RESIDENTIAL" }, true);
     }
-  }, [formData?.usageCategoryMajor?.i18nKey]);
+  }, [formData?.usageCategoryMajor?.i18nKey]); */
 
   function selectPropertyPurpose(value) {
     setPropertyPurpose(value);

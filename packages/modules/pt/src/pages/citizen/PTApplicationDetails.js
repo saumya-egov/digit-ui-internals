@@ -12,11 +12,30 @@ const PTApplicationDetails = () => {
   const { acknowledgementIds } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const coreData = Digit.Hooks.useCoreData();
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, { filters: { acknowledgementIds } });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(
+    { filters: { acknowledgementIds } },
+    { filters: { acknowledgementIds } }
+  );
 
   const application = data?.Properties[0];
   let units = [];
   units = application?.units;
+  units &&
+    units.sort((x, y) => {
+      let a = x.floorNo,
+        b = y.floorNo;
+      if (x.floorNo < 0) {
+        a = x.floorNo * -20;
+      }
+      if (y.floorNo < 0) {
+        b = y.floorNo * -20;
+      }
+      if (a > b) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   let owners = [];
   owners = application?.owners;
   let docs = [];
