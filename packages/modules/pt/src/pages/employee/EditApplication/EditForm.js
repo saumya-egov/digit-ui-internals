@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { newConfig } from "../../../config/Create/config";
 
 const EditForm = ({ applicationData }) => {
-  console.log("%c 🙇‍♂️: EditForm -> applicationData ", "font-size:16px;background-color:#0a9f96;color:white;", applicationData);
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
@@ -23,14 +22,6 @@ const EditForm = ({ applicationData }) => {
     "PropertyTax",
     "OwnerShipCategory"
   );
-
-  let workflowDetails = Digit.Hooks.useWorkflowDetails({
-    tenantId: tenantId,
-    id: applicationData?.acknowldgementNumber,
-    moduleCode: "PT",
-    role: "PT_CEMP",
-  });
-  console.log("%c 🛷: EditForm -> workflowDetails ", "font-size:16px;background-color:#5400b5;color:white;", workflowDetails);
 
   const usageCategoryArray = applicationData?.usageCategory?.split(".");
 
@@ -116,7 +107,6 @@ const EditForm = ({ applicationData }) => {
   };
 
   const onFormValueChange = (setValue, formData) => {
-    console.log("%c 🎏: onFormValueChange -> formData ", "font-size:16px;background-color:#f2b478;color:black;", formData);
     if (
       formData?.address?.city?.code &&
       formData?.address?.locality?.code &&
@@ -151,19 +141,22 @@ const EditForm = ({ applicationData }) => {
 
   const onSubmit = (data) => {
     const formData = {
-      tenantId,
-      acknowldgementNumber: applicationData?.acknowldgementNumber,
+      ...applicationData,
+      id: applicationData?.id,
       propertyId: applicationData?.propertyId,
+      accountId: applicationData?.accountId,
+      acknowldgementNumber: applicationData?.acknowldgementNumber,
+      surveyId: applicationData?.surveyId || null,
+      linkedProperties: applicationData?.linkedProperties || null,
+      tenantId: applicationData?.tenantId || tenantId,
+      oldPropertyId: applicationData?.oldPropertyId || null,
+      status: applicationData?.status,
       address: {
+        ...applicationData?.address,
         ...data?.address,
         city: data?.address?.city?.name,
       },
-      usageCategory: data?.usageCategoryMinor?.subuagecode ? data?.usageCategoryMinor?.subuagecode : data?.usageCategoryMajor?.code,
-      // usageCategoryMinor: data?.usageCategoryMinor?.subuagecode,
-      // usageCategoryMajor: data?.usageCategoryMajor?.code,
-      landArea: data?.landarea?.floorarea,
       propertyType: data?.PropertyType?.code,
-      noOfFloors: data?.noOfFloors?.code,
       ownershipCategory: data?.ownershipCategory?.code,
       owners: [
         {
@@ -173,19 +166,35 @@ const EditForm = ({ applicationData }) => {
           relationship: data?.owners?.relationship.code,
         },
       ],
-      channel: "CFC_COUNTER", // required
       creationReason: "UPDATE", // required
+      usageCategory: data?.usageCategoryMinor?.subuagecode ? data?.usageCategoryMinor?.subuagecode : data?.usageCategoryMajor?.code,
+      usageCategoryMinor: data?.usageCategoryMinor?.subuagecode,
+      usageCategoryMajor: data?.usageCategoryMajor?.code,
+      noOfFloors: Number(data?.noOfFloors?.code),
+      landArea: data?.landarea?.floorarea,
+      superBuiltUpArea: applicationData?.superBuiltUpArea || null,
       source: "MUNICIPAL_RECORDS", // required
-      superBuiltUpArea: null,
-      units: data?.units[0]?.usageCategory ? data?.units : [],
+      channel: "CFC_COUNTER", // required
       documents: data?.documents?.documents,
-      applicationStatus: "UPDATE",
+      units: data?.units[0]?.usageCategory ? data?.units : [],
+      additionalDetails: applicationData?.additionalDetails || null,
+      auditDetails: applicationData?.auditDetails,
       workflow: {
-        id: applicationData?.acknowldgementNumber,
-        businessService: "PT",
-        businessId: applicationData?.acknowldgementNumber,
-        ...workflowDetails?.data,
+        businessService: "PT.UPDATE",
+        action: "OPEN",
+        moduleName: "PT",
       },
+      occupancyDate: applicationData?.occupancyDate || null,
+      usage: applicationData?.usage || null,
+      financialYear: applicationData?.financialYear || null,
+      assessmentNumber: applicationData?.assessmentNumber || null,
+      assessmentDate: applicationData?.assessmentDate || "0",
+      adhocExemption: applicationData?.adhocExemption || null,
+      adhocPenalty: applicationData?.adhocPenalty || null,
+      adhocExemptionReason: applicationData?.adhocExemptionReason || null,
+      adhocPenaltyReason: applicationData?.adhocPenaltyReason || null,
+      calculation: applicationData?.calculation || null,
+      applicationStatus: "UPDATE",
     };
 
     history.push("/digit-ui/employee/pt/response", { Property: formData, key: "UPDATE", action: "SUBMIT" });

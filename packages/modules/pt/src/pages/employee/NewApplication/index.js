@@ -56,7 +56,7 @@ const NewApplication = () => {
       usageCategoryMajor: data?.usageCategoryMajor?.code,
       landArea: data?.landarea,
       propertyType: data?.PropertyType?.code,
-      noOfFloors: data?.noOfFloors?.code,
+      noOfFloors: Number(data?.noOfFloors?.code),
       ownershipCategory: data?.ownershipCategory?.code,
       owners: [
         {

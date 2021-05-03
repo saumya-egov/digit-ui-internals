@@ -33,7 +33,9 @@ const ApplicationDetails = () => {
     setShowToast(null);
   };
 
-  if (applicationDetails?.applicationData?.status === "ACTIVE") {
+  const PT_CEMP = Digit.UserService.hasAccess(["PT_CEMP"]) || false;
+
+  if (applicationDetails?.applicationData?.status === "ACTIVE" && PT_CEMP) {
     workflowDetails = {
       ...workflowDetails,
       data: {
