@@ -39,11 +39,9 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
                 ))
               : console.log("error")}
           </div>
-          <div style={{ position: "fixed", bottom: "0px", width: "100%", marginLeft: "-6%" }}>
-            <span>
-              <SubmitBar label="Next" onSubmit={onSelect} />
-            </span>
-          </div>
+          <span>
+            <SubmitBar label="Next" onSubmit={onSelect} />
+          </span>
         </div>
       </Card>
     </React.Fragment>
