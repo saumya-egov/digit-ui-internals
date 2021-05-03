@@ -4,7 +4,7 @@ import { Link, Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { TopBar as TopBarComponent, Dropdown, LogoutIcon, HomeIcon, Hamburger } from "@egovernments/digit-ui-react-components";
 import ChangeLanguage from "./ChangeLanguage";
 import { useSelector } from "react-redux";
-
+import EmployeeChallan from "../../../mCollect/src/EmployeeChallan";
 import { AppModules } from "./AppModules";
 import { CitizenSidebar } from "./Sidebar";
 import { useLocation } from "react-router-dom";
@@ -45,6 +45,9 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
 
   return (
     <Switch>
+      <Route path="/digit-ui/example">
+        <EmployeeChallan />
+      </Route>
       <Route path="/digit-ui/employee">
         <div className="employee">
           <TopBarSideBar
