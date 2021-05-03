@@ -30,16 +30,16 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
               ? docs.map(({ code, dropdownData }, index) => (
                   <div key={index}>
                     <CardSubHeader>
-                      {index + 1}. {t("PROPERTYTAX_" + stringReplaceAll(code,".", "_") + "_HEADING")}
+                      {index + 1}. {t("PROPERTYTAX_" + stringReplaceAll(code, ".", "_") + "_HEADING")}
                     </CardSubHeader>
                     {dropdownData.map((dropdownData) => (
-                      <CardText>{t("PROPERTYTAX_" + stringReplaceAll(dropdownData?.code,".", "_") + "_LABEL")}</CardText>
+                      <CardText>{t("PROPERTYTAX_" + stringReplaceAll(dropdownData?.code, ".", "_") + "_LABEL")}</CardText>
                     ))}
                   </div>
                 ))
               : console.log("error")}
           </div>
-          <span> 
+          <span>
             <SubmitBar label="Next" onSubmit={onSelect} />
           </span>
         </div>
