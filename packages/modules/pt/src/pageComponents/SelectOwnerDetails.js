@@ -79,7 +79,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     return (
       <div>
         <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_MOBILE_NUMBER")}*`}</CardLabel>
+          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_MOBILE_NUMBER")}`}</CardLabel>
           <div className="field">
             <TextInput
               type={"text"}
@@ -99,7 +99,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           </div>
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_OWNER_NAME")}*`}</CardLabel>
+          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_OWNER_NAME")}`}</CardLabel>
           <div className="field">
             <TextInput
               t={t}
@@ -119,7 +119,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           </div>
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_GUARDIAN_NAME")}*`}</CardLabel>
+          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_GUARDIAN_NAME")}`}</CardLabel>
           <div className="field">
             <TextInput
               t={t}
@@ -138,7 +138,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           </div>
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_RELATIONSHIP")}*`}</CardLabel>
+          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_RELATIONSHIP")}`}</CardLabel>
           <Dropdown
             className="form-field"
             selected={relationship?.length === 1 ? relationship[0] : relationship}
@@ -151,7 +151,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           />
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_GENDER")}*`}</CardLabel>
+          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
           <Dropdown
             className="form-field"
             selected={gender?.length === 1 ? gender[0] : gender}
@@ -164,7 +164,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
           />
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_OWNER_EMAIL")}*`}</CardLabel>
+          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_OWNER_EMAIL")}`}</CardLabel>
           <div className="field">
             <TextInput
               t={t}

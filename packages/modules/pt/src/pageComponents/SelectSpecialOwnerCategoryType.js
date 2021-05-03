@@ -49,11 +49,9 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
         <LabelFieldPair key={index}>
           <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
             {t(input.label)}
-            {config.isMandatory ? " * " : null}
           </CardLabel>
           <Dropdown
             className="form-field"
-            isMandatory={config.isMandatory}
             selected={Menu?.length === 1 ? Menu[0] : ownerType}
             disable={Menu?.length === 1 || editScreen}
             option={Menu}

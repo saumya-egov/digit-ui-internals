@@ -111,7 +111,7 @@ function SelectDocument({ t, document, setDocuments, error, setError, documents 
   return (
     <div style={{ marginBottom: "24px" }}>
       <LabelFieldPair>
-        <CardLabel className="card-label-smaller">{t(document?.code)}*</CardLabel>
+        <CardLabel className="card-label-smaller">{t(document?.code)}</CardLabel>
         <Dropdown
           className="form-field"
           selected={selectedDocument}

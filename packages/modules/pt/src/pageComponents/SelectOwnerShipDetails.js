@@ -108,11 +108,9 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
         <LabelFieldPair key={index}>
           <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
             {t(input.label)}
-            {config.isMandatory ? " * " : null}
           </CardLabel>
           <Dropdown
             className="form-field"
-            isMandatory={config.isMandatory}
             selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
             disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
             option={getDropdwonForProperty(ownerShipdropDown)}
