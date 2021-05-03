@@ -12,10 +12,39 @@
   }
 }
 
+.chart-wrapper {
+
+}
+
 .chart-row {
   @apply flex justify-between flex-wrap;
   .chart-item {
     flex-grow: 1;
     margin-right: 10px;
+  }
+}
+
+.options {
+  display: none;
+}
+
+.options-m {
+  @apply flex justify-between;
+}
+
+.options,
+.options-m {
+  div {
+    @apply flex;
+  }
+}
+
+@media (min-width: 640px) {
+  .options-m {
+    display: none;
+  }
+
+  .options {
+    @apply flex justify-end;
   }
 }

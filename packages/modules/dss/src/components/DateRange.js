@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { ArrowDown, Modal } from "@egovernments/digit-ui-react-components";
+import { ArrowDown, Modal, ButtonSelector } from "@egovernments/digit-ui-react-components";
 import { DateRangePicker } from "react-date-range";
 import { format } from "date-fns";
 
@@ -38,7 +38,7 @@ const DateRange = ({ values, onFilterChange }) => {
     const endDate = selectionRange?.endDate.getTime();
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
-    onFilterChange({ startDate, endDate, duration, title });
+    onFilterChange({ range: { startDate, endDate, duration, title }});
     setIsModalOpen(false);
   };
   return (
@@ -46,11 +46,15 @@ const DateRange = ({ values, onFilterChange }) => {
       <div>Date Range</div>
       <div className="employee-select-wrap">
         <div className="select">
-          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `FY ${values?.title}` : ""} />
+          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
           <ArrowDown onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
+        {isModalOpen && <div className="options-card" style={{ overflow: "visible" }}>
+          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
+        </div>
+        }
       </div>
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <Modal
           actionCancelLabel={"Cancel"}
           actionCancelOnSubmit={handleClose}
@@ -61,7 +65,7 @@ const DateRange = ({ values, onFilterChange }) => {
         >
           <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
         </Modal>
-      )}
+      )} */}
     </>
   );
 };
