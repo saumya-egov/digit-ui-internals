@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { ResponsiveContainer, Cell, Legend, Pie, PieChart, Tooltip } from "recharts";
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
+import FilterContext from "./FilterContext";
 
 const data = [
   {
@@ -61,9 +62,10 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 const CustomPieChart = ({ dataKey = "value", data }) => {
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { value } = useContext(FilterContext)
   const requestDate = {
-    startDate: getTime(startOfMonth(new Date())),
-    endDate: getTime(endOfMonth(new Date())),
+    startDate: value?.range?.startDate,
+    endDate: value?.range?.endDate,
     interval: "month",
     title: "",
   };
@@ -78,7 +80,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     return <Loader />;
   }
   return (
-    <ResponsiveContainer width="99%" height={300}>
+    <ResponsiveContainer width="99%" height={500}>
       <PieChart width="100%" height="100%">
         <Pie
           data={response?.responseData?.data?.[0]?.plots}
@@ -94,7 +96,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
           ))}
         </Pie>
         <Tooltip />
-        <Legend layout="vertical" align="right" iconType="circle" />
+        <Legend layout="vertical" align="bottom" iconType="circle" />
       </PieChart>
     </ResponsiveContainer>
   );

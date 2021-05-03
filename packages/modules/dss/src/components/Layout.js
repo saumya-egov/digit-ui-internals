@@ -46,6 +46,7 @@ const Layout = ({ rowData }) => {
             header={visualizer.name}
             showDownload={visualizer?.charts?.[0].chartType === "table"}
             showSearch={visualizer?.charts?.[0].chartType === "table"}
+            className={visualizer?.charts?.[0].chartType === "table" && "fullWidth"}
           >
             {/* {visualizer.charts.map((chart, key) => renderChart(chart, key))} */}
             {renderChart(visualizer?.charts?.[0])}

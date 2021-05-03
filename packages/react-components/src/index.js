@@ -76,6 +76,7 @@ import {
   CloseSvg,
   UpwardArrow,
   PropertyHouse,
+  ShareIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -217,4 +218,5 @@ export {
   Details,
   FilterIcon,
   PrintIcon,
+  ShareIcon,
 };

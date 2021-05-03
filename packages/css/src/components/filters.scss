@@ -1,17 +1,19 @@
 .filters-wrapper {
-  height: 100%;
-  width: 264px;
-  position: fixed;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  padding: 15px 0px;
   z-index: 1;
-  top: 0;
-  left: 64px;
-  overflow-x: hidden;
   background-color: #ffffff;
-  padding: 100px 36px 0px;
+
+  .filters-input {
+    flex-basis: 20%;
+  }
 
   .switch-wrapper {
     display: flex;
     justify-content: space-between;
+    max-width: 150px;
 
     .radio-switch {
       display: none;
@@ -27,5 +29,11 @@
       padding: 6px;
       border-color: rgba(70, 70, 70, var(--border-opacity));
     }
+  }
+}
+
+@media (min-width: 640px) {
+  .filters-wrapper {
+    display: flex;
   }
 }

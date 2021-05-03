@@ -1,8 +1,9 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { ResponsiveContainer, Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis } from "recharts";
+import FilterContext from "./FilterContext";
 
 const CustomLabel = ({ x, y, name, stroke, value }) => {
   return (
@@ -30,10 +31,11 @@ const CustomBarChart = ({
 }) => {
   const { id } = data;
   const { t } = useTranslation();
+  const { value } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const requestDate = {
-    startDate: getTime(startOfMonth(new Date())),
-    endDate: getTime(endOfMonth(new Date())),
+    startDate: value?.range?.startDate,
+    endDate: value?.range?.endDate,
     interval: "month",
     title: "",
   };

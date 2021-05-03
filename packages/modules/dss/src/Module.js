@@ -13,7 +13,6 @@ const Routes = ({ path }) => {
       <BackButton></BackButton>
       <Switch>
         <PrivateRoute path={`${path}/dashboard`} component={DashBoard} />
-        <PrivateRoute path={`${path}/overview`} component={Overview} />
       </Switch>
     </>
   );
@@ -31,7 +30,6 @@ const DSSModule = ({ stateCode, userType, tenants }) => {
     return <Loader />;
   }
 
-  console.log("dss", userType, state, store);
   Digit.SessionStorage.set("DSS_TENANTS", tenants);
 
   if (userType !== "citizen") {
