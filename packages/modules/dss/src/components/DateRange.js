@@ -65,6 +65,7 @@ const DateRange = ({ values, onFilterChange }) => {
           <DateRangePicker
             focusedRange={focusedRange}
             ranges={[selectionRange]}
+            rangeColors={["#f47738"]}
             onChange={handleSelect}
             onRangeFocusChange={handleFocusChange}
             showSelectionPreview={true}

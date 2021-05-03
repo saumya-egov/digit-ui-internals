@@ -29,8 +29,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       <AreaChart width="100%" height="100%" data={response?.responseData?.data?.[0]?.plots}>
         <defs>
           <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#FF0000" stopOpacity={1} />
-            <stop offset="95%" stopColor="#F89462" stopOpacity={1} />
+            <stop offset="5%" stopColor="#FF0000" stopOpacity={0.5} />
+            <stop offset="95%" stopColor="#F89462" stopOpacity={0.1} />
           </linearGradient>
         </defs>
         <CartesianGrid />
