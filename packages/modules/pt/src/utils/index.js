@@ -4,7 +4,9 @@ export const checkForNotNull = (value = "") => {
 };
 
 export const convertDotValues = (value = "") => {
-  return (checkForNotNull(value) && ((value.replaceAll && value.replaceAll(".", "_")) || (value.replace && stringReplaceAll(value, ".", "_")))) || "NA";
+  return (
+    (checkForNotNull(value) && ((value.replaceAll && value.replaceAll(".", "_")) || (value.replace && stringReplaceAll(value, ".", "_")))) || "NA"
+  );
 };
 
 export const convertToLocale = (value = "", key = "") => {
@@ -166,12 +168,12 @@ export const setDocumentDetails = (data) => {
       documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
     });
   }
-  
+
   owners &&
     owners.length > 0 &&
     owners.map((owner) => {
       if (owner.documents && owner.documents["proofIdentity"]) {
-        if(owner?.documents["proofIdentity"]?.id) {
+        if (owner?.documents["proofIdentity"]?.id) {
           documents.push({
             fileStoreId: owner?.documents["proofIdentity"].fileStoreId || "",
             documentType: owner?.documents["proofIdentity"].documentType?.code || "",
@@ -186,7 +188,7 @@ export const setDocumentDetails = (data) => {
         }
       }
       if (owner.documents && owner.documents["specialProofIdentity"]) {
-        if(owner?.documents["specialProofIdentity"]?.id) {
+        if (owner?.documents["specialProofIdentity"]?.id) {
           documents.push({
             fileStoreId: owner?.documents["specialProofIdentity"]?.fileStoreId || "",
             documentType: owner?.documents["specialProofIdentity"]?.documentType?.code || "",
@@ -199,7 +201,6 @@ export const setDocumentDetails = (data) => {
             documentType: owner?.documents["specialProofIdentity"]?.documentType?.code || "",
           });
         }
-        
       }
     });
   data.documents = documents;
@@ -344,11 +345,14 @@ export const getunits = (data) => {
       });
     }
   }
+  data?.extraunitFPB ? (unit = unit.concat(data?.extraunitFPB)) : "";
   return unit;
 };
 
 export const getunitarray = (i, unitsdata, unit, data) => {
-  if (
+  if (unitsdata[i].active === true) {
+    unit.push(unitsdata[i]);
+  } else if (
     unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
     unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "PT_COMMON_YES"
   ) {
@@ -649,11 +653,11 @@ export const setUpdatedDocumentDetails = (data) => {
       documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
     });
   }
-  
+
   owners &&
     owners.length > 0 &&
     owners.map((owner) => {
-      owner.documents.map(document => {
+      owner.documents.map((document) => {
         documents.push(document);
       });
     });
@@ -698,15 +702,15 @@ export const convertToUpdateProperty = (data = {}) => {
       channel: "CITIZEN",
       workflow: !data?.isUpdateProperty
         ? {
-          action: "REOPEN",
-          businessService: "PT.CREATE",
-          moduleName: "PT",
-        }
+            action: "REOPEN",
+            businessService: "PT.CREATE",
+            moduleName: "PT",
+          }
         : {
-          action: "OPEN",
-          businessService: "PT.UPDATE",
-          moduleName: "PT",
-        },
+            action: "OPEN",
+            businessService: "PT.UPDATE",
+            moduleName: "PT",
+          },
     },
   };
   console.info("propertyCreated", formdata);
@@ -789,11 +793,10 @@ export const convertEpochToDate = (dateEpoch) => {
   }
 };
 
-
-export const stringReplaceAll = (str = '', searcher = '', replaceWith = '') => {
-  if (searcher == '') return str;
+export const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
+  if (searcher == "") return str;
   while (str.includes(searcher)) {
-    str = str.replace(searcher,replaceWith);
+    str = str.replace(searcher, replaceWith);
   }
   return str;
-}
+};

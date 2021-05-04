@@ -76,6 +76,7 @@ import {
   CloseSvg,
   UpwardArrow,
   PropertyHouse,
+  ShareIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -177,6 +178,7 @@ export {
   BreadCrumb,
   DatePicker,
   InfoBanner,
+  MobileNumber,
   // Icons
   GetApp,
   ArrowLeft,
@@ -219,5 +221,5 @@ export {
   Details,
   FilterIcon,
   PrintIcon,
-  MobileNumber,
+  ShareIcon,
 };
