@@ -65,7 +65,7 @@ const getCriteria = (tenantId, moduleDetails) => {
   };
 };
 
-const getGeneralCriteria = (tenantId, moduleCode, type) => ({
+export const getGeneralCriteria = (tenantId, moduleCode, type) => ({
   details: {
     moduleDetails: [
       {
@@ -607,7 +607,7 @@ const getPTPropertyType = (MdmsRes) =>
   MdmsRes["PropertyTax"].UsageCategory.filter((PropertyType) => PropertyType.active).map((PTPropertyTypelist) => {
     return {
       ...UsageCategorylist,
-      i18nKey: `COMMON_PROPTYPE_${stringReplaceAll(PTPropertyTypelist.code,".", "_")}`,
+      i18nKey: `COMMON_PROPTYPE_${stringReplaceAll(PTPropertyTypelist.code, ".", "_")}`,
     };
   });
 
@@ -893,5 +893,8 @@ export const MdmsService = {
   },
   getReceiptKey: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getReceiptKey(tenantId, moduleCode), moduleCode);
+  },
+  getHelpText: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
   },
 };

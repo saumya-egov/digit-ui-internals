@@ -50,7 +50,7 @@ const DateRange = ({ values, onFilterChange }) => {
     const endDate = selectionRange?.endDate.getTime();
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
-    onFilterChange({ range: { startDate, endDate, duration, title }});
+    onFilterChange({ range: { startDate, endDate, duration, title } });
     setIsModalOpen(false);
   };
   return (

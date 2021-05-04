@@ -8,13 +8,13 @@ export const config = [
     inputs: [
       {
         label: "PT_HOME_SEARCH_RESULTS_OWN_MOB_LABEL",
-        description: "CS_SEARCH_MUST_BE_10_DIGIT_NUMBER",
-        type: "text",
+        type: "mobileNumber",
         name: "mobileNumber",
         error: "ERR_HRMS_INVALID_USER_ID",
       },
       {
         label: "PT_PROPERTY_UNIQUE_ID",
+        description: "CS_PROPERTY_ID_FORMAT_MUST_BE",
         type: "text",
         name: "propertyId",
         error: "ERR_HRMS_WRONG_PASSWORD",

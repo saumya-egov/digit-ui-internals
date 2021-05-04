@@ -71,11 +71,11 @@ export const BillList = ({ billsList, currentPath, businessService }) => {
                 <MyBill {...{ bill, currentPath, businessService, getKeyNotesConfig }} />
               </div>
             ))}
-          {!applicationList?.length > 0 && <p>{t("CS_BILLS_TEXT_NO_BILLS_FOUND")}</p>}
+          {!applicationList?.length > 0 && <p style={{ paddingLeft: "16px" }}>{t("CS_BILLS_TEXT_NO_BILLS_FOUND")}</p>}
         </div>
         {businessService === "PT" && (
           <p style={{ marginLeft: "16px", marginTop: "16px" }}>
-            {t("PT_TEXT_NOT_ABLE_TO_FIND_THE_PROPERTY")}{" "}
+            {t("PT_TEXT_NOT_ABLE_TO_FIND_THE_PROPERTY")}
             <span className="link">
               <Link to="/digit-ui/citizen/pt/property/search">{t("PT_COMMON_CLICK_HERE")}</Link>
             </span>

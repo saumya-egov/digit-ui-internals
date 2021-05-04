@@ -126,7 +126,7 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
           />
         </div>
       </FormStep>
-      {usageCategoryMajor && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_USAGE_TYPE_INFO_MSG", usageCategoryMajor)} />}
+      {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("PT_USAGE_TYPE_INFO_MSG", usageCategoryMajor)} />}
     </React.Fragment>
   );
 };

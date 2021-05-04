@@ -1,4 +1,4 @@
-import { MdmsService } from "../../services/elements/MDMS";
+import { MdmsService, getGeneralCriteria } from "../../services/elements/MDMS";
 import { useQuery } from "react-query";
 
 const useMDMS = (tenantId, moduleCode, type, config = {}, payload = []) => {
@@ -15,6 +15,8 @@ const useMDMS = (tenantId, moduleCode, type, config = {}, payload = []) => {
       return useFinancialYears();
     case "PROPERTY_TAX_DOCUMENTS":
       return usePropertyTaxDocuments();
+    default:
+      return useQuery(type, () => MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode), config);
   }
 };
 
