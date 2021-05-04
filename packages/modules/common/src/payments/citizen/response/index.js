@@ -118,6 +118,8 @@ export const SuccessfulPayment = (props) => {
     justifyContent: "space-between",
   };
 
+  const ommitRupeeSymbol = ["PT"].includes(business_service);
+
   return (
     <Card>
       <Banner
@@ -164,7 +166,11 @@ export const SuccessfulPayment = (props) => {
           ))}
 
         <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_TRANSANCTION_ID")} text={egId} />
-        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={"₹ " + amount} />
+        <Row
+          rowContainerStyle={rowContainerStyle}
+          last
+          label={t(ommitRupeeSymbol ? "CS_PAYMENT_AMOUNT_PAID_WITHOUT_SYMBOL" : "CS_PAYMENT_AMOUNT_PAID")}
+        />
         {business_service !== "PT" && (
           <Row
             rowContainerStyle={rowContainerStyle}
