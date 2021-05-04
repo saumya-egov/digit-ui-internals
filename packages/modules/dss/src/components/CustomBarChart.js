@@ -6,13 +6,14 @@ import { ResponsiveContainer, Bar, BarChart, CartesianGrid, Legend, Tooltip, XAx
 import FilterContext from "./FilterContext";
 
 const CustomLabel = ({ x, y, name, stroke, value }) => {
+  const { t } = useTranslation();
   return (
     <>
       <text x={x} y={y} dx={-62} dy={10} fill={stroke}>
         {`${value.toFixed(2)}%`}
       </text>
-      <text x={x} y={y} dx={-152} dy={10}>
-        {name}
+      <text x={x} y={y} dx={-150} dy={10}>
+        {t(name)}
       </text>
     </>
   );

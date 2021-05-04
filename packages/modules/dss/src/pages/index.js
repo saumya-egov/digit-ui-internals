@@ -1,14 +1,14 @@
 import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
-import { startOfYear, endOfYear, getTime, format } from "date-fns";
+import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
 
 const getInitialRange = () => {
-  const startDate = getTime(startOfYear(new Date()));
-  const endDate = getTime(endOfYear(new Date()));
+  const startDate = getTime(addMonths(startOfYear(new Date()), 3));
+  const endDate = getTime(addMonths(endOfYear(new Date()), 3));
   const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, title, duration };

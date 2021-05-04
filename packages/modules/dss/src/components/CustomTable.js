@@ -29,7 +29,6 @@ const CustomTable = ({
       Header: plot?.name,
       accessor: plot?.name,
       symbol: plot?.symbol,
-      // Cell: (row) => row.original[plot?.name]
     }))
   ), [response]);
 
@@ -37,6 +36,9 @@ const CustomTable = ({
     response?.responseData?.data?.map(rows => (
       rows.plots.reduce((acc, row) => {
         acc[row?.name] = row?.value !== null ? row?.value : row?.label || "";
+        if (typeof acc[row?.name] === "number" && !Number.isInteger(acc[row.name])) {
+          acc[row.name] = Math.round((acc[row.name] + Number.EPSILON) * 100) / 100
+        }
         return acc;
       }, {})
     ))
