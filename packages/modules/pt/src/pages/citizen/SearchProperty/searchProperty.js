@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { FormComposer, CardLabelDesc } from "@egovernments/digit-ui-react-components";
+import { FormComposer, CardLabelDesc, Loader } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 
 const SearchProperty = ({ config: propsConfig, t }) => {
   const cities = Digit.Hooks.fsm.useTenants();
   const history = useHistory();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  // moduleCode, type, config = {}, payload = []
+  const { data: propertyIdFormat, isLoading } = Digit.Hooks.pt.useMDMS(tenantId, "DIGIT-UI", "HelpText", {
+    select: (data) => {
+      return data?.["DIGIT-UI"]?.["HelpText"]?.[0]?.PT?.propertyIdFormat;
+    },
+  });
 
   const onPropertySearch = async (data) => {
     if (!data.mobileNumber && !data.propertyId && !data.oldPropertyId) {
@@ -24,7 +32,7 @@ const SearchProperty = ({ config: propsConfig, t }) => {
       body: [
         {
           label: mobileNumber.label,
-          description: mobileNumber.description,
+
           type: mobileNumber.type,
           populators: {
             name: mobileNumber.name,
@@ -33,6 +41,8 @@ const SearchProperty = ({ config: propsConfig, t }) => {
         },
         {
           label: property.label,
+          description: property.description + "\n" + propertyIdFormat,
+          descriptionStyles: { whiteSpace: "pre" },
           type: property.type,
           populators: {
             name: property.name,
@@ -51,7 +61,9 @@ const SearchProperty = ({ config: propsConfig, t }) => {
     },
   ];
 
-  console.log(config[0].body);
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div style={{ marginTop: "16px" }}>

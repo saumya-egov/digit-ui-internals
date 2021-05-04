@@ -85,6 +85,7 @@ import DatePicker from "./atoms/DatePicker";
 import MultiLink from "./atoms/MultiLink";
 import InfoBanner from "./atoms/InfoBanner";
 import { SearchIconSvg } from "./atoms/svgindex";
+import MobileNumber from "./atoms/MobileNumber";
 
 import RemoveableTag from "./molecules/RemoveableTag";
 import TypeSelectCard from "./molecules/TypeSelectCard";
@@ -218,4 +219,5 @@ export {
   Details,
   FilterIcon,
   PrintIcon,
+  MobileNumber,
 };

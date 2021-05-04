@@ -159,7 +159,7 @@ export const SuccessfulPayment = (props) => {
               rowContainerStyle={rowContainerStyle}
               last
               label={t("CS_PAYMENT_AMOUNT_PENDING")}
-              text={demand?.Demands?.some((e) => !e?.isPaymentCompleted) ? billData?.Bill[0]?.totalAmount : 0}
+              text={demand?.Demands?.some((e) => !e?.isPaymentCompleted) ? "₹ " + billData?.Bill[0]?.totalAmount : "₹ " + 0}
             />
           ))}
 
