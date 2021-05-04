@@ -22,25 +22,29 @@ const CustomTable = ({ data }) => {
     requestDate,
   });
 
-  const tableColumns = useMemo(() => (
-    response?.responseData?.data?.[0]?.plots?.map((plot) => ({
-      Header: plot?.name,
-      accessor: plot?.name,
-      symbol: plot?.symbol,
-    }))
-  ), [response]);
+  const tableColumns = useMemo(
+    () =>
+      response?.responseData?.data?.[0]?.plots?.map((plot) => ({
+        Header: plot?.name,
+        accessor: plot?.name.replaceAll(".", " "),
+        symbol: plot?.symbol,
+      })),
+    [response]
+  );
 
-  const tableData = useMemo(() => (
-    response?.responseData?.data?.map(rows => (
-      rows.plots.reduce((acc, row) => {
-        acc[row?.name] = row?.value !== null ? row?.value : row?.label || "";
-        if (typeof acc[row?.name] === "number" && !Number.isInteger(acc[row.name])) {
-          acc[row.name] = Math.round((acc[row.name] + Number.EPSILON) * 100) / 100
-        }
-        return acc;
-      }, {})
-    ))
-  ), [response]);
+  const tableData = useMemo(
+    () =>
+      response?.responseData?.data?.map((rows) =>
+        rows.plots.reduce((acc, row) => {
+          acc[row?.name.replaceAll(".", " ")] = row?.value !== null ? row?.value : row?.label || "";
+          if (typeof acc[row?.name] === "number" && !Number.isInteger(acc[row.name])) {
+            acc[row.name.replaceAll(".", " ")] = Math.round((acc[row.name] + Number.EPSILON) * 100) / 100;
+          }
+          return acc;
+        }, {})
+      ),
+    [response]
+  );
 
   if (isLoading || !tableColumns || !tableData) {
     return <Loader />;
