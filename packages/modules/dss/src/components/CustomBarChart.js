@@ -46,24 +46,16 @@ const CustomBarChart = ({
     requestDate,
   });
   if (isLoading) {
-    return (
-      <Loader />
-    )
+    return <Loader />;
   }
   return (
     <ResponsiveContainer width="99%" height={200}>
-      <BarChart width="100%"
-        height="100%"
-        data={response?.responseData?.data?.[0]?.plots}
-        layout={layout}
-        maxBarSize={10}
-        margin={{ left: 150 }}
-      >
+      <BarChart width="100%" height="100%" data={response?.responseData?.data?.[0]?.plots} layout={layout} maxBarSize={10} margin={{ left: 150 }}>
         {showGrid && <CartesianGrid />}
         <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} />
         <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} />
         <Bar dataKey={xDataKey} fill={fillColor} label={<CustomLabel stroke={fillColor} />} radius={[10, 10, 10, 10]} stackId="x" />
-        <Bar dataKey={val => 100} fill="#D6D5D4" label={false} radius={[0, 10, 10, 0]} stackId="x" />
+        <Bar dataKey={(val) => 100} fill="#D6D5D4" label={false} radius={[0, 10, 10, 0]} stackId="x" />
       </BarChart>
     </ResponsiveContainer>
   );

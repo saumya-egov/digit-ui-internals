@@ -4,7 +4,7 @@ import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import FilterContext from "./FilterContext";
 
 const MetricData = ({ data }) => {
-  const { value } = useContext(FilterContext)
+  const { value } = useContext(FilterContext);
   return (
     <div>
       <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>

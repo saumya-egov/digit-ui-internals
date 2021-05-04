@@ -38,7 +38,7 @@ const DateRange = ({ values, onFilterChange }) => {
     const endDate = selectionRange?.endDate.getTime();
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
-    onFilterChange({ range: { startDate, endDate, duration, title }});
+    onFilterChange({ range: { startDate, endDate, duration, title } });
     setIsModalOpen(false);
   };
   return (
@@ -49,10 +49,11 @@ const DateRange = ({ values, onFilterChange }) => {
           <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
           <ArrowDown onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
-        {isModalOpen && <div className="options-card" style={{ overflow: "visible" }}>
-          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
-        </div>
-        }
+        {isModalOpen && (
+          <div className="options-card" style={{ overflow: "visible" }}>
+            <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
+          </div>
+        )}
       </div>
       {/* {isModalOpen && (
         <Modal

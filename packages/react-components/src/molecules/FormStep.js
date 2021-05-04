@@ -20,7 +20,7 @@ const FormStep = ({
   forcedError,
   componentInFront,
   onAdd,
-  cardStyle={},
+  cardStyle = {},
   isMultipleAllow = false,
   showErrorBelowChildren = false,
 }) => {
@@ -71,8 +71,15 @@ const FormStep = ({
   });
 
   return (
-    <form onSubmit={handleSubmit(goNext)} >
-      <InputCard {...{ isDisable: isDisable, isMultipleAllow: isMultipleAllow }} {...config} cardStyle={cardStyle}  submit {...{ onSkip: onSkip, onAdd: onAdd }} t={t}>
+    <form onSubmit={handleSubmit(goNext)}>
+      <InputCard
+        {...{ isDisable: isDisable, isMultipleAllow: isMultipleAllow }}
+        {...config}
+        cardStyle={cardStyle}
+        submit
+        {...{ onSkip: onSkip, onAdd: onAdd }}
+        t={t}
+      >
         {inputs}
         {forcedError && !showErrorBelowChildren && <CardLabelError>{t(forcedError)}</CardLabelError>}
         {children}

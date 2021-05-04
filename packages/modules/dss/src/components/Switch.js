@@ -2,9 +2,7 @@ import React, { Fragment } from "react";
 
 const denominations = ["Cr", "Lac", "Unit"];
 
-const Switch = ({
-  onSelect
-}) => {
+const Switch = ({ onSelect }) => {
   return (
     <>
       <div>Denomination</div>

@@ -6,28 +6,28 @@ import PropertyDocument from "../../../pageComponents/PropertyDocument";
 import { getPropertyTypeLocale, propertyCardBodyStyle } from "../../../utils";
 
 const setBillData = async (tenantId, propertyIds, updatefetchBillData, updateCanFetchBillData) => {
-  const assessmentData =await Digit.PTService.assessmentSearch({tenantId,filters:{propertyIds}});
-  console.log(assessmentData,'assessmentData');
-  let billData ={}
-  if(assessmentData?.Assessments?.length>0){
-    billData= await Digit.PaymentService.fetchBill(tenantId, {
+  const assessmentData = await Digit.PTService.assessmentSearch({ tenantId, filters: { propertyIds } });
+  console.log(assessmentData, "assessmentData");
+  let billData = {};
+  if (assessmentData?.Assessments?.length > 0) {
+    billData = await Digit.PaymentService.fetchBill(tenantId, {
       businessService: "PT",
       consumerCode: propertyIds,
     });
   }
-  
-  updatefetchBillData(billData)
+
+  updatefetchBillData(billData);
   updateCanFetchBillData({
     loading: false,
     loaded: true,
-    canLoad: true
-  })
-}
+    canLoad: true,
+  });
+};
 
 const getBillAmount = (fetchBillData = null) => {
-  if (fetchBillData == null) return 'NA';
-  return fetchBillData ? fetchBillData?.Bill && fetchBillData.Bill[0] ? fetchBillData.Bill[0]?.totalAmount : 'NA' : 'NA';
-}
+  if (fetchBillData == null) return "NA";
+  return fetchBillData ? (fetchBillData?.Bill && fetchBillData.Bill[0] ? fetchBillData.Bill[0]?.totalAmount : "NA") : "NA";
+};
 
 const PropertyInformation = () => {
   const { t } = useTranslation();
@@ -36,11 +36,10 @@ const PropertyInformation = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ filters: { propertyIds } }, { filters: { propertyIds } });
 
-
   const [billData, updateCanFetchBillData] = useState({
     loading: false,
     loaded: false,
-    canLoad: false
+    canLoad: false,
   });
   const [fetchBillData, updatefetchBillData] = useState({});
 
@@ -74,16 +73,16 @@ const PropertyInformation = () => {
     updateCanFetchBillData({
       loading: false,
       loaded: false,
-      canLoad: true
+      canLoad: true,
     });
   }
   if (billData?.canLoad && !billData.loading && !billData.loaded) {
     updateCanFetchBillData({
       loading: true,
       loaded: false,
-      canLoad: true
+      canLoad: true,
     });
-    setBillData(property?.tenantId||tenantId, propertyIds, updatefetchBillData, updateCanFetchBillData);
+    setBillData(property?.tenantId || tenantId, propertyIds, updatefetchBillData, updateCanFetchBillData);
   }
 
   let flrno,
@@ -122,7 +121,7 @@ const PropertyInformation = () => {
               text={
                 `${t(
                   (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
-                  (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory)
+                    (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory)
                 )}` || "NA"
               }
             />
@@ -167,8 +166,8 @@ const PropertyInformation = () => {
                           text={
                             `${t(
                               (property.usageCategory !== "RESIDENTIAL" ? "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" : "COMMON_PROPSUBUSGTYPE_") +
-                              (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory) +
-                              (property.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
+                                (property?.usageCategory?.split(".")[1] ? property?.usageCategory?.split(".")[1] : property.usageCategory) +
+                                (property.usageCategory !== "RESIDENTIAL" ? "_" + unit?.usageCategory.split(".").pop() : "")
                             )}` || "NA"
                           }
                         />

@@ -12,19 +12,22 @@ const getInitialRange = () => {
   const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, title, duration };
-}
+};
 
 const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [filters, setFilters] = useState({
-    denomination: 'Unit',
-    range: getInitialRange()
+    denomination: "Unit",
+    range: getInitialRange(),
   });
-  const provided = useMemo(() => ({
-    value: filters,
-    setValue: setFilters
-  }), [filters]);
+  const provided = useMemo(
+    () => ({
+      value: filters,
+      setValue: setFilters,
+    }),
+    [filters]
+  );
   const stateCode = tenantId.split(".")[0];
   const moduleCode = "fsm";
   // const moduleCode = "propertytax";
