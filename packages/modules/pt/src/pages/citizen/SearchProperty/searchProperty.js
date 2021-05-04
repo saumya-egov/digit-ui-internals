@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { FormComposer, CardLabelDesc, Loader } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-const SearchProperty = ({ config: propsConfig, t }) => {
+const SearchProperty = ({ config: propsConfig }) => {
+  const { t } = useTranslation();
+
   const cities = Digit.Hooks.fsm.useTenants();
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -41,7 +44,7 @@ const SearchProperty = ({ config: propsConfig, t }) => {
         },
         {
           label: property.label,
-          description: property.description + "\n" + propertyIdFormat,
+          description: t(property.description) + "\n" + propertyIdFormat,
           descriptionStyles: { whiteSpace: "pre" },
           type: property.type,
           populators: {
