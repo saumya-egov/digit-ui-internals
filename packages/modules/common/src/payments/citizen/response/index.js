@@ -170,6 +170,7 @@ export const SuccessfulPayment = (props) => {
           rowContainerStyle={rowContainerStyle}
           last
           label={t(ommitRupeeSymbol ? "CS_PAYMENT_AMOUNT_PAID_WITHOUT_SYMBOL" : "CS_PAYMENT_AMOUNT_PAID")}
+          text={"₹ " + amount}
         />
         {business_service !== "PT" && (
           <Row
