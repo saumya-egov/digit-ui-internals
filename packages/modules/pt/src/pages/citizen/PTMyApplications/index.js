@@ -10,10 +10,10 @@ export const PTMyApplications = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   let filter = window.location.href.split("/").pop();
-  let filters =
-    filter === "limit:50" ? { limit: 50, sortOrder: "ASC", sortBy: "createdTime" } : { limit: 4, sortOrder: "ASC", sortBy: "createdTime" };
+  let filter1 =
+    filter === "limit:50" ? { limit: "50", sortOrder: "ASC", sortBy: "createdTime" } : { limit: "4", sortOrder: "ASC", sortBy: "createdTime" };
 
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(tenantId, filters);
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ filters: filter1 }, { filters: filter1 });
   if (isLoading) {
     return <Loader />;
   }
@@ -22,7 +22,7 @@ export const PTMyApplications = () => {
 
   return (
     <React.Fragment>
-      <Header>{t("CS_TITLE_MY_APPLICATIONS")}</Header>
+      <Header>{`${t("CS_TITLE_MY_APPLICATIONS")} ${applicationsList ? `(${applicationsList.length})` : ""}`}</Header>
       <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 14em)" }}>
         {applicationsList?.length > 0 &&
           applicationsList.map((application, index) => (
@@ -46,7 +46,7 @@ export const PTMyApplications = () => {
 
       <p style={{ marginLeft: "16px", marginTop: "16px" }}>
         {t("PT_TEXT_NOT_ABLE_TO_FIND_THE_APPLICATION")}{" "}
-        <span className="link">
+        <span className="link" style={{ display: "block" }}>
           <Link to="/digit-ui/citizen/pt/property/new-application/info">{t("PT_COMMON_CLICK_HERE_TO_REGISTER_NEW_PROPERTY")}</Link>
         </span>
       </p>

@@ -377,7 +377,7 @@ const CheckPage = ({ onSubmit, value = {} }) => {
             units.map((owner, index) => (
               <div key={index}>
                 <CardSubHeader>
-                  {t(`PROPERTYTAX_FLOOR_${index}`)} {t("PT_DETAILS_HEADER")}
+                  {t(`PROPERTYTAX_FLOOR_${units[index].floorNo ? units[index].floorNo : index}`)} {t("PT_DETAILS_HEADER")}
                 </CardSubHeader>
                 <StatusTable>
                   <Row

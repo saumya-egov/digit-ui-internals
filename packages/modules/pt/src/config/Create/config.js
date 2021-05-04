@@ -165,7 +165,11 @@ export const newConfig = [
         },
         key: "units",
         withoutLabel: true,
-        nextStep: "is-any-part-of-this-floor-unoccupied",
+        //nextStep: "is-any-part-of-this-floor-unoccupied",
+        nextStep: {
+          yes: "is-any-part-of-this-floor-unoccupied",
+          no: "provide-sub-usage-type-of-rented-area",
+        },
         hideInEmployee: true,
       },
       {
@@ -209,7 +213,7 @@ export const newConfig = [
         key: "units",
         withoutLabel: true,
         //nextStep: "provide-sub-usage-type-of-rented-area",
-        nextStep: { yes: "rental-details", no: "provide-sub-usage-type-of-rented-area", vacant: "map" },
+        nextStep: { yes: "rental-details", no: "provide-sub-usage-type", vacant: "map" },
         hideInEmployee: true,
       },
       {

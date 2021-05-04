@@ -1,24 +1,15 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
 import { startOfMonth, endOfMonth, getTime } from "date-fns";
+import FilterContext from "./FilterContext";
 
 const MetricData = ({ data }) => {
-  const displaySymbol = (type) => {
-    switch (type) {
-      case "Amount":
-        return "₹";
-      case "number":
-        return "";
-      default:
-        return "";
-    }
-  };
-
+  const { value } = useContext(FilterContext)
   return (
     <div>
-      <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>{`${displaySymbol(data.headerSymbol)} ${+data.headerValue.toFixed(
-        1
-      )}`}</p>
+      <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>
+        {Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)}
+      </p>
       {data.insight && (
         <div>
           <p className={`${data.insight.colorCode}`}>{data.insight.value}</p>
@@ -28,25 +19,13 @@ const MetricData = ({ data }) => {
   );
 };
 
-const res = {
-  headerName: "DSS_TOTAL_COLLECTION",
-  headerValue: 0.0,
-  headerSymbol: "Amount",
-  insight: {
-    name: "INSIGHTS",
-    value: "-100% than last year",
-    indicator: "lower_red",
-    colorCode: "lower_red",
-  },
-  plots: [],
-};
-
 const MetricChartRow = ({ data }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { value } = useContext(FilterContext);
   const requestDate = {
-    startDate: getTime(startOfMonth(new Date())),
-    endDate: getTime(endOfMonth(new Date())),
+    startDate: value?.range?.startDate,
+    endDate: value?.range?.endDate,
     interval: "month",
     title: "",
   };

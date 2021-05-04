@@ -12,10 +12,15 @@ export const getKeyNotesConfig = (businessService, t) => {
             keyPath: [
               (d) => {
                 const overdueBy = new Date().getTime() - new Date(d.billDetails[0]?.toPeriod).getTime();
+                const days = Math.floor(overdueBy / (86400 * 1000));
                 return (
                   <React.Fragment>
-                    {"₹" + d["totalAmount"].toFixed(2)}
-                    <span style={{ fontSize: "16px", fontWeight: "normal" }}>{` ( overdue By ${Math.floor(overdueBy / (86400 * 1000))} days)`}</span>
+                    {"₹" + d["totalAmount"]}
+                    {days >= 0 ? (
+                      <span className={"card-label-error"} style={{ fontSize: "16px", fontWeight: "normal" }}>{` ( ${t(
+                        "CS_PAYMENT_OVERDUE"
+                      )} ${days} ${t(days === 1 ? "CS_COMMON_DAY" : "CS_COMMON_DAYS")})`}</span>
+                    ) : null}
                   </React.Fragment>
                 );
               },
@@ -76,6 +81,10 @@ export const getKeyNotesConfig = (businessService, t) => {
         <Row
           rowContainerStyle={{ padding: "4px 10px" }}
           last
+
+          You will be redirected to a third-party payment gateway.
+mSeva does not save any credit or debit card details
+
           label={t("CS_PAYMENT_TRANSANCTION_DATE")}
           text={transactionDate && new Date(transactionDate).toLocaleDateString("in")}
         /> */

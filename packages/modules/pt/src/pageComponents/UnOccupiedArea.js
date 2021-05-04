@@ -12,7 +12,7 @@ const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
     [UnOccupiedArea, setUnOccupiedArea] = useState(formData?.UnOccupiedArea?.UnOccupiedArea);
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     //let index = window.location.href.charAt(window.location.href.length - 1);
     let index = window.location.href.split("/").pop();
     if (userType !== "employee" && formData?.IsAnyPartOfThisFloorUnOccupied?.i18nKey === "PT_COMMON_NO") {
@@ -26,14 +26,16 @@ const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
         onSelect(config.key, {}, true, index);
       }
     }
-  });
+  }); */
 
   let validation = {};
   const [unitareaerror, setunitareaerror] = useState(null);
+  const [areanotzeroerror, setareanotzeroerror] = useState(null);
 
   function setPropertyUnOccupiedArea(e) {
     setUnOccupiedArea(e.target.value);
     setunitareaerror(null);
+    setareanotzeroerror(null);
     if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
       let totalarea = parseInt(formData?.units[index]?.floorarea || 0) + parseInt(formData?.units[index]?.RentArea || 0) + parseInt(e.target.value);
       if (parseInt(formData?.units[index]?.builtUpArea) < totalarea) {
@@ -46,6 +48,9 @@ const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
         parseInt(e.target.value) + parseInt(formData?.landarea?.floorarea || "0") + parseInt(formData?.Constructiondetails?.RentArea || "0")
     ) {
       setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
+    }
+    if (parseInt(e.target.value) == 0) {
+      setareanotzeroerror("PT_AREA_NOT_0_MSG");
     }
   }
 
@@ -103,10 +108,10 @@ const UnOccupiedArea = ({ t, config, onSelect, value, userType, formData }) => {
       config={((config.texts.headerCaption = getheaderCaption()), config)}
       onChange={onChange}
       onSelect={goNext}
-      forcedError={t(unitareaerror)}
+      forcedError={t(unitareaerror) || t(areanotzeroerror)}
       onSkip={onSkip}
       t={t}
-      isDisabled={unitareaerror || !UnOccupiedArea}
+      isDisabled={unitareaerror || areanotzeroerror || !UnOccupiedArea}
       showErrorBelowChildren={true}
     >
       <CardLabel>{`${t("PT_UNOCCUPIED_AREA_SQ_FEET_LABEL")}`}</CardLabel>

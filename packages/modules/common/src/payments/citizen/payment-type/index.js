@@ -8,6 +8,7 @@ import {
   CardLabel,
   CardLabelDesc,
   CardSectionHeader,
+  InfoBanner,
 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useForm, Controller } from "react-hook-form";
@@ -110,6 +111,7 @@ export const SelectPaymentType = (props) => {
           <SubmitBar label={t("PAYMENT_CS_BUTTON_LABEL")} submit={true} />
         </Card>
       </form>
+      <InfoBanner label={t("CS_COMMON_INFO")} text={t("CS_PAYMENT_REDIRECT_NOTICE")} />
     </React.Fragment>
   );
 };

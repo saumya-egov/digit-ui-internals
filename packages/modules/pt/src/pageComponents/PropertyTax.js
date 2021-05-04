@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardSubHeader, CardText, SubmitBar } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { cardBodyStyle } from "../utils";
+import { cardBodyStyle, stringReplaceAll } from "../utils";
 //import { map } from "lodash-es";
 
 const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
@@ -19,7 +19,7 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
     <React.Fragment>
       <Card>
         <CardHeader>{t("PT_DOC_REQ_SCREEN_HEADER")}</CardHeader>
-        <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 15em)" }}>
+        <div style={{ ...cardBodyStyle }}>
           <CardText>{t("PT_DOC_REQ_SCREEN_SUB_HEADER")}</CardText>
           <CardText>{t("PT_DOC_REQ_SCREEN_TEXT")}</CardText>
           <CardText>{t("PT_DOC_REQ_SCREEN_SUB_TEXT")}</CardText>
@@ -30,19 +30,19 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
               ? docs.map(({ code, dropdownData }, index) => (
                   <div key={index}>
                     <CardSubHeader>
-                      {index + 1}. {t("PROPERTYTAX_" + code.replaceAll(".", "_") + "_HEADING")}
+                      {index + 1}. {t("PROPERTYTAX_" + stringReplaceAll(code, ".", "_") + "_HEADING")}
                     </CardSubHeader>
                     {dropdownData.map((dropdownData) => (
-                      <CardText>{t("PROPERTYTAX_" + dropdownData?.code.replaceAll(".", "_") + "_LABEL")}</CardText>
+                      <CardText>{t("PROPERTYTAX_" + stringReplaceAll(dropdownData?.code, ".", "_") + "_LABEL")}</CardText>
                     ))}
                   </div>
                 ))
               : console.log("error")}
           </div>
-          <span> 
-            <SubmitBar label="Next" onSubmit={onSelect} />
-          </span>
         </div>
+        <span>
+          <SubmitBar label="Next" onSubmit={onSelect} />
+        </span>
       </Card>
     </React.Fragment>
   );

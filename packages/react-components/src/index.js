@@ -76,6 +76,7 @@ import {
   CloseSvg,
   UpwardArrow,
   PropertyHouse,
+  ShareIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -83,7 +84,7 @@ import RoundedLabel from "./atoms/RoundedLabel";
 import BreadCrumb from "./atoms/BreadCrumb";
 import DatePicker from "./atoms/DatePicker";
 import MultiLink from "./atoms/MultiLink";
-
+import InfoBanner from "./atoms/InfoBanner";
 import { SearchIconSvg } from "./atoms/svgindex";
 
 import RemoveableTag from "./molecules/RemoveableTag";
@@ -175,6 +176,7 @@ export {
   LabelFieldPair,
   BreadCrumb,
   DatePicker,
+  InfoBanner,
   // Icons
   GetApp,
   ArrowLeft,
@@ -217,4 +219,5 @@ export {
   Details,
   FilterIcon,
   PrintIcon,
+  ShareIcon,
 };

@@ -25,12 +25,12 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
       : "";
   }
 
-  useEffect(() => {
+  /*  useEffect(() => {
     if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
       //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
       /* let index = window.location.href.charAt(window.location.href.length - 1);
       let unit = formData.units && formData.units[index];
-      onSelect(config.key, unit, true, index); */
+      onSelect(config.key, unit, true, index); 
 
       if (!isNaN(index)) {
         //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -41,13 +41,15 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
         onSelect(config.key, {}, true, index);
       }
     }
-  });
+  }); */
 
   const [unitareaerror, setunitareaerror] = useState(null);
+  const [areanotzeroerror, setareanotzeroerror] = useState(null);
 
   function setPropertyRentArea(e) {
     setRentArea(e.target.value);
     setunitareaerror(null);
+    setareanotzeroerror(null);
     if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY") {
       let totalarea = parseInt(formData?.units[index]?.floorarea || 0) + parseInt(e.target.value);
       if (parseInt(formData?.units[index]?.builtUpArea) < totalarea) {
@@ -59,6 +61,9 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
       parseInt(formData?.floordetails?.builtUpArea) < parseInt(e.target.value) + parseInt(formData?.landarea?.floorarea || "0")
     ) {
       setunitareaerror("PT_RENTED_AREA_LESS_THAN_BUILTUP");
+    }
+    if (parseInt(e.target.value) == 0) {
+      setareanotzeroerror("PT_AREA_NOT_0_MSG");
     }
   }
   function setPropertyAnnualRent(e) {
@@ -91,9 +96,9 @@ const RentalDetails = ({ t, config, onSelect, value, userType, formData }) => {
       config={((config.texts.headerCaption = getheaderCaption()), config)}
       onSelect={goNext}
       onSkip={onSkip}
-      forcedError={t(unitareaerror)}
+      forcedError={t(unitareaerror) || t(areanotzeroerror)}
       t={t}
-      isDisabled={unitareaerror || !RentArea || !AnnualRent}
+      isDisabled={unitareaerror || areanotzeroerror || !RentArea || !AnnualRent}
       showErrorBelowChildren={true}
     >
       <CardLabel>{`${t("PT_FLOOR_DETAILS_RENTED_AREA_LABEL")}`}</CardLabel>

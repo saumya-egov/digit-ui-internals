@@ -16,15 +16,20 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
   }
   const [error, setError] = useState(null);
   const [unitareaerror, setunitareaerror] = useState(null);
+  const [areanotzeroerror, setareanotzeroerror] = useState(null);
 
   function setPropertyfloorarea(e) {
     setfloorarea(e.target.value);
     setunitareaerror(null);
+    setareanotzeroerror(null);
     if (formData?.PropertyType?.code === "BUILTUP.INDEPENDENTPROPERTY" && parseInt(formData?.units[index]?.builtUpArea) < e.target.value) {
       setunitareaerror("PT_TOTUNITAREA_LESS_THAN_BUILTUP_ERR_MSG");
     }
     if (formData?.PropertyType?.code === "BUILTUP.SHAREDPROPERTY" && parseInt(formData?.floordetails?.builtUpArea) < e.target.value) {
       setunitareaerror("PT_SELFOCCUPIED_AREA_LESS_THAN_BUILTUP");
+    }
+    if (parseInt(e.target.value) == 0) {
+      setareanotzeroerror("PT_AREA_NOT_0_MSG");
     }
   }
 
@@ -115,11 +120,11 @@ const Area = ({ t, config, onSelect, value, userType, formData }) => {
     <FormStep
       config={config}
       onChange={onChange}
-      forcedError={t(unitareaerror)}
+      forcedError={t(unitareaerror) || t(areanotzeroerror)}
       onSelect={goNext}
       onSkip={onSkip}
       t={t}
-      isDisabled={unitareaerror || !floorarea}
+      isDisabled={unitareaerror || areanotzeroerror || !floorarea}
       showErrorBelowChildren={true}
     >
       <CardLabel>{`${t("PT_PLOT_SIZE_SQUARE_FEET_LABEL")}`}</CardLabel>

@@ -24,8 +24,8 @@ const DSSCard = () => {
           </div>
           <div className="body">
             <span className="link">
-              <Link to={`/digit-ui/employee/dss/overview`}>{t("ES_TITLE_DSS_OVERVIEW")}</Link>
-              {<ArrowRight to={`/digit-ui/employee/dss/overview`} />}
+              <Link to={`/digit-ui/employee/dss/dashboard`}>{t("ES_TITLE_DSS_OVERVIEW")}</Link>
+              {<ArrowRight to={`/digit-ui/employee/dss/dashboard`} />}
             </span>
           </div>
         </div>
