@@ -106,7 +106,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
           <CardLabel className="card-label-smaller">
             {t("PT_LOCALITY_LABEL")}
             {/* {config.isMandatory ? " * " : null} */}
-          </CardLabel>   
+          </CardLabel>
           <Dropdown
             className="form-field"
             isMandatory
@@ -122,7 +122,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     );
   }
   return (
-    <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true} >
+    <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }}>
         <CardLabel>{`${t("MYCITY_CODE_LABEL")} `}</CardLabel>
         <RadioOrSelect
@@ -134,18 +134,20 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
         />
         {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
         {selectedCity && localities && (
-               <span  className={'form-pt-dropdown-only'}>
-          <RadioOrSelect
-          dropdownStyle={{paddingBottom:"20px"}}
-            isMandatory={config.isMandatory}
-            options={localities.sort((a, b) => a.name.localeCompare(b.name))}
-            selectedOption={selectedLocality}
-            optionKey="i18nkey"
-            onSelect={selectLocality}
-            t={t}
-          /></span>
+          <span className={"form-pt-dropdown-only"}>
+            <RadioOrSelect
+              dropdownStyle={{ paddingBottom: "20px" }}
+              isMandatory={config.isMandatory}
+              options={localities.sort((a, b) => a.name.localeCompare(b.name))}
+              selectedOption={selectedLocality}
+              optionKey="i18nkey"
+              onSelect={selectLocality}
+              t={t}
+            />
+          </span>
         )}
-      {/* </div> */}
+        {/* </div> */}
+      </div>
     </FormStep>
   );
 };
