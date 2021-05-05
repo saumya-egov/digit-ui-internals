@@ -612,7 +612,7 @@ const getDocumentRequiredScreen = (MdmsRes) => {
 };
 
 const getMapConfig = (MdmsRes) => {
-  MdmsRes["PropertyTax"].MapConfig.filter((MapConfig) => MapConfig.active).map((MapData) => {
+  MdmsRes["PropertyTax"].MapConfig.filter((MapConfig) => MapConfig).map((MapData) => {
     return {
       ...MapConfig,
       defaultconfig: MapData.defaultConfig,

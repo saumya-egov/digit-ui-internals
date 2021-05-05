@@ -347,8 +347,8 @@ const LocationSearch = (props) => {
       const getLatLngError = (error) => {
         console.log("geo location error", error);
         let defaultLatLong = {};
-        if (props.isPTDefault) {
-          defaultLatLong = props.PTdefaultcoord.defaultConfig || { lat: 31.6160638, lng: 74.8978579 };
+        if (props?.isPTDefault) {
+          defaultLatLong = props?.PTdefaultcoord?.defaultConfig || { lat: 31.6160638, lng: 74.8978579 };
         } else {
           defaultLatLong = {
             lat: 31.6160638,
