@@ -34,7 +34,7 @@ export const mCollectLinks = ({ matchPath, userType }) => {
   }, []);
   return (
     <Switch>
-      <Route path="/digit-ui/example">
+      <Route path="mcollect/challan-details/<challan_no>">
         <EmployeeChallan />
       </Route>
     </Switch>
