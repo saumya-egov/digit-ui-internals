@@ -12,14 +12,14 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   if (propertyIds) filters.propertyIds = propertyIds;
   if (oldPropertyIds) filters.oldPropertyIds = oldPropertyIds;
 
-  if (!params["mobileNumber"]) delete params["mobileNumber"];
-
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const result = Digit.Hooks.pt.usePropertySearch({ filters });
   const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
 
+  const fetchBillParams = mobileNumber ? { mobileNumber, consumerCode } : { consumerCode };
+
   const paymentDetails = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
-    { consumerCode, businessService: "PT", mobileNumber: mobileNumber },
+    { businessService: "PT", ...fetchBillParams },
     { enabled: consumerCode ? true : false }
   );
 
