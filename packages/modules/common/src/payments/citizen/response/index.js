@@ -16,7 +16,10 @@ export const SuccessfulPayment = (props) => {
 
   const { label } = Digit.Hooks.useApplicationsForBusinessServiceSearch({ businessService: business_service }, { enabled: false });
 
-  const { data: demand } = Digit.Hooks.useDemandSearch({ consumerCode, businessService: business_service }, { enabled: !isLoading });
+  const { data: demand } = Digit.Hooks.useDemandSearch(
+    { consumerCode, businessService: business_service },
+    { enabled: !isLoading, retry: false, staleTime: Infinity, refetchOnWindowFocus: false }
+  );
 
   const { data: billData, isLoading: isBillDataLoading } = Digit.Hooks.useFetchPayment(
     { tenantId, consumerCode, businessService: business_service },
@@ -26,6 +29,9 @@ export const SuccessfulPayment = (props) => {
   const { data: generatePdfKey } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey", {
     select: (data) =>
       data["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt",
+    retry: false,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 
   const payments = data?.payments;

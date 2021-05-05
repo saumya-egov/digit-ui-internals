@@ -6,6 +6,7 @@ import { useQueryClient } from "react-query";
 import { useCardPaymentDetails } from "./card";
 import { useChequeDetails, ChequeDetailsComponent } from "./cheque";
 import isEqual from "lodash/isEqual";
+// import BillDetails, { BillDetailsFormConfig } from "./Bill-details/billDetails";
 
 export const CollectPayment = (props) => {
   // const { formData, addParams } = props;
