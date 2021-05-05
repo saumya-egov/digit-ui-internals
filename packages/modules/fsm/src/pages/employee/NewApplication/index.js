@@ -115,7 +115,7 @@ export const NewApplication = ({ parentUrl, heading }) => {
           pincode,
           slumName: slum,
           locality: {
-            code: localityCode?.split("_").pop(),
+            code: localityCode,
             name: localityName,
           },
           geoLocation: {
