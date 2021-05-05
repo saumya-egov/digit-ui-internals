@@ -22,7 +22,7 @@ const Layout = ({ rowData }) => {
       case "horizontalBar":
         return <CustomHorizontalBarChart data={chart} />;
       default:
-        return <CustomTable />;
+        return <CustomTable data={chart} />;
     }
   };
 
