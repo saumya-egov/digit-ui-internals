@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { PGRModule, PGRLinks, PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { PTModule, PTLinks, PTComponents } from "@egovernments/digit-ui-module-pt";
+import { MCollectModule, MCollectLinks, MCollectComponents } from "@egovernments/digit-ui-module-mcollect";
 import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
@@ -91,7 +92,7 @@ const userInfo = {
   QAPTA,
 };
 
-const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS"];
+const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS", "MCollect"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -130,6 +131,9 @@ const initDigitUI = () => {
     PTModule,
     PTLinks,
     ...PTComponents,
+    MCollectLinks,
+    MCollectModule,
+    ...MCollectComponents
   });
 
   initFSMComponents();
