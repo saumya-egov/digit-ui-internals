@@ -131,6 +131,9 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
           optionKey="code"
           onSelect={selectCity}
           t={t}
+          isDependent={true}
+          labelKey="TENANT_TENANTS"
+          disabled={isEditProperty}
         />
         {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
         {selectedCity && localities && (
@@ -143,6 +146,9 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
               optionKey="i18nkey"
               onSelect={selectLocality}
               t={t}
+              isDependent={true}
+              labelKey=""
+              disabled={isEditProperty}
             />
           </span>
         )}
