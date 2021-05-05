@@ -4,6 +4,24 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { propertyCardBodyStyle } from "../../../modules/pt/src/utils";
 
+const tenantId = Digit.ULBService.getCurrentTenantId();
+const coreData = Digit.Hooks.useCoreData();
+const { isLoading, isError, error, data } = Digit.Hooks.pt.useEmployeeSearch({
+  tenantId,
+  filters: { acknowledgementIds },
+});
+
+const challan = data?.Properties[0];
+let units = [];
+units = challan?.units;
+let owners = [];
+owners = challan?.owners;
+let docs = [];
+docs = challan?.documents;
+if (isLoading) {
+  return <Loader />;
+}
+
 class EmployeeChallan extends React.Component {
   constructor(props) {
     super(props);

@@ -32,7 +32,13 @@ export const mCollectLinks = ({ matchPath, userType }) => {
   useEffect(() => {
     clearParams();
   }, []);
-
+  return (
+    <Switch>
+      <Route path="/digit-ui/example">
+        <EmployeeChallan />
+      </Route>
+    </Switch>
+  );
   // return (
   //   <React.Fragment>
   //     <Header>{t("ACTION_TEST_PROPERTY_TAX")}</Header>

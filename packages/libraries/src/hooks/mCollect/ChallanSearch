@@ -1,0 +1,10 @@
+import { useQuery, useQueryClient } from "react-query";
+
+const ChallanSearch = ({ tenantId, challan_no }, config = {}) => {
+  const client = useQueryClient();
+  const args = tenantId ? { tenantId, filters } : { filters };
+  const { isLoading, error, data } = useQuery(["ChallanSearch", tenantId, challan_no], () => Digit.UserService.employeeSearch(args), config);
+  return { isLoading, error, data, revalidate: () => client.invalidateQueries(["challanSearchList", tenantId, challan_no]) };
+};
+
+export default ChallanSearch;
