@@ -18,15 +18,15 @@ let owners = [];
 owners = challan?.owners;
 let docs = [];
 docs = challan?.documents;
-if (isLoading) {
-  return <Loader />;
-}
 
 class EmployeeChallan extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
+    if (isLoading) {
+      return <Loader />;
+    }
     return (
       <React.Fragment>
         <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
