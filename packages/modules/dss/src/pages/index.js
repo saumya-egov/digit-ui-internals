@@ -1,5 +1,6 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useReactToPrint } from "react-to-print";
 import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
 import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
@@ -36,6 +37,12 @@ const DashBoard = () => {
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   // console.log("find all data here", dashData, screenConfig);
+  const fullPageRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => fullPageRef.current,
+  });
+
   if (isLoading) {
     return <Loader />;
   }
@@ -43,13 +50,13 @@ const DashBoard = () => {
   const dashboardConfig = response?.responseData;
   return (
     <FilterContext.Provider value={provided}>
-      <div className="chart-wrapper">
+      <div className="chart-wrapper" ref={fullPageRef}>
         <div className="options">
           <div className="mrlg">
             <ShareIcon className="mrsm" />
             {t(`ES_DSS_SHARE`)}
           </div>
-          <div className="mrsm">
+          <div className="mrsm" onClick={handlePrint}>
             <DownloadIcon className="mrsm" />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
