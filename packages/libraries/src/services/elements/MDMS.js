@@ -416,6 +416,51 @@ const getReasonCriteria = (tenantId, moduleCode, type, payload) => ({
   },
 });
 
+const getBusinessServiceType = (tenantId, type, payload) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: "BillingService",
+        masterDetails: payload.map((mdmsLoad) => ({
+          name: mdmsLoad,
+        })),
+      },
+    ],
+  },
+});
+
+const getTaxHeadMasterType = (tenantId, type, payload) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: "BillingService",
+        masterDetails: payload.map((mdmsLoad) => ({
+          name: mdmsLoad,
+        })),
+      },
+    ],
+  },
+});
+
+const getTaxPeriodType = (tenantId, type, payload) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: "BillingService",
+        masterDetails: payload.map((mdmsLoad) => ({
+          name: mdmsLoad,
+        })),
+      },
+    ],
+  },
+});
+
 const getBillingServiceForBusinessServiceCriteria = () => ({
   moduleDetails: [
     {
@@ -850,5 +895,14 @@ export const MdmsService = {
   },
   getPaymentGateway: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getBusinessService: (tenantId, moduleCode, payload) => {
+    return MdmsService.getDataByCriteria(tenantId, getBusinessServiceType(tenantId, type, payload), moduleCode);
+  },
+  getTaxHeadMaster: (tenantId, moduleCode, payload) => {
+    return MdmsService.getDataByCriteria(tenantId, getTaxHeadMasterType(tenantId, type, payload), moduleCode);
+  },
+  getTaxPeriod: (tenantId, moduleCode, payload) => {
+    return MdmsService.getDataByCriteria(tenantId, getTaxPeriodType(tenantId, type, payload), moduleCode);
   },
 };
