@@ -1,5 +1,5 @@
 import React from "react";
-import { PTLinks } from "../../Module";
+import { MCollectLinks } from "../../Module";
 import Inbox from "./Inbox";
 import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
@@ -20,17 +20,17 @@ const EmployeeApp = ({ path, url, userType }) => {
             <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
               {t("ES_COMMON_HOME")}
             </Link>{" "}
-            / <span>{location.pathname === "/digit-ui/employee/mCollect/inbox" ? t("ES_TITLE_INBOX") : "MCOLLECT"}</span>
+            / <span>{location.pathname === "/digit-ui/employee/mCollect" ? t("ES_TITLE_INBOX") : "MCOLLECT"}</span>
           </p>
-          <PrivateRoute exact path={`${path}/`} component={() => <PTLinks matchPath={path} userType={userType} />} />
-          <PrivateRoute path={`${path}/inbox`} component={() => <Inbox parentRoute={path} isInbox={true} />} />
+          <PrivateRoute exact path={`${path}/`} component={() => <MCollectLinks matchPath={path} userType={userType} />} />
+          {/*<PrivateRoute path={`${path}/inbox`} component={() => <Inbox parentRoute={path} isInbox={true} />} />*/}
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
           {/*<PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />*/}
           {/*<PrivateRoute path={`${path}/property-details/:id`} component={() => <PropertyDetails parentRoute={path} />} />*/}
           {/* <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} /> */}
           {/* <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} /> */}
           {/* <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} /> */}
-          <PrivateRoute path={`${path}/search`} component={() => <Inbox parentRoute={path} isSearch={true} />} />
+          {/*<PrivateRoute path={`${path}/search`} component={() => <Inbox parentRoute={path} isSearch={true} />} />*/}
         </div>
       </React.Fragment>
     </Switch>
