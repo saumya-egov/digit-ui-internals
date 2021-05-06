@@ -45,12 +45,12 @@ const DashBoard = () => {
     <FilterContext.Provider value={provided}>
       <div className="chart-wrapper">
         <div className="options">
-          <div>
-            <ShareIcon styles={{ marginRight: "8px" }} />
+          <div className="mrlg">
+            <ShareIcon className="mrsm" />
             {t(`ES_DSS_SHARE`)}
           </div>
-          <div>
-            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+          <div className="mrsm">
+            <DownloadIcon className="mrsm" />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>

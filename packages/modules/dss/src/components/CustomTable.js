@@ -55,6 +55,9 @@ const CustomTable = ({ data }) => {
       <Table
         className="customTable"
         t={t}
+        disableSort={false}
+        autoSort={true}
+        initSortId="SN"
         data={tableData}
         columns={tableColumns}
         getCellProps={(cellInfo) => {

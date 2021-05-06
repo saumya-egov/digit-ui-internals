@@ -18,7 +18,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
 
   const fetchBillParams = mobileNumber ? { mobileNumber, consumerCode } : { consumerCode };
 
-  const paymentDetails = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
+  const paymentDetails = Digit.Hooks.useFetchBillsForBuissnessService(
     { businessService: "PT", ...fetchBillParams },
     { enabled: consumerCode ? true : false }
   );

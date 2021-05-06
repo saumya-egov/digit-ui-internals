@@ -23,7 +23,9 @@ const SearchProperty = ({ config: propsConfig }) => {
       return alert("Provide at least one parameter");
     } else {
       history.push(
-        `/digit-ui/citizen/pt/property/search-results?mobileNumber=${data.mobileNumber}&propertyIds=${data.propertyId}&oldPropertyIds=${data.oldPropertyId}`
+        `/digit-ui/citizen/pt/property/search-results?mobileNumber=${data?.mobileNumber ? data?.mobileNumber : ``}&propertyIds=${
+          data?.propertyId ? data.propertyId : ``
+        }&oldPropertyIds=${data?.oldPropertyId ? data?.oldPropertyId : ``}`
       );
     }
   };

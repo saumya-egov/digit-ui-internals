@@ -3,11 +3,21 @@
   justify-content: space-between;
 
   .sideContent {
-    display: flex;
-    justify-content: space-around;
+    @apply flex justify-around items-center ;
 
     .searchInput {
-      margin-right: 30px;
+      @apply mr-lg;
+      input{
+        margin-bottom: 0;
+        @apply pr-xl;
+      }
+    }
+
+    .signature-img{
+      top: 8px;
+      right: 8px;
+      fill: #505A5F;
+      @apply absolute;
     }
   }
 }
