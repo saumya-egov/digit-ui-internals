@@ -68,7 +68,7 @@ const getPropertyEditDetails = (data = {}) => {
   }
   data.address.pincode = data?.address?.pincode;
   data.address.city = { code: data?.tenantId };
-  data.address.locality.i18nkey =  data?.tenantId.replace(".", "_").toUpperCase() + "_" + "REVENUE" + "_" + data?.address?.locality?.code
+  data.address.locality.i18nkey = data?.tenantId.replace(".", "_").toUpperCase() + "_" + "REVENUE" + "_" + data?.address?.locality?.code;
   let addressDocs = data?.documents?.filter((doc) => doc?.documentType?.includes("ADDRESSPROOF"));
   addressDocs[0]?.documentType = { code: addressDocs[0]?.documentType, i18nKey: stringReplaceAll(addressDocs[0]?.documentType, ".", "_") };
   if (data?.address?.documents) {
@@ -420,7 +420,7 @@ const EditProperty = ({ parentRoute }) => {
         application.isUpdateProperty = false;
         application.isEditProperty = true;
       }
-      sessionStorage.setItem("propertyInitialObject", JSON.stringify({...application}));
+      sessionStorage.setItem("propertyInitialObject", JSON.stringify({ ...application }));
       let propertyEditDetails = getPropertyEditDetails(application);
       setParams({ ...params, ...propertyEditDetails });
     }
@@ -477,7 +477,11 @@ const EditProperty = ({ parentRoute }) => {
       }
     }
     if (typeof nextStep == "object" && nextStep != null && isMultiple == false) {
-      if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
+      if (
+        nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] &&
+        (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] == "map" ||
+          nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] == "un-occupied-area")
+      ) {
         nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
       } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
         nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}`;
