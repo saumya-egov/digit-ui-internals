@@ -16,7 +16,7 @@ const getRequest = (type, code, requestDate) => ({
 
 const useGetChart = (args) => {
   const { key, type, tenantId, requestDate } = args;
-  return useQuery([key], () =>
+  return useQuery([key, requestDate], () =>
     DSSService.getCharts({
       ...getRequest(type, key, requestDate),
       headers: {

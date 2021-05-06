@@ -21,8 +21,8 @@ const Layout = ({ rowData }) => {
         return <CustomAreaChart data={chart} />;
       case "horizontalBar":
         return <CustomHorizontalBarChart data={chart} />;
-      default:
-        return <CustomTable />;
+      case "bar":
+        return <CustomHorizontalBarChart data={chart} />
     }
   };
 
