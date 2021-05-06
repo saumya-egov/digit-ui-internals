@@ -25,9 +25,9 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
     }
   ];
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  // if (isLoading) {
+  //   return <Loader />;
+  // }
 
   return (
     <div className="status-container">
