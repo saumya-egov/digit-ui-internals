@@ -4,7 +4,7 @@ import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox, L
 import { useTranslation } from "react-i18next";
 
 import Status from "./Status";
-import ServiceCategory from "./ServiceCategoryCount";
+import ServiceCategory from "./ServiceCategory";
 import _ from "lodash";
 
 const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props }) => {

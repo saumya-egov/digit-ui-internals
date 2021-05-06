@@ -34,20 +34,33 @@ const Inbox = ({
   let paginationParams = isMobile
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
-debugger;
-  const { isLoading: hookLoading, searchResponseKey, data, ...rest } = Digit.Hooks.useInboxGeneral({
-    tenantId,
-    businessService,
-    isInbox,
-    filters: { ...searchParams, ...paginationParams, sortParams },
-    rawWfHandler,
-    rawSearchHandler,
-    combineResponse,
-    wfConfig,
-    searchConfig,
-    middlewaresWf,
-    middlewareSearch,
-  });
+  // const { isLoading: hookLoading, searchResponseKey, data, ...rest } = Digit.Hooks.useInboxGeneral({
+  //   tenantId,
+  //   businessService,
+  //   isInbox,
+  //   filters: { ...searchParams, ...paginationParams, sortParams },
+  //   rawWfHandler,
+  //   rawSearchHandler,
+  //   combineResponse,
+  //   wfConfig,
+  //   searchConfig,
+  //   middlewaresWf,
+  //   middlewareSearch,
+  // });
+
+  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({tenantId, filters: { ...paginationParams } });
+
+  console.log(data, "qlwhoiwqheoihwqiehwqoiheoihwqeoi");
+
+  let formedData = [];
+  data?.challans?.map(data => {
+    formedData.push({
+      challanNo: data.challanNo,
+      name: data.citizen.name,
+      applicationStatus: data.applicationStatus,
+      businessService: data.businessService
+    })
+  })
 
   useEffect(() => {
     console.log("data from the hook", hookLoading, rest, data);
@@ -125,7 +138,7 @@ debugger;
           {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
           <DesktopInbox
             businessService={businessService}
-            data={data}
+            data={formedData}
             tableConfig={rest?.tableConfig}
             isLoading={hookLoading}
             defaultSearchParams={initialStates.searchParams}

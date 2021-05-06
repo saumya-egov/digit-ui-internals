@@ -9,7 +9,6 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   const { t } = useTranslation();
 
   const onStatusChange = (e, type) => {
-    debugger;
     if (e.target.checked) onFilterChange({ applicationStatus: [...searchParams?.applicationStatus, type] });
     else onFilterChange({ applicationStatus: searchParams?.applicationStatus.filter((option) => type.name !== option.name) });
   };

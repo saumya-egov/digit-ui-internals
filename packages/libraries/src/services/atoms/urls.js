@@ -62,6 +62,10 @@ const Urls = {
     dashboardConfig: "/dashboard-analytics/dashboard/getDashboardConfig",
     getCharts: "/dashboard-analytics/dashboard/getChartV2",
   },
+
+  mcollect: {
+    search: "/echallan-services/eChallan/v1/_search",
+  }
 };
 
 export default Urls;

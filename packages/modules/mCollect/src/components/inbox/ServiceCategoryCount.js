@@ -21,7 +21,7 @@ const ServiceCategoryCount = ({ status, searchParams, onAssignmentChange, busine
     null
   );
 
-  // console.log(businessService, "in status count");
+  console.log(data, "in status countin status countin status countin status count");
 
   return (
     <CheckBox
@@ -30,7 +30,7 @@ const ServiceCategoryCount = ({ status, searchParams, onAssignmentChange, busine
         //IIFE
         return searchParams?.applicationStatus.some((e) => e.code === status.code);
       })()}
-      label={`${t()} (${data?.[0]?.totalCount ? data?.[0]?.totalCount : 0})`}
+      label={`${t(status.name)} (${data?.[0]?.totalCount ? data?.[0]?.totalCount : 0})`}
     />
   );
 };
