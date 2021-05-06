@@ -27,7 +27,7 @@ const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
 };
 
-const GenericChart = ({ header, className, caption, children, showSearch = false, showDownload = false }) => {
+const GenericChart = ({ header, className, caption, children, showSearch = false, showDownload = false, onChange }) => {
   const { t } = useTranslation();
 
   const { value } = useContext(FilterContext);
@@ -37,7 +37,7 @@ const GenericChart = ({ header, className, caption, children, showSearch = false
       <div className="chartHeader">
         <CardLabel style={{ fontWeight: "bold", wordBreak: "break-all" }}>{`${t(header)} ${renderUnits(value.denomination)}`}</CardLabel>
         <div className="sideContent">
-          {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} />}
+          {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
           {showDownload && <DownloadIcon className="mrlg" />}
           <Ellipsis />
         </div>
