@@ -51,7 +51,6 @@ const DashBoard = () => {
   return (
     <FilterContext.Provider value={provided}>
       <div className="chart-wrapper" ref={fullPageRef}>
-        <style>{`@media print { html, body { width: 1024px !important; he } } @page{ size: 80mm 50mm }`}</style>
         <div className="options">
           <div className="mrlg">
             <ShareIcon className="mrsm" />
