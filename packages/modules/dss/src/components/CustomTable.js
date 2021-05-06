@@ -4,7 +4,7 @@ import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { UpwardArrow, TextInput, Loader, Table } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
-const CustomTable = ({ data }) => {
+const CustomTable = ({ data, onSearch }) => {
   const { id } = data;
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
@@ -58,6 +58,7 @@ const CustomTable = ({ data }) => {
         disableSort={false}
         autoSort={true}
         initSortId="SN"
+        onSearch={onSearch}
         data={tableData}
         columns={tableColumns}
         getCellProps={(cellInfo) => {

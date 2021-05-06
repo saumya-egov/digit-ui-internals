@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useTable, useRowSelect, usePagination, useSortBy, useControlledState } from "react-table";
+import { useTable, useRowSelect, usePagination, useSortBy, useGlobalFilter, useControlledState } from "react-table";
 import { ArrowBack, ArrowForward, SortUp, SortDown } from "./svgindex";
 
 // const IndeterminateCheckbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
@@ -30,6 +30,7 @@ const Table = ({
   disableSort = true,
   autoSort = false,
   initSortId = "",
+  onSearch = false,
   totalRecords,
   onNextPage,
   onPrevPage,
@@ -52,7 +53,8 @@ const Table = ({
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize, sortBy },
+    setGlobalFilter,
+    state: { pageIndex, pageSize, sortBy, globalFilter },
   } = useTable(
     {
       columns,
@@ -66,6 +68,7 @@ const Table = ({
       autoResetPage: false,
       autoResetSortBy: false,
       disableSortRemove: true,
+      disableGlobalFilter: onSearch === false ? true : false,
       useControlledState: (state) => {
         return React.useMemo(() => ({
           ...state,
@@ -73,6 +76,7 @@ const Table = ({
         }));
       },
     },
+    useGlobalFilter,
     useSortBy,
     usePagination,
     useRowSelect
@@ -102,6 +106,7 @@ const Table = ({
     onSort(sortBy);
   }, [onSort, sortBy]);
 
+  useEffect(() => setGlobalFilter(onSearch), [onSearch, setGlobalFilter]);
   return (
     <React.Fragment>
       <table className={className} {...getTableProps()}>
