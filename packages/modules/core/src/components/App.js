@@ -45,10 +45,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
 
   return (
     <Switch>
-      <Route path="/digit-ui/mcollect/challan-details/<challan_no>">
-        <EmployeeChallan />
-      </Route>
-      <Route path="/digit-ui/employee">
+     <Route path="/digit-ui/employee">
         <div className="employee">
           <TopBarSideBar
             t={t}

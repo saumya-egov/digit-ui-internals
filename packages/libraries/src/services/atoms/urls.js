@@ -55,6 +55,11 @@ const Urls = {
     update: "/property-services/property/_update",
     assessment_create: "/property-services/assessment/_create",
   },
+
+  mCollect: {
+    search: "/echallan-services/eChallan/v1/_search",
+    
+  },
 };
 
 export default Urls;

@@ -65,6 +65,7 @@ class EmployeeChallan extends React.Component {
               </StatusTable>
             </Card>
           </Card>
+          <PrivateRoute path={`${path}/challan-details/:id`} component={() => <ChallanDetails parentRoute={path} />} />
         </div>
       </React.Fragment>
     );
