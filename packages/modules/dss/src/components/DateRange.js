@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { ArrowDown, Modal, ButtonSelector } from "@egovernments/digit-ui-react-components";
+import { ArrowDown, Modal, ButtonSelector, Calender } from "@egovernments/digit-ui-react-components";
 import { DateRangePicker } from "react-date-range";
 import { format } from "date-fns";
 
@@ -29,12 +29,10 @@ const DateRange = ({ values, onFilterChange }) => {
     }
   };
 
-  const handleSelect = ({ selection }) => {
-    console.log(selection, "ranges");
+  const handleSelect = (ranges) => {
+    const { range1: selection } = ranges;
     setSelectionRange(selection);
-    if (isEndDateFocused(focusedRange[1])) {
-      handleSubmit(selection);
-    }
+    handleSubmit(selection);
   };
 
   const handleFocusChange = (focusedRange) => {
@@ -46,12 +44,14 @@ const DateRange = ({ values, onFilterChange }) => {
   };
 
   const handleSubmit = (selectionRange) => {
-    const startDate = selectionRange?.startDate.getTime();
-    const endDate = selectionRange?.endDate.getTime();
+    const startDate = selectionRange?.startDate;
+    const endDate = selectionRange?.endDate;
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
     onFilterChange({ range: { startDate, endDate, duration, title } });
-    setIsModalOpen(false);
+    if (isEndDateFocused(focusedRange[1])) {
+      setIsModalOpen(false);
+    }
   };
   return (
     <>
@@ -59,7 +59,7 @@ const DateRange = ({ values, onFilterChange }) => {
       <div className="employee-select-wrap">
         <div className="select">
           <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
-          <ArrowDown onClick={() => setIsModalOpen((prevState) => !prevState)} />
+          <Calender onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
         {isModalOpen && (
           <div className="options-card" style={{ overflow: "visible", width: "unset", maxWidth: "unset" }}>
@@ -70,7 +70,6 @@ const DateRange = ({ values, onFilterChange }) => {
               onChange={handleSelect}
               onRangeFocusChange={handleFocusChange}
               showSelectionPreview={true}
-              moveRangeOnFirstSelection={false}
             />
           </div>
         )}

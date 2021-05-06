@@ -7,8 +7,8 @@ import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
 
 const getInitialRange = () => {
-  const startDate = getTime(addMonths(startOfYear(new Date()), 3));
-  const endDate = getTime(addMonths(endOfYear(new Date()), 3));
+  const startDate = addMonths(startOfYear(new Date()), 3);
+  const endDate = addMonths(endOfYear(new Date()), 3);
   const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, title, duration };
@@ -45,12 +45,12 @@ const DashBoard = () => {
     <FilterContext.Provider value={provided}>
       <div className="chart-wrapper">
         <div className="options">
-          <div>
-            <ShareIcon styles={{ marginRight: "8px" }} />
+          <div className="mrlg">
+            <ShareIcon className="mrsm" />
             {t(`ES_DSS_SHARE`)}
           </div>
-          <div>
-            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+          <div className="mrsm">
+            <DownloadIcon className="mrsm" />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>
@@ -58,14 +58,14 @@ const DashBoard = () => {
         <Filters />
         <div className="options-m">
           <div>
-            <FilterIcon styles={{ marginRight: "8px" }} />
+            <FilterIcon style />
           </div>
           <div>
-            <ShareIcon styles={{ marginRight: "8px" }} />
+            <ShareIcon />
             {t(`ES_DSS_SHARE`)}
           </div>
           <div>
-            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+            <DownloadIcon />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>

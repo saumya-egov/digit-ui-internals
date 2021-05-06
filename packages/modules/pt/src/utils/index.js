@@ -713,7 +713,19 @@ export const convertToUpdateProperty = (data = {}) => {
           },
     },
   };
-  console.info("propertyCreated", formdata);
+
+  let propertyInitialObject = JSON.parse(sessionStorage.getItem("propertyInitialObject"));
+  if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units)) {
+    let oldUnits = propertyInitialObject.units.map((unit) => {
+      return { ...unit, active: false };
+    });
+    formdata.Property?.units.push(...oldUnits);
+  }
+
+  if (propertyInitialObject?.auditDetails) {
+    formdata.Property["auditDetails"] = { ...propertyInitialObject.auditDetails };
+  }
+  console.info("propertyUpdated", formdata);
   return formdata;
 };
 
@@ -799,4 +811,11 @@ export const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
     str = str.replace(searcher, replaceWith);
   }
   return str;
+};
+
+export const checkIsAnArray = (obj = []) => {
+  return obj && Array.isArray(obj) ? true : false;
+};
+export const checkArrayLength = (obj = [], length = 0) => {
+  return checkIsAnArray(obj) && obj.length > length ? true : false;
 };
