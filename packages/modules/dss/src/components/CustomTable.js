@@ -10,8 +10,8 @@ const CustomTable = ({ data, onSearch }) => {
   const { value } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const requestDate = {
-    startDate: value?.range?.startDate,
-    endDate: value?.range?.endDate,
+    startDate: value?.range?.startDate.getTime(),
+    endDate: value?.range?.endDate.getTime(),
     interval: "month",
     title: "",
   };
