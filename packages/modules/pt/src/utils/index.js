@@ -41,6 +41,16 @@ export const getMohallaLocale = (value = "", tenantId = "") => {
   return convertToLocale(value, `${convertedValue}_REVENUE`);
 };
 
+export const getCityLocale = (value = "") => {
+  let convertedValue = convertDotValues(value);
+  if (convertedValue == "NA" || !checkForNotNull(value)) {
+    return "PT_NA";
+  }
+  convertedValue = convertedValue.toUpperCase();
+  return convertToLocale( convertedValue,`TENANT_TENANTS`);
+};
+
+
 export const getPropertyOwnerTypeLocale = (value = "") => {
   return convertToLocale(value, "PROPERTYTAX_OWNERTYPE");
 };
