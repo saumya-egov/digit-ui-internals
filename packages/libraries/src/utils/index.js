@@ -2,6 +2,7 @@ import PDFUtil from "./pdf";
 import BrowserUtil from "./browser";
 import * as locale from "./locale";
 import * as date from "./date";
+import * as dss from "./dss";
 
 const GetParamFromUrl = (key, fallback, search) => {
   if (typeof window !== "undefined") {
@@ -85,5 +86,6 @@ export default {
   routeSubscription,
   pgrAccess,
   fsmAccess,
+  dss,
   ptAccess,
 };

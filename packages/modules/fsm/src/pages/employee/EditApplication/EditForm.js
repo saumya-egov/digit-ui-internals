@@ -155,7 +155,7 @@ const EditForm = ({ tenantId, applicationData, channelMenu, vehicleMenu, sanitat
         slumName: slum,
         locality: {
           ...applicationData.address.locality,
-          code: localityCode.split("_").pop(),
+          code: localityCode,
           name: localityName,
         },
         geoLocation: {

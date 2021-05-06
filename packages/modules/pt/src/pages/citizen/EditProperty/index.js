@@ -67,6 +67,8 @@ const getPropertyEditDetails = (data = {}) => {
     data.address.geoLocation = {};
   }
   data.address.pincode = data?.address?.pincode;
+  data.address.city = { code: data?.tenantId };
+  data.address.locality.i18nkey = data?.tenantId.replace(".", "_").toUpperCase() + "_" + "REVENUE" + "_" + data?.address?.locality?.code;
   let addressDocs = data?.documents?.filter((doc) => doc.documentType.includes("ADDRESSPROOF"));
   addressDocs[0].documentType = { code: addressDocs[0].documentType, i18nKey: stringReplaceAll(addressDocs[0].documentType, ".", "_") };
   if (data?.address?.documents) {

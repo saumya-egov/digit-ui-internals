@@ -76,6 +76,7 @@ import {
   CloseSvg,
   UpwardArrow,
   PropertyHouse,
+  ShareIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -85,6 +86,7 @@ import DatePicker from "./atoms/DatePicker";
 import MultiLink from "./atoms/MultiLink";
 import InfoBanner from "./atoms/InfoBanner";
 import { SearchIconSvg } from "./atoms/svgindex";
+import MobileNumber from "./atoms/MobileNumber";
 
 import RemoveableTag from "./molecules/RemoveableTag";
 import TypeSelectCard from "./molecules/TypeSelectCard";
@@ -176,6 +178,7 @@ export {
   BreadCrumb,
   DatePicker,
   InfoBanner,
+  MobileNumber,
   // Icons
   GetApp,
   ArrowLeft,
@@ -218,4 +221,5 @@ export {
   Details,
   FilterIcon,
   PrintIcon,
+  ShareIcon,
 };

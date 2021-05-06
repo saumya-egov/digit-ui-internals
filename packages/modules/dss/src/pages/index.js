@@ -1,19 +1,33 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader } from "@egovernments/digit-ui-react-components";
-import config from "../chartconfig.json";
-import CustomAreaChart from "../components/CustomAreaChart";
-import CustomBarChart from "../components/CustomBarChart";
-import CustomPieChart from "../components/CustomPieChart";
+import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
+import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
-import GenericChart from "../components/GenericChart";
-import MetricChart from "../components/MetricChart";
 import Layout from "../components/Layout";
-import Summary from "../components/Summary";
+import FilterContext from "../components/FilterContext";
+
+const getInitialRange = () => {
+  const startDate = getTime(addMonths(startOfYear(new Date()), 3));
+  const endDate = getTime(addMonths(endOfYear(new Date()), 3));
+  const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
+  const duration = Digit.Utils.dss.getDuration(startDate, endDate);
+  return { startDate, endDate, title, duration };
+};
 
 const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
+  const [filters, setFilters] = useState({
+    denomination: "Unit",
+    range: getInitialRange(),
+  });
+  const provided = useMemo(
+    () => ({
+      value: filters,
+      setValue: setFilters,
+    }),
+    [filters]
+  );
   const stateCode = tenantId.split(".")[0];
   const moduleCode = "fsm";
   // const moduleCode = "propertytax";
@@ -28,15 +42,38 @@ const DashBoard = () => {
 
   const dashboardConfig = response?.responseData;
   return (
-    <>
-      <Filters />
-      <div style={{ marginLeft: "264px" }}>
+    <FilterContext.Provider value={provided}>
+      <div className="chart-wrapper">
+        <div className="options">
+          <div>
+            <ShareIcon styles={{ marginRight: "8px" }} />
+            {t(`ES_DSS_SHARE`)}
+          </div>
+          <div>
+            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+            {t(`ES_DSS_DOWNLOAD`)}
+          </div>
+        </div>
         <Header>{t(dashboardConfig?.[0]?.name)}</Header>
+        <Filters />
+        <div className="options-m">
+          <div>
+            <FilterIcon styles={{ marginRight: "8px" }} />
+          </div>
+          <div>
+            <ShareIcon styles={{ marginRight: "8px" }} />
+            {t(`ES_DSS_SHARE`)}
+          </div>
+          <div>
+            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+            {t(`ES_DSS_DOWNLOAD`)}
+          </div>
+        </div>
         {dashboardConfig?.[0]?.visualizations.map((row, key) => (
           <Layout rowData={row} key={key} />
         ))}
       </div>
-    </>
+    </FilterContext.Provider>
   );
 };
 

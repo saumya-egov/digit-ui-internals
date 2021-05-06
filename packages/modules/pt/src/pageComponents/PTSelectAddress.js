@@ -115,7 +115,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
-      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 23em)" }}>
+      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 26em)" }}>
         <CardLabel>{`${t("MYCITY_CODE_LABEL")} `}</CardLabel>
         <RadioOrSelect
           options={cities.sort((a, b) => a.name.localeCompare(b.name))}
@@ -123,17 +123,26 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
           optionKey="code"
           onSelect={selectCity}
           t={t}
+          isDependent={true}
+          labelKey="TENANT_TENANTS"
+          disabled={isEditProperty}
         />
         {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
         {selectedCity && localities && (
-          <RadioOrSelect
-            isMandatory={config.isMandatory}
-            options={localities.sort((a, b) => a.name.localeCompare(b.name))}
-            selectedOption={selectedLocality}
-            optionKey="i18nkey"
-            onSelect={selectLocality}
-            t={t}
-          />
+          <span className={"form-pt-dropdown-only"}>
+            <RadioOrSelect
+              dropdownStyle={{ paddingBottom: "20px" }}
+              isMandatory={config.isMandatory}
+              options={localities.sort((a, b) => a.name.localeCompare(b.name))}
+              selectedOption={selectedLocality}
+              optionKey="i18nkey"
+              onSelect={selectLocality}
+              t={t}
+              isDependent={true}
+              labelKey=""
+              disabled={isEditProperty}
+            />
+          </span>
         )}
       </div>
     </FormStep>

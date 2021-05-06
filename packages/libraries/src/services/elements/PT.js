@@ -61,7 +61,7 @@ export const PTService = {
       params: { tenantId },
       auth: true,
     }),
-    assessmentSearch: ({tenantId, filters}) =>
+  assessmentSearch: ({ tenantId, filters }) =>
     Request({
       url: Urls.pt.assessment_search,
       useCache: false,
@@ -70,7 +70,6 @@ export const PTService = {
       userService: true,
       params: { tenantId, ...filters },
     }),
-    
 };
 
 // export const PTService = {

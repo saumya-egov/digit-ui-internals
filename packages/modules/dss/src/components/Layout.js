@@ -14,21 +14,15 @@ const Layout = ({ rowData }) => {
   const renderChart = (chart, key) => {
     switch (chart.chartType) {
       case "table":
-        return (
-          <CustomTable data={chart} key={key} />
-        )
+        return <CustomTable data={chart} key={key} />;
       case "donut":
-        return (
-          <CustomPieChart data={chart} key={key} />
-        );
+        return <CustomPieChart data={chart} key={key} />;
       case "line":
         return <CustomAreaChart data={chart} />;
       case "horizontalBar":
-        return (
-          <CustomHorizontalBarChart data={chart} />
-        )
+        return <CustomHorizontalBarChart data={chart} />;
       default:
-        return <CustomTable />;
+        return <CustomTable data={chart} />;
     }
   };
 
@@ -46,6 +40,7 @@ const Layout = ({ rowData }) => {
             header={visualizer.name}
             showDownload={visualizer?.charts?.[0].chartType === "table"}
             showSearch={visualizer?.charts?.[0].chartType === "table"}
+            className={visualizer?.charts?.[0].chartType === "table" && "fullWidth"}
           >
             {/* {visualizer.charts.map((chart, key) => renderChart(chart, key))} */}
             {renderChart(visualizer?.charts?.[0])}
@@ -54,20 +49,12 @@ const Layout = ({ rowData }) => {
       case "performing-metric":
         return (
           <GenericChart header={visualizer.name}>
-            <CustomBarChart data={visualizer?.charts?.[0]}
-              fillColor={(index++) % 2 ? "#00703C" : "#D4351C"}
-            />
+            <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} />
           </GenericChart>
         );
       case "collection":
       case "module":
-        return (
-          <Summary
-            key={key}
-            ttile={visualizer.name}
-            data={visualizer}
-          />
-        )
+        return <Summary key={key} ttile={visualizer.name} data={visualizer} />;
     }
   };
   return <div className="chart-row">{rowData.vizArray.map((chart, key) => renderVisualizer(chart, key))}</div>;

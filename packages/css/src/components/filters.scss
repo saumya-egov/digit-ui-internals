@@ -1,13 +1,14 @@
 .filters-wrapper {
-  height: 100%;
-  width: 264px;
-  position: fixed;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 25px;
+  padding: 20px 0px;
   z-index: 1;
-  top: 0;
-  left: 64px;
-  overflow-x: hidden;
   background-color: #ffffff;
-  padding: 100px 36px 0px;
+
+  .filters-input {
+    flex-basis: 22%;
+  }
 
   .switch-wrapper {
     display: flex;
@@ -24,8 +25,15 @@
 
     label {
       border: 1px solid;
-      padding: 6px;
+      padding: 6px 10px;
+      display: block;
       border-color: rgba(70, 70, 70, var(--border-opacity));
     }
+  }
+}
+
+@media (min-width: 640px) {
+  .filters-wrapper {
+    display: flex;
   }
 }
