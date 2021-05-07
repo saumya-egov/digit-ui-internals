@@ -32,8 +32,8 @@ const Inbox = ({
 
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParams = isMobile
-    ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
-    : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
+    ? { limit: 100, offset: 0, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
+    : { limit: pageSize, offset: pageOffset, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
   // const { isLoading: hookLoading, searchResponseKey, data, ...rest } = Digit.Hooks.useInboxGeneral({
   //   tenantId,
   //   businessService,
@@ -47,8 +47,7 @@ const Inbox = ({
   //   middlewaresWf,
   //   middlewareSearch,
   // });
-
-  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({tenantId, filters: { ...paginationParams } });
+  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({tenantId, filters: { ...searchParams, ...paginationParams } });
 
   console.log(data, "qlwhoiwqheoihwqiehwqoiheoihwqeoi");
 
@@ -82,7 +81,10 @@ const Inbox = ({
     let keys_to_delete = filterParam.delete;
     console.log(keys_to_delete);
     let _new = { ...searchParams, ...filterParam };
+    // if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
+    // delete filterParam.delete;
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
+    delete _new.delete;
     delete filterParam.delete;
     setSearchParams({ ..._new });
   };
@@ -100,7 +102,7 @@ const Inbox = ({
       return [
         {
           label: t("UC_CHALLAN_NO_LABEL"),
-          name: "Challan No.",
+          name: "challanNo",
         },
         {
           label: t("ES_SEARCH_APPLICATION_MOBILE_NO"),

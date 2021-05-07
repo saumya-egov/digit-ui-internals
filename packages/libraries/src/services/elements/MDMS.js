@@ -504,6 +504,19 @@ const getMCollectBillingServiceCriteria = (tenantId, moduleCode, type, filter) =
   },
 });
 
+const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "applcationStatus" }],
+      },
+    ],
+  },
+});
+
 const GetEgovLocations = (MdmsRes) => {
   return MdmsRes["egov-location"].TenantBoundary[0].boundary.children.map((obj) => ({
     name: obj.localname,
@@ -662,6 +675,14 @@ const GetMCollectBusinessService = (MdmsRes) =>
     };
   });
 
+const GetMCollectApplicationStatus = (MdmsRes) =>
+MdmsRes["mCollect"].applcationStatus.map((appStatusDetails) => {
+  return {
+    ...appStatusDetails,
+    i18nKey: `BILLINGSERVICE_BUSINESSSERVICE_${appStatusDetails.code}`,
+  };
+});
+
 const getDssDashboard = () => MdmsRes["dss-dashboard"]["dashboard-config"];
 
 const GetRoleStatusMapping = (MdmsRes) => MdmsRes["DIGIT-UI"].RoleStatusMapping;
@@ -723,6 +744,8 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return getDssDashboard(MdmsRes);
     case "BusinessService":
       return GetMCollectBusinessService(MdmsRes);
+    case "applcatonStatus":
+      return GetMCollectApplicationStatus(MdmsRes);
     default:
       return MdmsRes;
   }
@@ -922,5 +945,8 @@ export const MdmsService = {
   },
   getMCollectBillingService: (tenantId, moduleCode, type, filter) => {
     return MdmsService.getDataByCriteria(tenantId, getMCollectBillingServiceCriteria(tenantId, moduleCode, type, filter), moduleCode);
+  },
+  getMCollectApplcationStatus: (tenantId, moduleCode, type, filter) => {
+    return MdmsService.getDataByCriteria(tenantId, getMCollectApplicationStatusCriteria(tenantId, moduleCode, type, filter), moduleCode);
   },
 };

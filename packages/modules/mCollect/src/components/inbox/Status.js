@@ -5,29 +5,16 @@ import StatusCount from "./StatusCount";
 
 const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
   const { t } = useTranslation();
-
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
+  const { data, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(stateId, "mCollect", "applcationStatus");
+  const applicationStatus = data?.mCollect?.applcationStatus || [];
   const translateState = (state) => {
     return `${state.code || "ACTIVE"}`;
   };
-
-  const applicationStatus = [
-    {
-      "code": "PAID",
-      "active": true
-    },
-    {
-      "code": "CANCELLED",
-      "active": true
-    },
-    {
-      "code": "ACTIVE",
-      "active": true
-    }
-  ];
-
-  // if (isLoading) {
-  //   return <Loader />;
-  // }
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="status-container">
