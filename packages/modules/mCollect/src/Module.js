@@ -34,21 +34,21 @@ export const mCollectLinks = ({ matchPath, userType }) => {
   }, []);
   return (
     <Switch>
-      <Route path="mcollect/challan-details/<challan_no>">
+      <Route path="/digit-ui/employee/mcollect/challan-details">
         <EmployeeChallan />
       </Route>
     </Switch>
   );
-  // return (
-  //   <React.Fragment>
-  //     <Header>{t("ACTION_TEST_PROPERTY_TAX")}</Header>
-  //     <div className="d-grid">
-  //       <HomeLink to={`${matchPath}/property/new-application`}>{t("PT_CREATE_PROPERTY")}</HomeLink>
-  //       <HomeLink to={`${matchPath}/property/my-properties`}>{t("PT_MY_PROPERTIES")}</HomeLink>
-  //       <HomeLink to={`${matchPath}/property/my-applications`}>{t("PT_MY_APPLICATION")}</HomeLink>
-  //     </div>
-  //   </React.Fragment>
-  // );
+  return (
+    <React.Fragment>
+      <Header>{t("ACTION_TEST_PROPERTY_TAX")}</Header>
+      <div className="d-grid">
+        <HomeLink to={`${matchPath}/mcollect/challan-details`}>{t("MCollect_echallan")}</HomeLink>
+        {/* <HomeLink to={`${matchPath}/property/my-properties`}>{t("PT_MY_PROPERTIES")}</HomeLink>
+        <HomeLink to={`${matchPath}/property/my-applications`}>{t("PT_MY_APPLICATION")}</HomeLink> */}
+      </div>
+    </React.Fragment>
+  );
 };
 
 export const mCollectComponents = {
