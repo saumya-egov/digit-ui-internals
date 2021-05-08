@@ -38,7 +38,11 @@ const CreateProperty = ({ parentRoute }) => {
     }
     let { nextStep = {} } = config.find((routeObj) => routeObj.route === currentPath);
     if (typeof nextStep == "object" && nextStep != null && isMultiple != false) {
-      if (nextStep[sessionStorage.getItem("ownershipCategory")]) {
+      if (
+        nextStep[sessionStorage.getItem("ownershipCategory")] &&
+        (nextStep[sessionStorage.getItem("ownershipCategory")] == "inistitution-details" ||
+          nextStep[sessionStorage.getItem("ownershipCategory")] == "owner-details")
+      ) {
         nextStep = `${nextStep[sessionStorage.getItem("ownershipCategory")]}/${index}`;
       } else if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
         if (`${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}` === "un-occupied-area") {
@@ -46,7 +50,11 @@ const CreateProperty = ({ parentRoute }) => {
         } else {
           nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
         }
-      } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
+      } else if (
+        nextStep[sessionStorage.getItem("subusagetypevar")] &&
+        (nextStep[sessionStorage.getItem("subusagetypevar")] == "is-any-part-of-this-floor-unoccupied" ||
+          nextStep[sessionStorage.getItem("subusagetypevar")] == "is-any-part-of-this-floor-unoccupied")
+      ) {
         nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}/${index}`;
       } else if (nextStep[sessionStorage.getItem("area")]) {
         // nextStep = `${nextStep[sessionStorage.getItem("area")]}/${index}`;
@@ -70,7 +78,11 @@ const CreateProperty = ({ parentRoute }) => {
           nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] == "un-occupied-area")
       ) {
         nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
-      } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
+      } else if (
+        nextStep[sessionStorage.getItem("subusagetypevar")] &&
+        (nextStep[sessionStorage.getItem("subusagetypevar")] == "is-any-part-of-this-floor-unoccupied" ||
+          nextStep[sessionStorage.getItem("subusagetypevar")] == "is-any-part-of-this-floor-unoccupied")
+      ) {
         nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}`;
       } else if (nextStep[sessionStorage.getItem("area")]) {
         nextStep = `${nextStep[sessionStorage.getItem("area")]}`;
