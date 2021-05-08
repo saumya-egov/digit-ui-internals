@@ -41,6 +41,15 @@ export const getMohallaLocale = (value = "", tenantId = "") => {
   return convertToLocale(value, `${convertedValue}_REVENUE`);
 };
 
+export const getCityLocale = (value = "") => {
+  let convertedValue = convertDotValues(value);
+  if (convertedValue == "NA" || !checkForNotNull(value)) {
+    return "PT_NA";
+  }
+  convertedValue = convertedValue.toUpperCase();
+  return convertToLocale(convertedValue, `TENANT_TENANTS`);
+};
+
 export const getPropertyOwnerTypeLocale = (value = "") => {
   return convertToLocale(value, "PROPERTYTAX_OWNERTYPE");
 };
@@ -717,30 +726,20 @@ export const convertToUpdateProperty = (data = {}) => {
         basement2: basement2,
       },
 
-      creationReason: !data?.isUpdateProperty ? "CREATE" : "UPDATE",
+      creationReason: getCreationReason(data),
       source: "MUNICIPAL_RECORDS",
       channel: "CITIZEN",
-      workflow: !data?.isUpdateProperty
-        ? {
-            action: "REOPEN",
-            businessService: "PT.CREATE",
-            moduleName: "PT",
-          }
-        : {
-            action: "OPEN",
-            businessService: "PT.UPDATE",
-            moduleName: "PT",
-          },
+      workflow: getWorkflow(data),
     },
   };
 
   let propertyInitialObject = JSON.parse(sessionStorage.getItem("propertyInitialObject"));
-  if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units)) {
-    propertyInitialObject.units=propertyInitialObject.units.filter(unit=>unit.active);
-    let oldUnits = propertyInitialObject.units.map(unit => {
-      return { ...unit, active: false }
-    })
-    formdata.Property?.units.push(...oldUnits)
+  if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units) && data?.isEditProperty) {
+    propertyInitialObject.units = propertyInitialObject.units.filter((unit) => unit.active);
+    let oldUnits = propertyInitialObject.units.map((unit) => {
+      return { ...unit, active: false };
+    });
+    formdata.Property?.units.push(...oldUnits);
   }
 
   if (propertyInitialObject?.auditDetails) {
@@ -839,4 +838,16 @@ export const checkIsAnArray = (obj = []) => {
 };
 export const checkArrayLength = (obj = [], length = 0) => {
   return checkIsAnArray(obj) && obj.length > length ? true : false;
+};
+
+export const getWorkflow = (data = {}) => {
+  return {
+    action: data?.isEditProperty ? "REOPEN" : "OPEN",
+    businessService: `PT.${getCreationReason(data)}`,
+    moduleName: "PT",
+  };
+};
+
+export const getCreationReason = (data = {}) => {
+  return data?.isUpdateProperty ? "UPDATE" : "CREATE";
 };

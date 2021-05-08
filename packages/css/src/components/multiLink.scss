@@ -9,6 +9,8 @@
 }
 
 .multilink-optionWrap{
+    right: 0;
+    top:110px;
     @apply absolute shadow-card bg-white m-md z-10;
 
     .multilink-option{

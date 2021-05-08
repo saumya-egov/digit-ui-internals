@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useParams } from "react-router-dom";
 import PropertyDocument from "../../../pageComponents/PropertyDocument";
-import { getPropertyTypeLocale, propertyCardBodyStyle } from "../../../utils";
+import { getCityLocale, getPropertyTypeLocale, propertyCardBodyStyle } from "../../../utils";
 
 const setBillData = async (tenantId, propertyIds, updatefetchBillData, updateCanFetchBillData) => {
   const assessmentData = await Digit.PTService.assessmentSearch({ tenantId, filters: { propertyIds } });
@@ -44,6 +44,7 @@ const PropertyInformation = () => {
   const [fetchBillData, updatefetchBillData] = useState({});
 
   const property = data?.Properties[0] || " ";
+  sessionStorage.setItem("pt-property", JSON.stringify(property));
   let docs = [];
   docs = property?.documents;
   let units = [];
@@ -111,7 +112,7 @@ const PropertyInformation = () => {
             <Row label={t("PT_PROPERTY_ADDRESS_COLONY_NAME")} text={`${property.address?.buildingName || "NA"}`} />
             <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${property.address?.street || "NA"}`} />
             <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={`${t(property?.address?.locality?.name)}` || "NA"} />
-            <Row label={t("PT_COMMON_CITY")} text={`${property.address?.city || "NA"}`} />
+            <Row label={t("PT_COMMON_CITY")} text={`${t(getCityLocale(property?.tenantId)) || "NA"}`} />
             <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${property.address?.pincode || "NA"}`} />
           </StatusTable>
           <CardSubHeader>{t("PT_PROPERTY_ASSESSMENT_DETAILS_HEADER")}</CardSubHeader>
@@ -173,6 +174,9 @@ const PropertyInformation = () => {
                         />
                         <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t("PROPERTYTAX_OCCUPANCYTYPE_" + unit?.occupancyType)}` || "NA"} />
                         <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${`${unit?.constructionDetail?.builtUpArea} sq.ft` || "NA"}`} />
+                        {unit.occupancyType == "RENTED" && (
+                          <Row label={t("PT_FORM2_TOTAL_ANNUAL_RENT")} text={`${(unit?.arv && `₹${unit?.arv}`) || "NA"}`} />
+                        )}
                       </StatusTable>
                     )}
                   </div>
@@ -226,7 +230,7 @@ const PropertyInformation = () => {
           <div>
             {property?.status === "ACTIVE" && (
               <div style={{ marginTop: "24px", position: "fixed", bottom: "0px", width: "100%", marginLeft: "-6%" }}>
-                <Link to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/update=true/${property.propertyId}` }}>
+                <Link to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/action=UPDATE/${property.propertyId}` }}>
                   <SubmitBar label={t("PT_UPDATE_PROPERTY_BUTTON")} />
                 </Link>
               </div>

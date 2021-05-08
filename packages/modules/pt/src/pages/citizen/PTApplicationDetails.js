@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import getPTAcknowledgementData from "../../getPTAcknowledgementData";
 import PropertyDocument from "../../pageComponents/PropertyDocument";
 import PTWFApplicationTimeline from "../../pageComponents/PTWFApplicationTimeline";
-import { getPropertyTypeLocale, propertyCardBodyStyle } from "../../utils";
+import { getCityLocale, getPropertyTypeLocale, propertyCardBodyStyle } from "../../utils";
 
 const PTApplicationDetails = () => {
   const { t } = useTranslation();
@@ -18,6 +18,7 @@ const PTApplicationDetails = () => {
   );
 
   const application = data?.Properties[0];
+  sessionStorage.setItem("pt-property", JSON.stringify(application));
   let units = [];
   units = application?.units;
   units &&
@@ -43,6 +44,7 @@ const PTApplicationDetails = () => {
   if (isLoading) {
     return <Loader />;
   }
+
   let flrno,
     i = 0;
   flrno = units && units[0]?.floorNo;
@@ -69,7 +71,7 @@ const PTApplicationDetails = () => {
           <CardSubHeader>{t("PT_PROPERTY_ADDRESS_SUB_HEADER")}</CardSubHeader>
           <StatusTable>
             <Row label={t("PT_PROPERTY_ADDRESS_PINCODE")} text={`${t(application?.address?.pincode)}` || "NA"} />
-            <Row label={t("PT_COMMON_CITY")} text={`${t(application?.address?.city)}` || "NA"} />
+            <Row label={t("PT_COMMON_CITY")} text={`${t(getCityLocale(application?.tenantId))}` || "NA"} />
             <Row label={t("PT_COMMON_LOCALITY_OR_MOHALLA")} text={`${t(application?.address?.locality?.name)}` || "NA"} />
             <Row label={t("PT_PROPERTY_ADDRESS_STREET_NAME")} text={`${t(application?.address?.street)}` || "NA"} />
             <Row label={t("PT_PROPERTY_ADDRESS_COLONY_NAME")} text={`${t(application?.address?.buildingName)}` || "NA"} />
@@ -89,15 +91,6 @@ const PTApplicationDetails = () => {
             <Row label={t("PT_ASSESMENT1_PLOT_SIZE")} text={(application?.landArea && `${t(`${application?.landArea} sq.ft`)}`) || "NA"} />
             <Row label={t("PT_ASSESMENT_INFO_NO_OF_FLOOR")} text={`${t(application?.noOfFloors)}` || "NA"} />
           </StatusTable>
-          {/* <CardSubHeader>{t("Ground Floor")}</CardSubHeader>
-          <CardSubHeader>{t("Unit 1")}</CardSubHeader>
-          <div style={{ border: "groove" }}>
-            <StatusTable>
-              <Row label={t("PT_ASSESSMENT_UNIT_USAGE_TYPE")} text={`${t(Array.isArray(units) && units[0]?.usageCategory)}` || "NA"} />
-              <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t(Array.isArray(units) && units[0]?.occupancyType)}` || "NA"} />
-              <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${t(Array.isArray(units) && units[0]?.constructionDetail?.builtUpArea)}` || "NA"} />
-            </StatusTable>
-          </div> */}
           <div>
             {Array.isArray(units) &&
               units.length > 0 &&
@@ -124,6 +117,9 @@ const PTApplicationDetails = () => {
                         />
                         <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t("PROPERTYTAX_OCCUPANCYTYPE_" + unit?.occupancyType)}` || "NA"} />
                         <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${`${unit?.constructionDetail?.builtUpArea} sq.ft` || "NA"}`} />
+                        {unit.occupancyType == "RENTED" && (
+                          <Row label={t("PT_FORM2_TOTAL_ANNUAL_RENT")} text={`${(unit?.arv && `₹${unit?.arv}`) || "NA"}`} />
+                        )}
                       </StatusTable>
                     )}
                   </div>

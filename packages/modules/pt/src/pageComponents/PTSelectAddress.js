@@ -73,6 +73,9 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function selectLocality(locality) {
+    if (formData?.address?.locality) {
+      formData.address["locality"] = locality;
+    }
     setSelectedLocality(locality);
     if (userType === "employee") {
       onSelect(config.key, { ...formData[config.key], locality: locality });
