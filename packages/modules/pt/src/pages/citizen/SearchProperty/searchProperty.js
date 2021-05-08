@@ -7,9 +7,9 @@ import { useTranslation } from "react-i18next";
 const SearchProperty = ({ config: propsConfig }) => {
   const { t } = useTranslation();
 
-  const cities = Digit.Hooks.fsm.useTenants();
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [canSubmit, setCanSubmit] = useState(false);
 
   // moduleCode, type, config = {}, payload = []
   const { data: propertyIdFormat, isLoading } = Digit.Hooks.pt.useMDMS(tenantId, "DIGIT-UI", "HelpText", {
@@ -66,6 +66,16 @@ const SearchProperty = ({ config: propsConfig }) => {
     },
   ];
 
+  const onFormValueChange = (setValue, data) => {
+    const mobileNumberLength = data?.[mobileNumber.name]?.length;
+    const oldPropId = data?.[oldProperty.name];
+    const propId = data?.[property.name];
+
+    if (mobileNumberLength > 0 && mobileNumberLength < 10) setCanSubmit(false);
+    else if (!propId && !oldPropId && !mobileNumberLength) setCanSubmit(false);
+    else setCanSubmit(true);
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -76,13 +86,14 @@ const SearchProperty = ({ config: propsConfig }) => {
         onSubmit={onPropertySearch}
         noBoxShadow
         inline
-        submitInForm
         config={config}
         label={propsConfig.texts.submitButtonLabel}
         heading={propsConfig.texts.header}
         text={propsConfig.texts.text}
         cardStyle={{ margin: "auto" }}
         headingStyle={{ fontSize: "32px", marginBottom: "16px" }}
+        isDisabled={!canSubmit}
+        onFormValueChange={onFormValueChange}
       ></FormComposer>
     </div>
   );
