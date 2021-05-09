@@ -36,6 +36,7 @@ const DashBoard = () => {
   // const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
+  const ulbTenants = Digit.Hooks.useModuleTenants();
   // console.log("find all data here", dashData, screenConfig);
   const fullPageRef = useRef();
 
@@ -62,7 +63,7 @@ const DashBoard = () => {
           </div>
         </div>
         <Header>{t(dashboardConfig?.[0]?.name)}</Header>
-        <Filters />
+        <Filters t={t} ulbTenants={ulbTenants} />
         <div className="options-m">
           <div>
             <FilterIcon style />
