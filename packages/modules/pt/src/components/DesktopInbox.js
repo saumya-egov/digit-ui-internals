@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
@@ -15,9 +15,9 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
 
   const columns = React.useMemo(() => (props.isSearch ? tableConfig.searchColumns(props) : tableConfig.inboxColumns(props) || []), []);
 
-  useEffect(() => {
-    console.log(data, columns, "inside desktop inbox....");
-  }, [data, columns]);
+  // useEffect(() => {
+  //   console.log(data, columns, "inside desktop inbox....");
+  // }, [data, columns]);
 
   let result;
   if (props.isLoading) {
@@ -26,6 +26,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
     result = (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
+
         {t("CS_MYAPPLICATIONS_NO_APPLICATION")
           .split("\\n")
           .map((text, index) => (
@@ -78,14 +79,6 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
                 type="desktop"
               />
             }
-            {/* <Filter
-              businessService={props.businessService}
-              searchParams={props.searchParams}
-              applications={props.data}
-              onFilterChange={props.onFilterChange}
-              translatePrefix={props.translatePrefix}
-              type="desktop"
-            /> */}
           </div>
         </div>
       )}

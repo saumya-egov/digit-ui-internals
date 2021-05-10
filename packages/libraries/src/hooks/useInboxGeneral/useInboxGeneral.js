@@ -5,7 +5,6 @@ import { PTService } from "../../services/elements/PT";
 import { TableConfig } from "./tableConfig";
 import { filterFunctions } from "./filterFn";
 import { getSearchFields } from "./searchFields";
-import { useEffect } from "react";
 
 const inboxConfig = (tenantId, filters) => ({
   PT: {
@@ -109,7 +108,7 @@ const useInboxGeneral = ({
   const applicationNoFromWF = processInstances?.map((e) => e.businessId).join() || "";
 
   if (isInbox && applicationNoFromWF && !searchFilters[businessIdAliasForSearch])
-    searchFilters = { ...searchFilters, [businessIdsParamForSearch]: applicationNoFromWF };
+    searchFilters = { [businessIdsParamForSearch]: applicationNoFromWF, ...searchFilters };
 
   const { _searchFn } = inboxConfig(tenantId, { ...searchFilters })[businessService];
 
