@@ -25,7 +25,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     requestDate,
   });
 
-  const renderLegend = (value) => <span>{t(`PROPERTYTYPE_MASTERS_${value}`)}</span>;
+  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`PROPERTYTYPE_MASTERS_${value}`)}</span>;
 
   const renderCustomLabel = (args) => {
     const { value, endAngle, startAngle } = args
@@ -34,7 +34,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
       return null;
     }
     return (
-      <text {...args} fill="#000" alignmentBaseline="middle" className="recharts-pie-label-text">
+      <text {...args} fill="#505A5F" alignmentBaseline="middle" className="recharts-pie-label-text" fontSize="14px">
         {value}
       </text>
     );
