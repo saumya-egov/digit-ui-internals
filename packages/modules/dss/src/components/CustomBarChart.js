@@ -57,7 +57,7 @@ const CustomBarChart = ({
         <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} padding={{ right: 40 }} />
         <Bar dataKey={xDataKey}
           fill={fillColor}
-          background={{ fill: "#D6D5D4", strokeLinecap: "round", strokeWidth: 20  }}
+          background={{ fill: "#D6D5D4", radius: 10  }}
           label={<CustomLabel stroke={fillColor} />}
           radius={[10, 10, 10, 10]}
         />
