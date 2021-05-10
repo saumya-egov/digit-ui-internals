@@ -44,7 +44,7 @@ const CustomHorizontalBarChart = ({ data }) => {
 
   const chartData = useMemo(() => constructChartData(response?.responseData?.data), [response]);
 
-  const renderLegend = (value) => <span>{value}</span>;
+  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{value}</span>;
 
   if (isLoading) {
     return <Loader />;
@@ -63,8 +63,8 @@ const CustomHorizontalBarChart = ({ data }) => {
         barSize={15}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <YAxis />
-        <XAxis dataKey="name" type="category" />
+        <YAxis tick={{ fontSize: "14px", fill: "#505A5F" }} />
+        <XAxis dataKey="name" type="category" tick={{ fontSize: "14px", fill: "#505A5F" }} />
         {bars.map((bar, id) => (
           <Bar key={id} dataKey={bar} fill={barColors[id]} />
         ))}

@@ -52,8 +52,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
           </defs>
           <CartesianGrid />
           <Tooltip />
-          <XAxis dataKey={xDataKey} />
-          <YAxis label={{ value: response?.responseData?.data?.[0]?.headerName, angle: -90, position: "left", offset: 15  }} />
+          <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} />
+          <YAxis label={{ value: response?.responseData?.data?.[0]?.headerName, angle: -90, position: "left", offset: 15, fontSize: "14px", fill: "#505A5F"  }} tick={{ fontSize: "14px", fill: "#505A5F" }} />
           <Area type="monotone" dataKey={renderPlot} stroke="#048BD0" fill="url(#colorUv)" dot={true} />
         </AreaChart>
       </ResponsiveContainer>
