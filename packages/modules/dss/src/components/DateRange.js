@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { ArrowDown, Modal, ButtonSelector, Calender } from "@egovernments/digit-ui-react-components";
 import { DateRangePicker } from "react-date-range";
 import { format } from "date-fns";
@@ -15,6 +15,19 @@ const DateRange = ({ values, onFilterChange }) => {
     endDate: new Date(),
     key: "selection",
   });
+  const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+        setIsModalOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [wrapperRef])
 
   const getDuration = (startDate, endDate) => {
     let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
@@ -56,7 +69,7 @@ const DateRange = ({ values, onFilterChange }) => {
   return (
     <>
       <div>Date Range</div>
-      <div className="employee-select-wrap">
+      <div className="employee-select-wrap" ref={wrapperRef}>
         <div className="select">
           <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
           <Calender onClick={() => setIsModalOpen((prevState) => !prevState)} />
