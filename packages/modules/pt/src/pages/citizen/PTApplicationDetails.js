@@ -18,7 +18,7 @@ const PTApplicationDetails = () => {
   );
 
   const application = data?.Properties[0];
-  sessionStorage.setItem("pt-property",JSON.stringify(application))
+  sessionStorage.setItem("pt-property", JSON.stringify(application));
   let units = [];
   units = application?.units;
   units &&
@@ -44,7 +44,7 @@ const PTApplicationDetails = () => {
   if (isLoading) {
     return <Loader />;
   }
-  
+
   let flrno,
     i = 0;
   flrno = units && units[0]?.floorNo;
@@ -117,7 +117,9 @@ const PTApplicationDetails = () => {
                         />
                         <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t("PROPERTYTAX_OCCUPANCYTYPE_" + unit?.occupancyType)}` || "NA"} />
                         <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${`${unit?.constructionDetail?.builtUpArea} sq.ft` || "NA"}`} />
-                        {unit.occupancyType=="RENTED"&& <Row label={t("PT_FORM2_TOTAL_ANNUAL_RENT")} text={`${unit?.arv&&`₹${unit?.arv}` || "NA"}`} />}
+                        {unit.occupancyType == "RENTED" && (
+                          <Row label={t("PT_FORM2_TOTAL_ANNUAL_RENT")} text={`${(unit?.arv && `₹${unit?.arv}`) || "NA"}`} />
+                        )}
                       </StatusTable>
                     )}
                   </div>

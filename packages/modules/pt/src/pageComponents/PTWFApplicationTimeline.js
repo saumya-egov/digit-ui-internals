@@ -50,10 +50,10 @@ const PTWFApplicationTimeline = (props) => {
 
   const showNextActions = (nextActions) => {
     let nextAction = nextActions[0];
-    const next = nextActions.map(action => action.action);
-    if (next.includes('PAY') || next.includes('EDIT')) {
-      let currentIndex = next.indexOf('EDIT') || next.indexOf('PAY');
-      currentIndex=currentIndex!=-1?currentIndex:next.indexOf('PAY');
+    const next = nextActions.map((action) => action.action);
+    if (next.includes("PAY") || next.includes("EDIT")) {
+      let currentIndex = next.indexOf("EDIT") || next.indexOf("PAY");
+      currentIndex = currentIndex != -1 ? currentIndex : next.indexOf("PAY");
       nextAction = nextActions[currentIndex];
     }
     switch (nextAction?.action) {
@@ -70,12 +70,17 @@ const PTWFApplicationTimeline = (props) => {
       case "EDIT":
         return (
           <div style={{ marginTop: "24px", position: "fixed", bottom: "0px", width: "100%", marginLeft: "-6%" }}>
-          {businessService!='PT.MUTATION'&&<Link
-            to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/action=edit-${businessService}/${props.id}`, state: { tenantId: props.application.tenantId } }}
-          >
-            <SubmitBar label={t("CS_APPLICATION_DETAILS_EDIT")} />
-          </Link>}
-        </div>
+            {businessService != "PT.MUTATION" && (
+              <Link
+                to={{
+                  pathname: `/digit-ui/citizen/pt/property/edit-application/action=edit-${businessService}/${props.id}`,
+                  state: { tenantId: props.application.tenantId },
+                }}
+              >
+                <SubmitBar label={t("CS_APPLICATION_DETAILS_EDIT")} />
+              </Link>
+            )}
+          </div>
         );
       case "SUBMIT_FEEDBACK":
         return (

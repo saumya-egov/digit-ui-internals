@@ -7,9 +7,9 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
 
-  const { isLoading,data: Documentsob = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Documents");
+  const { isLoading, data: Documentsob = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Documents");
   let docs = Documentsob?.PropertyTax?.Documents;
-  docs=docs?.filter(doc=>doc['digit-citizen']);
+  docs = docs?.filter((doc) => doc["digit-citizen"]);
   function onSave() {}
 
   function goNext() {
@@ -26,7 +26,7 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
           <CardSubHeader>{t("PT_DOC_REQ_SCREEN_LABEL")}</CardSubHeader>
           <CardText>{t("PT_DOC_REQ_SCREEN_LABEL_TEXT")}</CardText>
           <div>
-            {isLoading&& <Loader />}
+            {isLoading && <Loader />}
             {Array.isArray(docs)
               ? docs.map(({ code, dropdownData }, index) => (
                   <div key={index}>

@@ -54,7 +54,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   };
 
   const onSkip = () => onSelect();
-// As Ticket RAIN-2619 other option in gender and gaurdian will be enhance , dont uncomment it 
+  // As Ticket RAIN-2619 other option in gender and gaurdian will be enhance , dont uncomment it
   const options = [
     { name: "Female", value: "FEMALE", code: "FEMALE" },
     { name: "Male", value: "MALE", code: "MALE" },

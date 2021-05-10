@@ -26,7 +26,7 @@ const BannerPicker = (props) => {
     <Banner
       message={GetActionMessage(props)}
       applicationNumber={props.data?.Properties[0].acknowldgementNumber}
-      info={props.isSuccess?props.t("PT_APPLICATION_NO"):''}
+      info={props.isSuccess ? props.t("PT_APPLICATION_NO") : ""}
       successful={props.isSuccess}
     />
   );
