@@ -5,7 +5,7 @@ import { ResponsiveContainer, Cell, Legend, Pie, PieChart, Tooltip } from "recha
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#FBC02D", "#048BD0", "#8E29BF", "#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const CustomPieChart = ({ dataKey = "value", data }) => {
   const { id } = data;
@@ -27,18 +27,14 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
 
   const renderLegend = (value) => <span>{t(`PROPERTYTYPE_MASTERS_${value}`)}</span>;
 
-  const renderCustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value, index, startAngle, endAngle }) => {
+  const renderCustomLabel = (args) => {
+    const { value, endAngle, startAngle } = args
     const diffAngle = endAngle - startAngle;
-    const delta = (360 - diffAngle) / 40 - 1;
-    if (diffAngle < 5) {
+    if (diffAngle < 7) {
       return null;
     }
-    const RADIAN = Math.PI / 180;
-    const radius = innerRadius + (outerRadius - innerRadius);
-    const x = cx + (radius + delta) * Math.cos(-midAngle * RADIAN);
-    const y = cy + (radius + delta * delta) * Math.sin(-midAngle * RADIAN);
     return (
-      <text x={x} y={y} textAnchor={x > cx ? "start" : "end"} dominantBaseline="central">
+      <text {...args} fill="#000" alignmentBaseline="middle" className="recharts-pie-label-text">
         {value}
       </text>
     );
@@ -65,7 +61,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
             <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip />
+        <Tooltip formatter={(value, name) => ([value, t(name)])} />
         <Legend layout="vertical" align="bottom" iconType="circle" formatter={renderLegend} />
       </PieChart>
     </ResponsiveContainer>

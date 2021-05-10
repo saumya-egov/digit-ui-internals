@@ -5,7 +5,7 @@ import { Loader, ResponseComposer } from "@egovernments/digit-ui-react-component
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import FilterContext from "./FilterContext";
 
-const barColors = ["#61A0FF", "#ECC478", "#ECC478"];
+const barColors = ["#048BD0", "#FBC02D", "#ECC478"];
 
 const CustomHorizontalBarChart = ({ data }) => {
   const { id } = data;
@@ -68,8 +68,8 @@ const CustomHorizontalBarChart = ({ data }) => {
         {bars.map((bar, id) => (
           <Bar key={id} dataKey={bar} fill={barColors[id]} />
         ))}
-        <Legend formatter={renderLegend} />
-        {/* <Tooltip /> */}
+        <Legend formatter={renderLegend} iconType="circle" />
+        <Tooltip />
       </BarChart>
     </ResponsiveContainer>
   );

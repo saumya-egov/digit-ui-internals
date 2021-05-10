@@ -10,7 +10,7 @@ const MetricData = ({ data, code }) => {
     <div>
       <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>
         {code === "citizenAvgRating" ? (
-          <Rating currentRating={data?.headerValue} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
+          <Rating currentRating={Math.round(data?.headerValue)} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
         ) : (
           Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)
         )}
