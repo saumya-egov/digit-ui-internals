@@ -4,6 +4,7 @@ import Inbox from "./Inbox";
 import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import EmployeeChallan from "../../EmployeeChallan";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ const EmployeeApp = ({ path, url, userType }) => {
       // uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
       // services: ["PT.CREATE"],
       status: [],
-      businessService: []
+      businessService: [],
       // locality: [],
     },
   };
@@ -58,7 +59,13 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute
             path={`${path}/inbox`}
             component={() => (
-              <Inbox parentRoute={path} businessService="PT" filterComponent="MCOLLECT_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
+              <Inbox
+                parentRoute={path}
+                businessService="PT"
+                filterComponent="MCOLLECT_INBOX_FILTER"
+                initialStates={inboxInitialState}
+                isInbox={true}
+              />
             )}
           />
           <PrivateRoute
@@ -67,6 +74,7 @@ const EmployeeApp = ({ path, url, userType }) => {
               <Inbox parentRoute={path} businessService="PT" middlewareSearch={searchMW} initialStates={inboxInitialState} isInbox={false} />
             )}
           />
+          <PrivateRoute path={`${path}/challansearch`} component={() => <EmployeeChallan />} />
         </div>
       </React.Fragment>
     </Switch>
