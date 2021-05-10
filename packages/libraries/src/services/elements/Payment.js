@@ -11,7 +11,15 @@ export const PaymentService = {
       userService: true,
       params: { tenantId, ...filters },
     }),
-
+  searchBill: (tenantId, filters = {}) =>
+    Request({
+      url: Urls.payment.search_bill,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      params: { tenantId, ...filters },
+    }),
   createReciept: (tenantId, details = {}) =>
     Request({
       url: Urls.payment.create_reciept,
