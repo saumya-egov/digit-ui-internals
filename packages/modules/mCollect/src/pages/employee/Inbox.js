@@ -30,11 +30,13 @@ const Inbox = ({
     return initialStates.searchParams || {};
   });
 
+  const [businessIdToOwnerMappings, setBusinessIdToOwnerMappings] = useState({});
+
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParams = isMobile
     ? { limit: 100, offset: 0, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
-  // const { isLoading: hookLoading, searchResponseKey, data, ...rest } = Digit.Hooks.useInboxGeneral({
+  // const { isLoading: hookLoading, searchResponseKey, data, ...rest } = Digit.Hooks.useInboxMCollect({
   //   tenantId,
   //   businessService,
   //   isInbox,
@@ -49,17 +51,59 @@ const Inbox = ({
   // });
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({tenantId, filters: { ...searchParams, ...paginationParams } });
 
-  console.log(data, "qlwhoiwqheoihwqiehwqoiheoihwqeoi");
 
   let formedData = [];
+  let res;
+  let businessIdToOwnerMapping = {};
+
+  useEffect(() => {
+    debugger;
+    async function fetchMyAPI() {
+      let businessIds = [];
+      let businessServiceMap = {};
+      let challanNumbers = [];
+      let challanNums = [];
+  
+      data?.challans?.forEach(item => {
+        challanNums = businessServiceMap[item.businessService] || [];
+        challanNumbers = challanNums;
+        challanNums.push(item.challanNo);
+        businessServiceMap[item.businessService] = challanNums;
+      });
+      let processInstanceArray = [];
+
+      for (var key in businessServiceMap) {
+        let consumerCodes = businessServiceMap[key].toString();
+        res = await Digit.PaymentService.searchBill(tenantId, { consumerCode: consumerCodes, service: key });
+        processInstanceArray = processInstanceArray.concat(res.Bill)
+        businessIdToOwnerMapping = {};
+        processInstanceArray.filter(
+          record => record.businessService
+        ).forEach(item => {
+          businessIdToOwnerMapping[item.consumerCode] = {
+            businessService: item.businessService,
+            totalAmount: item.totalAmount || 0,
+            dueDate: item?.billDetails[0]?.expiryDate
+          };
+        });
+      }
+      setBusinessIdToOwnerMappings(businessIdToOwnerMapping);
+    }
+    if (data?.challans && data?.challans?.length > 0) {
+      fetchMyAPI();
+    }
+  }, [data]);
+  
   data?.challans?.map(data => {
     formedData.push({
       challanNo: data.challanNo,
       name: data.citizen.name,
       applicationStatus: data.applicationStatus,
-      businessService: data.businessService
+      businessService: data.businessService,
+      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount,
+      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate
     })
-  })
+  });
 
   useEffect(() => {
     console.log("data from the hook", hookLoading, rest, data);
