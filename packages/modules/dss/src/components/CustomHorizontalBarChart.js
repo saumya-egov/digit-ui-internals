@@ -62,7 +62,7 @@ const CustomHorizontalBarChart = ({ data }) => {
         barGap={14}
         barSize={15}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid />
         <YAxis tick={{ fontSize: "14px", fill: "#505A5F" }} />
         <XAxis dataKey="name" type="category" tick={{ fontSize: "14px", fill: "#505A5F" }} />
         {bars.map((bar, id) => (
