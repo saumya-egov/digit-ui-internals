@@ -5,7 +5,7 @@ import { Loader, ResponseComposer } from "@egovernments/digit-ui-react-component
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import FilterContext from "./FilterContext";
 
-const barColors = ["#61A0FF", "#ECC478", "#ECC478"];
+const barColors = ["#048BD0", "#FBC02D", "#ECC478"];
 
 const CustomHorizontalBarChart = ({ data }) => {
   const { id } = data;
@@ -44,7 +44,7 @@ const CustomHorizontalBarChart = ({ data }) => {
 
   const chartData = useMemo(() => constructChartData(response?.responseData?.data), [response]);
 
-  const renderLegend = (value) => <span>{value}</span>;
+  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{value}</span>;
 
   if (isLoading) {
     return <Loader />;
@@ -62,14 +62,14 @@ const CustomHorizontalBarChart = ({ data }) => {
         barGap={14}
         barSize={15}
       >
-        <CartesianGrid strokeDasharray="3 3" />
-        <YAxis />
-        <XAxis dataKey="name" type="category" />
+        <CartesianGrid />
+        <YAxis tick={{ fontSize: "14px", fill: "#505A5F" }} />
+        <XAxis dataKey="name" type="category" tick={{ fontSize: "14px", fill: "#505A5F" }} />
         {bars.map((bar, id) => (
           <Bar key={id} dataKey={bar} fill={barColors[id]} />
         ))}
-        <Legend formatter={renderLegend} />
-        {/* <Tooltip /> */}
+        <Legend formatter={renderLegend} iconType="circle" />
+        <Tooltip />
       </BarChart>
     </ResponsiveContainer>
   );
