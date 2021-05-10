@@ -18,6 +18,7 @@ import useBoundaryLocalities from "./useLocalities";
 import useCommonMDMS from "./useMDMS";
 import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useApplicationStatusGeneral from "./useStatusGeneral";
+import useModuleTenants from "./useModuleTenants";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -155,6 +156,7 @@ const Hooks = {
   useBoundaryLocalities,
   useCommonMDMS,
   useApplicationStatusGeneral,
+  useModuleTenants,
   pgr,
   fsm,
   pt,

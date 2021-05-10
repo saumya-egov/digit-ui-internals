@@ -18,10 +18,19 @@ const getInitialRange = () => {
 const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const [filters, setFilters] = useState({
-    denomination: "Unit",
-    range: getInitialRange(),
-  });
+  const [filters, setFilters] = useState((data) => ({
+    denomination: data?.denomination || "Unit",
+    range: data?.range || getInitialRange(),
+    requestDate: {
+      startDate: data?.range?.startDate.getTime() || getInitialRange().startDate.getTime(),
+      endDate: data?.range?.endDate.getTime() || getInitialRange().endDate.getTime(),
+      interval: "month",
+      title: "",
+    },
+    filters: {
+      tenantId: data?.filters?.tenantId || [],
+    },
+  }));
   const provided = useMemo(
     () => ({
       value: filters,
@@ -36,8 +45,7 @@ const DashBoard = () => {
   // const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
-  const ulbTenants = Digit.Hooks.useModuleTenants();
-  // console.log("find all data here", dashData, screenConfig);
+  const { data: ulbTenants } = Digit.Hooks.useModuleTenants("FSM");
   const fullPageRef = useRef();
 
   const handlePrint = useReactToPrint({

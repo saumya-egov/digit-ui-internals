@@ -4,24 +4,11 @@ import Switch from "./Switch";
 import DateRange from "./DateRange";
 import FilterContext from "./FilterContext";
 
-const ULBS = [
-  {
-    name: "All",
-  },
-  {
-    name: "ULB A",
-  },
-  {
-    name: "ULB B",
-  },
-  {
-    name: "ULB C",
-  },
-];
-
-const Filters = () => {
+const Filters = ({ t, ulbTenants }) => {
   const { value, setValue } = useContext(FilterContext);
-  const selectULB = () => {};
+  const selectULB = (data) => {
+    setValue({ ...value, filters: { tenantId: [data.code] } });
+  };
   const handleFilterChange = (data) => {
     setValue({ ...value, ...data });
   };
@@ -31,12 +18,12 @@ const Filters = () => {
         <DateRange onFilterChange={handleFilterChange} values={value?.range} />
       </div>
       <div className="filters-input">
-        <div>DDRs</div>
-        <Dropdown option={ULBS} optionKey="name" select={selectULB} />
+        <div>{t("ES_DSS_DDR")}</div>
+        <Dropdown option={ulbTenants} optionKey="ddrKey" select={selectULB} />
       </div>
       <div className="filters-input">
-        <div>ULBs</div>
-        <Dropdown option={ULBS} optionKey="name" select={selectULB} />
+        <div>{t("ES_DSS_ULB")}</div>
+        <Dropdown option={ulbTenants} optionKey="ulbKey" select={selectULB} />
       </div>
       <div className="filters-input" style={{ flexBasis: "16%" }}>
         <Switch onSelect={handleFilterChange} />
