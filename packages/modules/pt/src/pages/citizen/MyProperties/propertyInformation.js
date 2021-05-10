@@ -44,6 +44,7 @@ const PropertyInformation = () => {
   const [fetchBillData, updatefetchBillData] = useState({});
 
   const property = data?.Properties[0] || " ";
+  sessionStorage.setItem("pt-property",JSON.stringify(property))
   let docs = [];
   docs = property?.documents;
   let units = [];
@@ -173,6 +174,7 @@ const PropertyInformation = () => {
                         />
                         <Row label={t("PT_OCCUPANY_TYPE_LABEL")} text={`${t("PROPERTYTAX_OCCUPANCYTYPE_" + unit?.occupancyType)}` || "NA"} />
                         <Row label={t("PT_BUILTUP_AREA_LABEL")} text={`${`${unit?.constructionDetail?.builtUpArea} sq.ft` || "NA"}`} />
+                       {unit.occupancyType=="RENTED"&& <Row label={t("PT_FORM2_TOTAL_ANNUAL_RENT")} text={`${unit?.arv&&`₹${unit?.arv}` || "NA"}`} />}
                       </StatusTable>
                     )}
                   </div>
@@ -226,7 +228,7 @@ const PropertyInformation = () => {
           <div>
             {property?.status === "ACTIVE" && (
               <div style={{ marginTop: "24px", position: "fixed", bottom: "0px", width: "100%", marginLeft: "-6%" }}>
-                <Link to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/update=true/${property.propertyId}` }}>
+                <Link to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/action=UPDATE/${property.propertyId}` }}>
                   <SubmitBar label={t("PT_UPDATE_PROPERTY_BUTTON")} />
                 </Link>
               </div>

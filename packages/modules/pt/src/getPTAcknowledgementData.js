@@ -23,7 +23,7 @@ const getOwner = (application, t) => {
         { title: t("PT_OWNERSHIP_INFO_NAME"), value: application?.owners[0]?.name || "N/A" },
         { title: t("PT_OWNERSHIP_INFO_MOBILE_NO"), value: application?.owners[0]?.mobileNumber || "N/A" },
         { title: t("PT_SEARCHPROPERTY_TABEL_GUARDIANNAME"), value: application?.owners[0]?.fatherOrHusbandName || "N/A" },
-        { title: t("PT_OWNERSHIP_INFO_GENDER"), value: application?.owners[0]?.gender || "N/A" },
+        { title: t("PT_OWNERSHIP_INFO_GENDER"), value:t( application?.owners[0]?.gender) || "N/A" },
         { title: t("PT_FORM3_OWNERSHIP_TYPE"), value: t(application?.ownershipCategory) || "N/A" },
         { title: t("PT_OWNERSHIP_INFO_EMAIL_ID"), value: application?.owners[0]?.emailId || "N/A" },
         { title: t("PT_OWNERSHIP_INFO_USER_CATEGORY"), value: t(getPropertyOwnerTypeLocale(application?.owners[0]?.ownerType)) || "N/A" },
@@ -124,7 +124,7 @@ const getAssessmentInfo = (application, t) => {
               ? t("PT_FORM2_TOTAL_ANNUAL_RENT")
               : t("")
             : "",
-        value: (flrno = unit?.floorNo) > -3 ? (t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ? t(unit?.arv) : t("")) : "",
+        value: (flrno = unit?.floorNo) > -3 ? (t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ?  unit?.arv&&`₹${t(unit?.arv)}`||'NA' : t("")) : "",
       },
     ];
 
