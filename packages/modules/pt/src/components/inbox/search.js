@@ -139,9 +139,15 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
             </div>
             {type === "desktop" && !mobileView && !isInboxPage && <span className="clear-search">{clearAll()}</span>}
             {isInboxPage && (
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end" }}>
-                {type === "desktop" && !mobileView && <span className="clear-search">{clearAll()}</span>}
-                {type === "desktop" && !mobileView && <SubmitBar className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />}
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
+                {type === "desktop" && !mobileView && (
+                  <span style={{ paddingTop: "9px" }} className="clear-search">
+                    {clearAll()}
+                  </span>
+                )}
+                {type === "desktop" && !mobileView && (
+                  <SubmitBar style={{ marginTop: "unset" }} className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />
+                )}
               </div>
             )}
           </div>
