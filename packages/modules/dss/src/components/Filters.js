@@ -27,11 +27,6 @@ const Filters = () => {
   };
   return (
     <div className="filters-wrapper">
-      {/* <CardSectionHeader style={{ display: "flex" }}>
-        <FilterIcon />
-        <span style={{ marginLeft: "8px", marginRight: "70px", fontWeight: 400, fontSize: "24px" }}>Filters</span>
-        <RefreshIcon />
-      </CardSectionHeader> */}
       <div className="filters-input">
         <DateRange onFilterChange={handleFilterChange} values={value?.range} />
       </div>
@@ -43,7 +38,7 @@ const Filters = () => {
         <div>ULBs</div>
         <Dropdown option={ULBS} optionKey="name" select={selectULB} />
       </div>
-      <div className="filters-input">
+      <div className="filters-input" style={{ flexBasis: "16%" }}>
         <Switch onSelect={handleFilterChange} />
       </div>
       {/* <SubmitBar label={"Apply"} /> */}

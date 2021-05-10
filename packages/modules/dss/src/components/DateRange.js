@@ -1,10 +1,15 @@
-import React, { Fragment, useState } from "react";
-import { ArrowDown, Modal, ButtonSelector } from "@egovernments/digit-ui-react-components";
+import React, { Fragment, useEffect, useState } from "react";
+import { ArrowDown, Modal, ButtonSelector, Calender } from "@egovernments/digit-ui-react-components";
 import { DateRangePicker } from "react-date-range";
 import { format } from "date-fns";
 
+function isEndDateFocused(focusNumber) {
+  return focusNumber === 1;
+}
+
 const DateRange = ({ values, onFilterChange }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [focusedRange, setFocusedRange] = useState([0, 0]);
   const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -24,22 +29,29 @@ const DateRange = ({ values, onFilterChange }) => {
     }
   };
 
-  const handleSelect = ({ selection }) => {
-    console.log(selection, "ranges");
+  const handleSelect = (ranges) => {
+    const { range1: selection } = ranges;
     setSelectionRange(selection);
+    handleSubmit(selection);
+  };
+
+  const handleFocusChange = (focusedRange) => {
+    setFocusedRange(focusedRange);
   };
 
   const handleClose = () => {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = () => {
-    const startDate = selectionRange?.startDate.getTime();
-    const endDate = selectionRange?.endDate.getTime();
+  const handleSubmit = (selectionRange) => {
+    const startDate = selectionRange?.startDate;
+    const endDate = selectionRange?.endDate;
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
-    onFilterChange({ range: { startDate, endDate, duration, title }});
-    setIsModalOpen(false);
+    onFilterChange({ range: { startDate, endDate, duration, title } });
+    if (isEndDateFocused(focusedRange[1])) {
+      setIsModalOpen(false);
+    }
   };
   return (
     <>
@@ -47,25 +59,21 @@ const DateRange = ({ values, onFilterChange }) => {
       <div className="employee-select-wrap">
         <div className="select">
           <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
-          <ArrowDown onClick={() => setIsModalOpen((prevState) => !prevState)} />
+          <Calender onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
-        {isModalOpen && <div className="options-card" style={{ overflow: "visible" }}>
-          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
-        </div>
-        }
+        {isModalOpen && (
+          <div className="options-card" style={{ overflow: "visible", width: "unset", maxWidth: "unset" }}>
+            <DateRangePicker
+              focusedRange={focusedRange}
+              ranges={[values]}
+              rangeColors={["#f47738"]}
+              onChange={handleSelect}
+              onRangeFocusChange={handleFocusChange}
+              showSelectionPreview={true}
+            />
+          </div>
+        )}
       </div>
-      {/* {isModalOpen && (
-        <Modal
-          actionCancelLabel={"Cancel"}
-          actionCancelOnSubmit={handleClose}
-          actionSaveLabel={"Select"}
-          closeModal={handleClose}
-          actionSaveOnSubmit={handleSubmit}
-          popupStyles={{ width: "569px" }}
-        >
-          <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} showSelectionPreview={true} />
-        </Modal>
-      )} */}
     </>
   );
 };

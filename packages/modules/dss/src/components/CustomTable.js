@@ -4,16 +4,14 @@ import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { UpwardArrow, TextInput, Loader, Table } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
-const CustomTable = ({
-  data,
-}) => {
+const CustomTable = ({ data, onSearch }) => {
   const { id } = data;
   const { t } = useTranslation();
-  const { value } = useContext(FilterContext)
+  const { value } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const requestDate = {
-    startDate: value?.range?.startDate,
-    endDate: value?.range?.endDate,
+    startDate: value?.range?.startDate.getTime(),
+    endDate: value?.range?.endDate.getTime(),
     interval: "month",
     title: "",
   };
@@ -24,28 +22,32 @@ const CustomTable = ({
     requestDate,
   });
 
-  const tableColumns = useMemo(() => (
-    response?.responseData?.data?.[0]?.plots?.map((plot) => ({
-      Header: plot?.name,
-      accessor: plot?.name,
-      symbol: plot?.symbol,
-      // Cell: (row) => row.original[plot?.name]
-    }))
-  ), [response]);
+  const tableColumns = useMemo(
+    () =>
+      response?.responseData?.data?.[0]?.plots?.map((plot) => ({
+        Header: plot?.name,
+        accessor: plot?.name.replaceAll(".", " "),
+        symbol: plot?.symbol,
+      })),
+    [response]
+  );
 
-  const tableData = useMemo(() => (
-    response?.responseData?.data?.map(rows => (
-      rows.plots.reduce((acc, row) => {
-        acc[row?.name] = row?.value !== null ? row?.value : row?.label || "";
-        return acc;
-      }, {})
-    ))
-  ), [response]);
+  const tableData = useMemo(
+    () =>
+      response?.responseData?.data?.map((rows) =>
+        rows.plots.reduce((acc, row) => {
+          acc[row?.name.replaceAll(".", " ")] = row?.value !== null ? row?.value : row?.label || "";
+          if (typeof acc[row?.name] === "number" && !Number.isInteger(acc[row.name])) {
+            acc[row.name.replaceAll(".", " ")] = Math.round((acc[row.name] + Number.EPSILON) * 100) / 100;
+          }
+          return acc;
+        }, {})
+      ),
+    [response]
+  );
 
   if (isLoading || !tableColumns || !tableData) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (
@@ -53,6 +55,10 @@ const CustomTable = ({
       <Table
         className="customTable"
         t={t}
+        disableSort={false}
+        autoSort={true}
+        initSortId="SN"
+        onSearch={onSearch}
         data={tableData}
         columns={tableColumns}
         getCellProps={(cellInfo) => {
@@ -62,7 +68,7 @@ const CustomTable = ({
         }}
       />
     </div>
-  )
+  );
 };
 
 export default CustomTable;

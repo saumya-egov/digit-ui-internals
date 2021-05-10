@@ -16,6 +16,7 @@ import SubmitBar from "../atoms/SubmitBar";
 import LabelFieldPair from "../atoms/LabelFieldPair";
 
 import { useTranslation } from "react-i18next";
+import MobileNumber from "../atoms/MobileNumber";
 
 export const FormComposer = (props) => {
   const { register, handleSubmit, setValue, getValues, watch, control, formState, errors } = useForm({ defaultValues: props.defaultValues });
@@ -65,6 +66,15 @@ export const FormComposer = (props) => {
         // if (populators.defaultValue) setTimeout(setValue(populators.name, populators.defaultValue));
         return (
           <TextArea className="field" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} disable={disable} />
+        );
+      case "mobileNumber":
+        return (
+          <Controller
+            render={(props) => <MobileNumber className="field" onChange={props.onChange} value={props.value} disable={disable} />}
+            defaultValue={populators.defaultValue}
+            name={populators.name}
+            control={control}
+          />
         );
       case "custom":
         return (
@@ -119,7 +129,15 @@ export const FormComposer = (props) => {
                       </CardLabel>
                     )}
                     {field?.description && (
-                      <CardLabel style={{ marginBottom: props.inline ? "8px" : "revert", fontSize: "16px", fontWeight: "bold", color: "#505A5F" }}>
+                      <CardLabel
+                        style={{
+                          marginBottom: props.inline ? "8px" : "revert",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "#505A5F",
+                          ...field?.descriptionStyles,
+                        }}
+                      >
                         {t(field.description)}
                       </CardLabel>
                     )}
@@ -142,6 +160,9 @@ export const FormComposer = (props) => {
                   <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : {}} className="field">
                     {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field)}
                   </div>
+                  {field?.populators?.name && errors && errors[field?.populators?.name] && Object.keys(errors[field?.populators?.name]).length ? (
+                    <CardLabelError>{field?.populators?.error}</CardLabelError>
+                  ) : null}
                 </LabelFieldPair>
               );
             })}

@@ -8,6 +8,7 @@ import {
   getMohallaLocale,
   pdfDocumentName,
   pdfDownloadLink,
+  getCityLocale,
 } from "./utils";
 
 const capitalize = (text) => text.substr(0, 1).toUpperCase() + text.substr(1);
@@ -22,7 +23,7 @@ const getOwner = (application, t) => {
         { title: t("PT_OWNERSHIP_INFO_NAME"), value: application?.owners[0]?.name || "N/A" },
         { title: t("PT_OWNERSHIP_INFO_MOBILE_NO"), value: application?.owners[0]?.mobileNumber || "N/A" },
         { title: t("PT_SEARCHPROPERTY_TABEL_GUARDIANNAME"), value: application?.owners[0]?.fatherOrHusbandName || "N/A" },
-        { title: t("PT_OWNERSHIP_INFO_GENDER"), value: application?.owners[0]?.gender || "N/A" },
+        { title: t("PT_OWNERSHIP_INFO_GENDER"), value: t(application?.owners[0]?.gender) || "N/A" },
         { title: t("PT_FORM3_OWNERSHIP_TYPE"), value: t(application?.ownershipCategory) || "N/A" },
         { title: t("PT_OWNERSHIP_INFO_EMAIL_ID"), value: application?.owners[0]?.emailId || "N/A" },
         { title: t("PT_OWNERSHIP_INFO_USER_CATEGORY"), value: t(getPropertyOwnerTypeLocale(application?.owners[0]?.ownerType)) || "N/A" },
@@ -123,7 +124,12 @@ const getAssessmentInfo = (application, t) => {
               ? t("PT_FORM2_TOTAL_ANNUAL_RENT")
               : t("")
             : "",
-        value: (flrno = unit?.floorNo) > -3 ? (t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented" ? t(unit?.arv) : t("")) : "",
+        value:
+          (flrno = unit?.floorNo) > -3
+            ? t(getPropertyOccupancyTypeLocale(unit?.occupancyType)) === "Rented"
+              ? (unit?.arv && `₹${t(unit?.arv)}`) || "NA"
+              : t("")
+            : "",
       },
     ];
 
@@ -163,7 +169,7 @@ const getPTAcknowledgementData = async (application, tenantInfo, t) => {
         title: t("PT_PROPERTY_ADDRESS_SUB_HEADER"),
         values: [
           { title: t("PT_PROPERTY_ADDRESS_PINCODE"), value: application?.address?.pincode || "N/A" },
-          { title: t("PT_PROPERTY_ADDRESS_CITY"), value: application?.address?.city || "N/A" },
+          { title: t("PT_PROPERTY_ADDRESS_CITY"), value: t(getCityLocale(application?.tenantId)) || "N/A" },
           {
             title: t("PT_PROPERTY_ADDRESS_MOHALLA"),
             value: t(`${getMohallaLocale(application?.address?.locality?.code, application?.tenantId)}`) || "N/A",

@@ -12,11 +12,18 @@ export const SuccessfulPayment = (props) => {
   const [allowFetchBill, setallowFetchBill] = useState(false);
   const { businessService: business_service, consumerCode, tenantId } = useParams();
 
-  const { isLoading, data, isError } = Digit.Hooks.usePaymentUpdate({ egId }, business_service);
+  const { isLoading, data, isError } = Digit.Hooks.usePaymentUpdate({ egId }, business_service, {
+    retry: false,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
   const { label } = Digit.Hooks.useApplicationsForBusinessServiceSearch({ businessService: business_service }, { enabled: false });
 
-  const { data: demand } = Digit.Hooks.useDemandSearch({ consumerCode, businessService: business_service }, { enabled: !isLoading });
+  const { data: demand } = Digit.Hooks.useDemandSearch(
+    { consumerCode, businessService: business_service },
+    { enabled: !isLoading, retry: false, staleTime: Infinity, refetchOnWindowFocus: false }
+  );
 
   const { data: billData, isLoading: isBillDataLoading } = Digit.Hooks.useFetchPayment(
     { tenantId, consumerCode, businessService: business_service },
@@ -26,6 +33,9 @@ export const SuccessfulPayment = (props) => {
   const { data: generatePdfKey } = Digit.Hooks.useCommonMDMS(tenantId, "common-masters", "ReceiptKey", {
     select: (data) =>
       data["common-masters"]?.uiCommonPay?.filter(({ code }) => business_service?.includes(code))[0]?.receiptKey || "consolidatedreceipt",
+    retry: false,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 
   const payments = data?.payments;
@@ -118,6 +128,8 @@ export const SuccessfulPayment = (props) => {
     justifyContent: "space-between",
   };
 
+  const ommitRupeeSymbol = ["PT"].includes(business_service);
+
   return (
     <Card>
       <Banner
@@ -135,15 +147,15 @@ export const SuccessfulPayment = (props) => {
         successful={true}
       />
       <CardText>{t(`${bannerText}_DETAIL`)}</CardText>
-      {generatePdfKey ? (
+      {/* {generatePdfKey ? (
         <div className="primary-label-btn d-grid" onClick={printReciept}>
           <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#f47738">
             <path d="M0 0h24v24H0V0z" fill="none" />
             <path d="M19 9h-4V3H9v6H5l7 7 7-7zm-8 2V5h2v6h1.17L12 13.17 9.83 11H11zm-6 7h14v2H5z" />
           </svg>
-          {t("COMMON_DOWNLOAD_THE_RECEIPT")}
+          
         </div>
-      ) : null}
+      ) : null} */}
       <StatusTable>
         <Row rowContainerStyle={rowContainerStyle} last label={t(label)} text={applicationNo} />
         {/** TODO : move this key and value into the hook based on business Service */}
@@ -159,12 +171,17 @@ export const SuccessfulPayment = (props) => {
               rowContainerStyle={rowContainerStyle}
               last
               label={t("CS_PAYMENT_AMOUNT_PENDING")}
-              text={demand?.Demands?.some((e) => !e?.isPaymentCompleted) ? billData?.Bill[0]?.totalAmount : 0}
+              text={demand?.Demands?.some((e) => !e?.isPaymentCompleted) ? "₹ " + billData?.Bill[0]?.totalAmount : "₹ " + 0}
             />
           ))}
 
         <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_TRANSANCTION_ID")} text={egId} />
-        <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_AMOUNT_PAID")} text={"₹ " + amount} />
+        <Row
+          rowContainerStyle={rowContainerStyle}
+          last
+          label={t(ommitRupeeSymbol ? "CS_PAYMENT_AMOUNT_PAID_WITHOUT_SYMBOL" : "CS_PAYMENT_AMOUNT_PAID")}
+          text={"₹ " + amount}
+        />
         {business_service !== "PT" && (
           <Row
             rowContainerStyle={rowContainerStyle}
@@ -174,9 +191,10 @@ export const SuccessfulPayment = (props) => {
           />
         )}
       </StatusTable>
-      <Link to="/digit-ui/citizen">
-        <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
-      </Link>
+      <SubmitBar onSubmit={printReciept} label={t("COMMON_DOWNLOAD_RECEIPT")} />
+      <div className="link" style={isMobile ? { marginTop: "8px", width: "100%", textAlign: "center" } : { marginTop: "8px" }}>
+        <Link to={`/digit-ui/citizen`}>{t("CORE_COMMON_GO_TO_HOME")}</Link>
+      </div>
     </Card>
   );
 };
@@ -191,9 +209,6 @@ export const FailedPayment = (props) => {
     <Card>
       <Banner message={getMessage()} complaintNumber={consumerCode} successful={false} />
       <CardText>{t("ES_COMMON_TRACK_COMPLAINT_TEXT")}</CardText>
-      <Link to="/digit-ui/citizen">
-        <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
-      </Link>
     </Card>
   );
 };

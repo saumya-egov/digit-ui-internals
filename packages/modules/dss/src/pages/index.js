@@ -1,30 +1,33 @@
 import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
-import { startOfYear, endOfYear, getTime, format } from "date-fns";
+import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
 
 const getInitialRange = () => {
-  const startDate = getTime(startOfYear(new Date()));
-  const endDate = getTime(endOfYear(new Date()));
+  const startDate = addMonths(startOfYear(new Date()), 3);
+  const endDate = addMonths(endOfYear(new Date()), 3);
   const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, title, duration };
-}
+};
 
 const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [filters, setFilters] = useState({
-    denomination: 'Unit',
-    range: getInitialRange()
+    denomination: "Unit",
+    range: getInitialRange(),
   });
-  const provided = useMemo(() => ({
-    value: filters,
-    setValue: setFilters
-  }), [filters]);
+  const provided = useMemo(
+    () => ({
+      value: filters,
+      setValue: setFilters,
+    }),
+    [filters]
+  );
   const stateCode = tenantId.split(".")[0];
   const moduleCode = "fsm";
   // const moduleCode = "propertytax";
@@ -42,12 +45,12 @@ const DashBoard = () => {
     <FilterContext.Provider value={provided}>
       <div className="chart-wrapper">
         <div className="options">
-          <div>
-            <ShareIcon styles={{ marginRight: "8px" }} />
+          <div className="mrlg">
+            <ShareIcon className="mrsm" />
             {t(`ES_DSS_SHARE`)}
           </div>
-          <div>
-            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+          <div className="mrsm">
+            <DownloadIcon className="mrsm" />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>
@@ -55,20 +58,21 @@ const DashBoard = () => {
         <Filters />
         <div className="options-m">
           <div>
-            <FilterIcon styles={{ marginRight: "8px" }} />
+            <FilterIcon style />
           </div>
           <div>
-            <ShareIcon styles={{ marginRight: "8px" }} />
+            <ShareIcon />
             {t(`ES_DSS_SHARE`)}
           </div>
           <div>
-            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+            <DownloadIcon />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>
-        {dashboardConfig?.[0]?.visualizations.map((row, key) => (
-          <Layout rowData={row} key={key} />
-        ))}
+        {dashboardConfig?.[0]?.visualizations.map((row, key) => {
+          if (row.row === 4) return null;
+          return <Layout rowData={row} key={key} />;
+        })}
       </div>
     </FilterContext.Provider>
   );

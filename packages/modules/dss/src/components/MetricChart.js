@@ -1,14 +1,19 @@
 import React, { Fragment, useContext } from "react";
-import { Card, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { useTranslation } from "react-i18next";
+import { Card, CardSubHeader, Rating } from "@egovernments/digit-ui-react-components";
 import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import FilterContext from "./FilterContext";
 
-const MetricData = ({ data }) => {
-  const { value } = useContext(FilterContext)
+const MetricData = ({ data, code }) => {
+  const { value } = useContext(FilterContext);
   return (
     <div>
       <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>
-        {Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)}
+        {code === "citizenAvgRating" ? (
+          <Rating currentRating={data?.headerValue} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
+        ) : (
+          Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)
+        )}
       </p>
       {data.insight && (
         <div>
@@ -22,10 +27,11 @@ const MetricData = ({ data }) => {
 const MetricChartRow = ({ data }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const requestDate = {
-    startDate: value?.range?.startDate,
-    endDate: value?.range?.endDate,
+    startDate: value?.range?.startDate.getTime(),
+    endDate: value?.range?.endDate.getTime(),
     interval: "month",
     title: "",
   };
@@ -42,8 +48,8 @@ const MetricChartRow = ({ data }) => {
 
   return (
     <div className="row">
-      <div>{data.name}</div>
-      <MetricData data={response?.responseData?.data?.[0]} />
+      <div>{t(data.name)}</div>
+      <MetricData data={response?.responseData?.data?.[0]} code={response?.responseData?.visualizationCode} />
       {/* <div>{`${displaySymbol(response.headerSymbol)} ${response.headerValue}`}</div> */}
     </div>
   );
