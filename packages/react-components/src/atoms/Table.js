@@ -59,7 +59,7 @@ const Table = ({
     {
       columns,
       data,
-      initialState: { pageIndex: currentPage, pageSize: pageSizeLimit, sortBy: autoSort ? [initSortId] : sortParams },
+      initialState: { pageIndex: currentPage, pageSize: pageSizeLimit, sortBy: autoSort ? [{ id: initSortId, desc: false }] : sortParams },
       pageCount: totalRecords > 0 ? Math.ceil(totalRecords / pageSizeLimit) : -1,
       manualPagination: true,
       disableMultiSort: false,
