@@ -74,7 +74,7 @@ const EmployeeApp = ({ path, url, userType }) => {
               <Inbox parentRoute={path} businessService="PT" middlewareSearch={searchMW} initialStates={inboxInitialState} isInbox={false} />
             )}
           />
-          <PrivateRoute path={`${path}/challansearch`} component={() => <EmployeeChallan />} />
+          <PrivateRoute path={`${path}/challansearch/:challanno`} component={() => <EmployeeChallan />} />
         </div>
       </React.Fragment>
     </Switch>

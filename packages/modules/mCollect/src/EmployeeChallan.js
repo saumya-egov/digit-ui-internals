@@ -5,6 +5,12 @@ import { useParams } from "react-router-dom";
 import { propertyCardBodyStyle } from "../../../modules/pt/src/utils";
 
 const EmployeeChallan = (props) => {
+  const { t } = useTranslation();
+  const { challanno } = useParams();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const coreData = Digit.Hooks.useCoreData();
+  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanno } });
+  console.log(data);
   return (
     <React.Fragment>
       <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
@@ -12,7 +18,7 @@ const EmployeeChallan = (props) => {
       </div>
       <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 12em)", margin: "30px" }}>
         <Card>
-          <CardSubHeader>{"Challan No: CH-CB-SECU-2021-004291"} </CardSubHeader>
+          <CardSubHeader>Challan No : {challanno} </CardSubHeader>
           <StatusTable>
             <Row label={"Compensation of lieu of concessions"} text={"₹5000"} textStyle={{ whiteSpace: "pre" }} />
             <Row label={"Field Fee"} text={"₹500"} textStyle={{ whiteSpace: "pre" }} />
