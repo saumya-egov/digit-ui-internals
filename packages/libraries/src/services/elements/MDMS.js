@@ -437,7 +437,15 @@ const getBillingServiceForBusinessServiceCriteria = () => ({
   moduleDetails: [
     {
       moduleName: "BillingService",
-      masterDetails: [{ name: "BusinessService" }],
+      masterDetails: [
+        { name: "BusinessService" },
+        {
+          name: "TaxHeadMaster",
+        },
+        {
+          name: "TaxPeriod",
+        },
+      ],
     },
   ],
 });
@@ -676,12 +684,12 @@ const GetMCollectBusinessService = (MdmsRes) =>
   });
 
 const GetMCollectApplicationStatus = (MdmsRes) =>
-MdmsRes["mCollect"].applcationStatus.map((appStatusDetails) => {
-  return {
-    ...appStatusDetails,
-    i18nKey: `BILLINGSERVICE_BUSINESSSERVICE_${appStatusDetails.code}`,
-  };
-});
+  MdmsRes["mCollect"].applcationStatus.map((appStatusDetails) => {
+    return {
+      ...appStatusDetails,
+      i18nKey: `BILLINGSERVICE_BUSINESSSERVICE_${appStatusDetails.code}`,
+    };
+  });
 
 const getDssDashboard = () => MdmsRes["dss-dashboard"]["dashboard-config"];
 
