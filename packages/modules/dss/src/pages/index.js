@@ -28,6 +28,7 @@ const DashBoard = () => {
     }),
     [filters]
   );
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const stateCode = tenantId.split(".")[0];
   const moduleCode = "fsm";
   // const moduleCode = "propertytax";
@@ -55,10 +56,10 @@ const DashBoard = () => {
           </div>
         </div>
         <Header>{t(dashboardConfig?.[0]?.name)}</Header>
-        <Filters />
+        <Filters isOpen={isFilterModalOpen} closeFilters={() => setIsFilterModalOpen(false)} />
         <div className="options-m">
           <div>
-            <FilterIcon style />
+            <FilterIcon onClick={() => setIsFilterModalOpen(!isFilterModalOpen)} style />
           </div>
           <div>
             <ShareIcon />
