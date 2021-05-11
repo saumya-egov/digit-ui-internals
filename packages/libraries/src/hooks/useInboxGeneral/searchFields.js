@@ -44,10 +44,16 @@ const searchFieldsForSearch = {
     {
       label: "ES_SEARCH_APPLICATION_MOBILE_NO",
       name: "mobileNumber",
-      maxLength: 10,
-      pattern: "[6-9][0-9]{9}",
       type: "mobileNumber",
+      maxLength: 10,
+      minLength: 10,
       roles: [],
+      pattern: "[6-9][0-9]{9}",
+      errorMessages: {
+        pattern: "",
+        minLength: "",
+        maxLength: "",
+      },
     },
   ],
 };
