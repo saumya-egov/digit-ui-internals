@@ -4,10 +4,11 @@ import ReactDOM from "react-dom";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { PGRModule, PGRLinks, PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { PTModule, PTLinks, PTComponents } from "@egovernments/digit-ui-module-pt";
-import { MCollectModule, MCollectLinks, MCollectComponents } from "@egovernments/digit-ui-module-mcollect";
+import { MCollectModule, MCollectLinks } from "@egovernments/digit-ui-module-mcollect";
 import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+import { initMCollectComponents } from "@egovernments/digit-ui-module-mcollect";
 import { PaymentModule, PaymentLinks, paymentConfigs } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { PGRModule, PGRLinks } from "@egovernments/digit-ui-module-pgr";
@@ -133,12 +134,12 @@ const initDigitUI = () => {
     ...PTComponents,
     MCollectLinks,
     MCollectModule,
-    ...MCollectComponents
   });
 
   initFSMComponents();
   initPGRComponents();
   initDSSComponents();
+  initMCollectComponents();
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),

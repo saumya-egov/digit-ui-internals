@@ -6,18 +6,11 @@ import EmployeeApp from "./pages/employee";
 import MCollectCard from "./components/MCollectCard";
 import InboxFilter from "./components/inbox/NewInboxFilter";
 
-const componentsToRegister = {};
-
-const addComponentsToRegistry = () => {
-  Object.entries(componentsToRegister).forEach(([key, value]) => {
-    Digit.ComponentRegistryService.setComponent(key, value);
-  });
-};
-
 export const MCollectModule = ({ userType, tenants }) => {
   const moduleCode = "mCollect";
-  addComponentsToRegistry();
+  // addComponentsToRegistry();
   console.log(moduleCode, "module integrated");
+
   // Digit.SessionStorage.set("PT_TENANTS", tenants);
 
   const { path, url } = useRouteMatch();
@@ -47,9 +40,15 @@ export const MCollectLinks = ({ matchPath, userType }) => {
   );
 };
 
-export const MCollectComponents = {
+const componentsToRegister = {
   MCollectCard,
   MCollectModule,
   MCollectLinks,
-  MCOLLECT_INBOX_FILTER: (props) => <InboxFilter {...props} />
+  MCOLLECT_INBOX_FILTER: (props) => <InboxFilter {...props} />,
+};
+
+export const initMCollectComponents = () => {
+  Object.entries(componentsToRegister).forEach(([key, value]) => {
+    Digit.ComponentRegistryService.setComponent(key, value);
+  });
 };
