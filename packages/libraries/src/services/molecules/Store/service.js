@@ -78,7 +78,7 @@ export const StoreService = {
     initData.modules.push({
       module: "DSS",
       code: "DSS",
-      tenants: [{ code: "pb.amritsar" }],
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
     });
 
     const moduleTenants = initData.modules
