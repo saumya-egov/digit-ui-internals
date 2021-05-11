@@ -5,6 +5,7 @@ import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
 import MCollectCard from "./components/MCollectCard";
 import InboxFilter from "./components/inbox/NewInboxFilter";
+import CitizenApp from "./pages/citizen";
 
 const componentsToRegister = {};
 
@@ -37,11 +38,9 @@ export const MCollectLinks = ({ matchPath, userType }) => {
 
   return (
     <React.Fragment>
-      <Header>{t("ACTION_TEST_PROPERTY_TAX")}</Header>
+      <Header>{t("M-Collect")}</Header>
       <div className="d-grid">
-        <HomeLink to={`${matchPath}/property/new-application`}>{t("PT_CREATE_PROPERTY")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-properties`}>{t("PT_MY_PROPERTIES")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-applications`}>{t("PT_MY_APPLICATION")}</HomeLink>
+        <HomeLink to={`${matchPath}/search`}>{t("Search Challan")}</HomeLink>
       </div>
     </React.Fragment>
   );
@@ -51,5 +50,5 @@ export const MCollectComponents = {
   MCollectCard,
   MCollectModule,
   MCollectLinks,
-  MCOLLECT_INBOX_FILTER: (props) => <InboxFilter {...props} />
+  MCOLLECT_INBOX_FILTER: (props) => <InboxFilter {...props} />,
 };
