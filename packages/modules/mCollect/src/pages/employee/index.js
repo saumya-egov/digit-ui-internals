@@ -75,6 +75,7 @@ const EmployeeApp = ({ path, url, userType }) => {
             )}
           />
           <PrivateRoute path={`${path}/acknowledgement`}   component={() => (<MCollectAcknowledgement/>)} />
+          <PrivateRoute path={`${path}/challansearch/:challanno`} component={() => <EmployeeChallan />} />
         </div>
       </React.Fragment>
     </Switch>

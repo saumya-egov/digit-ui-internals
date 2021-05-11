@@ -4,17 +4,31 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { propertyCardBodyStyle } from "../../../modules/pt/src/utils";
 
-class EmployeeChallan extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    return (
-      <React.Fragment>
-        <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
-          <Header>CHALLAN DETAILS </Header>
-        </div>
-        <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 12em)", margin: "30px" }}>
+const EmployeeChallan = (props) => {
+  const { t } = useTranslation();
+  const { challanno } = useParams();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const coreData = Digit.Hooks.useCoreData();
+  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanno } });
+  console.log(data);
+  return (
+    <React.Fragment>
+      <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
+        <Header>CHALLAN DETAILS </Header>
+      </div>
+      <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 12em)", margin: "30px" }}>
+        <Card>
+          <CardSubHeader>Challan No : {challanno} </CardSubHeader>
+          <StatusTable>
+            <Row label={"Compensation of lieu of concessions"} text={"₹5000"} textStyle={{ whiteSpace: "pre" }} />
+            <Row label={"Field Fee"} text={"₹500"} textStyle={{ whiteSpace: "pre" }} />
+            <Row label={"Security Deposit"} text="₹50" />
+            <Row label={"CGST"} text={`${"₹20"}` || "NA"} />
+            <Row label={"SGST"} text={`${"₹20"}` || "NA"} />
+            <Row label={"Round Off"} text={`${"₹0"}` || "NA"} />
+            <hr />
+            <Row label={<b>Total Due Amount</b>} text={<b>{"₹5090"}</b> || "NA"} />
+          </StatusTable>
           <Card>
             <CardSubHeader>{"Challan No: CH-CB-SECU-2021-004291"} </CardSubHeader>
             <StatusTable>
@@ -47,10 +61,11 @@ class EmployeeChallan extends React.Component {
               </StatusTable>
             </Card>
           </Card>
+          </Card>
         </div>
       </React.Fragment>
     );
   }
-}
+
 
 export default EmployeeChallan;

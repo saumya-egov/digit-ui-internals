@@ -50,7 +50,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         return (
           <div>
             <span className="link">
-              <Link to={`${props.parentRoute}/application-details/` + row.original?.["challanNo"]}>
+              <Link to={`mcollect/challansearch/` + row.original?.["challanNo"]}>
                 {row.original?.["challanNo"]}
               </Link>
             </span>
