@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Dropdown, DatePicker } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
-import { FormComposer } from "../../../../pgr/src/components/FormComposer";
+import { FormComposer } from "../../components/FormComposer";
 import TaxForm from "../../components/TaxForm";
 const CreateChallen = ({ parentUrl }) => {
+  const childRef = useRef();
   const cities = Digit.Hooks.pgr.useTenants();
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
@@ -49,11 +50,9 @@ const CreateChallen = ({ parentUrl }) => {
   const [TaxHeadMasterFields, setTaxHeadMasterFields] = useState([]);
   const [selectedLocality, setSelectedLocality] = useState(null);
   const [pincodeNotValid, setPincodeNotValid] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
   const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
-  const dispatch = useDispatch();
-
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
   const selectCity = async (city) => {
@@ -61,7 +60,6 @@ const CreateChallen = ({ parentUrl }) => {
     return;
   };
 
-  function onChange() {}
   useEffect(() => {
     setAPIcategoriesType(selectedCategory?.child ? selectedCategory.child : []);
   }, [selectedCategory]);
@@ -102,7 +100,31 @@ const CreateChallen = ({ parentUrl }) => {
   }, [pincode]);
 
   const onSubmit = (data) => {
-    console.log(data);
+    const Challan = {
+      citizen: {
+        name: data.name,
+       mobileNumber : data.mobileNumber
+      },
+      businessService: selectedCategoryType.code,
+       consumerType: selectedCategory.code,
+       description: data.comments,
+       taxPeriodFrom: Date.parse(fromDate),
+       taxPeriodTo: Date.parse(toDate),
+       tenantId: tenantId,
+      address:{
+        buildingName: data.buildingName,
+        doorNo: data.doorNo,
+        street: data.street,
+        locality: {code: selectedLocality.code},
+    },
+    amount: childRef.current.submit()
+  }
+  Digit.MCollectService.create({Challan: Challan}, tenantId).then((result)=>{
+    if(result.challans && result.challans.length > 0){
+   const challan  = result.challans[0];
+   Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, 'challan')
+    }
+  })
   };
   const config = [
     {
@@ -140,7 +162,7 @@ const CreateChallen = ({ parentUrl }) => {
           isMandatory: true,
           type: "text",
           populators: {
-            name: "name",
+            name: "doorNo",
             validation: {
               required: true,
               pattern: /^[A-Za-z]/,
@@ -153,7 +175,7 @@ const CreateChallen = ({ parentUrl }) => {
           isMandatory: true,
           type: "text",
           populators: {
-            name: "name",
+            name: "buildingName",
             validation: {
               required: true,
               pattern: /^[A-Za-z]/,
@@ -166,7 +188,7 @@ const CreateChallen = ({ parentUrl }) => {
           isMandatory: true,
           type: "text",
           populators: {
-            name: "Street Name",
+            name: "street",
             validation: {
               required: true,
               pattern: /^[A-Za-z]/,
@@ -177,8 +199,10 @@ const CreateChallen = ({ parentUrl }) => {
         {
           label: t("CORE_COMMON_PINCODE"),
           type: "text",
+          isMandatory: true,
           populators: {
             name: "pincode",
+            required: true,
             validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
             error: t("CORE_COMMON_PINCODE_INVALID"),
             onChange: handlePincode,
@@ -191,7 +215,7 @@ const CreateChallen = ({ parentUrl }) => {
           name: "Mohalla",
           dependency: localities ? true : false,
           populators: (
-            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
+            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality"   option={localities} select={selectLocality} t={t} />
           ),
         },
       ],
@@ -203,6 +227,7 @@ const CreateChallen = ({ parentUrl }) => {
           label: t("TL_NEW_TRADE_DETAILS_CITY_LABEL"),
           isMandatory: true,
           type: "dropdown",
+          name: "city",
           populators: (
             <Dropdown
               isMandatory
@@ -220,6 +245,7 @@ const CreateChallen = ({ parentUrl }) => {
           label: t("UC_SERVICE_CATEGORY_LABEL"),
           type: "dropdown",
           isMandatory: true,
+          name: "category",
           populators: (
             <Dropdown
               isMandatory
@@ -236,6 +262,7 @@ const CreateChallen = ({ parentUrl }) => {
           label: t("UC_SERVICE_TYPE_LABEL"),
           type: "dropdown",
           isMandatory: true,
+          name: "categoryType",
           dependency: selectedCategory ? true : false,
           populators: (
             <Dropdown
@@ -252,25 +279,29 @@ const CreateChallen = ({ parentUrl }) => {
         {
           label: t("UC_FROM_DATE_LABEL"),
           type: "date",
-          populators: <DatePicker date={fromDate} onChange={setFromDate} />,
+          name: "fromDate",
+          isMandatory: true,
+          populators: <DatePicker date={fromDate ? fromDate : ''} onChange={setFromDate} />,
         },
         {
           label: t("UC_TO_DATE_LABEL"),
           type: "date",
+          name: "toDate",
+          isMandatory: true,
           dependency: fromDate ? true : false,
-          populators: <DatePicker date={toDate} onChange={setToDate} />,
+          populators: <DatePicker date={toDate ? toDate: ''}  min={fromDate} onChange={setToDate} />,
         },
         {
           isMandatory: false,
           type: "custom",
-          populators: <TaxForm data={TaxHeadMasterFields} />,
+          populators: <TaxForm  ref={childRef} data={TaxHeadMasterFields} />,
         },
         {
           label: t("UC_COMMENT_LABEL"),
           isMandatory: false,
           type: "textarea",
           populators: {
-            name: "name",
+            name: "comments",
             validation: {
               required: false,
             },

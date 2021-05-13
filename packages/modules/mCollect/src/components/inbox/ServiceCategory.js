@@ -3,62 +3,54 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import ServiceCategoryCount from "./ServiceCategoryCount";
 
-// export const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
-//   if (searcher == "") return str;
-//   while (str.includes(searcher)) {
-//     str = str.replace(searcher, replaceWith);
-//   }
-//   return str;
-// };
-
 const ServiceCategory = ({ onAssignmentChange, searchParams, businessServices }) => {
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  const stateId = tenantId.split(".")[0];
+
   const [moreStatus, showMoreStatus] = useState(false);
-  const { data: Menu, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(stateId, "BillingService", "BusinessService", "[?(@.type=='Adhoc')]");
 
-const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
-  if (searcher == "") return str;
-  while (str.includes(searcher)) {
-    str = str.replace(searcher, replaceWith);
-  }
-  return str;
-};
+  const { data: statusData, isLoading } = Digit.Hooks.useApplicationStatusGeneral({ businessServices }, {});
 
+  const { userRoleStates, otherRoleStates } = statusData || {};
 
-  const translateState = (option) => {
-    let code = stringReplaceAll(option.code, ".", "_");
-    code = code.toUpperCase();
-    return t(`BILLINGSERVICE_BUSINESSSERVICE_${code}`);
+  const translateState = (state) => {
+    return `ES_PT_STATUS_${state.state || "CREATED"}`;
   };
 
   if (isLoading) {
     return <Loader />;
   }
-// translateState(option)
+
   return (
     <div className="status-container">
       <div className="filter-label" style={{ fontWeight: "normal" }}>
-        {t("Service Category")}
+        {t("ES_INBOX_STATUS")}
       </div>
-      <div>
+      {userRoleStates?.map((option, index) => {
+        return (
+          <ServiceCategoryCount
+            businessServices={businessServices}
+            key={index}
+            onAssignmentChange={onAssignmentChange}
+            status={{ name: translateState(option), code: option.applicationStatus }}
+            searchParams={searchParams}
+          />
+        );
+      })}
       {moreStatus &&
-        Menu?.map((option, index) => {
+        otherRoleStates?.map((option, index) => {
           return (
             <ServiceCategoryCount
+              businessServices={businessServices}
               key={index}
               onAssignmentChange={onAssignmentChange}
-              status={{ name: translateState(option), code: option.businessService }}
+              status={{ name: translateState(option), code: option.applicationStatus }}
               searchParams={searchParams}
             />
           );
-        })
-        }
+        })}
       <div className="filter-button" onClick={() => showMoreStatus(!moreStatus)}>
         {" "}
         {moreStatus ? t("ES_COMMON_LESS") : t("ES_COMMON_MORE")}{" "}
-      </div>
       </div>
     </div>
   );

@@ -8,19 +8,19 @@ const InboxLinks = ({ parentRoute, businessService }) => {
 
   const allLinks = [
     {
-      text: "Generate New Challan",
+      text: "ES_TITLE_NEW_REGISTRATION",
       link: "/digit-ui/employee/pt/new-application",
       businessService: "PT",
       roles: ["PT_DOC_VERIFIER"],
     },
     {
-      text: "Report",
+      text: "ES_TITLE_NEW_REGISTRATION",
       link: "/digit-ui/employee/pt/new-application",
       businessService: "PT",
       roles: ["PT_CEMP"],
     },
     {
-      text: "Dashboard",
+      text: "ES_TITILE_SEARCH_APPLICATION",
       link: `/digit-ui/employee/pt/search`,
       businessService: "PT",
       roles: [],
@@ -33,9 +33,9 @@ const InboxLinks = ({ parentRoute, businessService }) => {
 
   useEffect(() => {
     let linksToShow = allLinks
-      // .filter((e) => e.businessService === businessService)
-      // .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
-    // console.log(linksToShow, "inside the links");
+      .filter((e) => e.businessService === businessService)
+      .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
+    console.log(linksToShow, "inside the links");
     setLinks(linksToShow);
   }, []);
 
@@ -44,7 +44,7 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       <span className="logo">
         <PropertyHouse />
       </span>{" "}
-      <span className="text">{t("mCollect")}</span>
+      <span className="text">{t("ES_TITLE_PROPERTY_TAX")}</span>
     </div>
   );
 

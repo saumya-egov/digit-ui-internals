@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo } from "react";
-import { FormComposer } from "../../../pgr/src/components/FormComposer";
+import React, { forwardRef, useRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import {
@@ -15,13 +14,21 @@ import {
   SubmitBar,
   LabelFieldPair,
 } from "@egovernments/digit-ui-react-components";
-const TaxForm = (props) => {
-  const { register, handleSubmit, errors } = useForm();
+const TaxForm = forwardRef((props, ref) => {
+  const refContainer = useRef(null);
+  const { register,  getValues } = useForm();
   const { t } = useTranslation();
-  console.log(props);
-  const onSubmit = () => {
-    console.log("submit");
-  };
+
+  useImperativeHandle(ref, () => ({
+    submit(){
+      console.log('function called', getValues())
+      const res =  getValues();
+     const  amount = []
+     const key = Object.keys(res)[0];
+     Object.keys(Object.values(res)[0]).forEach((ele=>amount.push({taxHeadCode:key+'.'+ele, amount: res[key]?res[key][ele]:undefined})))
+    return amount;
+   }
+  }));
 
   const fieldSelector = (type, populators) => {
     switch (type) {
@@ -39,19 +46,20 @@ const TaxForm = (props) => {
     }
   };
 
-  return props
+  return  props
     ? props.data.length > 0 &&
         props.data
           .map((ele) => ({
             label: t(ele.name.split(".").join("_")),
             isMandatory: ele.isRequired,
             type: "text",
-            populators: { name: "name", validation: { required: ele.isRequired } },
+            populators: { name: ele.name, validation: { required: ele.isRequired } },
           }))
           .map((field, index) => {
             console.log(field);
             return (
               <React.Fragment key={index}>
+
                 <LabelFieldPair>
                   <CardLabel>
                     {field.label}
@@ -59,11 +67,10 @@ const TaxForm = (props) => {
                   </CardLabel>
                   <div className="field">{fieldSelector(field.type, field.populators)}</div>
                 </LabelFieldPair>
+
               </React.Fragment>
             );
           })
-    : [];
-
-  // isDisabled={canSubmit})
-};
+    : []
+});
 export default TaxForm;

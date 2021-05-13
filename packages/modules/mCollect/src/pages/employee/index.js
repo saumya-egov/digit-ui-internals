@@ -1,6 +1,7 @@
 import React from "react";
 import { MCollectLinks } from "../../Module";
 import Inbox from "./Inbox";
+import CreateChallen from "./CreateChallan"
 import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
@@ -12,11 +13,10 @@ const EmployeeApp = ({ path, url, userType }) => {
 
   const inboxInitialState = {
     searchParams: {
-      // uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
-      // services: ["PT.CREATE"],
-      status: [],
-      businessService: []
-      // locality: [],
+      uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
+      services: ["PT.CREATE"],
+      applicationStatus: [],
+      locality: [],
     },
   };
 
@@ -61,12 +61,21 @@ const EmployeeApp = ({ path, url, userType }) => {
               <Inbox parentRoute={path} businessService="PT" filterComponent="MCOLLECT_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
             )}
           />
+              <PrivateRoute
+            path={`${path}/new-application`}
+            component={() => (
+              <CreateChallen />
+            )}
+          />
           <PrivateRoute
             path={`${path}/search`}
             component={() => (
               <Inbox parentRoute={path} businessService="PT" middlewareSearch={searchMW} initialStates={inboxInitialState} isInbox={false} />
             )}
           />
+          <Route path={`${path}/acknowledgement`}>
+        <PTAcknowledgement data={params} onSuccess={onSuccess} />
+      </Route>
         </div>
       </React.Fragment>
     </Switch>
