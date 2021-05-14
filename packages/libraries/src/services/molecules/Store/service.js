@@ -89,6 +89,12 @@ export const StoreService = {
       code: "Payment",
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
     });
+    
+    initData.modules.push({
+      module: "MCollect",
+      code: "MCollect",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
 
     initData.modules.push({
       module: "DSS",
