@@ -17,7 +17,10 @@ const TaxForm = forwardRef((props, ref) => {
       const res =  getValues();
      const  amount = []
      const key = Object.keys(res)[0];
-     Object.keys(Object.values(res)[0]).forEach((ele=>amount.push({taxHeadCode:key+'.'+ele, amount: res[key]?res[key][ele]:undefined})))
+     Object.keys(Object.values(res)[0]).forEach((ele=> {
+       console.log(res[key][ele])
+       amount.push({taxHeadCode:key+'.'+ele, amount: res[key] ? res[key][ele] ? res[key][ele] : 0 : undefined})
+    }))
     return amount;
    }
   }));

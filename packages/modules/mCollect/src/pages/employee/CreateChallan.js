@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
@@ -10,7 +11,7 @@ const CreateChallen = ({ parentUrl }) => {
   const history = useHistory();
   const { url } = useRouteMatch();
   const childRef = useRef();
-  const cities = Digit.Hooks.pgr.useTenants();
+  const cities = Digit.Hooks.mcollect.usemcollectTenants();
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
@@ -40,8 +41,21 @@ const CreateChallen = ({ parentUrl }) => {
     setSelectedcategories(category);
   }
 
+  function ChangesetToDate(value) {
+    if (new Date(fromDate) < new Date(value)) {
+      setToDate(value)
+    }
+  }
   function setcategoriesType(categoryType) {
+
     setselectedCategoryType(categoryType);
+  }
+  function humanize(str) {
+    var frags = str.split('_');
+    for (let i = 0; i < frags.length; i++) {
+      frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+    }
+    return frags.join('_');
   }
   const [canSubmit, setSubmitValve] = useState(true);
   const [localities, setLocalities] = useState(fetchedLocalities);
@@ -59,18 +73,23 @@ const CreateChallen = ({ parentUrl }) => {
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
   const selectCity = async (city) => {
+    console.log(city)
     // if (selectedCity?.code !== city.code) {}
-    return;
+    return city
   };
 
   useEffect(() => {
-    setAPIcategoriesType(selectedCategory?.child ? selectedCategory.child : []);
+    console.log(selectedCity, getCities()[0])
+    setAPIcategoriesType(selectedCategory?.child ? selectedCategory.child.map((ele => {
+      ele.code = 'BILLINGSERVICE_BUSINESSSERVICE_' + ele.code.split('.').join('_').toUpperCase();
+      return ele;
+    })) : []);
   }, [selectedCategory]);
 
   useEffect(() => {
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
-        return ele.service == selectedCategoryType.code;
+        return ele.service == selectedCategory.code + '.' + humanize(selectedCategoryType.code.split(selectedCategory.code + '_')[1].toLowerCase());
       })
     );
   }, [selectedCategoryType]);
@@ -87,12 +106,12 @@ const CreateChallen = ({ parentUrl }) => {
   }, [tenantId]);
 
   useEffect(() => {
-    if (selectedCategory && selectedCategoryType && !pincodeNotValid && fromDate != '' && toDate != '' ) {
+    if (selectedCategory && selectedCategoryType && fromDate != '' && toDate != '' && selectedLocality != null) {
       setSubmitValve(true);
     } else {
       setSubmitValve(false);
     }
-  }, [selectedCategory, selectedCategoryType, pincodeNotValid, fromDate, toDate]);
+  }, [selectedCategory, selectedCategoryType, selectedLocality, fromDate, toDate]);
 
   useEffect(() => {
     const city = cities ? cities.find((obj) => obj.pincode?.find((item) => item == pincode)) : [];
@@ -117,7 +136,7 @@ const CreateChallen = ({ parentUrl }) => {
         name: data.name,
         mobileNumber: data.mobileNumber
       },
-      businessService: selectedCategoryType.code,
+      businessService: selectedCategory.code + '.' + humanize(selectedCategoryType.code.split(selectedCategory.code + '_')[1].toLowerCase()),
       consumerType: selectedCategory.code,
       description: data.comments,
       taxPeriodFrom: Date.parse(fromDate),
@@ -175,47 +194,30 @@ const CreateChallen = ({ parentUrl }) => {
         },
         {
           label: t("UC_DOOR_NO_LABEL"),
-          isMandatory: true,
           type: "text",
           populators: {
-            name: "doorNo",
-            validation: {
-              required: true,
-            },
-            error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
-          },
+            name: "doorNo"
+          }
         },
         {
           label: t("UC_BLDG_NAME_LABEL"),
-          isMandatory: true,
           type: "text",
           populators: {
             name: "buildingName",
-            validation: {
-              required: true,
-            },
-            error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
           },
         },
         {
           label: t("UC_SRT_NAME_LABEL"),
-          isMandatory: true,
           type: "text",
           populators: {
             name: "street",
-            validation: {
-              required: true,
-            },
-            error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
           },
         },
         {
           label: t("CORE_COMMON_PINCODE"),
           type: "text",
-          isMandatory: true,
           populators: {
             name: "pincode",
-            required: true,
             validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
             error: t("CORE_COMMON_PINCODE_INVALID"),
             onChange: handlePincode,
@@ -246,6 +248,7 @@ const CreateChallen = ({ parentUrl }) => {
               isMandatory
               selected={selectedCity}
               freeze={true}
+              disable={true}
               option={getCities()}
               id="city"
               select={selectCity}
@@ -300,9 +303,10 @@ const CreateChallen = ({ parentUrl }) => {
           label: t("UC_TO_DATE_LABEL"),
           type: "date",
           name: "toDate",
+          disable: fromDate == '' ? true : false,
           isMandatory: true,
           dependency: fromDate ? true : false,
-          populators: <DatePicker date={toDate ? toDate : ''} min={fromDate} onChange={setToDate} />,
+          populators: <DatePicker date={toDate ? toDate : ''} min={fromDate} onChange={ChangesetToDate} />,
         },
         {
           isMandatory: false,
