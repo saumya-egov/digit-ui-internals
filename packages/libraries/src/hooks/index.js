@@ -75,6 +75,7 @@ import useGetChart from "./dss/useGetChart";
 
 import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
+import usemcollectTenants from "./mcollect/useTenants"
 
 const pgr = {
   useComplaintDetails,
@@ -140,7 +141,8 @@ const dss = {
 
 const mcollect = {
   useMCollectMDMS,
-  useMCollectSearch
+  useMCollectSearch,
+  usemcollectTenants
 }
 
 const Hooks = {
