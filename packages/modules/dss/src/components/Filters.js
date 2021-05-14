@@ -56,7 +56,7 @@ const Filters = ({ isOpen, closeFilters }) => {
       </div>
       <div className="filters-input" style={{ flexBasis: "16%" }}>
         <Switch onSelect={handleFilterChange} />
-        <p className="clearText" onClick={handleClear}>{t(`DSS_FILTER_CLEAR`)}</p>
+        {/* <p className="clearText" onClick={handleClear}>{t(`DSS_FILTER_CLEAR`)}</p> */}
       </div>
     </div>
   );

@@ -44,18 +44,20 @@ const DashBoard = () => {
   const dashboardConfig = response?.responseData;
   return (
     <FilterContext.Provider value={provided}>
-      <div className="chart-wrapper">
+      <div>
         <div className="options">
-          <div className="mrlg">
-            <ShareIcon className="mrsm" />
-            {t(`ES_DSS_SHARE`)}
-          </div>
-          <div className="mrsm">
-            <DownloadIcon className="mrsm" />
-            {t(`ES_DSS_DOWNLOAD`)}
+          <Header styles={{ marginBottom: "0px" }}>{t(dashboardConfig?.[0]?.name)}</Header>
+          <div>
+            <div className="mrlg">
+              <ShareIcon className="mrsm" />
+              {t(`ES_DSS_SHARE`)}
+            </div>
+            <div className="mrsm">
+              <DownloadIcon className="mrsm" />
+              {t(`ES_DSS_DOWNLOAD`)}
+            </div>
           </div>
         </div>
-        <Header>{t(dashboardConfig?.[0]?.name)}</Header>
         <Filters isOpen={isFilterModalOpen} closeFilters={() => setIsFilterModalOpen(false)} />
         <div className="options-m">
           <div>
