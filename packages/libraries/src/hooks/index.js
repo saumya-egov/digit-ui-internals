@@ -74,6 +74,10 @@ import useDashboardConfig from "./dss/useDashboardConfig";
 import useDSSDashboard from "./dss/useDSSDashboard";
 import useGetChart from "./dss/useGetChart";
 
+import useMCollectMDMS from "./mcollect/useMCollectMDMS";
+import useMCollectSearch from "./mcollect/useMCollectSearch";
+import usemcollectTenants from "./mcollect/useTenants";
+
 const pgr = {
   useComplaintDetails,
   useComplaintsList,
@@ -136,6 +140,12 @@ const dss = {
   useGetChart,
 };
 
+const mcollect = {
+  useMCollectMDMS,
+  useMCollectSearch,
+  usemcollectTenants,
+};
+
 const Hooks = {
   useSessionStorage,
   useQueryParams,
@@ -161,6 +171,7 @@ const Hooks = {
   fsm,
   pt,
   dss,
+  mcollect,
 };
 
 export default Hooks;

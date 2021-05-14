@@ -1,20 +1,29 @@
 const inboxSearchFields = {
   PT: [
     {
-      label: "ES_SEARCH_UNIQUE_PROPERTY_ID",
-      name: "propertyIds",
+      label: "PT_PROPERTY_APPLICATION_NO",
+      name: "acknowledgementIds",
       roles: [],
     },
     {
-      label: "ES_SEARCH_EXISTING_PROPERTY_ID",
-      name: "oldpropertyids",
+      label: "ES_SEARCH_UNIQUE_PROPERTY_ID",
+      name: "propertyIds",
+      minLength: "10",
       roles: [],
     },
     {
       label: "ES_SEARCH_APPLICATION_MOBILE_NO",
       name: "mobileNumber",
-      maxlength: 10,
+      type: "mobileNumber",
+      maxLength: 10,
+      minLength: 10,
       roles: [],
+      pattern: "[6-9][0-9]{9}",
+      errorMessages: {
+        pattern: "",
+        minLength: "",
+        maxLength: "",
+      },
     },
   ],
 };
@@ -35,9 +44,16 @@ const searchFieldsForSearch = {
     {
       label: "ES_SEARCH_APPLICATION_MOBILE_NO",
       name: "mobileNumber",
-      maxlength: 10,
-      pattern: "[6-9][0-9]{9}",
+      type: "mobileNumber",
+      maxLength: 10,
+      minLength: 10,
       roles: [],
+      pattern: "[6-9][0-9]{9}",
+      errorMessages: {
+        pattern: "",
+        minLength: "",
+        maxLength: "",
+      },
     },
   ],
 };

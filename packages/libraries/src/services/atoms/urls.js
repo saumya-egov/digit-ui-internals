@@ -45,6 +45,7 @@ const Urls = {
     generate_pdf: "/pdf-service/v1/_create",
     create_citizen_reciept: "/pg-service/transaction/v1/_create",
     update_citizen_reciept: "/pg-service/transaction/v1/_update",
+    search_bill: "/billing-service/bill/v2/_search",
   },
 
   pt: {
@@ -61,6 +62,12 @@ const Urls = {
   dss: {
     dashboardConfig: "/dashboard-analytics/dashboard/getDashboardConfig",
     getCharts: "/dashboard-analytics/dashboard/getChartV2",
+  },
+
+  mcollect: {
+    search: "/echallan-services/eChallan/v1/_search",
+    create: "/echallan-services/eChallan/v1/_create?",
+    fetch_bill: "/billing-service/bill/v2/_fetchbill?",
   },
 };
 

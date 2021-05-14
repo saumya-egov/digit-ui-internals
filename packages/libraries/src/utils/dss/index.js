@@ -1,3 +1,5 @@
+import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
+
 const amountFormatter = (value, denomination) => {
   const currencyFormatter = new Intl.NumberFormat("en-IN", { currency: "INR" });
   switch (denomination) {
@@ -37,4 +39,12 @@ export const getDuration = (startDate, endDate) => {
   if (noOfDays <= 14) {
     return "day";
   }
+};
+
+export const getInitialRange = () => {
+  const startDate = addMonths(startOfYear(new Date()), 3);
+  const endDate = addMonths(endOfYear(new Date()), 3);
+  const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
+  const duration = Digit.Utils.dss.getDuration(startDate, endDate);
+  return { startDate, endDate, title, duration };
 };

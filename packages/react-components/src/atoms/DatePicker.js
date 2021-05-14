@@ -27,13 +27,21 @@ const DatePicker = (props) => {
   return (
     <div style={{ position: "relative", width: "100%" }}>
       <React.Fragment>
-        <input type="text" value={getDatePrint()} readOnly className="employee-card-input" style={{ width: "calc(100%-62px)" }} />
+        <input
+          type="text"
+          disabled={props.disabled}
+          value={getDatePrint() ? getDatePrint() : ""}
+          readOnly
+          className="employee-card-input"
+          style={{ width: "calc(100%-62px)" }}
+        />
         <CalendarIcon style={{ right: "6px", zIndex: "10", top: 6, position: "absolute" }} />
         <input
           style={{ right: "6px", zIndex: "100", top: 6, position: "absolute", opacity: 0, width: "100%" }}
-          value={props.date}
+          value={props.date ? props.date : ""}
           type="date"
           ref={dateInp}
+          disabled={props.disabled}
           onChange={selectDate}
           defaultValue={props.defaultValue}
           min={props.min}

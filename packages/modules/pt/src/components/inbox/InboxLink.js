@@ -20,11 +20,13 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       roles: ["PT_CEMP"],
     },
     {
-      text: "ES_TITILE_SEARCH_APPLICATION",
+      text: "PT_SEARCH_PROPERTY",
       link: `/digit-ui/employee/pt/search`,
       businessService: "PT",
       roles: [],
     },
+    { text: "PT_REPORTS", hyperLink: true, link: "/employee/integration/dss/propertytax", roles: [], businessService: "PT" },
+    { text: "PT_DASHBOARD", link: "/digit-ui/employee/", roles: [], businessService: "PT" },
   ];
 
   const [links, setLinks] = useState([]);
@@ -35,7 +37,6 @@ const InboxLinks = ({ parentRoute, businessService }) => {
     let linksToShow = allLinks
       .filter((e) => e.businessService === businessService)
       .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
-    console.log(linksToShow, "inside the links");
     setLinks(linksToShow);
   }, []);
 

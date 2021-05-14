@@ -52,7 +52,7 @@ const CustomTable = ({ data, onSearch }) => {
         t={t}
         disableSort={false}
         autoSort={true}
-        initSortId="SN"
+        initSortId="S N "
         onSearch={onSearch}
         data={tableData}
         columns={tableColumns}

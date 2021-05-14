@@ -10,8 +10,25 @@ export const PaymentService = {
       auth: true,
       userService: true,
       params: { tenantId, ...filters },
+    })
+      .then((d) => {
+        console.log("from request fetchbill", d);
+        return d;
+      })
+      .catch((err) => {
+        console.log(err, "inside the catch block of payment");
+        if (err?.response?.data?.Errors?.[0]?.code === "EG_BS_BILL_NO_DEMANDS_FOUND") return { Bill: [] };
+        else throw err;
+      }),
+  searchBill: (tenantId, filters = {}) =>
+    Request({
+      url: Urls.payment.search_bill,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      params: { tenantId, ...filters },
     }),
-
   createReciept: (tenantId, details = {}) =>
     Request({
       url: Urls.payment.create_reciept,

@@ -13,6 +13,7 @@
   .switch-wrapper {
     display: flex;
     justify-content: space-between;
+    max-width: 200px;
 
     .radio-switch {
       display: none;
@@ -32,8 +33,55 @@
   }
 }
 
+.filter-close {
+  @apply flex justify-end;
+}
+
+.filter-header {
+  @apply flex;
+
+  p {
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 1;
+    margin: 0 12px 20px 8px;
+  }
+}
+
+.clearText {
+  display: none;
+}
+
 @screen dt {
   .filters-wrapper {
     display: flex;
+  }
+
+  .filter-close,
+  .filter-header {
+    display: none;
+  }
+
+  .clearText {
+    display: block;
+    text-align: right;
+    color: #f47738;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 780px) {
+  .filters-modal {
+    display: block;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    left: 0;
+    top: 77px;
+    padding: 16px;
+  }
+
+  .rdrDefinedRangesWrapper {
+    display: none;
   }
 }

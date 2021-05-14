@@ -35,7 +35,7 @@ const GenericChart = ({ header, className, caption, children, showSearch = false
   return (
     <Card className={`chart-item ${className}`}>
       <div className="chartHeader">
-        <CardLabel style={{ fontWeight: "bold", wordBreak: "break-all" }}>{`${t(header)}`}</CardLabel>
+        <CardLabel style={{ fontWeight: "bold" }}>{`${t(header)}`}</CardLabel>
         <div className="sideContent">
           {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
           {showDownload && <DownloadIcon className="mrlg" />}
