@@ -11,7 +11,7 @@ export const MCollectService = {
       userService: true,
       params: { tenantId, ...filters },
     }),
-    create: (details, tenantId) =>
+  create: (details, tenantId) =>
     Request({
       url: Urls.mcollect.create,
       data: details,
@@ -21,17 +21,14 @@ export const MCollectService = {
       auth: true,
       userService: true,
     }),
-    generateBill: (consumerCode,
-      tenantId,
-      businessService,
-      operation) =>
-      Request({
-        url: Urls.mcollect.fetch_bill,
-        data: {},
-        useCache: true,
-        method: "POST",
-        params:  { consumerCode, tenantId, businessService },
-        auth: true,
-        userService: true,
-      })
+  generateBill: (consumerCode, tenantId, businessService, operation) =>
+    Request({
+      url: Urls.mcollect.fetch_bill,
+      data: {},
+      useCache: true,
+      method: "POST",
+      params: { consumerCode, tenantId, businessService },
+      auth: true,
+      userService: true,
+    }),
 };

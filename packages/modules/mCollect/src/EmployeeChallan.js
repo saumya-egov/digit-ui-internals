@@ -61,11 +61,10 @@ const EmployeeChallan = (props) => {
               </StatusTable>
             </Card>
           </Card>
-          </Card>
-        </div>
-      </React.Fragment>
-    );
-  }
-
+        </Card>
+      </div>
+    </React.Fragment>
+  );
+};
 
 export default EmployeeChallan;

@@ -29,17 +29,12 @@ const MetricChartRow = ({ data }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
-  const requestDate = {
-    startDate: value?.range?.startDate.getTime(),
-    endDate: value?.range?.endDate.getTime(),
-    interval: "month",
-    title: "",
-  };
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
-    requestDate,
+    requestDate: value?.requestDate,
+    filters: value?.filters,
   });
 
   if (isLoading) {
@@ -57,7 +52,6 @@ const MetricChartRow = ({ data }) => {
 
 const MetricChart = ({ data }) => {
   const { charts } = data;
-
   return (
     <>
       {charts.map((chart, index) => (

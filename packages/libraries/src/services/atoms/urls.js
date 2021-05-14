@@ -45,7 +45,7 @@ const Urls = {
     generate_pdf: "/pdf-service/v1/_create",
     create_citizen_reciept: "/pg-service/transaction/v1/_create",
     update_citizen_reciept: "/pg-service/transaction/v1/_update",
-    search_bill: "/billing-service/bill/v2/_search"
+    search_bill: "/billing-service/bill/v2/_search",
   },
 
   pt: {
@@ -67,8 +67,8 @@ const Urls = {
   mcollect: {
     search: "/echallan-services/eChallan/v1/_search",
     create: "/echallan-services/eChallan/v1/_create?",
-    fetch_bill :"/billing-service/bill/v2/_fetchbill?"
-  }
+    fetch_bill: "/billing-service/bill/v2/_fetchbill?",
+  },
 };
 
 export default Urls;

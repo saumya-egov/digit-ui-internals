@@ -34,17 +34,12 @@ const CustomBarChart = ({
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const requestDate = {
-    startDate: value?.range?.startDate,
-    endDate: value?.range?.endDate,
-    interval: "month",
-    title: "",
-  };
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
-    requestDate,
+    requestDate: value?.requestDate,
+    filters: value?.filters,
   });
   if (isLoading) {
     return <Loader />;
@@ -55,9 +50,10 @@ const CustomBarChart = ({
         {showGrid && <CartesianGrid />}
         <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} />
         <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} padding={{ right: 40 }} />
-        <Bar dataKey={xDataKey}
+        <Bar
+          dataKey={xDataKey}
           fill={fillColor}
-          background={{ fill: "#D6D5D4", radius: 10  }}
+          background={{ fill: "#D6D5D4", radius: 10 }}
           label={<CustomLabel stroke={fillColor} />}
           radius={[10, 10, 10, 10]}
         />

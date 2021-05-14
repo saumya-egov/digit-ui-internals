@@ -19,4 +19,3 @@ export const Module = ({ deltaConfig = {}, stateCode, cityCode, moduleCode, user
     </Switch>
   );
 };
-

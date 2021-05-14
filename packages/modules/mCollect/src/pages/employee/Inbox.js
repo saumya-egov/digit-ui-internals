@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
-
 const Inbox = ({
   parentRoute,
   businessService = "PT",
@@ -49,8 +48,10 @@ const Inbox = ({
   //   middlewaresWf,
   //   middlewareSearch,
   // });
-  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { ...searchParams, ...paginationParams } });
-
+  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({
+    tenantId,
+    filters: { ...searchParams, ...paginationParams },
+  });
 
   let formedData = [];
   let res;
@@ -63,7 +64,7 @@ const Inbox = ({
       let challanNumbers = [];
       let challanNums = [];
 
-      data?.challans?.forEach(item => {
+      data?.challans?.forEach((item) => {
         challanNums = businessServiceMap[item.businessService] || [];
         challanNumbers = challanNums;
         challanNums.push(item.challanNo);
@@ -74,17 +75,17 @@ const Inbox = ({
       for (var key in businessServiceMap) {
         let consumerCodes = businessServiceMap[key].toString();
         res = await Digit.PaymentService.searchBill(tenantId, { consumerCode: consumerCodes, service: key });
-        processInstanceArray = processInstanceArray.concat(res.Bill)
+        processInstanceArray = processInstanceArray.concat(res.Bill);
         businessIdToOwnerMapping = {};
-        processInstanceArray.filter(
-          record => record.businessService
-        ).forEach(item => {
-          businessIdToOwnerMapping[item.consumerCode] = {
-            businessService: item.businessService,
-            totalAmount: item.totalAmount || 0,
-            dueDate: item?.billDetails[0]?.expiryDate
-          };
-        });
+        processInstanceArray
+          .filter((record) => record.businessService)
+          .forEach((item) => {
+            businessIdToOwnerMapping[item.consumerCode] = {
+              businessService: item.businessService,
+              totalAmount: item.totalAmount || 0,
+              dueDate: item?.billDetails[0]?.expiryDate,
+            };
+          });
       }
       setBusinessIdToOwnerMappings(businessIdToOwnerMapping);
     }
@@ -93,15 +94,15 @@ const Inbox = ({
     }
   }, [data]);
 
-  data?.challans?.map(data => {
+  data?.challans?.map((data) => {
     formedData.push({
       challanNo: data.challanNo,
       name: data.citizen.name,
       applicationStatus: data.applicationStatus,
       businessService: data.businessService,
       totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount,
-      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate
-    })
+      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate,
+    });
   });
 
   useEffect(() => {
@@ -150,7 +151,7 @@ const Inbox = ({
         maxlength: 10,
         pattern: "[6-9][0-9]{9}",
         title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
-      }
+      },
     ];
   };
 

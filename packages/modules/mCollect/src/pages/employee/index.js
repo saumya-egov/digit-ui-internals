@@ -60,22 +60,23 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute
             path={`${path}/inbox`}
             component={() => (
-              <Inbox parentRoute={path} businessService="PT" filterComponent="MCOLLECT_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
+              <Inbox
+                parentRoute={path}
+                businessService="PT"
+                filterComponent="MCOLLECT_INBOX_FILTER"
+                initialStates={inboxInitialState}
+                isInbox={true}
+              />
             )}
           />
-              <PrivateRoute
-            path={`${path}/new-application`}
-            component={() => (
-              <CreateChallen />
-            )}
-          />
+          <PrivateRoute path={`${path}/new-application`} component={() => <CreateChallen />} />
           <PrivateRoute
             path={`${path}/search`}
             component={() => (
               <Inbox parentRoute={path} businessService="PT" middlewareSearch={searchMW} initialStates={inboxInitialState} isInbox={false} />
             )}
           />
-          <PrivateRoute path={`${path}/acknowledgement`}   component={() => (<MCollectAcknowledgement/>)} />
+          <PrivateRoute path={`${path}/acknowledgement`} component={() => <MCollectAcknowledgement />} />
           <PrivateRoute path={`${path}/challansearch/:challanno`} component={() => <EmployeeChallan />} />
         </div>
       </React.Fragment>

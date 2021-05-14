@@ -42,19 +42,18 @@ const CreateChallen = ({ parentUrl }) => {
 
   function ChangesetToDate(value) {
     if (new Date(fromDate) < new Date(value)) {
-      setToDate(value)
+      setToDate(value);
     }
   }
   function setcategoriesType(categoryType) {
-
     setselectedCategoryType(categoryType);
   }
   function humanize(str) {
-    var frags = str.split('_');
+    var frags = str.split("_");
     for (let i = 0; i < frags.length; i++) {
       frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
     }
-    return frags.join('_');
+    return frags.join("_");
   }
   const [canSubmit, setSubmitValve] = useState(true);
   const [localities, setLocalities] = useState(fetchedLocalities);
@@ -66,8 +65,8 @@ const CreateChallen = ({ parentUrl }) => {
   const [TaxHeadMasterFields, setTaxHeadMasterFields] = useState([]);
   const [selectedLocality, setSelectedLocality] = useState(null);
   const [pincodeNotValid, setPincodeNotValid] = useState(false);
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
   const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
@@ -77,16 +76,20 @@ const CreateChallen = ({ parentUrl }) => {
   };
 
   useEffect(() => {
-    setAPIcategoriesType(selectedCategory?.child ? selectedCategory.child.map((ele => {
-      ele.code = 'BILLINGSERVICE_BUSINESSSERVICE_' + ele.code.split('.').join('_').toUpperCase();
-      return ele;
-    })) : []);
+    setAPIcategoriesType(
+      selectedCategory?.child
+        ? selectedCategory.child.map((ele) => {
+            ele.code = "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.split(".").join("_").toUpperCase();
+            return ele;
+          })
+        : []
+    );
   }, [selectedCategory]);
 
   useEffect(() => {
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
-        return ele.service == selectedCategory.code + '.' + humanize(selectedCategoryType.code.split(selectedCategory.code + '_')[1].toLowerCase());
+        return ele.service == selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase());
       })
     );
   }, [selectedCategoryType]);
@@ -103,7 +106,7 @@ const CreateChallen = ({ parentUrl }) => {
   }, [tenantId]);
 
   useEffect(() => {
-    if (selectedCategory && selectedCategoryType && fromDate != '' && toDate != '' && selectedLocality != null) {
+    if (selectedCategory && selectedCategoryType && fromDate != "" && toDate != "" && selectedLocality != null) {
       setSubmitValve(true);
     } else {
       setSubmitValve(false);
@@ -131,9 +134,9 @@ const CreateChallen = ({ parentUrl }) => {
     const Challan = {
       citizen: {
         name: data.name,
-        mobileNumber: data.mobileNumber
+        mobileNumber: data.mobileNumber,
       },
-      businessService: selectedCategory.code + '.' + humanize(selectedCategoryType.code.split(selectedCategory.code + '_')[1].toLowerCase()),
+      businessService: selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase()),
       consumerType: selectedCategory.code,
       description: data.comments,
       taxPeriodFrom: Date.parse(fromDate),
@@ -145,18 +148,21 @@ const CreateChallen = ({ parentUrl }) => {
         street: data.street,
         locality: { code: selectedLocality.code },
       },
-      amount: childRef.current.submit()
-    }
+      amount: childRef.current.submit(),
+    };
     Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
       if (result.challans && result.challans.length > 0) {
         const challan = result.challans[0];
-        Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, 'challan').then((response) => {
+        Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
           if (response.Bill && response.Bill.length > 0) {
-            history.push(`/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`, { from: url });
+            history.push(
+              `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`,
+              { from: url }
+            );
           }
-        })
+        });
       }
-    })
+    });
   };
   const config = [
     {
@@ -193,8 +199,8 @@ const CreateChallen = ({ parentUrl }) => {
           label: t("UC_DOOR_NO_LABEL"),
           type: "text",
           populators: {
-            name: "doorNo"
-          }
+            name: "doorNo",
+          },
         },
         {
           label: t("UC_BLDG_NAME_LABEL"),
@@ -294,16 +300,16 @@ const CreateChallen = ({ parentUrl }) => {
           type: "date",
           name: "fromDate",
           isMandatory: true,
-          populators: <DatePicker date={fromDate ? fromDate : ''} onChange={setFromDate} />,
+          populators: <DatePicker date={fromDate ? fromDate : ""} onChange={setFromDate} />,
         },
         {
           label: t("UC_TO_DATE_LABEL"),
           type: "date",
           name: "toDate",
-          disable: fromDate == '' ? true : false,
+          disable: fromDate == "" ? true : false,
           isMandatory: true,
           dependency: fromDate ? true : false,
-          populators: <DatePicker date={toDate ? toDate : ''} min={fromDate} onChange={ChangesetToDate} />,
+          populators: <DatePicker date={toDate ? toDate : ""} min={fromDate} onChange={ChangesetToDate} />,
         },
         {
           isMandatory: false,

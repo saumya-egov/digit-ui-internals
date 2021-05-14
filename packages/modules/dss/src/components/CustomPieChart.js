@@ -12,23 +12,18 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
-  const requestDate = {
-    startDate: value?.range?.startDate.getTime(),
-    endDate: value?.range?.endDate.getTime(),
-    interval: "month",
-    title: "",
-  };
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
-    requestDate,
+    requestDate: value?.requestDate,
+    filters: value?.filters,
   });
 
   const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`PROPERTYTYPE_MASTERS_${value}`)}</span>;
 
   const renderCustomLabel = (args) => {
-    const { value, endAngle, startAngle } = args
+    const { value, endAngle, startAngle } = args;
     const diffAngle = endAngle - startAngle;
     if (diffAngle < 7) {
       return null;
@@ -61,7 +56,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
             <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip formatter={(value, name) => ([value, t(name)])} />
+        <Tooltip formatter={(value, name) => [value, t(name)]} />
         <Legend layout="vertical" align="bottom" iconType="circle" formatter={renderLegend} />
       </PieChart>
     </ResponsiveContainer>

@@ -1,27 +1,22 @@
 import React, { forwardRef, useRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import {
-  CardLabel,
-  TextArea,
-  TextInput,
-  LabelFieldPair,
-} from "@egovernments/digit-ui-react-components";
+import { CardLabel, TextArea, TextInput, LabelFieldPair } from "@egovernments/digit-ui-react-components";
 const TaxForm = forwardRef((props, ref) => {
   const refContainer = useRef(null);
-  const { register,  getValues } = useForm();
+  const { register, getValues } = useForm();
   const { t } = useTranslation();
 
   useImperativeHandle(ref, () => ({
-    submit(){
-      const res =  getValues();
-     const  amount = []
-     const key = Object.keys(res)[0];
-     Object.keys(Object.values(res)[0]).forEach((ele=> {
-       amount.push({taxHeadCode:key+'.'+ele, amount: res[key] ? res[key][ele] ? res[key][ele] : 0 : undefined})
-    }))
-    return amount;
-   }
+    submit() {
+      const res = getValues();
+      const amount = [];
+      const key = Object.keys(res)[0];
+      Object.keys(Object.values(res)[0]).forEach((ele) => {
+        amount.push({ taxHeadCode: key + "." + ele, amount: res[key] ? (res[key][ele] ? res[key][ele] : 0) : undefined });
+      });
+      return amount;
+    },
   }));
 
   const fieldSelector = (type, populators) => {
@@ -40,7 +35,7 @@ const TaxForm = forwardRef((props, ref) => {
     }
   };
 
-  return  props
+  return props
     ? props.data.length > 0 &&
         props.data
           .map((ele) => ({
@@ -52,7 +47,6 @@ const TaxForm = forwardRef((props, ref) => {
           .map((field, index) => {
             return (
               <React.Fragment key={index}>
-
                 <LabelFieldPair>
                   <CardLabel>
                     {field.label}
@@ -60,10 +54,9 @@ const TaxForm = forwardRef((props, ref) => {
                   </CardLabel>
                   <div className="field">{fieldSelector(field.type, field.populators)}</div>
                 </LabelFieldPair>
-
               </React.Fragment>
             );
           })
-    : []
+    : [];
 });
 export default TaxForm;

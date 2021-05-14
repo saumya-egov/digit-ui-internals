@@ -52,14 +52,17 @@ export const FormComposer = (props) => {
                   {errors[field.populators.name] && (field.populators?.validate ? errors[field.populators.validate] : true) && (
                     <CardLabelError>{field.populators.error}</CardLabelError>
                   )}
-                  {field.label ? <LabelFieldPair>
-                    <CardLabel>
-                      {field.label}
-                      {field.isMandatory ? " * " : null}
-                    </CardLabel>
+                  {field.label ? (
+                    <LabelFieldPair>
+                      <CardLabel>
+                        {field.label}
+                        {field.isMandatory ? " * " : null}
+                      </CardLabel>
+                      <div className="field">{fieldSelector(field.type, field.populators)}</div>
+                    </LabelFieldPair>
+                  ) : (
                     <div className="field">{fieldSelector(field.type, field.populators)}</div>
-                  </LabelFieldPair> : <div className="field">{fieldSelector(field.type, field.populators)}</div>
-            }
+                  )}
                 </React.Fragment>
               );
             })}

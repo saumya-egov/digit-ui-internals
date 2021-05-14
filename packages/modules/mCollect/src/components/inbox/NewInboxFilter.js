@@ -149,7 +149,7 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props })
                 }}
               />
             </div>
-            
+
             <div>
               <SubmitBar
                 disabled={_.isEqual(_searchParams, searchParams)}

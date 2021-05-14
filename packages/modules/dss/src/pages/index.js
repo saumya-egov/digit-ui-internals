@@ -1,5 +1,6 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
+import { useReactToPrint } from "react-to-print";
 import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
 import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
@@ -17,10 +18,19 @@ const getInitialRange = () => {
 const DashBoard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const [filters, setFilters] = useState({
-    denomination: "Unit",
-    range: getInitialRange(),
-  });
+  const [filters, setFilters] = useState((data) => ({
+    denomination: data?.denomination || "Unit",
+    range: data?.range || getInitialRange(),
+    requestDate: {
+      startDate: data?.range?.startDate.getTime() || getInitialRange().startDate.getTime(),
+      endDate: data?.range?.endDate.getTime() || getInitialRange().endDate.getTime(),
+      interval: "month",
+      title: "",
+    },
+    filters: {
+      tenantId: data?.filters?.tenantId || [],
+    },
+  }));
   const provided = useMemo(
     () => ({
       value: filters,
@@ -36,7 +46,13 @@ const DashBoard = () => {
   // const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
-  // console.log("find all data here", dashData, screenConfig);
+  const { data: ulbTenants } = Digit.Hooks.useModuleTenants("FSM");
+  const fullPageRef = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => fullPageRef.current,
+  });
+
   if (isLoading) {
     return <Loader />;
   }
@@ -44,19 +60,19 @@ const DashBoard = () => {
   const dashboardConfig = response?.responseData;
   return (
     <FilterContext.Provider value={provided}>
-      <div className="chart-wrapper">
+      <div className="chart-wrapper" ref={fullPageRef}>
         <div className="options">
           <div className="mrlg">
             <ShareIcon className="mrsm" />
             {t(`ES_DSS_SHARE`)}
           </div>
-          <div className="mrsm">
+          <div className="mrsm" onClick={handlePrint}>
             <DownloadIcon className="mrsm" />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>
         <Header>{t(dashboardConfig?.[0]?.name)}</Header>
-        <Filters isOpen={isFilterModalOpen} closeFilters={() => setIsFilterModalOpen(false)} />
+        <Filters t={t} ulbTenants={ulbTenants} isOpen={isFilterModalOpen} closeFilters={() => setIsFilterModalOpen(false)} />
         <div className="options-m">
           <div>
             <FilterIcon onClick={() => setIsFilterModalOpen(!isFilterModalOpen)} style />
