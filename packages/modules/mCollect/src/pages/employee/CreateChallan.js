@@ -73,13 +73,11 @@ const CreateChallen = ({ parentUrl }) => {
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
   const selectCity = async (city) => {
-    console.log(city)
     // if (selectedCity?.code !== city.code) {}
-    return city
+    return;
   };
 
   useEffect(() => {
-    console.log(selectedCity, getCities()[0])
     setAPIcategoriesType(selectedCategory?.child ? selectedCategory.child.map((ele => {
       ele.code = 'BILLINGSERVICE_BUSINESSSERVICE_' + ele.code.split('.').join('_').toUpperCase();
       return ele;
