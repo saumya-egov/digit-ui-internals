@@ -6,6 +6,7 @@ import MCollectAcknowledgement from "./EmployeeChallanAcknowledgement";
 import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import EmployeeChallan from "../../EmployeeChallan";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();

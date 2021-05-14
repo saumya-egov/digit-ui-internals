@@ -109,7 +109,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
     }
   ];
 
-  const columns = React.useMemo(() => (props.isSearch ? tableConfig.searchColumns(props) : tableConfig.inboxColumns(props) || []), []);
+  const columns = React.useMemo(() => (props.isSearch ? tableConfig.searchColumns(props) : inboxColumns(props) || []), []);
 
   useEffect(() => {
     console.log(data, columns, "inside desktop inbox....");
