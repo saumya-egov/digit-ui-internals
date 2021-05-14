@@ -12,11 +12,7 @@ export const MCollectModule = ({ userType, tenants }) => {
   // addComponentsToRegistry();
   console.log(moduleCode, "module integrated");
 
-<<<<<<< HEAD
   Digit.SessionStorage.set("MCollect_TENANTS", tenants);
-=======
-  // Digit.SessionStorage.set("PT_TENANTS", tenants);
->>>>>>> 46b6d1720d31e619166d5311a6711246906eaaeb
 
   const { path, url } = useRouteMatch();
 
