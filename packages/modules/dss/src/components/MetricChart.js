@@ -5,11 +5,15 @@ import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import FilterContext from "./FilterContext";
 
 const MetricData = ({ data, code }) => {
-  const { value } = useContext(FilterContext)
+  const { value } = useContext(FilterContext);
   return (
     <div>
       <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>
-        {code === "citizenAvgRating" ? <Rating currentRating={data?.headerValue} styles={{ width: "unset" }} starStyles={{ width: "25px" }} /> : Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)}
+        {code === "citizenAvgRating" ? (
+          <Rating currentRating={Math.round(data?.headerValue)} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
+        ) : (
+          Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)
+        )}
       </p>
       {data.insight && (
         <div>
@@ -26,8 +30,8 @@ const MetricChartRow = ({ data }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const requestDate = {
-    startDate: value?.range?.startDate,
-    endDate: value?.range?.endDate,
+    startDate: value?.range?.startDate.getTime(),
+    endDate: value?.range?.endDate.getTime(),
     interval: "month",
     title: "",
   };

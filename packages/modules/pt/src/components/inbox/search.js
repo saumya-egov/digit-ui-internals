@@ -1,15 +1,51 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker } from "@egovernments/digit-ui-react-components";
+import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker, MobileNumber } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+// import MobileNumber from "@egovernments/digit-ui-react-components/src/atoms/MobileNumber";
 // import _ from "lodash";
+
+const fieldComponents = {
+  date: DatePicker,
+  mobileNumber: MobileNumber,
+};
 
 const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams, isInboxPage, defaultSearchParams }) => {
   const { t } = useTranslation();
-  const { register, handleSubmit, reset, watch, control } = useForm({
+  const { register, handleSubmit, reset, watch, control, setError, clearErrors, formState } = useForm({
     defaultValues: searchParams,
   });
+
+  const form = watch();
+
   const mobileView = innerWidth <= 640;
+
+  useEffect(() => {
+    // setError("mobileNumber", { type: "maxLength", message: "new" });
+    console.log(formState?.dirtyFields, "inside form");
+  }, [formState, form]);
+
+  useEffect(() => {
+    searchFields.forEach(({ pattern, name, maxLength, minLength, errorMessages, ...el }) => {
+      const value = form[name];
+      const error = formState.errors[name];
+      if (pattern) {
+        if (!new RegExp(pattern).test(value) && !error)
+          setError(name, { type: "pattern", message: errorMessages?.pattern || `PATTERN_${name.toUpperCase()}_FAILED` });
+        else if (new RegExp(pattern).test(value) && error?.type === "pattern") clearErrors([name]);
+      }
+      if (minLength) {
+        if (value?.length < minLength && !error)
+          setError(name, { type: "minLength", message: errorMessages?.minLength || `MINLENGTH_${name.toUpperCase()}_FAILED` });
+        else if (value?.length >= minLength && error?.type === "minLength") clearErrors([name]);
+      }
+      if (maxLength) {
+        if (value?.length > maxLength && !error)
+          setError(name, { type: "maxLength", message: errorMessages?.maxLength || `MAXLENGTH_${name.toUpperCase()}_FAILED` });
+        else if (value?.length <= maxLength && error?.type === "maxLength") clearErrors([name]);
+      }
+    });
+  }, [form, formState, setError, clearErrors]);
 
   // console.log(_.isEqual(defaultSearchParams, searchParams), { defaultSearchParams, searchParams }, "params are defaulted");
 
@@ -68,23 +104,52 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
               {searchFields
                 ?.filter((e) => true)
                 ?.map((input, index) => (
-                  <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
-                    <Label>{input.label}</Label>
-                    {input.type !== "date" ? (
-                      <TextInput {...input} inputRef={register} watch={watch} shouldUpdate={true} />
-                    ) : (
-                      <Controller
-                        render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
-                        name={input.name}
-                        control={control}
-                        defaultValue={null}
-                      />
-                    )}{" "}
-                  </span>
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
+                      <Label>{input.label}</Label>
+                      {!input.type ? (
+                        <Controller
+                          render={(props) => {
+                            return <TextInput onChange={props.onChange} value={props.value} />;
+                          }}
+                          name={input.name}
+                          control={control}
+                          defaultValue={""}
+                        />
+                      ) : (
+                        <Controller
+                          render={(props) => {
+                            const Comp = fieldComponents?.[input.type];
+                            return <Comp onChange={props.onChange} value={props.value} />;
+                          }}
+                          name={input.name}
+                          control={control}
+                          defaultValue={""}
+                        />
+                      )}
+                    </span>
+                    {formState?.dirtyFields?.[input.name] ? (
+                      <span style={{ fontWeight: "700", color: "rgba(212, 53, 28)", paddingLeft: "8px" }} className="inbox-search-form-error">
+                        {formState?.errors?.[input.name]?.message}
+                      </span>
+                    ) : null}
+                  </div>
                 ))}
-              {type === "desktop" && !mobileView && <SubmitBar className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />}
+              {type === "desktop" && !mobileView && !isInboxPage && <SubmitBar className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />}
             </div>
-            {type === "desktop" && !mobileView && <span className="clear-search">{clearAll()}</span>}
+            {type === "desktop" && !mobileView && !isInboxPage && <span className="clear-search">{clearAll()}</span>}
+            {isInboxPage && (
+              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
+                {type === "desktop" && !mobileView && (
+                  <span style={{ paddingTop: "9px" }} className="clear-search">
+                    {clearAll()}
+                  </span>
+                )}
+                {type === "desktop" && !mobileView && (
+                  <SubmitBar style={{ marginTop: "unset" }} className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />
+                )}
+              </div>
+            )}
           </div>
         </div>
         {(type === "mobile" || mobileView) && (

@@ -4,16 +4,18 @@ import { stringReplaceAll } from "../utils";
 
 const Units = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [units, setUnits] = useState([
-    {
-      key: 1,
-      floorNo: null,
-      occupancyType: null,
-      tenantId,
-      usageCategory: null,
-      builtUpArea: "",
-    },
-  ]);
+  const [units, setUnits] = useState(
+    formData?.units || [
+      {
+        key: 1,
+        floorNo: null,
+        occupancyType: null,
+        tenantId,
+        usageCategory: null,
+        builtUpArea: "",
+      },
+    ]
+  );
   const stateId = tenantId.split(".")[0];
   const [focusIndex, setFocusIndex] = useState(-1);
 
@@ -25,7 +27,7 @@ const Units = ({ t, config, onSelect, userType, formData }) => {
 
   function getfloorlistdata(floorlist) {
     for (i = 0; Array.isArray(floorlist) && i < floorlist.length; i++) {
-      floorListData.push({ i18nKey: "PROPERTYTAX_FLOOR_" + stringReplaceAll(floorlist[i].code,"-", "_"), code: floorlist[i].code });
+      floorListData.push({ i18nKey: "PROPERTYTAX_FLOOR_" + stringReplaceAll(floorlist[i].code, "-", "_"), code: floorlist[i].code });
     }
     return floorListData;
   }
@@ -153,6 +155,7 @@ function Unit({
   };
 
   const selectSubUsageType = (value) => {
+    console.log("%c 🐑: selectSubUsageType -> value ", "font-size:16px;background-color:#928c29;color:white;", value);
     setUnits((pre) => pre.map((item) => (item.key === unit.key ? { ...item, usageCategory: value } : item)));
   };
 

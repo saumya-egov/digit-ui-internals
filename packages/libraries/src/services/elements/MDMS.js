@@ -379,6 +379,22 @@ const getDocumentRequiredScreenCategory = (tenantId, moduleCode) => ({
   },
 });
 
+const getDefaultMapConfig = (tenantId, moduleCode) => ({
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "MapConfig",
+          },
+        ],
+      },
+    ],
+  },
+});
+
 const getUsageCategoryList = (tenantId, moduleCode, type) => ({
   type,
   details: {
@@ -629,6 +645,15 @@ const getDocumentRequiredScreen = (MdmsRes) => {
   });
 };
 
+const getMapConfig = (MdmsRes) => {
+  MdmsRes["PropertyTax"].MapConfig.filter((MapConfig) => MapConfig).map((MapData) => {
+    return {
+      ...MapConfig,
+      defaultconfig: MapData.defaultConfig,
+    };
+  });
+};
+
 const getUsageCategory = (MdmsRes) =>
   MdmsRes["PropertyTax"].UsageCategory.filter((UsageCategory) => UsageCategory.active).map((UsageCategorylist) => {
     return {
@@ -730,6 +755,8 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return getSubPropertyOwnerShipCategory(MdmsRes);
     case "Documents":
       return getDocumentRequiredScreen(MdmsRes);
+    case "MapConfig":
+      return getMapConfig(MdmsRes);
     case "UsageCategory":
       return getUsageCategory(MdmsRes);
     case "PTPropertyType":
@@ -926,6 +953,9 @@ export const MdmsService = {
   },
   getDocumentRequiredScreen: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getDocumentRequiredScreenCategory(tenantId, moduleCode), moduleCode);
+  },
+  getMapConfig: (tenantId, moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getDefaultMapConfig(tenantId, moduleCode), moduleCode);
   },
   getUsageCategory: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getUsageCategoryList(tenantId, moduleCode), moduleCode);

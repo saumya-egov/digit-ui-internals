@@ -65,11 +65,20 @@
 @import "./pages/employee/inbox.scss";
 @import "./pages/employee/response.scss";
 @import "./pages/employee/form-fields.scss";
+@import "./pages/employee/scroll-table.scss";
 
 @import "./pages/citizen/payment/payment-type.scss";
 
 .dark {
   @apply text-text-primary;
+}
+
+.mrlg{
+  @apply mr-lg
+}
+
+.mrsm{
+  @apply mr-sm
 }
 
 .home-link {

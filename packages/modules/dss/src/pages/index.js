@@ -7,8 +7,8 @@ import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
 
 const getInitialRange = () => {
-  const startDate = getTime(addMonths(startOfYear(new Date()), 3));
-  const endDate = getTime(addMonths(endOfYear(new Date()), 3));
+  const startDate = addMonths(startOfYear(new Date()), 3);
+  const endDate = addMonths(endOfYear(new Date()), 3);
   const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, title, duration };
@@ -28,6 +28,7 @@ const DashBoard = () => {
     }),
     [filters]
   );
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const stateCode = tenantId.split(".")[0];
   const moduleCode = "fsm";
   // const moduleCode = "propertytax";
@@ -45,33 +46,34 @@ const DashBoard = () => {
     <FilterContext.Provider value={provided}>
       <div className="chart-wrapper">
         <div className="options">
-          <div>
-            <ShareIcon styles={{ marginRight: "8px" }} />
+          <div className="mrlg">
+            <ShareIcon className="mrsm" />
             {t(`ES_DSS_SHARE`)}
           </div>
-          <div>
-            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+          <div className="mrsm">
+            <DownloadIcon className="mrsm" />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>
         <Header>{t(dashboardConfig?.[0]?.name)}</Header>
-        <Filters />
+        <Filters isOpen={isFilterModalOpen} closeFilters={() => setIsFilterModalOpen(false)} />
         <div className="options-m">
           <div>
-            <FilterIcon styles={{ marginRight: "8px" }} />
+            <FilterIcon onClick={() => setIsFilterModalOpen(!isFilterModalOpen)} style />
           </div>
           <div>
-            <ShareIcon styles={{ marginRight: "8px" }} />
+            <ShareIcon />
             {t(`ES_DSS_SHARE`)}
           </div>
           <div>
-            <DownloadIcon styles={{ marginRight: "8px", marginLeft: "20px" }} />
+            <DownloadIcon />
             {t(`ES_DSS_DOWNLOAD`)}
           </div>
         </div>
-        {dashboardConfig?.[0]?.visualizations.map((row, key) => (
-          <Layout rowData={row} key={key} />
-        ))}
+        {dashboardConfig?.[0]?.visualizations.map((row, key) => {
+          if (row.row === 4) return null;
+          return <Layout rowData={row} key={key} />;
+        })}
       </div>
     </FilterContext.Provider>
   );

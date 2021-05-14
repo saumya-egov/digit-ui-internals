@@ -92,13 +92,9 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
     return inputs?.map((input, index) => {
       return (
         <LabelFieldPair key={index}>
-          <CardLabel className="card-label-smaller">
-            {t(input.label)}
-            {config.isMandatory ? " * " : null}
-          </CardLabel>
+          <CardLabel className="card-label-smaller">{t(input.label)}</CardLabel>
           <Dropdown
             className="form-field"
-            isMandatory={config.isMandatory}
             selected={usageCategoryMajorMenu(usagecat)?.length === 1 ? usageCategoryMajorMenu(usagecat)[0] : usageCategoryMajor}
             disable={usageCategoryMajorMenu(usagecat)?.length === 1}
             option={usageCategoryMajorMenu(usagecat)}
@@ -114,7 +110,7 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData }) => {
   return (
     <React.Fragment>
       <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!usageCategoryMajor}>
-        <div style={cardBodyStyle}>
+        <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 30em)" }}>
           <RadioButtons
             t={t}
             optionsKey="i18nKey"

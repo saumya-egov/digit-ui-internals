@@ -4,14 +4,14 @@ import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { UpwardArrow, TextInput, Loader, Table } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
-const CustomTable = ({ data }) => {
+const CustomTable = ({ data, onSearch }) => {
   const { id } = data;
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const requestDate = {
-    startDate: value?.range?.startDate,
-    endDate: value?.range?.endDate,
+    startDate: value?.range?.startDate.getTime(),
+    endDate: value?.range?.endDate.getTime(),
     interval: "month",
     title: "",
   };
@@ -55,6 +55,10 @@ const CustomTable = ({ data }) => {
       <Table
         className="customTable"
         t={t}
+        disableSort={false}
+        autoSort={true}
+        initSortId="S N "
+        onSearch={onSearch}
         data={tableData}
         columns={tableColumns}
         getCellProps={(cellInfo) => {

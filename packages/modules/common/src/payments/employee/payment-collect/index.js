@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { RadioButtons, FormComposer, Dropdown, CardSectionHeader, Loader, Toast } from "@egovernments/digit-ui-react-components";
+import { RadioButtons, FormComposer, Dropdown, CardSectionHeader, Loader, Toast, Card } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { useCardPaymentDetails } from "./card";
 import { useChequeDetails, ChequeDetailsComponent } from "./cheque";
 import isEqual from "lodash/isEqual";
+import BillDetails, { BillDetailsFormConfig } from "./billDetails";
 
 export const CollectPayment = (props) => {
   // const { formData, addParams } = props;
-  props.setLink("Collect Payment");
   const { t } = useTranslation();
   const history = useHistory();
   const queryClient = useQueryClient();
@@ -22,7 +22,6 @@ export const CollectPayment = (props) => {
 
   const { cardConfig } = useCardPaymentDetails(props, t);
   const { chequeConfig, date } = useChequeDetails(props, t);
-  const additionalCharges = getAdditionalCharge() || [];
 
   const [formState, setFormState] = useState({});
   const [toast, setToast] = useState(null);
@@ -41,6 +40,10 @@ export const CollectPayment = (props) => {
     CHEQUE: chequeConfig,
     CARD: cardConfig,
   };
+
+  useEffect(() => {
+    props.setLink("Collect Payment");
+  }, []);
 
   const getPaymentModes = () => defaultPaymentModes;
   const paidByMenu = [{ name: t("COMMON_OWNER") }, { name: t("COMMON_OTHER") }];
@@ -108,21 +111,6 @@ export const CollectPayment = (props) => {
     }
   };
 
-  function getAdditionalCharge() {
-    const billAccountDetails = bill?.billDetails
-      ?.map((billDetail) => {
-        return billDetail.billAccountDetails;
-      })
-      ?.flat();
-
-    return billAccountDetails?.map((billAccountDetail) => {
-      return {
-        label: t(billAccountDetail.taxHeadCode),
-        populators: <div style={{ marginBottom: 0, textAlign: "right" }}>₹ {billAccountDetail.amount}</div>,
-      };
-    });
-  }
-
   useEffect(() => {
     document?.getElementById("paymentInfo")?.scrollIntoView({ behavior: "smooth" });
     document?.querySelector("#paymentInfo + .label-field-pair input")?.focus();
@@ -132,10 +120,9 @@ export const CollectPayment = (props) => {
     {
       head: t("COMMON_PAYMENT_HEAD"),
       body: [
-        ...additionalCharges,
         {
           label: t("PAY_TOTAL_AMOUNT"),
-          populators: <CardSectionHeader style={{ marginBottom: 0, textAlign: "right" }}> {`₹ ${bill.totalAmount}`} </CardSectionHeader>,
+          populators: <CardSectionHeader style={{ marginBottom: 0, textAlign: "right" }}> {`₹ ${bill?.totalAmount}`} </CardSectionHeader>,
         },
       ],
     },
@@ -235,7 +222,10 @@ export const CollectPayment = (props) => {
     payerMobile: bill?.mobileNumber || formState?.payerMobile || "",
   });
 
-  const getFormConfig = () => config.concat(formConfigMap[formState?.paymentMode?.code] || []);
+  const getFormConfig = () => {
+    const conf = config.concat(formConfigMap[formState?.paymentMode?.code] || []);
+    return BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf);
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -243,6 +233,9 @@ export const CollectPayment = (props) => {
 
   return (
     <React.Fragment>
+      {/* <Card>
+        <BillDetails {...{ consumerCode, bill, businessService }} />
+      </Card> */}
       <FormComposer
         cardStyle={{ paddingBottom: "100px" }}
         heading={t("PAYMENT_COLLECT")}

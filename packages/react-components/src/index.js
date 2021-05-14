@@ -77,6 +77,7 @@ import {
   UpwardArrow,
   PropertyHouse,
   ShareIcon,
+  Calender,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -222,4 +223,5 @@ export {
   FilterIcon,
   PrintIcon,
   ShareIcon,
+  Calender,
 };

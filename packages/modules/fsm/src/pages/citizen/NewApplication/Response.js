@@ -52,7 +52,7 @@ const Response = ({ data, onSuccess }) => {
             city: city.name,
             pincode,
             locality: {
-              code: locality.code.split("_").pop(),
+              code: locality.code,
               name: locality.name,
             },
             geoLocation: {

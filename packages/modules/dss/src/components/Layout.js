@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import CustomAreaChart from "./CustomAreaChart";
 import CustomBarChart from "./CustomBarChart";
 import CustomHorizontalBarChart from "./CustomHorizontalBarChart";
@@ -11,18 +11,20 @@ import Summary from "./Summary";
 let index = 1;
 
 const Layout = ({ rowData }) => {
+  const [searchQuery, onSearch] = useState();
+
   const renderChart = (chart, key) => {
     switch (chart.chartType) {
       case "table":
-        return <CustomTable data={chart} key={key} />;
+        return <CustomTable data={chart} key={key} onSearch={searchQuery} />;
       case "donut":
         return <CustomPieChart data={chart} key={key} />;
       case "line":
         return <CustomAreaChart data={chart} />;
       case "horizontalBar":
         return <CustomHorizontalBarChart data={chart} />;
-      default:
-        return <CustomTable />;
+      case "bar":
+        return <CustomHorizontalBarChart data={chart} />;
     }
   };
 
@@ -41,6 +43,7 @@ const Layout = ({ rowData }) => {
             showDownload={visualizer?.charts?.[0].chartType === "table"}
             showSearch={visualizer?.charts?.[0].chartType === "table"}
             className={visualizer?.charts?.[0].chartType === "table" && "fullWidth"}
+            onChange={(e) => onSearch(e.target.value)}
           >
             {/* {visualizer.charts.map((chart, key) => renderChart(chart, key))} */}
             {renderChart(visualizer?.charts?.[0])}
