@@ -8,19 +8,19 @@ const InboxLinks = ({ parentRoute, businessService }) => {
 
   const allLinks = [
     {
-      text: "ES_TITLE_NEW_REGISTRATION",
+      text: "UC_GENERATE_NEW_CHALLAN",
       link: "/digit-ui/employee/pt/new-application",
       businessService: "PT",
       roles: ["PT_DOC_VERIFIER"],
     },
     {
-      text: "ES_TITLE_NEW_REGISTRATION",
+      text: "UC_REPORT",
       link: "/digit-ui/employee/pt/new-application",
       businessService: "PT",
       roles: ["PT_CEMP"],
     },
     {
-      text: "ES_TITILE_SEARCH_APPLICATION",
+      text: "UC_DASHBOARD",
       link: `/digit-ui/employee/pt/search`,
       businessService: "PT",
       roles: [],
