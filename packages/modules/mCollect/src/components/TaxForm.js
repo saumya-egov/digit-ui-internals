@@ -2,16 +2,9 @@ import React, { forwardRef, useRef, useImperativeHandle } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import {
-  BreakLine,
-  Card,
   CardLabel,
-  CardLabelError,
-  CardSubHeader,
-  CardSectionHeader,
   TextArea,
   TextInput,
-  ActionBar,
-  SubmitBar,
   LabelFieldPair,
 } from "@egovernments/digit-ui-react-components";
 const TaxForm = forwardRef((props, ref) => {
@@ -21,7 +14,6 @@ const TaxForm = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     submit(){
-      console.log('function called', getValues())
       const res =  getValues();
      const  amount = []
      const key = Object.keys(res)[0];
@@ -56,7 +48,6 @@ const TaxForm = forwardRef((props, ref) => {
             populators: { name: ele.name, validation: { required: ele.isRequired } },
           }))
           .map((field, index) => {
-            console.log(field);
             return (
               <React.Fragment key={index}>
 

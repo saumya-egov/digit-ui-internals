@@ -1,7 +1,8 @@
 import React from "react";
 import { MCollectLinks } from "../../Module";
 import Inbox from "./Inbox";
-import CreateChallen from "./CreateChallan"
+import CreateChallen from "./CreateChallan";
+import MCollectAcknowledgement from "./EmployeeChallanAcknowledgement";
 import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
@@ -73,9 +74,7 @@ const EmployeeApp = ({ path, url, userType }) => {
               <Inbox parentRoute={path} businessService="PT" middlewareSearch={searchMW} initialStates={inboxInitialState} isInbox={false} />
             )}
           />
-          <Route path={`${path}/acknowledgement`}>
-        <PTAcknowledgement data={params} onSuccess={onSuccess} />
-      </Route>
+          <PrivateRoute path={`${path}/acknowledgement`}   component={() => (<MCollectAcknowledgement/>)} />
         </div>
       </React.Fragment>
     </Switch>

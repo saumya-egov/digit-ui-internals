@@ -16,33 +16,7 @@ export const setServiceCategory = (businessServiceData, dispatch, state, setCate
       set(nestedServiceData, `${item.code}`, item);
     }
   });
-  // console.log(Object.values(nestedServiceData))
 
   let serviceCategories = Object.values(nestedServiceData).filter((item) => item.code);
-  console.log(serviceCategories);
   return serviceCategories;
-  // setCategory&&dispatch(
-  //   prepareFinalObject(
-  //     "applyScreenMdmsData.serviceCategories",
-  //     serviceCategories
-  //   )
-  // );
-  // const editingMode = get(
-  //   state.screenConfiguration,
-  //   "preparedFinalObject.Challan[0].id",
-  //   null
-  // );
-
-  // dispatch(
-  //   handleField(
-  //     "newCollection",
-  //     "components.div.children.newCollectionServiceDetailsCard.children.cardContent.children.searchContainer.children.serviceType",
-  //     "props.value",
-  //     get(
-  //       state.screenConfiguration,
-  //       "preparedFinalObject.Challan[0].serviceType",
-  //       null
-  //     )
-  //   )
-  // );
 };

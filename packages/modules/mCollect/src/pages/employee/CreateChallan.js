@@ -5,7 +5,10 @@ import { Dropdown, DatePicker } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
 import TaxForm from "../../components/TaxForm";
+import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const CreateChallen = ({ parentUrl }) => {
+  const history = useHistory();
+  const { url } = useRouteMatch();
   const childRef = useRef();
   const cities = Digit.Hooks.pgr.useTenants();
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
@@ -40,7 +43,7 @@ const CreateChallen = ({ parentUrl }) => {
   function setcategoriesType(categoryType) {
     setselectedCategoryType(categoryType);
   }
-  const [canSubmit, setSubmitValve] = useState(false);
+  const [canSubmit, setSubmitValve] = useState(true);
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [categoires, setAPIcategories] = useState([]);
   const [categoiresType, setAPIcategoriesType] = useState([]);
@@ -75,12 +78,21 @@ const CreateChallen = ({ parentUrl }) => {
   useEffect(() => {
     setLocalities(fetchedLocalities);
   }, [fetchedLocalities]);
+
   useEffect(() => {
     Digit.MDMSService.getPaymentRules(tenantId).then((value) => {
       setAPIcategories(func.setServiceCategory(value.MdmsRes.BillingService.BusinessService));
       setAPITaxHeadMaster(value.MdmsRes.BillingService.TaxHeadMaster);
     });
   }, [tenantId]);
+
+  useEffect(() => {
+    if (selectedCategory && selectedCategoryType && !pincodeNotValid && fromDate != '' && toDate != '' ) {
+      setSubmitValve(true);
+    } else {
+      setSubmitValve(false);
+    }
+  }, [selectedCategory, selectedCategoryType, pincodeNotValid, fromDate, toDate]);
 
   useEffect(() => {
     const city = cities ? cities.find((obj) => obj.pincode?.find((item) => item == pincode)) : [];
@@ -103,28 +115,32 @@ const CreateChallen = ({ parentUrl }) => {
     const Challan = {
       citizen: {
         name: data.name,
-       mobileNumber : data.mobileNumber
+        mobileNumber: data.mobileNumber
       },
       businessService: selectedCategoryType.code,
-       consumerType: selectedCategory.code,
-       description: data.comments,
-       taxPeriodFrom: Date.parse(fromDate),
-       taxPeriodTo: Date.parse(toDate),
-       tenantId: tenantId,
-      address:{
+      consumerType: selectedCategory.code,
+      description: data.comments,
+      taxPeriodFrom: Date.parse(fromDate),
+      taxPeriodTo: Date.parse(toDate),
+      tenantId: tenantId,
+      address: {
         buildingName: data.buildingName,
         doorNo: data.doorNo,
         street: data.street,
-        locality: {code: selectedLocality.code},
-    },
-    amount: childRef.current.submit()
-  }
-  Digit.MCollectService.create({Challan: Challan}, tenantId).then((result)=>{
-    if(result.challans && result.challans.length > 0){
-   const challan  = result.challans[0];
-   Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, 'challan')
+        locality: { code: selectedLocality.code },
+      },
+      amount: childRef.current.submit()
     }
-  })
+    Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
+      if (result.challans && result.challans.length > 0) {
+        const challan = result.challans[0];
+        Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, 'challan').then((response) => {
+          if (response.Bill && response.Bill.length > 0) {
+            history.push(`/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`, { from: url });
+          }
+        })
+      }
+    })
   };
   const config = [
     {
@@ -165,7 +181,6 @@ const CreateChallen = ({ parentUrl }) => {
             name: "doorNo",
             validation: {
               required: true,
-              pattern: /^[A-Za-z]/,
             },
             error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
           },
@@ -178,7 +193,6 @@ const CreateChallen = ({ parentUrl }) => {
             name: "buildingName",
             validation: {
               required: true,
-              pattern: /^[A-Za-z]/,
             },
             error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
           },
@@ -191,7 +205,6 @@ const CreateChallen = ({ parentUrl }) => {
             name: "street",
             validation: {
               required: true,
-              pattern: /^[A-Za-z]/,
             },
             error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
           },
@@ -215,7 +228,7 @@ const CreateChallen = ({ parentUrl }) => {
           name: "Mohalla",
           dependency: localities ? true : false,
           populators: (
-            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality"   option={localities} select={selectLocality} t={t} />
+            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
           ),
         },
       ],
@@ -289,12 +302,12 @@ const CreateChallen = ({ parentUrl }) => {
           name: "toDate",
           isMandatory: true,
           dependency: fromDate ? true : false,
-          populators: <DatePicker date={toDate ? toDate: ''}  min={fromDate} onChange={setToDate} />,
+          populators: <DatePicker date={toDate ? toDate : ''} min={fromDate} onChange={setToDate} />,
         },
         {
           isMandatory: false,
           type: "custom",
-          populators: <TaxForm  ref={childRef} data={TaxHeadMasterFields} />,
+          populators: <TaxForm ref={childRef} data={TaxHeadMasterFields} />,
         },
         {
           label: t("UC_COMMENT_LABEL"),
@@ -311,6 +324,6 @@ const CreateChallen = ({ parentUrl }) => {
     },
   ];
 
-  return <FormComposer heading={t("UC_COMMON_HEADER")} config={config} onSubmit={onSubmit} isDisabled={canSubmit} label={t("UC_ECHALLAN")} />;
+  return <FormComposer heading={t("UC_COMMON_HEADER")} config={config} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
 };
 export default CreateChallen;
