@@ -12,9 +12,9 @@ const DatePicker = (props) => {
       const month = operationDate?.getMonth() + 1;
       const _date = operationDate?.getDate();
       // console.log("find current date", _date, month, years)
-      return _date && month && years ? `${_date}/${month}/${years}` : null;
+      return _date && month && years ? `${_date}/${month}/${years}` : "";
     }
-    return null;
+    return "";
   }
 
   const getDatePrint = () => props?.formattingFn?.(props?.date) || defaultFormatFunc(props?.date);

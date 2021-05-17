@@ -104,8 +104,8 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
               {searchFields
                 ?.filter((e) => true)
                 ?.map((input, index) => (
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
+                  <div key={input.name} style={{ display: "flex", flexDirection: "column" }}>
+                    <span className={index === 0 ? "complaint-input" : "mobile-input"}>
                       <Label>{input.label}</Label>
                       {!input.type ? (
                         <Controller

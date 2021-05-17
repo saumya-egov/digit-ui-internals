@@ -10,6 +10,11 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
   const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
+  const [EmptyInboxComp, setEmptyInboxComp] = useState(() => {
+    const com = Digit.ComponentRegistryService?.getComponent(props.EmptyResultInboxComp);
+    console.log("here is the empty component", com, props.EmptyResultInboxComp);
+    return com;
+  });
 
   // searchData, workFlowData
 
@@ -23,7 +28,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   if (props.isLoading) {
     result = <Loader />;
   } else if (data?.length === 0) {
-    result = (
+    result = (EmptyInboxComp && <EmptyInboxComp />) || (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
 

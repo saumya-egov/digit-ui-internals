@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const useCardPaymentDetails = (props, t) => {
   const config = [
@@ -7,41 +8,13 @@ export const useCardPaymentDetails = (props, t) => {
       headId: "paymentInfo",
       body: [
         {
-          label: t("PAYMENT_CARD_LAST_DIGITS_LABEL"),
-          type: "number",
+          withoutLabel: true,
+          type: "custom",
           populators: {
-            name: "instrumentNumber",
-            validation: {
-              required: true,
-              pattern: /^\d{4}$/,
-            },
-            error: t("PAYMENT_CARD_LAST_DIGITS_ERROR"),
-            min: "0",
-            max: "9999",
-          },
-        },
-        {
-          label: t("PAYMENT_TRANS_NO_LABEL"),
-          type: "number",
-          populators: {
-            name: "transactionNumber",
-            validation: {
-              required: true,
-              pattern: /^\d{5,}$/,
-            },
-            error: t("PAYMENT_TRANS_NO_ERROR"),
-          },
-        },
-        {
-          label: t("PAYMENT_RENTR_TRANS_LABEL"),
-          type: "number",
-          populators: {
-            name: "reTransanctionNumber",
-            validation: {
-              required: true,
-              pattern: /^\d{5,}$/,
-            },
-            error: t("PAYMENT_RENTR_TRANS_ERROR"),
+            name: "paymentModeDetails",
+            customProps: {},
+            defaultValue: {},
+            component: (props, customProps) => <CardDetailsComponent onChange={props.onChange} value={props.value} {...customProps} />,
           },
         },
       ],
@@ -49,4 +22,68 @@ export const useCardPaymentDetails = (props, t) => {
   ];
 
   return { cardConfig: config };
+};
+
+const CardDetailsComponent = ({ ...props }) => {
+  const { t } = useTranslation();
+  const [last4Digits, setLast4Digits] = useState(props?.value?.last4Digits);
+  const [transactionNumber, setTransactionNumber] = useState(props?.value?.transactionNumber);
+  const [reTransanctionNumber, setReTransanctionNumber] = useState(props?.value?.reTransanctionNumber);
+
+  useEffect(() => {
+    if (props.onChange) {
+      let errorObj = {};
+      if (!last4Digits) errorObj.last4Digits = "ES_COMMON_LAST_4_DIGITS";
+      if (!transactionNumber) errorObj.transactionNumber = "ES_COMMON_TRANSANCTION_NO";
+      if (!reTransanctionNumber) errorObj.reTransanctionNumber = "ES_COMMON_RE_TRANSANCTION_NO";
+      props.onChange({ last4Digits, transactionNumber, reTransanctionNumber, instrumentNumber: transactionNumber, errorObj });
+    }
+  }, [last4Digits, transactionNumber, reTransanctionNumber]);
+
+  return (
+    <React.Fragment>
+      <div className="label-field-pair">
+        <h2 className="card-label">{t("NOC_PAYMENT_CARD_LAST_DIGITS_LABEL")}</h2>
+        <div className="field">
+          <div className="field-container">
+            <input
+              className="employee-card-input"
+              value={last4Digits}
+              type="text"
+              name="instrumentNumber"
+              onChange={(e) => setLast4Digits(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="label-field-pair">
+        <h2 className="card-label">{t("NOC_PAYMENT_TRANS_NO_LABEL")}</h2>
+        <div className="field">
+          <div className="field-container">
+            <input
+              className="employee-card-input"
+              value={transactionNumber}
+              type="text"
+              name="instrumentNumber"
+              onChange={(e) => setTransactionNumber(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+      <div className="label-field-pair">
+        <h2 className="card-label">{t("NOC_PAYMENT_RENTR_TRANS_LABEL")}</h2>
+        <div className="field">
+          <div className="field-container">
+            <input
+              className="employee-card-input"
+              value={reTransanctionNumber}
+              type="text"
+              name="instrumentNumber"
+              onChange={(e) => setReTransanctionNumber(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
 };
