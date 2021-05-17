@@ -11,7 +11,11 @@ const EmployeeChallan = (props) => {
   const coreData = Digit.Hooks.useCoreData();
   const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanno } });
   console.log(data?.challans);
+  console.log(data?.Bill);
   var challanDetails = data?.challans?.filter(function (item) {
+    return item.challanNo === challanno;
+  })[0];
+  var billDetails = data?.Bill?.filter(function (item) {
     return item.challanNo === challanno;
   })[0];
   // console.log(challanDetails)
@@ -24,12 +28,12 @@ const EmployeeChallan = (props) => {
         <Card>
           <CardSubHeader>Challan No : {challanno} </CardSubHeader>
           <StatusTable>
-            <Row label={"Compensation of lieu of concessions"} text={"₹5000"} textStyle={{ whiteSpace: "pre" }} />
-            <Row label={"Field Fee"} text={"₹500"} textStyle={{ whiteSpace: "pre" }} />
-            <Row label={"Security Deposit"} text="₹50" />
-            <Row label={"CGST"} text={`${"₹20"}` || "NA"} />
-            <Row label={"SGST"} text={`${"₹20"}` || "NA"} />
-            <Row label={"Round Off"} text={`${"₹0"}` || "NA"} />
+            <Row label={"Tenant id"} text={"₹5000"} text={billDetails?.tenantId} />
+            <Row label={"Bill Detail id"} text={"₹500"} text={billDetails?.billAccountdeatils.billDetailId} />
+            <Row label={"Demand Detail id"} text={billDetails?.billAccountdeatils.demandDetailId} />
+            <Row label={"Tax Head code"} text={billDetails?.billAccountdeatils.taxHeadCode} />
+            <Row label={"Adjusted amount"} text={billDetails?.billAccountdeatils.adjustedAmount} />
+            <Row label={"Order"} text={billDetails?.billAccountdeatils.order} />
             <hr />
             <Row label={<b>Total Due Amount</b>} text={challanDetails?.amount} />
           </StatusTable>
