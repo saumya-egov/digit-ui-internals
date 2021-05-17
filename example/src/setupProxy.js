@@ -32,6 +32,7 @@ module.exports = function (app) {
     "/pt-calculator-v2",
     "/dashboard-analytics",
     "/echallan-services",
+    "/egov-searcher/bill-genie/mcollectbills/_get",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
 };

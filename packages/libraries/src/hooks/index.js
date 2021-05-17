@@ -75,6 +75,7 @@ import useGetChart from "./dss/useGetChart";
 
 import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
+import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
 
 const pgr = {
   useComplaintDetails,
@@ -140,8 +141,9 @@ const dss = {
 
 const mcollect = {
   useMCollectMDMS,
-  useMCollectSearch
-}
+  useMCollectSearch,
+  useMcollectSearchBill,
+};
 
 const Hooks = {
   useSessionStorage,
@@ -167,7 +169,7 @@ const Hooks = {
   fsm,
   pt,
   dss,
-  mcollect
+  mcollect,
 };
 
 export default Hooks;
