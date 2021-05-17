@@ -1,19 +1,26 @@
 import React from "react";
 import { Header, ResponseComposer, Loader } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
+import Axios from "axios";
 import { useHistory, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   const { t } = useTranslation();
-  //const { mobileNumber, propertyIds, oldPropertyIds } = Digit.Hooks.useQueryParams();
-  //const filters = {};
-  //if (mobileNumber) filters.mobileNumber = mobileNumber;
-  //if (propertyIds) filters.propertyIds = propertyIds;
-  //if (oldPropertyIds) filters.oldPropertyIds = oldPropertyIds;
+  const history = useHistory();
+  const { mobileNumber, challanNo, Servicecategory } = Digit.Hooks.useQueryParams();
+  const filters = {};
+  if (mobileNumber) filters.mobileNumber = mobileNumber;
+  if (challanNo) filters.challanNo = challanNo;
+  if (Servicecategory) filters.businesService = Servicecategory;
+  //filters.url = "egov-searcher/bill-genie/mcollectbills/_get"
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  //const result = Digit.Hooks.pt.usePropertySearch({ filters });
+  const result = Digit.Hooks.mcollect.useMcollectSearchBill({ tenantId: "pb.amritsar", filters });
+  //const result = await Axios.post(`https://qa.digit.org/egov-searcher/bill-genie/mcollectbills/_get?`, {"searchCriteria":{"tenantId":"pb.amritsar","mobileNumber":"7878787878","businesService":"ADVT.Hoardings"},"RequestInfo":{"apiId":"Rainmaker","authToken":"1fff79b7-694d-4b18-8a6f-2dbdac1531aa"}})
+  console.log("result");
+  console.log(result);
+  let bills = result?.data?.Bills;
   //const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
 
   /* const paymentDetails = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
@@ -21,7 +28,6 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
     { enabled: consumerCode ? true : false }
   ); */
 
-  const history = useHistory();
   /* 
   if (paymentDetails.isLoading || result.isLoading) {
     return <Loader />;
@@ -32,7 +38,10 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   } */
 
   const onSubmit = (data) => {
+    console.log(data);
+    //debugger;
     //history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
+    history.push(`/digit-ui/citizen/mcollect/bill-details/${data.businesService}/${data?.ChannelNo}`, { tenantId });
   };
 
   const payment = {};
@@ -46,30 +55,25 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
     }
   }); */
 
-  /* const searchResults = result?.data?.Properties?.map((property) => {
-    let addr = property?.address || {};
-
+  const searchResults = result?.data?.Bills?.map((bill) => {
     return {
-      property_id: property?.propertyId,
-      owner_name: (property?.owners || [])[0]?.name,
-      property_address: [addr.doorNo || "", addr.buildingName || "", addr.street || "", addr.locality?.name || "", addr.city || ""]
-        .filter((a) => a)
-        .join(", "),
-      total_due: payment[property?.propertyId]?.total_due || 0,
-      bil_due__date: payment[property?.propertyId]?.bil_due__date || t("N/A"),
+      businesService: bill.businessService,
+      total_due: bill.totalAmount,
+      OwnerName: bill.payerName || "NA",
+      bil_due__date: bill.billDetails[0].expiryDate || 0,
+      ChannelNo: bill?.consumerCode || "NA",
+      ServiceCategory: bill.businessService ? bill.businessService.split(".")[bill.businessService.split(".").length - 1] : "NA",
     };
-  }); */
+  });
 
-  let searchResults = [
-    { total_due: 1200, bil_due__date: t("N/A"), ChannelNo: "PB-763-23-213433", ServiceCategory: "Traffic Rules", OwnerName: "Ajit Singh" },
-  ];
-
+  console.log("searchResult");
+  console.log(searchResults);
   return (
     <div className="static" style={{ marginTop: "16px" }}>
       <div className="static-wrapper">
         {header && (
           <Header style={{ marginLeft: "8px" }}>
-            {t(header)} {/* ({searchResults?.length}) */}
+            {t(header)} ({searchResults?.length})
           </Header>
         )}
         <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
