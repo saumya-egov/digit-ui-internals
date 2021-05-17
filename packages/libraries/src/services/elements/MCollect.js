@@ -33,7 +33,7 @@ export const MCollectService = {
     }),
   search_bill: ({ tenantId, filters }) =>
     Request({
-      url: Urls.mcollect.search_bill,
+      url: filters.businesService !== "PT" ? Urls.mcollect.search_bill : Urls.mcollect.search_bill_pt,
       useCache: false,
       method: "POST",
       data: { searchCriteria: { tenantId, ...filters } },
