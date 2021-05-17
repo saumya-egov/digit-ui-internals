@@ -20,8 +20,6 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   const tenantId = userInfo?.info?.permanentCity;
   const result = Digit.Hooks.mcollect.useMcollectSearchBill({ tenantId, filters });
   //const result = await Axios.post(`https://qa.digit.org/egov-searcher/bill-genie/mcollectbills/_get?`, {"searchCriteria":{"tenantId":"pb.amritsar","mobileNumber":"7878787878","businesService":"ADVT.Hoardings"},"RequestInfo":{"apiId":"Rainmaker","authToken":"1fff79b7-694d-4b18-8a6f-2dbdac1531aa"}})
-  console.log("result");
-  console.log(result);
   let bills = result?.data?.Bills;
   //const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
 
@@ -40,7 +38,6 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   } */
 
   const onSubmit = (data) => {
-    console.log(data);
     //debugger;
     //history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
     //history.push(`/digit-ui/citizen/mcollect/bill-details/${data.businesService}/${data?.ChannelNo}`, { tenantId });
@@ -69,8 +66,6 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
     };
   });
 
-  console.log("searchResult");
-  console.log(searchResults);
   return (
     <div className="static" style={{ marginTop: "16px" }}>
       <div className="static-wrapper">

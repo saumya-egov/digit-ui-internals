@@ -19,14 +19,11 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
   // moduleCode, type, config = {}, payload = []
 
   const { data: Menu, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(tenantId, "BillingService", "BusinessService");
-  console.log("data");
-  console.log(Menu);
   const onChallanSearch = async (data) => {
     //history.push(`/digit-ui/citizen/mcollect/search-results`);
     if (!mobileNumber && !challanNo && !Servicecateogry) {
       return alert("Provide at least one parameter");
     } else {
-      console.log(Servicecateogry);
       history.push(
         `/digit-ui/citizen/mcollect/search-results?mobileNumber=${mobileNumber}&challanNo=${challanNo}&Servicecategory=${
           Servicecateogry.code.split("_")[Servicecateogry.code.split("_").length - 1]
@@ -41,8 +38,6 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         SCMenu.push({ i18nKey: `${searchcat.i18nKey.toUpperCase().replaceAll(".", "_")}`, code: searchcat.i18nKey });
       }
     });
-  console.log("SCMENU");
-  console.log(SCMenu);
 
   function setMobileNo(e) {
     setMobileNumber(e.target.value);
