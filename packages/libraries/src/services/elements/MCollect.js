@@ -1,5 +1,5 @@
 import Urls from "../atoms/urls";
-import { Request, ServiceRequest } from "../atoms/Utils/Request";
+import { Request } from "../atoms/Utils/Request";
 
 export const MCollectService = {
   search: ({ tenantId, filters }) =>
@@ -10,16 +10,6 @@ export const MCollectService = {
       auth: true,
       userService: true,
       params: { tenantId, ...filters },
-    }),
-  search_bill: ({ tenantId, filters }) =>
-    Request({
-      url: Urls.mcollect.search_bill,
-      useCache: false,
-      method: "POST",
-      data: { searchCriteria: { tenantId, ...filters } },
-      auth: true,
-      userService: false,
-      //params: { tenantId, ...filters },
     }),
   create: (details, tenantId) =>
     Request({
@@ -40,5 +30,15 @@ export const MCollectService = {
       params: { consumerCode, tenantId, businessService },
       auth: true,
       userService: true,
+    }),
+  search_bill: ({ tenantId, filters }) =>
+    Request({
+      url: filters.businesService !== "PT" ? Urls.mcollect.search_bill : Urls.mcollect.search_bill_pt,
+      useCache: false,
+      method: "POST",
+      data: { searchCriteria: { tenantId, ...filters } },
+      auth: true,
+      userService: false,
+      //params: { tenantId, ...filters },
     }),
 };

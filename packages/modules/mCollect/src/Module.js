@@ -33,7 +33,7 @@ export const MCollectLinks = ({ matchPath, userType }) => {
     <React.Fragment>
       <Header>{t("M-Collect")}</Header>
       <div className="d-grid">
-        <HomeLink to={`${matchPath}/search`}>{t("Search Challan")}</HomeLink>
+        <HomeLink to={`${matchPath}/search`}>{t("Search and pay")}</HomeLink>
       </div>
     </React.Fragment>
   );

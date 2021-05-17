@@ -41,7 +41,8 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
     console.log(data);
     //debugger;
     //history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
-    history.push(`/digit-ui/citizen/mcollect/bill-details/${data.businesService}/${data?.ChannelNo}`, { tenantId });
+    //history.push(`/digit-ui/citizen/mcollect/bill-details/${data.businesService}/${data?.ChannelNo}`, { tenantId });
+    history.push(`/digit-ui/citizen/payment/my-bills/${data?.businesService}/${data?.ChannelNo}`);
   };
 
   const payment = {};
