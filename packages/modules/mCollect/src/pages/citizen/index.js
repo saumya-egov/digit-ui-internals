@@ -3,6 +3,7 @@ import React from "react";
 import { Redirect, Switch, useRouteMatch } from "react-router-dom";
 import SearchChallanComponent from "./SearchChallan";
 import SearchResultsComponent from "./SearchResults";
+//import BillInfo from "./SearchResults/BillInfo";
 
 const App = () => {
   const { path, url, ...match } = useRouteMatch();

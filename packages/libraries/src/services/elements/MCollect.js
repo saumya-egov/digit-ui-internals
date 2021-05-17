@@ -31,4 +31,14 @@ export const MCollectService = {
       auth: true,
       userService: true,
     }),
+  search_bill: ({ tenantId, filters }) =>
+    Request({
+      url: filters.businesService !== "PT" ? Urls.mcollect.search_bill : Urls.mcollect.search_bill_pt,
+      useCache: false,
+      method: "POST",
+      data: { searchCriteria: { tenantId, ...filters } },
+      auth: true,
+      userService: false,
+      //params: { tenantId, ...filters },
+    }),
 };

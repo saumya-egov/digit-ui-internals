@@ -75,8 +75,8 @@ export const Request = async ({
   } else if (setTimeParam) {
     params._ = Date.now();
   }
-
   const res = await Axios({ method, url, data, params, headers });
+
   const returnData = res?.data || res?.response?.data || {};
   if (useCache && res?.data && Object.keys(returnData).length !== 0) {
     window.Digit.RequestCache[key] = returnData;
@@ -118,6 +118,7 @@ export const ServiceRequest = async ({
     reqData = preHookRes.data;
   }
   const resData = await Request({ method, url, data: reqData, headers, useCache, params: reqParams, auth, userService });
+
   if (window[postHookName] && typeof window[postHookName] === "function") {
     return await window[postHookName](resData);
   }
