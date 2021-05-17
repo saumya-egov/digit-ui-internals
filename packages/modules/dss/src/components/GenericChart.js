@@ -1,27 +1,7 @@
-import React, { Fragment, useContext } from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Card,
-  CardSubHeader,
-  DownloadIcon,
-  TextInput,
-  CardCaption,
-  CardLabel,
-  Ellipsis,
-  SearchIconSvg,
-} from "@egovernments/digit-ui-react-components";
+import { Card, DownloadIcon, TextInput, CardCaption, CardLabel, EllipsisMenu, SearchIconSvg } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
-
-const renderUnits = (denomination) => {
-  switch (denomination) {
-    case "Unit":
-      return "";
-    case "Lac":
-      return "(In Lac)";
-    case "Cr":
-      return "(In Cr)";
-  }
-};
 
 const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
@@ -39,7 +19,20 @@ const GenericChart = ({ header, className, caption, children, showSearch = false
         <div className="sideContent">
           {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
           {showDownload && <DownloadIcon className="mrlg" />}
-          <Ellipsis />
+          <EllipsisMenu
+            menuItems={[
+              {
+                code: "pdf",
+                i18nKey: "ES_COMMON_DOWNLOAD_PDF",
+              },
+              {
+                code: "image",
+                i18nKey: "ES_COMMON_DOWNLOAD_IMAGE",
+              },
+            ]}
+            displayKey="i18nKey"
+            onSelect={(data) => console.log(data)}
+          />
         </div>
       </div>
       {caption && <CardCaption>{caption}</CardCaption>}
