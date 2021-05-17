@@ -56,19 +56,21 @@ export const TableConfig = (t) => ({
       {
         Header: t("ES_SEARCH_TAX_DUE"),
         Cell: ({ row }) => {
-          return GetCell(row.original?.searchData?.due_tax);
+          return GetCell("₹ " + row.original?.searchData?.due_tax);
         },
         disableSortBy: true,
-        mobileCell: (original) => GetMobCell(original?.searchData?.due_tax),
+        mobileCell: (original) => GetMobCell("₹ " + original?.searchData?.due_tax),
       },
       {
         Header: t("ES_SEARCH_ACTION"),
         Cell: ({ row }) => {
           return (
             <div>
-              <span className="link">
-                <Link to={`${props.parentRoute}/application-details/` + row.original?.searchData?.["propertyId"]}>{t("ES_PT_COLLECT_TAX")}</Link>
-              </span>
+              {row.original?.searchData?.due_tax > 0 ? (
+                <span className="link">
+                  <Link to={`/digit-ui/employee/payment/collect/PT/` + row.original?.searchData?.["propertyId"]}>{t("ES_PT_COLLECT_TAX")}</Link>
+                </span>
+              ) : null}
             </div>
           );
         },
