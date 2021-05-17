@@ -15,8 +15,10 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   if (Servicecategory) filters.businesService = Servicecategory;
   //filters.url = "egov-searcher/bill-genie/mcollectbills/_get"
 
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  const result = Digit.Hooks.mcollect.useMcollectSearchBill({ tenantId: "pb.amritsar", filters });
+  //const tenantId = Digit.ULBService.getCurrentTenantId();
+  const userInfo = Digit.UserService.getUser();
+  const tenantId = userInfo?.info?.permanentCity;
+  const result = Digit.Hooks.mcollect.useMcollectSearchBill({ tenantId, filters });
   //const result = await Axios.post(`https://qa.digit.org/egov-searcher/bill-genie/mcollectbills/_get?`, {"searchCriteria":{"tenantId":"pb.amritsar","mobileNumber":"7878787878","businesService":"ADVT.Hoardings"},"RequestInfo":{"apiId":"Rainmaker","authToken":"1fff79b7-694d-4b18-8a6f-2dbdac1531aa"}})
   console.log("result");
   console.log(result);

@@ -37,12 +37,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
   let SCMenu = [];
   Menu &&
     Menu.map((searchcat) => {
-      if (
-        searchcat.businessService.includes("PropertyTax") ||
-        searchcat.businessService.includes("Taxes") ||
-        searchcat.businessService.includes("Advertisement Tax") ||
-        searchcat.businessService.includes("services-calculation")
-      ) {
+      if (searchcat.billGineiURL) {
         SCMenu.push({ i18nKey: `${searchcat.i18nKey.toUpperCase().replaceAll(".", "_")}`, code: searchcat.i18nKey });
       }
     });
