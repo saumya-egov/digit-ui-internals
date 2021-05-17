@@ -67,12 +67,12 @@ export const CollectPayment = (props) => {
             businessService,
             billId: bill.id,
             totalDue: bill.totalAmount,
-            totalAmountPaid: data.amount,
+            totalAmountPaid: data.amount || bill.totalAmount,
           },
         ],
         tenantId: bill.tenantId,
         totalDue: bill.totalAmount,
-        totalAmountPaid: data.amount,
+        totalAmountPaid: data.amount || bill.totalAmount,
         paymentMode: data.paymentMode.code,
         payerName: data.payerName,
         paidBy: data.paidBy,
@@ -241,8 +241,10 @@ export const CollectPayment = (props) => {
 
   const getFormConfig = () => {
     let conf = config.concat(formConfigMap[formState?.paymentMode?.code] || []);
-    conf = conf.concat(cashConfig);
-    return BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf);
+    conf = conf?.concat(cashConfig);
+    return BillDetailsFormConfig({ consumerCode }, t)[businessService]
+      ? BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf)
+      : conf;
   };
 
   if (isLoading) {
