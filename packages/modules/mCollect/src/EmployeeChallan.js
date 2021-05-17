@@ -1,8 +1,18 @@
 import { Card, CardSubHeader, Header, LinkButton, Loader, Row, StatusTable } from "@egovernments/digit-ui-react-components";
+import { values } from "lodash-es";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { propertyCardBodyStyle } from "../../../modules/pt/src/utils";
+
+function billSearch(tenantId, challanno, businessService) {
+  console.log(businessService + "This one");
+
+  var res = null;
+  var pr = Digit.PaymentService.searchBill(tenantId, { consumerCode: challanno, service: businessService });
+
+  return pr;
+}
 
 const EmployeeChallan = (props) => {
   // const { t } = useTranslation();
@@ -10,15 +20,22 @@ const EmployeeChallan = (props) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const coreData = Digit.Hooks.useCoreData();
   const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanno } });
-  console.log(data?.challans);
-  console.log(data?.Bill);
-  var challanDetails = data?.challans?.filter(function (item) {
+  /*console.log(data?.challans);*/
+  const challanDetails = data?.challans?.filter(function (item) {
     return item.challanNo === challanno;
   })[0];
-  var billDetails = data?.Bill?.filter(function (item) {
-    return item.challanNo === challanno;
-  })[0];
-  // console.log(challanDetails)
+
+  var res = null;
+  if (challanDetails) res = billSearch(tenantId, challanno, challanDetails?.businessService);
+
+  console.log(res);
+
+  var billDetails = null;
+
+  res.then((values) => {
+    if (values?.Bill) billDetails = values?.Bill[0];
+  });
+
   return (
     <React.Fragment>
       <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
