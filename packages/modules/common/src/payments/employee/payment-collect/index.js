@@ -7,7 +7,7 @@ import { useCashPaymentDetails } from "./ManualReciept";
 import { useCardPaymentDetails } from "./card";
 import { useChequeDetails } from "./cheque";
 import isEqual from "lodash/isEqual";
-import { BillDetailsFormConfig } from "./billDetails";
+import { BillDetailsFormConfig } from "./Bill-details/billDetails";
 
 export const CollectPayment = (props) => {
   // const { formData, addParams } = props;
@@ -100,6 +100,7 @@ export const CollectPayment = (props) => {
           return;
         }
       }
+      if (data.errorMsg) setToast({ key: "error", action: t(errorMsg) });
 
       recieptRequest.Payment.instrumentDate = new Date(recieptRequest?.Payment?.instrumentDate).getTime();
       recieptRequest.Payment.transactionNumber = data.paymentModeDetails.transactionNumber;
