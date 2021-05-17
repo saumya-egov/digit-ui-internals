@@ -88,6 +88,7 @@ import MultiLink from "./atoms/MultiLink";
 import InfoBanner from "./atoms/InfoBanner";
 import { SearchIconSvg } from "./atoms/svgindex";
 import MobileNumber from "./atoms/MobileNumber";
+import MultiSelectDropdown from "./atoms/MultiSelectDropdown";
 
 import RemoveableTag from "./molecules/RemoveableTag";
 import TypeSelectCard from "./molecules/TypeSelectCard";
@@ -199,6 +200,7 @@ export {
   CloseSvg,
   PropertyHouse,
   MultiLink,
+  MultiSelectDropdown,
   // Molecule
   InputCard,
   FormStep,

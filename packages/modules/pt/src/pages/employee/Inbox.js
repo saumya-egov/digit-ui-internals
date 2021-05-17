@@ -18,6 +18,7 @@ const Inbox = ({
   searchConfig,
   middlewaresWf,
   middlewareSearch,
+  EmptyResultInboxComp,
 }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -100,6 +101,7 @@ const Inbox = ({
           linkPrefix={`${parentRoute}/application-details/`}
           tableConfig={rest?.tableConfig}
           filterComponent={filterComponent}
+          EmptyResultInboxComp={EmptyResultInboxComp}
         />
         // <div></div>
       );
@@ -129,6 +131,7 @@ const Inbox = ({
             sortParams={sortParams}
             totalRecords={Number(data?.[0]?.totalCount)}
             filterComponent={filterComponent}
+            EmptyResultInboxComp={EmptyResultInboxComp}
           />
         </div>
       );

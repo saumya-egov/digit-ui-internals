@@ -10,17 +10,12 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { value } = useContext(FilterContext);
-  const requestDate = {
-    startDate: value?.range?.startDate.getTime(),
-    endDate: value?.range?.endDate.getTime(),
-    interval: "month",
-    title: "",
-  };
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
-    requestDate,
+    requestDate: value?.requestDate,
+    filters: value?.filters,
   });
 
   const renderPlot = (plot) => {
@@ -45,7 +40,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       <ResponsiveContainer width="99%" height={300}>
         <AreaChart width="100%" height="100%" data={response?.responseData?.data?.[0]?.plots} margin={{ left: 30 }}>
           <defs>
-            <linearGradient id="colorUv" x1='.5' x2='.5' y2='1'>
+            <linearGradient id="colorUv" x1=".5" x2=".5" y2="1">
               <stop stopColor="#048BD0" stopOpacity={0.5} />
               <stop offset="1" stopColor="#048BD0" stopOpacity={0} />
             </linearGradient>
@@ -53,7 +48,17 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
           <CartesianGrid />
           <Tooltip />
           <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} />
-          <YAxis label={{ value: response?.responseData?.data?.[0]?.headerName, angle: -90, position: "left", offset: 15, fontSize: "14px", fill: "#505A5F"  }} tick={{ fontSize: "14px", fill: "#505A5F" }} />
+          <YAxis
+            label={{
+              value: response?.responseData?.data?.[0]?.headerName,
+              angle: -90,
+              position: "left",
+              offset: 15,
+              fontSize: "14px",
+              fill: "#505A5F",
+            }}
+            tick={{ fontSize: "14px", fill: "#505A5F" }}
+          />
           <Area type="monotone" dataKey={renderPlot} stroke="#048BD0" fill="url(#colorUv)" dot={true} />
         </AreaChart>
       </ResponsiveContainer>

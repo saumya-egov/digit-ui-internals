@@ -31,7 +31,8 @@ const CustomTable = ({ data, onSearch }) => {
     key: id,
     type: "metric",
     tenantId,
-    requestDate,
+    requestDate: value?.requestDate,
+    filters: value?.filters,
   });
 
   const tableColumns = useMemo(

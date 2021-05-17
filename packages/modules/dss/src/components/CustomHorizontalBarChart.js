@@ -12,17 +12,12 @@ const CustomHorizontalBarChart = ({ data }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const requestDate = {
-    startDate: value?.range?.startDate.getTime(),
-    endDate: value?.range?.endDate.getTime(),
-    interval: "month",
-    title: "",
-  };
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
-    requestDate,
+    requestDate: value?.requestDate,
+    filters: value?.filters,
   });
 
   const constructChartData = (data) => {
