@@ -8,6 +8,9 @@ export const filterFunctions = {
 
     const { propertyIds, mobileNumber, limit, offset, sortBy, sortOrder, total, applicationStatus, services } = filtersArg || {};
 
+    if (filtersArg?.acknowledgementIds) {
+      searchFilters.acknowledgementIds = filtersArg?.acknowledgementIds;
+    }
     if (filtersArg?.propertyIds) {
       searchFilters.propertyIds = propertyIds;
     }

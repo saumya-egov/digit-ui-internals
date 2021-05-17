@@ -5,6 +5,12 @@ import { useParams } from "react-router-dom";
 import { propertyCardBodyStyle } from "../../../modules/pt/src/utils";
 
 const EmployeeChallan = (props) => {
+  const { t } = useTranslation();
+  const { challanno } = useParams();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const coreData = Digit.Hooks.useCoreData();
+  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanno } });
+  console.log(data);
   return (
     <React.Fragment>
       <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
@@ -12,7 +18,7 @@ const EmployeeChallan = (props) => {
       </div>
       <div style={{ ...propertyCardBodyStyle, maxHeight: "calc(100vh - 12em)", margin: "30px" }}>
         <Card>
-          <CardSubHeader>{"Challan No: CH-CB-SECU-2021-004291"} </CardSubHeader>
+          <CardSubHeader>Challan No : {challanno} </CardSubHeader>
           <StatusTable>
             <Row label={"Compensation of lieu of concessions"} text={"₹5000"} textStyle={{ whiteSpace: "pre" }} />
             <Row label={"Field Fee"} text={"₹500"} textStyle={{ whiteSpace: "pre" }} />
@@ -24,23 +30,36 @@ const EmployeeChallan = (props) => {
             <Row label={<b>Total Due Amount</b>} text={<b>{"₹5090"}</b> || "NA"} />
           </StatusTable>
           <Card>
-            <CardSubHeader>{"SERVICE DETAILS"}</CardSubHeader>
+            <CardSubHeader>{"Challan No: CH-CB-SECU-2021-004291"} </CardSubHeader>
             <StatusTable>
-              <Row label={"UC_SERVICE_CATEGORY_LABEL"} text={"Compensation in lieu of concessions"} textStyle={{ whiteSpace: "pre" }} />
-              <Row label={"UC_FROM_DATE_LABEL"} text={"1/12/2020"} textStyle={{ whiteSpace: "pre" }} />
-              <Row label={"UC_TO_DATE_LABEL"} text="17/12/2020" />
-              <Row label={"UC_COMMENT_LABEL"} text={`${"Sample Comments, Address"}` || "NA"} />
-              <Row label={"CS_INBOX_STATUS_FILTER"} text={`${"Active"}` || "NA"} />
+              <Row label={"Compensation of lieu of concessions"} text={"₹5000"} textStyle={{ whiteSpace: "pre" }} />
+              <Row label={"Field Fee"} text={"₹500"} textStyle={{ whiteSpace: "pre" }} />
+              <Row label={"Security Deposit"} text="₹50" />
+              <Row label={"CGST"} text={`${"₹20"}` || "NA"} />
+              <Row label={"SGST"} text={`${"₹20"}` || "NA"} />
+              <Row label={"Round Off"} text={`${"₹0"}` || "NA"} />
+              <hr />
+              <Row label={<b>Total Due Amount</b>} text={<b>{"₹5090"}</b> || "NA"} />
             </StatusTable>
-            <CardSubHeader>{"CONSUMER DETAILS"}</CardSubHeader>
-            <StatusTable>
-              <Row label={"UC_CONS_NAME_LABEL"} text={`${"Ajit"}` || "NA"} />
-              <Row label={"UC_MOBILE_NO_LABEL"} text={`${"9167926072"}` || "NA"} />
-              <Row label={"UC_DOOR_NO_LABEL"} text={`${"A 16"}` || "NA"} />
-              <Row label={"UC_BLDG_NAME_LABEL"} text={`${"Purva Complex"}` || "NA"} />
-              <Row label={"UC_SRT_NAME_LABEL"} text={`${"Purva Westend"}` || "NA"} />
-              <Row label={"UC_MOHALLA_LABEL"} text={`${"Vittal nagar, Hanuman Nagar"}` || "NA"} />
-            </StatusTable>
+            <Card>
+              <CardSubHeader>{"SERVICE DETAILS"}</CardSubHeader>
+              <StatusTable>
+                <Row label={"UC_SERVICE_CATEGORY_LABEL"} text={"Compensation in lieu of concessions"} textStyle={{ whiteSpace: "pre" }} />
+                <Row label={"UC_FROM_DATE_LABEL"} text={"1/12/2020"} textStyle={{ whiteSpace: "pre" }} />
+                <Row label={"UC_TO_DATE_LABEL"} text="17/12/2020" />
+                <Row label={"UC_COMMENT_LABEL"} text={`${"Sample Comments, Address"}` || "NA"} />
+                <Row label={"CS_INBOX_STATUS_FILTER"} text={`${"Active"}` || "NA"} />
+              </StatusTable>
+              <CardSubHeader>{"CONSUMER DETAILS"}</CardSubHeader>
+              <StatusTable>
+                <Row label={"UC_CONS_NAME_LABEL"} text={`${"Ajit"}` || "NA"} />
+                <Row label={"UC_MOBILE_NO_LABEL"} text={`${"9167926072"}` || "NA"} />
+                <Row label={"UC_DOOR_NO_LABEL"} text={`${"A 16"}` || "NA"} />
+                <Row label={"UC_BLDG_NAME_LABEL"} text={`${"Purva Complex"}` || "NA"} />
+                <Row label={"UC_SRT_NAME_LABEL"} text={`${"Purva Westend"}` || "NA"} />
+                <Row label={"UC_MOHALLA_LABEL"} text={`${"Vittal nagar, Hanuman Nagar"}` || "NA"} />
+              </StatusTable>
+            </Card>
           </Card>
         </Card>
       </div>

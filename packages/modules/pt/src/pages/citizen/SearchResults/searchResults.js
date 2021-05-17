@@ -16,8 +16,10 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   const result = Digit.Hooks.pt.usePropertySearch({ filters });
   const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
 
-  const paymentDetails = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
-    { consumerCode, businessService: "PT", mobileNumber: mobileNumber },
+  const fetchBillParams = mobileNumber ? { mobileNumber, consumerCode } : { consumerCode };
+
+  const paymentDetails = Digit.Hooks.useFetchBillsForBuissnessService(
+    { businessService: "PT", ...fetchBillParams },
     { enabled: consumerCode ? true : false }
   );
 

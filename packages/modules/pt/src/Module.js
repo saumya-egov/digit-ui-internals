@@ -43,6 +43,7 @@ import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
 import EmployeeApp from "./pages/employee";
 import PTCard from "./components/PTCard";
 import InboxFilter from "./components/inbox/NewInboxFilter";
+import EmptyResultInbox from "./components/empty-result";
 
 const componentsToRegister = {
   PropertyTax,
@@ -125,4 +126,5 @@ export const PTComponents = {
   PTModule,
   PTLinks,
   PT_INBOX_FILTER: (props) => <InboxFilter {...props} />,
+  EmptyResultInbox,
 };

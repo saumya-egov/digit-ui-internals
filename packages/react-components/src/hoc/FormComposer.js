@@ -37,7 +37,6 @@ export const FormComposer = (props) => {
 
   useEffect(() => {
     props.onFormValueChange && props.onFormValueChange(setValue, formData, formState);
-    console.log("find formData", formData);
   }, [formData]);
 
   const fieldSelector = (type, populators, isMandatory, disable = false, component, config) => {
@@ -161,6 +160,9 @@ export const FormComposer = (props) => {
                   <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : {}} className="field">
                     {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field)}
                   </div>
+                  {field?.populators?.name && errors && errors[field?.populators?.name] && Object.keys(errors[field?.populators?.name]).length ? (
+                    <CardLabelError>{field?.populators?.error}</CardLabelError>
+                  ) : null}
                 </LabelFieldPair>
               );
             })}

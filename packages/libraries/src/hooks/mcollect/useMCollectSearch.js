@@ -1,16 +1,16 @@
 import { useQuery, useQueryClient } from "react-query";
 
 const useMCollectSearch = ({ tenantId, filters }, config = {}) => {
-  if(filters.status && filters.status.length > 0) {
+  if (filters.status && filters.status.length > 0) {
     filters.status = filters.status.toString();
   } else if (filters.status && filters.status.length === 0) {
-    delete filters.status
+    delete filters.status;
   }
 
-  if(filters.businessService && filters.businessService.length > 0) {
+  if (filters.businessService && filters.businessService.length > 0) {
     filters.businessService = filters.businessService.toString();
   } else if (filters.businessService && filters.businessService.length === 0) {
-    delete filters.businessService
+    delete filters.businessService;
   }
 
   const client = useQueryClient();

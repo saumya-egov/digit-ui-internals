@@ -1,20 +1,40 @@
 import React, { Fragment } from "react";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 // import { useRouteMatch } from "react-router";
-import { BackButton, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import { BackButton, Loader, PrivateRoute, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import DashBoard from "./pages";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
 import Overview from "./pages/Overview";
 import DSSCard from "./components/DSSCard";
 
+const DssBreadCrumb = ({ location }) => {
+  const { t } = useTranslation();
+  const crumbs = [
+    {
+      path: "/digit-ui/employee",
+      content: t("ES_COMMON_HOME"),
+      show: true,
+    },
+    {
+      path: "/digit-ui/employee/dss/dashboard",
+      content: t("ES_COMMON_DSS"),
+      show: true,
+    },
+  ];
+
+  return <BreadCrumb crumbs={crumbs} />;
+};
+
 const Routes = ({ path }) => {
+  const location = useLocation();
   return (
-    <>
-      <BackButton></BackButton>
+    <div className="chart-wrapper">
+      <DssBreadCrumb location={location} />
       <Switch>
         <PrivateRoute path={`${path}/dashboard`} component={DashBoard} />
       </Switch>
-    </>
+    </div>
   );
 };
 

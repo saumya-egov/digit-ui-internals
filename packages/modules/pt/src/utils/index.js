@@ -41,6 +41,15 @@ export const getMohallaLocale = (value = "", tenantId = "") => {
   return convertToLocale(value, `${convertedValue}_REVENUE`);
 };
 
+export const getCityLocale = (value = "") => {
+  let convertedValue = convertDotValues(value);
+  if (convertedValue == "NA" || !checkForNotNull(value)) {
+    return "PT_NA";
+  }
+  convertedValue = convertedValue.toUpperCase();
+  return convertToLocale(convertedValue, `TENANT_TENANTS`);
+};
+
 export const getPropertyOwnerTypeLocale = (value = "") => {
   return convertToLocale(value, "PROPERTYTAX_OWNERTYPE");
 };
@@ -668,6 +677,16 @@ export const convertToUpdateProperty = (data = {}) => {
   console.info("propertyFormData", data);
   let isResdential = data.isResdential;
   let propertyType = data.PropertyType;
+  let selfOccupied = data.selfOccupied;
+  let Subusagetypeofrentedarea = data.Subusagetypeofrentedarea || null;
+  let subusagetype = data.subusagetype || null;
+  let IsAnyPartOfThisFloorUnOccupied = data.IsAnyPartOfThisFloorUnOccupied || null;
+  let builtUpArea = data?.floordetails?.builtUpArea || null;
+  let noOfFloors = data?.noOfFloors;
+  let noOofBasements = data?.noOofBasements;
+  let unit = data?.units;
+  let basement1 = Array.isArray(data?.units) && data?.units["-1"] ? data?.units["-1"] : null;
+  let basement2 = Array.isArray(data?.units) && data?.units["-2"] ? data?.units["-2"] : null;
   data = setAddressDetails(data);
   data = setUpdateOwnerDetails(data);
   data = setUpdatedDocumentDetails(data);
@@ -695,25 +714,38 @@ export const convertToUpdateProperty = (data = {}) => {
         heightAbove36Feet: false,
         isResdential: isResdential,
         propertyType: propertyType,
+        selfOccupied: selfOccupied,
+        Subusagetypeofrentedarea: Subusagetypeofrentedarea,
+        subusagetype: subusagetype,
+        IsAnyPartOfThisFloorUnOccupied: IsAnyPartOfThisFloorUnOccupied,
+        builtUpArea: builtUpArea,
+        noOfFloors: noOfFloors,
+        noOofBasements: noOofBasements,
+        unit: unit,
+        basement1: basement1,
+        basement2: basement2,
       },
 
-      creationReason: !data?.isUpdateProperty ? "CREATE" : "UPDATE",
+      creationReason: getCreationReason(data),
       source: "MUNICIPAL_RECORDS",
       channel: "CITIZEN",
-      workflow: !data?.isUpdateProperty
-        ? {
-            action: "REOPEN",
-            businessService: "PT.CREATE",
-            moduleName: "PT",
-          }
-        : {
-            action: "OPEN",
-            businessService: "PT.UPDATE",
-            moduleName: "PT",
-          },
+      workflow: getWorkflow(data),
     },
   };
-  console.info("propertyCreated", formdata);
+
+  let propertyInitialObject = JSON.parse(sessionStorage.getItem("propertyInitialObject"));
+  if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units) && data?.isEditProperty) {
+    propertyInitialObject.units = propertyInitialObject.units.filter((unit) => unit.active);
+    let oldUnits = propertyInitialObject.units.map((unit) => {
+      return { ...unit, active: false };
+    });
+    formdata.Property?.units.push(...oldUnits);
+  }
+
+  if (propertyInitialObject?.auditDetails) {
+    formdata.Property["auditDetails"] = { ...propertyInitialObject.auditDetails };
+  }
+  console.info("propertyUpdated", formdata);
   return formdata;
 };
 
@@ -799,4 +831,23 @@ export const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
     str = str.replace(searcher, replaceWith);
   }
   return str;
+};
+
+export const checkIsAnArray = (obj = []) => {
+  return obj && Array.isArray(obj) ? true : false;
+};
+export const checkArrayLength = (obj = [], length = 0) => {
+  return checkIsAnArray(obj) && obj.length > length ? true : false;
+};
+
+export const getWorkflow = (data = {}) => {
+  return {
+    action: data?.isEditProperty ? "REOPEN" : "OPEN",
+    businessService: `PT.${getCreationReason(data)}`,
+    moduleName: "PT",
+  };
+};
+
+export const getCreationReason = (data = {}) => {
+  return data?.isUpdateProperty ? "UPDATE" : "CREATE";
 };

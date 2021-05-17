@@ -25,7 +25,7 @@ const MCollectCard = () => {
           <span className="logo">
             <PropertyHouse />
           </span>
-          <span className="text">{t("ES_TITLE_PROPERTY_TAX")}</span>
+          <span className="text">{t("mcollect/new-application")}</span>
         </div>
         <div className="body">
           <span className="link">
@@ -34,7 +34,7 @@ const MCollectCard = () => {
             {<ArrowRight to={`/digit-ui/employee/mcollect/inbox`} />}
           </span>
           <span className="link">
-            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("ES_TITLE_NEW_REGISTRATION")}</Link>
+            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("UC_ECHALLAN")}</Link>
           </span>
         </div>
       </div>

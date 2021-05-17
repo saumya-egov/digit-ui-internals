@@ -21,6 +21,8 @@ const StatusCount = ({ status, searchParams, onAssignmentChange, businessService
   //   null
   // );
 
+  // console.log(businessService, "in status count");
+
   return (
     <CheckBox
       onChange={(e) => onAssignmentChange(e, status)}

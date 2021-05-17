@@ -5,11 +5,15 @@ import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import FilterContext from "./FilterContext";
 
 const MetricData = ({ data, code }) => {
-  const { value } = useContext(FilterContext)
+  const { value } = useContext(FilterContext);
   return (
     <div>
       <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px" }}>
-        {code === "citizenAvgRating" ? <Rating currentRating={data?.headerValue} styles={{ width: "unset" }} starStyles={{ width: "25px" }} /> : Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)}
+        {code === "citizenAvgRating" ? (
+          <Rating currentRating={Math.round(data?.headerValue)} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
+        ) : (
+          Digit.Utils.dss.formatter(data?.headerValue, data.headerSymbol, value?.denomination, true)
+        )}
       </p>
       {data.insight && (
         <div>
@@ -25,17 +29,12 @@ const MetricChartRow = ({ data }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
-  const requestDate = {
-    startDate: value?.range?.startDate,
-    endDate: value?.range?.endDate,
-    interval: "month",
-    title: "",
-  };
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
     tenantId,
-    requestDate,
+    requestDate: value?.requestDate,
+    filters: value?.filters,
   });
 
   if (isLoading) {
@@ -53,11 +52,10 @@ const MetricChartRow = ({ data }) => {
 
 const MetricChart = ({ data }) => {
   const { charts } = data;
-
   return (
     <>
       {charts.map((chart, index) => (
-        <MetricChartRow data={chart} />
+        <MetricChartRow data={chart} key={index} />
       ))}
     </>
   );

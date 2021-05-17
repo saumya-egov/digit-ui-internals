@@ -5,6 +5,7 @@ import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import NewApplication from "./NewApplication";
+import EditApplication from "./EditApplication";
 import ApplicationDetails from "./ApplicationDetails";
 import PropertyDetails from "./PropertyDetails";
 import AssessmentDetails from "./AssessmentDetails";
@@ -36,11 +37,11 @@ const EmployeeApp = ({ path, url, userType }) => {
       res.Bill.forEach((e) => {
         obj[e.consumerCode] = e.totalAmount;
       });
-      returnData = searchData.map((e) => ({ ...e, due_tax: "₹ " + (obj[e.propertyId] || 0) }));
+      returnData = searchData.map((e) => ({ ...e, due_tax: obj[e.propertyId] || 0 }));
     } catch (er) {
       const err = er?.response?.data;
       if (["EG_BS_BILL_NO_DEMANDS_FOUND", "EMPTY_DEMANDS"].includes(err?.Errors?.[0].code)) {
-        returnData = searchData.map((e) => ({ ...e, due_tax: "₹ " + 0 }));
+        returnData = searchData.map((e) => ({ ...e, due_tax: 0 }));
       }
     }
     return _next(returnData);
@@ -69,13 +70,20 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
           <PrivateRoute path={`${path}/property-details/:id`} component={() => <PropertyDetails parentRoute={path} />} />
           <PrivateRoute path={`${path}/assessment-details/:id`} component={() => <AssessmentDetails parentRoute={path} />} />
-          {/* <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} /> */}
+          <PrivateRoute path={`${path}/modify-application/:id`} component={() => <EditApplication />} />
           {/* <PrivateRoute path={`${path}/application-details/:id`} component={() => <EmployeeApplicationDetails parentRoute={path} />} /> */}
           <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
           <PrivateRoute
             path={`${path}/search`}
             component={() => (
-              <Inbox parentRoute={path} businessService="PT" middlewareSearch={searchMW} initialStates={inboxInitialState} isInbox={false} />
+              <Inbox
+                parentRoute={path}
+                businessService="PT"
+                middlewareSearch={searchMW}
+                initialStates={inboxInitialState}
+                isInbox={false}
+                EmptyResultInboxComp={"EmptyResultInbox"}
+              />
             )}
           />
         </div>

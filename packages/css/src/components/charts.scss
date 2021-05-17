@@ -3,26 +3,36 @@
   justify-content: space-between;
 
   .sideContent {
-    display: flex;
-    justify-content: space-around;
+    @apply flex justify-around items-center ;
 
     .searchInput {
-      margin-right: 30px;
+      @apply mr-lg;
+      input{
+        margin-bottom: 0;
+        @apply pr-xl;
+      }
+    }
+
+    .signature-img{
+      top: 8px;
+      right: 8px;
+      fill: #505A5F;
+      @apply absolute;
     }
   }
 }
 
 .chart-wrapper {
-  padding-left: 15px;
+  padding: 0 10px;
+  margin-top: 10px;
 }
 
 .chart-row {
   @apply flex justify-between flex-wrap;
   .chart-item {
     flex-grow: 1;
-    margin-right: 25px;
-    margin-bottom: 25px;
-    width: 31%;
+    margin-bottom: 15px;
+    width: 100%;
 
     &:last-child {
       margin-right: 0px;
@@ -31,26 +41,105 @@
 }
 
 .options {
-  display: none;
+  @apply flex justify-between;
+  div {
+    display: none;
+  }
 }
 
 .options-m {
+  width: 95%;
+  margin: 0 auto 15px;
   @apply flex justify-between;
+
+  svg {
+    margin-right: 10px;
+  }
 }
 
-.options,
 .options-m {
   div {
     @apply flex;
   }
 }
 
-@media (min-width: 640px) {
+@screen dt {
+  .chart-wrapper {
+    padding-left: 15px;
+
+    .chart-item {
+      margin-right: 25px;
+      margin-bottom: 25px;
+      width: 31%;
+    }
+  }
   .options-m {
     display: none;
   }
 
   .options {
-    @apply flex justify-end;
+    div {
+      display: flex;
+    }
   }
+}
+
+@media print{
+  .page-break {
+    margin-top: 1rem;
+    display: block;
+    page-break-before: auto;
+  }
+  .chart-wrapper {
+   @media print{
+    .chart-row {
+      @media print{
+      @apply flex justify-between flex-wrap;
+        .chart-item {
+          @media print{
+            flex-grow: 1;
+            margin-right: 25px;
+            margin-bottom: 25px;
+            width: 31%;
+        
+            &:last-child {
+              margin-right: 0px;
+            }
+            .chartHeader {
+              display: flex;
+              justify-content: space-between;
+            
+              .sideContent {
+                @apply flex justify-around items-center ;
+            
+                .searchInput {
+                  @apply mr-lg;
+                  input{
+                    margin-bottom: 0;
+                    @apply pr-xl;
+                  }
+                }
+            
+                .signature-img{
+                  top: 8px;
+                  right: 8px;
+                  fill: #505A5F;
+                  @apply absolute;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+        
+    .options {
+      @apply flex justify-end;
+    }
+
+    .options-m {
+      display: none;
+    }
+  }
+}
 }

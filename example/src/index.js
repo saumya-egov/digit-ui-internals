@@ -8,6 +8,7 @@ import { MCollectModule, MCollectLinks, MCollectComponents } from "@egovernments
 import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+import { initMCollectComponents } from "@egovernments/digit-ui-module-mcollect";
 import { PaymentModule, PaymentLinks, paymentConfigs } from "@egovernments/digit-ui-module-common";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { PGRModule, PGRLinks } from "@egovernments/digit-ui-module-pgr";
@@ -92,7 +93,7 @@ const userInfo = {
   QAPTA,
 };
 
-const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS", "mCollect"];
+const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS", "MCollect"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -133,12 +134,12 @@ const initDigitUI = () => {
     ...PTComponents,
     MCollectLinks,
     MCollectModule,
-    ...MCollectComponents,
   });
 
   initFSMComponents();
   initPGRComponents();
   initDSSComponents();
+  initMCollectComponents();
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),

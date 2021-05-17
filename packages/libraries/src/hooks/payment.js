@@ -37,7 +37,7 @@ export const useFetchBillsForBuissnessService = ({ businessService, ...filters }
   const params = { businessService, ...filters };
 
   const { isLoading, error, isError, data, status } = useQuery(
-    ["billsForBuisnessService", businessService],
+    ["billsForBuisnessService", businessService, { ...filters }],
     () => Digit.PaymentService.fetchBill(tenantId, params),
     config
   );
@@ -71,7 +71,7 @@ export const useFetchPayment = ({ tenantId, consumerCode, businessService }, con
   };
 };
 
-export const usePaymentUpdate = ({ egId }, businessService) => {
+export const usePaymentUpdate = ({ egId }, businessService, config) => {
   const getPaymentData = async (egId) => {
     const transaction = await Digit.PaymentService.updateCitizenReciept(egId);
     const payments = await Digit.PaymentService.getReciept(transaction.Transaction[0].tenantId, businessService, {
@@ -80,7 +80,7 @@ export const usePaymentUpdate = ({ egId }, businessService) => {
     return { payments, applicationNo: transaction.Transaction[0].consumerCode, txnStatus: transaction.Transaction[0].txnStatus };
   };
 
-  return useQuery(["paymentUpdate", egId], () => getPaymentData(egId));
+  return useQuery(["paymentUpdate", egId], () => getPaymentData(egId), config);
 };
 
 export const useGetPaymentRulesForBusinessServices = (tenantId) => {

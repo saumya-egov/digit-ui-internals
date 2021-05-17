@@ -7,17 +7,17 @@ import { Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from 
 import { newConfig } from "../../../config/Create/config";
 import CheckPage from "../Create/CheckPage";
 import PTAcknowledgement from "../Create/PTAcknowledgement";
-import { stringReplaceAll } from "../../../utils";
+import { checkArrayLength, stringReplaceAll } from "../../../utils";
 
 const getPropertyEditDetails = (data = {}) => {
   // converting owners details
 
   if (data?.ownershipCategory === "INSTITUTIONALPRIVATE" || data?.ownershipCategory === "INSTITUTIONALGOVERNMENT") {
     let document = [];
-    if (data?.owners[0]?.documents[0]?.documentType.includes("IDENTITYPROOF")) {
+    if (data?.owners[0]?.documents[0]?.documentType?.includes("IDENTITYPROOF")) {
       data.owners[0].documents[0].documentType = {
-        code: data?.owners[0]?.documents[0].documentType,
-        i18nKey: stringReplaceAll(data?.owners[0]?.documents[0].documentType, ".", "_"),
+        code: data?.owners[0]?.documents[0]?.documentType,
+        i18nKey: stringReplaceAll(data?.owners[0]?.documents[0]?.documentType, ".", "_"),
       };
       document["proofIdentity"] = data?.owners[0]?.documents[0];
     }
@@ -33,12 +33,12 @@ const getPropertyEditDetails = (data = {}) => {
       let document = [];
       owner.documents &&
         owner.documents.map((doc) => {
-          if (doc.documentType && typeof doc.documentType == "string" && doc.documentType.includes("SPECIALCATEGORYPROOF")) {
-            doc.documentType = { code: doc.documentType, i18nKey: stringReplaceAll(doc.documentType, ".", "_") };
+          if (doc?.documentType && typeof doc?.documentType == "string" && doc?.documentType?.includes("SPECIALCATEGORYPROOF")) {
+            doc.documentType = { code: doc?.documentType, i18nKey: stringReplaceAll(doc?.documentType, ".", "_") };
             document["specialProofIdentity"] = doc;
           }
-          if (doc.documentType && typeof doc.documentType == "string" && doc.documentType.includes("IDENTITYPROOF")) {
-            doc.documentType = { code: doc.documentType, i18nKey: stringReplaceAll(doc.documentType, ".", "_") };
+          if (doc?.documentType && typeof doc?.documentType == "string" && doc?.documentType?.includes("IDENTITYPROOF")) {
+            doc.documentType = { code: doc?.documentType, i18nKey: stringReplaceAll(doc?.documentType, ".", "_") };
             document["proofIdentity"] = doc;
           }
         });
@@ -67,8 +67,12 @@ const getPropertyEditDetails = (data = {}) => {
     data.address.geoLocation = {};
   }
   data.address.pincode = data?.address?.pincode;
-  let addressDocs = data?.documents?.filter((doc) => doc.documentType.includes("ADDRESSPROOF"));
-  addressDocs[0].documentType = { code: addressDocs[0].documentType, i18nKey: stringReplaceAll(addressDocs[0].documentType, ".", "_") };
+  data.address.city = { code: data?.tenantId };
+  data.address.locality.i18nkey = data?.tenantId.replace(".", "_").toUpperCase() + "_" + "REVENUE" + "_" + data?.address?.locality?.code;
+  let addressDocs = data?.documents?.filter((doc) => doc?.documentType?.includes("ADDRESSPROOF"));
+  if (checkArrayLength(addressDocs)) {
+    addressDocs[0].documentType = { code: addressDocs[0]?.documentType, i18nKey: stringReplaceAll(addressDocs[0]?.documentType, ".", "_") };
+  }
   if (data?.address?.documents) {
     data.address.documents["ProofOfAddress"] = addressDocs[0];
   } else {
@@ -398,31 +402,34 @@ const EditProperty = ({ parentRoute }) => {
   const acknowledgementIds = window.location.href.split("/").pop();
   const propertyIds = window.location.href.split("/").pop();
   let application = {};
-  const typeOfProperty = window.location.href.includes("update=true");
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(
+  const updateProperty = window.location.href.includes("action=UPDATE");
+  const typeOfProperty = window.location.href.includes("UPDATE") ? true : false;
+  const ptProperty = JSON.parse(sessionStorage.getItem("pt-property")) || {};
+  const data = { Properties: [ptProperty] };
+  /* const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch(
     { filters: typeOfProperty ? { propertyIds } : { acknowledgementIds } },
     {
       filters: typeOfProperty ? { propertyIds } : { acknowledgementIds },
     }
-  );
+  ); */
   sessionStorage.setItem("isEditApplication", false);
+
   useEffect(() => {
-    application = data?.Properties[0];
+    application = data?.Properties && data.Properties[0] && data.Properties[0];
     if (data && application) {
       application = data?.Properties[0];
-      if (typeOfProperty) {
+      if (updateProperty) {
         application.isUpdateProperty = true;
         application.isEditProperty = false;
       } else {
-        application.isUpdateProperty = false;
+        application.isUpdateProperty = typeOfProperty;
         application.isEditProperty = true;
       }
+      sessionStorage.setItem("propertyInitialObject", JSON.stringify({ ...application }));
       let propertyEditDetails = getPropertyEditDetails(application);
       setParams({ ...params, ...propertyEditDetails });
     }
-  }, [data]);
-
-  // const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_PROPERTY", application);
+  }, []);
 
   const goNext = (skipStep, index, isAddMultiple, key) => {
     let currentPath = pathname.split("/").pop(),
@@ -473,7 +480,11 @@ const EditProperty = ({ parentRoute }) => {
       }
     }
     if (typeof nextStep == "object" && nextStep != null && isMultiple == false) {
-      if (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]) {
+      if (
+        nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] &&
+        (nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] == "map" ||
+          nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")] == "un-occupied-area")
+      ) {
         nextStep = `${nextStep[sessionStorage.getItem("IsAnyPartOfThisFloorUnOccupied")]}`;
       } else if (nextStep[sessionStorage.getItem("subusagetypevar")]) {
         nextStep = `${nextStep[sessionStorage.getItem("subusagetypevar")]}`;
@@ -534,6 +545,8 @@ const EditProperty = ({ parentRoute }) => {
   const onSuccess = () => {
     clearParams();
     queryClient.invalidateQueries("PT_CREATE_PROPERTY");
+    sessionStorage.setItem("propertyInitialObject", JSON.stringify({}));
+    sessionStorage.setItem("pt-property", JSON.stringify({}));
   };
   newConfig.forEach((obj) => {
     config = config.concat(obj.body.filter((a) => !a.hideInCitizen));

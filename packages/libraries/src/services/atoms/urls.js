@@ -66,6 +66,8 @@ const Urls = {
 
   mcollect: {
     search: "/echallan-services/eChallan/v1/_search",
+    create: "/echallan-services/eChallan/v1/_create?",
+    fetch_bill: "/billing-service/bill/v2/_fetchbill?",
     search_bill: "/egov-searcher/bill-genie/mcollectbills/_get",
   },
 };

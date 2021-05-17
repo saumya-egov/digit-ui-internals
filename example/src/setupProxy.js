@@ -1,8 +1,9 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
+
 const createProxy = createProxyMiddleware({
   // target: process.env.REACT_APP_PROXY_API || "https://uat.digit.org",
+  // target: process.env.REACT_APP_PROXY_API || "https://dev.digit.org",
   target: process.env.REACT_APP_PROXY_API || "https://qa.digit.org",
-  // target: process.env.REACT_APP_PROXY_API || "https://qa.digit.org",
   changeOrigin: true,
 });
 const assetsProxy = createProxyMiddleware({
@@ -31,6 +32,7 @@ module.exports = function (app) {
     "/fsm-calculator/v1/billingSlab/_search",
     "/pt-calculator-v2",
     "/dashboard-analytics",
+    "/echallan-services",
     "/echallan-services",
     "/egov-searcher/bill-genie/mcollectbills/_get",
   ].forEach((location) => app.use(location, createProxy));

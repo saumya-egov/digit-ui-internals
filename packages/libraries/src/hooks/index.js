@@ -18,6 +18,7 @@ import useBoundaryLocalities from "./useLocalities";
 import useCommonMDMS from "./useMDMS";
 import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useApplicationStatusGeneral from "./useStatusGeneral";
+import useModuleTenants from "./useModuleTenants";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -76,6 +77,7 @@ import useGetChart from "./dss/useGetChart";
 import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
 import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
+import usemcollectTenants from "./mcollect/useTenants";
 
 const pgr = {
   useComplaintDetails,
@@ -143,6 +145,7 @@ const mcollect = {
   useMCollectMDMS,
   useMCollectSearch,
   useMcollectSearchBill,
+  usemcollectTenants,
 };
 
 const Hooks = {
@@ -165,6 +168,7 @@ const Hooks = {
   useBoundaryLocalities,
   useCommonMDMS,
   useApplicationStatusGeneral,
+  useModuleTenants,
   pgr,
   fsm,
   pt,

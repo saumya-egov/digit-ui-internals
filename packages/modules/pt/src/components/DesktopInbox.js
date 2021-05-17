@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
@@ -10,22 +10,28 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
   const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
+  const [EmptyInboxComp, setEmptyInboxComp] = useState(() => {
+    const com = Digit.ComponentRegistryService?.getComponent(props.EmptyResultInboxComp);
+    console.log("here is the empty component", com, props.EmptyResultInboxComp);
+    return com;
+  });
 
   // searchData, workFlowData
 
   const columns = React.useMemo(() => (props.isSearch ? tableConfig.searchColumns(props) : tableConfig.inboxColumns(props) || []), []);
 
-  useEffect(() => {
-    console.log(data, columns, "inside desktop inbox....");
-  }, [data, columns]);
+  // useEffect(() => {
+  //   console.log(data, columns, "inside desktop inbox....");
+  // }, [data, columns]);
 
   let result;
   if (props.isLoading) {
     result = <Loader />;
   } else if (data?.length === 0) {
-    result = (
+    result = (EmptyInboxComp && <EmptyInboxComp />) || (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
+
         {t("CS_MYAPPLICATIONS_NO_APPLICATION")
           .split("\\n")
           .map((text, index) => (
@@ -78,14 +84,6 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
                 type="desktop"
               />
             }
-            {/* <Filter
-              businessService={props.businessService}
-              searchParams={props.searchParams}
-              applications={props.data}
-              onFilterChange={props.onFilterChange}
-              translatePrefix={props.translatePrefix}
-              type="desktop"
-            /> */}
           </div>
         </div>
       )}

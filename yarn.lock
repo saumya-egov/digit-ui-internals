@@ -14460,6 +14460,13 @@ react-time-picker@4.2.0:
     react-fit "^1.0.3"
     update-input-width "^1.1.1"
 
+react-to-print@^2.12.4:
+  version "2.12.4"
+  resolved "https://registry.yarnpkg.com/react-to-print/-/react-to-print-2.12.4.tgz#d9ed1447719c321798896040b0945a5c73a8f0c1"
+  integrity sha512-OM0nttpZMv3NV+z9FDRyyJIPRHlz05NzlTFoUKPREq+Bq4CnojwzUtB2qNzpwYerXPFzgYXR4/IT1W1mk9s9HA==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-transition-group@2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"
