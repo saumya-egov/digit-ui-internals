@@ -64,7 +64,7 @@ const CustomHorizontalBarChart = ({ data }) => {
           <Bar key={id} dataKey={bar} fill={barColors[id]} />
         ))}
         <Legend formatter={renderLegend} iconType="circle" />
-        <Tooltip />
+        <Tooltip cursor={false} />
       </BarChart>
     </ResponsiveContainer>
   );
