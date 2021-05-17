@@ -10,7 +10,7 @@ const Switch = ({ onSelect }) => {
       <div>Denomination</div>
       <div className="switch-wrapper">
         {denominations.map((label, idx) => (
-          <div key={idx}>
+          <div>
             <input
               type="radio"
               id={label}
@@ -18,9 +18,8 @@ const Switch = ({ onSelect }) => {
               name="unit"
               checked={label === value?.denomination}
               onClick={() => onSelect({ denomination: label })}
-              onChange={e => {}}
             />
-            <label htmlFor={label}>{label}</label>
+            <label for={label}>{label}</label>
           </div>
         ))}
       </div>

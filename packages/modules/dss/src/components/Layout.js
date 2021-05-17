@@ -32,14 +32,13 @@ const Layout = ({ rowData }) => {
     switch (visualizer.vizType) {
       case "metric-collection":
         return (
-          <GenericChart header={visualizer.name} className="metricsTable" key={key}>
+          <GenericChart header={visualizer.name} className="metricsTable">
             <MetricChart data={visualizer} />
           </GenericChart>
         );
       case "chart":
         return (
           <GenericChart
-            key={key}
             header={visualizer.name}
             showDownload={visualizer?.charts?.[0].chartType === "table"}
             showSearch={visualizer?.charts?.[0].chartType === "table"}
@@ -52,13 +51,13 @@ const Layout = ({ rowData }) => {
         );
       case "performing-metric":
         return (
-          <GenericChart header={visualizer.name} key={key}>
+          <GenericChart header={visualizer.name}>
             <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} />
           </GenericChart>
         );
       case "collection":
       case "module":
-        return <Summary key={key} ttile={visualizer.name} data={visualizer} key={key}/>;
+        return <Summary key={key} ttile={visualizer.name} data={visualizer} />;
     }
   };
   return <div className="chart-row">{rowData.vizArray.map((chart, key) => renderVisualizer(chart, key))}</div>;

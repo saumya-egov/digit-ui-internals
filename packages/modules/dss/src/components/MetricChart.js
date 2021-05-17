@@ -55,7 +55,7 @@ const MetricChart = ({ data }) => {
   return (
     <>
       {charts.map((chart, index) => (
-        <MetricChartRow data={chart} key={index} />
+        <MetricChartRow data={chart} />
       ))}
     </>
   );

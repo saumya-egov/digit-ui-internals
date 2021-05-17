@@ -71,7 +71,7 @@ const DateRange = ({ values, onFilterChange }) => {
       <div>Date Range</div>
       <div className="employee-select-wrap" ref={wrapperRef}>
         <div className="select">
-          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} readOnly />
+          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
           <Calender onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
         {isModalOpen && (

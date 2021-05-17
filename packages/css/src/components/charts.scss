@@ -24,7 +24,6 @@
 
 .chart-wrapper {
   padding: 0 10px;
-  margin-top: 10px;
 }
 
 .chart-row {
@@ -41,10 +40,7 @@
 }
 
 .options {
-  @apply flex justify-between;
-  div {
-    display: none;
-  }
+  display: none;
 }
 
 .options-m {
@@ -57,6 +53,7 @@
   }
 }
 
+.options,
 .options-m {
   div {
     @apply flex;
@@ -78,9 +75,7 @@
   }
 
   .options {
-    div {
-      display: flex;
-    }
+    @apply flex justify-end;
   }
 }
 
