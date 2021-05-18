@@ -1,18 +1,8 @@
 import { Card, CardSubHeader, Header, LinkButton, Loader, Row, StatusTable } from "@egovernments/digit-ui-react-components";
-import { values } from "lodash-es";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { propertyCardBodyStyle } from "../../../modules/pt/src/utils";
-
-function billSearch(tenantId, challanno, businessService) {
-  console.log(businessService + "This one");
-
-  var res = null;
-  var pr = Digit.PaymentService.searchBill(tenantId, { consumerCode: challanno, service: businessService });
-
-  return pr;
-}
 
 const EmployeeChallan = (props) => {
   // const { t } = useTranslation();
@@ -20,22 +10,11 @@ const EmployeeChallan = (props) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const coreData = Digit.Hooks.useCoreData();
   const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanno } });
-  /*console.log(data?.challans);*/
-  const challanDetails = data?.challans?.filter(function (item) {
+  console.log(data?.challans);
+  var challanDetails = data?.challans?.filter(function (item) {
     return item.challanNo === challanno;
   })[0];
-
-  var res = null;
-  if (challanDetails) res = billSearch(tenantId, challanno, challanDetails?.businessService);
-
-  console.log(res);
-
-  var billDetails = null;
-
-  res.then((values) => {
-    if (values?.Bill) billDetails = values?.Bill[0];
-  });
-
+  // console.log(challanDetails)
   return (
     <React.Fragment>
       <div style={{ width: "30%", fontFamily: "calibri", color: "#FF0000" }}>
@@ -45,12 +24,12 @@ const EmployeeChallan = (props) => {
         <Card>
           <CardSubHeader>Challan No : {challanno} </CardSubHeader>
           <StatusTable>
-            <Row label={"Tenant id"} text={"₹5000"} text={billDetails?.tenantId} />
-            <Row label={"Bill Detail id"} text={"₹500"} text={billDetails?.billAccountdeatils.billDetailId} />
-            <Row label={"Demand Detail id"} text={billDetails?.billAccountdeatils.demandDetailId} />
-            <Row label={"Tax Head code"} text={billDetails?.billAccountdeatils.taxHeadCode} />
-            <Row label={"Adjusted amount"} text={billDetails?.billAccountdeatils.adjustedAmount} />
-            <Row label={"Order"} text={billDetails?.billAccountdeatils.order} />
+            <Row label={"Tenant id"} text={"₹5000"} textStyle={{ whiteSpace: "pre" }} />
+            <Row label={"Bill Detail Id"} text={"₹500"} textStyle={{ whiteSpace: "pre" }} />
+            <Row label={"Demand Detail id"} text="₹50" />
+            <Row label={"Tax Head code"} text={`${"₹20"}` || "NA"} />
+            <Row label={"Adjusted amount"} text={`${"₹20"}` || "NA"} />
+            <Row label={"Order"} text={`${"₹0"}` || "NA"} />
             <hr />
             <Row label={<b>Total Due Amount</b>} text={challanDetails?.amount} />
           </StatusTable>
