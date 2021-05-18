@@ -12,17 +12,6 @@ import {
 } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
-const renderUnits = (denomination) => {
-  switch (denomination) {
-    case "Unit":
-      return "";
-    case "Lac":
-      return "(In Lac)";
-    case "Cr":
-      return "(In Cr)";
-  }
-};
-
 const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
 };
