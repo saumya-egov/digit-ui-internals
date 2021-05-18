@@ -6,6 +6,17 @@ import FilterContext from "./FilterContext";
 
 const getValue = (plot) => plot.value;
 
+const renderUnits = (denomination) => {
+  switch (denomination) {
+    case "Unit":
+      return "";
+    case "Lac":
+      return "(In Lac)";
+    case "Cr":
+      return "(In Cr)";
+  }
+};
+
 const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -50,10 +61,11 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
           <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} />
           <YAxis
             label={{
-              value: response?.responseData?.data?.[0]?.headerName,
+              value: `${response?.responseData?.data?.[0]?.headerName} ${renderUnits(value.denomination)}`,
               angle: -90,
-              position: "left",
-              offset: 15,
+              position: "insideLeft",
+              dy: 40,
+              offset: -10,
               fontSize: "14px",
               fill: "#505A5F",
             }}

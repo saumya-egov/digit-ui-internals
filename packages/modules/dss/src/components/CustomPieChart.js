@@ -30,7 +30,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     }
     return (
       <text x={x} cx={cx} y={y} cy={cy} percent={percent} name={name} fill="#505A5F" alignmentBaseline="middle" className="recharts-pie-label-text" fontSize="14px">
-        {value}
+        {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };

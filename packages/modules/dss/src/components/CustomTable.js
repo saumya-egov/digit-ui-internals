@@ -58,8 +58,8 @@ const CustomTable = ({ data, onSearch }) => {
     () => {
       if (!response || !lastYearResponse) return;
       return response?.responseData?.data?.map((rows) => {
-        const lyData = lastYearResponse?.responseData?.data?.find(lyRow => lyRow.headerName === rows.headerName);
-        return rows.plots.reduce((acc, row, currentIndex) => {
+        const lyData = lastYearResponse?.responseData?.data?.find(lyRow => lyRow?.headerName === rows?.headerName);
+        return rows?.plots?.reduce((acc, row, currentIndex) => {
           let value = row?.value !== null ? row?.value : row?.label || "";
           let insight = null;
           if (row.symbol === "number" && lyData !== undefined) {
@@ -92,6 +92,7 @@ const CustomTable = ({ data, onSearch }) => {
         initSortId="S N "
         onSearch={onSearch}
         data={tableData}
+        totalRecords={tableData?.length}
         columns={tableColumns}
         getCellProps={(cellInfo) => {
           return {

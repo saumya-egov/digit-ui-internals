@@ -22,7 +22,7 @@ const Layout = ({ rowData }) => {
       case "line":
         return <CustomAreaChart data={chart} />;
       case "horizontalBar":
-        return <CustomHorizontalBarChart data={chart} />;
+        return <CustomHorizontalBarChart data={chart} xAxisType="number" yAxisType="category" layout="vertical" yDataKey="name" xDataKey="" />;
       case "bar":
         return <CustomHorizontalBarChart data={chart} />;
     }

@@ -89,7 +89,6 @@ const DashBoard = () => {
           </div>
         </div>
         {dashboardConfig?.[0]?.visualizations.map((row, key) => {
-          if (row.row === 4) return null;
           return <Layout rowData={row} key={key} />;
         })}
       </div>
