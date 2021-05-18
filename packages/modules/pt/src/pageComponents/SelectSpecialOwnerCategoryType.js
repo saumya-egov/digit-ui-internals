@@ -8,6 +8,7 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const isUpdateProperty = formData?.isUpdateProperty || false;
+  let isEditProperty = formData?.isEditProperty || false;
   const [ownerType, setOwnerType] = useState(
     (formData.owners && formData.owners[index] && formData.owners[index].ownerType) || formData.owners?.ownerType || {}
   );
@@ -76,7 +77,7 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
           onSelect={setTypeOfOwner}
           labelKey="PROPERTYTAX_OWNERTYPE"
           isDependent={true}
-          disabled={isUpdateProperty}
+          disabled={isUpdateProperty || isEditProperty}
         />
       </div>
     </FormStep>

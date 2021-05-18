@@ -14,6 +14,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
   const [altContactNumber, setAltContactNumber] = useState(formData.owners && formData.owners[index] && formData.owners[index].altContactNumber);
   const [emailId, setEmailId] = useState(formData.owners && formData.owners[index] && formData.owners[index].emailId);
   const isUpdateProperty = formData?.isUpdateProperty || false;
+  let isEditProperty = formData?.isEditProperty || false;
 
   function setInistitution(e) {
     setInistitutionName(e.target.value);
@@ -100,7 +101,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="institutionName"
           onChange={setInistitution}
           value={inistitutionName}
-          disable={isUpdateProperty}
+          disable={isUpdateProperty || isEditProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -115,7 +116,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           selected={inistitutetype}
           optionKey="code"
           select={setTypeOfInistituteName}
-          disabled={isUpdateProperty}
+          disabled={isUpdateProperty || isEditProperty}
         />
         <CardHeader>{t("PT_AUTH_PERSON_DETAILS")}</CardHeader>
         <CardLabel>{`${t("PT_OWNER_NAME")}`}</CardLabel>
@@ -126,7 +127,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="name"
           onChange={setInistituteName}
           value={name}
-          disable={isUpdateProperty}
+          disable={isUpdateProperty || isEditProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -141,7 +142,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           name="designation"
           onChange={setDesignationName}
           value={designation}
-          disable={isUpdateProperty}
+          disable={isUpdateProperty || isEditProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -157,7 +158,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           onChange={setMobileNo}
           value={mobileNumber}
           type={"tel"}
-          disable={isUpdateProperty}
+          disable={isUpdateProperty || isEditProperty}
           {...(validation = {
             isRequired: true,
             pattern: "[6-9]{1}[0-9]{9}",
@@ -174,7 +175,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           onChange={setAltContactNo}
           value={altContactNumber}
           type={"tel"}
-          disable={isUpdateProperty}
+          disable={isUpdateProperty || isEditProperty}
           {...(validation = {
             isRequired: true,
             pattern: "^[0-9]{11}$",
@@ -191,7 +192,7 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
           onChange={setEmail}
           type="email"
           value={emailId}
-          disable={isUpdateProperty}
+          disable={isUpdateProperty || isEditProperty}
           // {...(validation = {
           //   isRequired: true,
           //   type: "email",
