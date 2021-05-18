@@ -741,7 +741,7 @@ export const convertToUpdateProperty = (data = {}) => {
     });
     formdata.Property?.units.push(...oldUnits);
   }
-  if (
+  /* if (
     checkArrayLength(propertyInitialObject?.owners) &&
     checkIsAnArray(formdata.Property?.owners) &&
     data?.isEditProperty &&
@@ -754,7 +754,7 @@ export const convertToUpdateProperty = (data = {}) => {
     formdata.Property?.owners.push(...oldOwners);
   } else {
     formdata.Property.owners = [...propertyInitialObject.owners];
-  }
+  } */
 
   if (checkArrayLength(propertyInitialObject?.owners) && checkIsAnArray(formdata.Property?.owners)) {
     formdata.Property.owners = [...propertyInitialObject.owners];
