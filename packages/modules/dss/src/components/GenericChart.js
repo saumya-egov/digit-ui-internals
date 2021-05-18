@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
+import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, DownloadIcon, TextInput, CardCaption, CardLabel, EllipsisMenu, SearchIconSvg } from "@egovernments/digit-ui-react-components";
-import FilterContext from "./FilterContext";
+import { useReactToPrint } from "react-to-print";
 
 const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
@@ -10,15 +10,26 @@ const SearchImg = () => {
 const GenericChart = ({ header, className, caption, children, showSearch = false, showDownload = false, onChange }) => {
   const { t } = useTranslation();
 
-  const { value } = useContext(FilterContext);
+  const chart = useRef();
+
+  const handlePrint = useReactToPrint({
+    content: () => chart.current,
+  });
+
+  function download(data) {
+    setTimeout(() => {
+      if (data.code === "pdf") handlePrint();
+      if (data.code === "image") Digit.Download.Image(chart, t(header));
+    }, 500);
+  }
 
   return (
-    <Card className={`chart-item ${className}`}>
+    <Card className={`chart-item ${className}`} ReactRef={chart}>
       <div className="chartHeader">
         <CardLabel style={{ fontWeight: "bold" }}>{`${t(header)}`}</CardLabel>
         <div className="sideContent">
           {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
-          {showDownload && <DownloadIcon className="mrlg" />}
+          {showDownload && <DownloadIcon className="mrlg" onClick={handlePrint} />}
           <EllipsisMenu
             menuItems={[
               {
@@ -31,7 +42,7 @@ const GenericChart = ({ header, className, caption, children, showSearch = false
               },
             ]}
             displayKey="i18nKey"
-            onSelect={(data) => console.log(data)}
+            onSelect={(data) => download(data)}
           />
         </div>
       </div>
