@@ -74,7 +74,7 @@ const Inbox = ({
 
       for (var key in businessServiceMap) {
         let consumerCodes = businessServiceMap[key].toString();
-        res = await Digit.PaymentService.searchBill(tenantId, { consumerCode: consumerCodes, service: key });
+        res = await Digit.PaymentService.fetchBill(tenantId, { consumerCode: consumerCodes, businessService: key });
         processInstanceArray = processInstanceArray.concat(res.Bill)
         businessIdToOwnerMapping = {};
         processInstanceArray.filter(
@@ -96,12 +96,13 @@ const Inbox = ({
   
   data?.challans?.map(data => {
     formedData.push({
-      challanNo: data.challanNo,
-      name: data.citizen.name,
-      applicationStatus: data.applicationStatus,
-      businessService: data.businessService,
-      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount,
-      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate
+      challanNo: data?.challanNo,
+      name: data?.citizen?.name,
+      applicationStatus: data?.applicationStatus,
+      businessService: data?.businessService,
+      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount || 0,
+      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate || "NA",
+      tenantId: data?.tenantId
     })
   });
 
