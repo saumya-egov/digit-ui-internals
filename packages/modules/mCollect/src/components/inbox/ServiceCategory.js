@@ -21,9 +21,17 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
 
   const translateState = (option) => {
     let code = stringReplaceAll(option.code, ".", "_");
+    code = stringReplaceAll(code, " ", "_");
     code = code.toUpperCase();
     return t(`BILLINGSERVICE_BUSINESSSERVICE_${code}`);
   };
+
+  let menuFirst = [];
+  let meuSecond = [];
+  Menu?.map((option, index) => {
+    if(index < 5) menuFirst.push(option);
+    else meuSecond.push(option);
+  })
 
   if (isLoading) {
     return <Loader />;
@@ -32,11 +40,21 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
   return (
     <div className="status-container">
       <div className="filter-label" style={{ fontWeight: "normal" }}>
-        {t("Service Category")}
+        {t("UC_SERVICE_CATEGORY_LABEL")}
       </div>
-      <div>
+
+      {menuFirst?.map((option, index) => {
+        return (
+          <ServiceCategoryCount
+            key={index}
+            onAssignmentChange={onAssignmentChange}
+            status={{ name: translateState(option), code: option.code }}
+            searchParams={searchParams}
+          />
+        );
+      })}
       {moreStatus &&
-        Menu?.map((option, index) => {
+        meuSecond?.map((option, index) => {
           return (
             <ServiceCategoryCount
               key={index}
@@ -45,12 +63,10 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
               searchParams={searchParams}
             />
           );
-        })
-        }
+        })}
       <div className="filter-button" onClick={() => showMoreStatus(!moreStatus)}>
         {" "}
         {moreStatus ? t("ES_COMMON_LESS") : t("ES_COMMON_MORE")}{" "}
-      </div>
       </div>
     </div>
   );

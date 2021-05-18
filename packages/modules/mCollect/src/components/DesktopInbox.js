@@ -6,6 +6,7 @@ import InboxLinks from "./inbox/InboxLink";
 import ApplicationTable from "./inbox/ApplicationTable";
 import SearchApplication from "./inbox/search";
 import { Link } from "react-router-dom";
+import { getActionButton } from "../utils";
 
 const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
   const { data } = props;
@@ -77,8 +78,8 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
     {
       Header: t("UC_DUE_DATE"),
       Cell: ({ row }) => {
-        const wf = row.original?.applicationStatus;
-        return GetCell(t(`${convertEpochToDate(row.original?.dueDate)}`));
+        const dueDate = row.original?.dueDate === "NA" ? "NA" : convertEpochToDate(row.original?.dueDate);
+        return GetCell(t(`${dueDate}`));
       },
       mobileCell: (original) => GetMobCell(convertEpochToDate(original?.["dueDate"])),
     },
@@ -103,7 +104,28 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
         const amount = row.original?.totalAmount;
         let action = "ACTIVE"
         if(amount > 0)  action = "COLLECT"
-        return GetCell(t(`${action}`));
+        if (action == "COLLECT") {
+          return (
+            <div>
+              <span className="link">
+                <Link to={{ pathname: `/digit-ui/employee/payment/collect/${row.original?.["businessService"]}/${row.original?.["challanNo"]}/tenantId=${row.original?.["tenantId"]}`}}>
+                  {action}
+                </Link>
+              </span>
+            </div>
+          );
+        } else if(row.original?.applicationStatus == "PAID") {
+          return (
+            <div>
+              <span className="link">
+                {getActionButton(row.original?.["businessService"], row.original?.["challanNo"])}
+              </span>
+            </div>
+          )
+        } else {
+          return GetCell(t(`${"NA"}`));
+        }
+        
       },
       mobileCell: (original) => GetMobCell(original?.workflowData?.state?.["state"]),
     }

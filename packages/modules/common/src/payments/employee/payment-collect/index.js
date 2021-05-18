@@ -48,13 +48,16 @@ export const CollectPayment = (props) => {
   }, []);
 
   const getPaymentModes = () => defaultPaymentModes;
-  const paidByMenu = [{ name: t("COMMON_OWNER") }, { name: t("COMMON_OTHER") }];
+  const paidByMenu = [
+    { code: "OWNER", name: t("COMMON_OWNER") },
+    { code: "OTHER", name: t("COMMON_OTHER") },
+  ];
   const [selectedPaymentMode, setPaymentMode] = useState(formState?.selectedPaymentMode || getPaymentModes()[0]);
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     bill.totalAmount = Math.round(bill.totalAmount);
-    data.paidBy = data.paidBy.name;
+    data.paidBy = data.paidBy.code;
     // console.log(data, bill.totalAmount);
 
     const { ManualRecieptDetails, paymentModeDetails, ...rest } = data;
@@ -115,7 +118,7 @@ export const CollectPayment = (props) => {
       delete recieptRequest.Payment.reTransanctionNumber;
     }
 
-    console.log(recieptRequest);
+    // console.log(recieptRequest);
 
     try {
       const resposne = await Digit.PaymentService.createReciept(tenantId, recieptRequest);
@@ -158,7 +161,7 @@ export const CollectPayment = (props) => {
                 {...customProps}
                 selected={props.value}
                 select={(d) => {
-                  if (isEqual(d, paidByMenu[0])) {
+                  if (d.name == paidByMenu[0].name) {
                     props.setValue("payerName", bill?.payerName);
                     props.setValue("payerMobile", bill?.mobileNumber);
                   } else {
