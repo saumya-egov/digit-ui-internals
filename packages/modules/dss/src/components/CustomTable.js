@@ -1,13 +1,13 @@
 import React, { Fragment, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime, subYears } from "date-fns";
-import { UpwardArrow, TextInput, Loader, Table } from "@egovernments/digit-ui-react-components";
+import { UpwardArrow, TextInput, Loader, Table, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
 const CustomTable = ({ data, onSearch }) => {
   const { id } = data;
   const { t } = useTranslation();
-  const { value } = useContext(FilterContext);
+  const { value, setValue } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const lastYearDate = {
     startDate: subYears(value?.range?.startDate, 1).getTime(),
@@ -78,12 +78,22 @@ const CustomTable = ({ data, onSearch }) => {
     [response, lastYearResponse]
   );
 
+  const removeULB = (id) => {
+    setValue({ ...value, filters: { ...value?.filters, tenantId: [...value?.filters?.tenantId].filter((tenant, index) => index !== id) } })
+  }
+
   if (isLoading || isRequestLoading || !tableColumns || !tableData) {
     return <Loader />;
   }
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }}>
+      {value?.filters?.tenantId.length > 0 && <div className="tag-container">
+        <span style={{ marginTop: '20px' }}>{t('DSS_FILTERS_APPLIED')}:  </span>
+        {value?.filters?.tenantId?.map((filter, id) => (
+          <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+        ))}
+      </div>}
       <Table
         className="customTable"
         t={t}

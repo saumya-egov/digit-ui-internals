@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useReactToPrint } from "react-to-print";
-import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
+import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
@@ -53,6 +53,14 @@ const DashBoard = () => {
     content: () => fullPageRef.current,
   });
 
+  const removeULB = (id) => {
+    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } })
+  }
+
+  const handleClear = () => {
+    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
+  }
+
   if (isLoading) {
     return <Loader />;
   }
@@ -75,6 +83,14 @@ const DashBoard = () => {
           </div>
         </div>
         <Filters t={t} ulbTenants={ulbTenants} isOpen={isFilterModalOpen} closeFilters={() => setIsFilterModalOpen(false)} />
+        {filters?.filters?.tenantId.length > 0 && <div className="tag-container">
+          {filters?.filters?.tenantId?.map((filter, id) => (
+            <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+          ))}
+          <p className="clearText" onClick={handleClear}>
+            {t(`DSS_FILTER_CLEAR`)}
+          </p>
+        </div>}
         <div className="options-m">
           <div>
             <FilterIcon onClick={() => setIsFilterModalOpen(!isFilterModalOpen)} style />
