@@ -1,8 +1,7 @@
-import React, { Fragment, useMemo, useState, useRef } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useReactToPrint } from "react-to-print";
 import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
-import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
+import { startOfYear, endOfYear, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
@@ -49,9 +48,7 @@ const DashBoard = () => {
   const { data: ulbTenants } = Digit.Hooks.useModuleTenants("FSM");
   const fullPageRef = useRef();
 
-  const handlePrint = useReactToPrint({
-    content: () => fullPageRef.current,
-  });
+  const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
 
   if (isLoading) {
     return <Loader />;

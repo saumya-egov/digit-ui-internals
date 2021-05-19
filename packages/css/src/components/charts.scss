@@ -79,7 +79,7 @@
 
   .options {
     div {
-      display: flex;
+      @apply flex cursor-pointer;
     }
   }
 }
