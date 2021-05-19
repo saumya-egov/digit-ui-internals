@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, DownloadIcon, TextInput, CardCaption, CardLabel, EllipsisMenu, SearchIconSvg } from "@egovernments/digit-ui-react-components";
-import { useReactToPrint } from "react-to-print";
 
 const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
@@ -12,13 +11,9 @@ const GenericChart = ({ header, className, caption, children, showSearch = false
 
   const chart = useRef();
 
-  const handlePrint = useReactToPrint({
-    content: () => chart.current,
-  });
-
   function download(data) {
     setTimeout(() => {
-      if (data.code === "pdf") handlePrint();
+      if (data.code === "pdf") Digit.Download.PDF(chart, t(header));
       if (data.code === "image") Digit.Download.Image(chart, t(header));
     }, 500);
   }
@@ -29,7 +24,7 @@ const GenericChart = ({ header, className, caption, children, showSearch = false
         <CardLabel style={{ fontWeight: "bold" }}>{`${t(header)}`}</CardLabel>
         <div className="sideContent">
           {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
-          {showDownload && <DownloadIcon className="mrlg" onClick={handlePrint} />}
+          {showDownload && <DownloadIcon className="mrlg" onClick={() => download({ code: "pdf" })} />}
           <EllipsisMenu
             menuItems={[
               {
