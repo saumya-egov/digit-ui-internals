@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
+import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import { startOfYear, endOfYear, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
