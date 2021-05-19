@@ -26,9 +26,10 @@ export const ApplicationCard = ({
   const [popup, setPopup] = useState(isSearch ? true : false);
   const [_sortparams, setSortParams] = useState(sortParams);
   const [FilterComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
+  const [searchFilterParams, setSearchFilterParams] = useState(searchParams);
 
   const onSearchFilter = (params) => {
-    onFilterChange(params);
+    onFilterChange(params, true);
     setPopup(false);
   };
 
@@ -71,6 +72,10 @@ export const ApplicationCard = ({
             text="SEARCH"
             handleActionClick={() => {
               setType("SEARCH");
+              setSearchFilterParams({
+                businessService: [],
+                status: []
+              });
               setPopup(true);
             }}
           />
@@ -80,31 +85,35 @@ export const ApplicationCard = ({
             text="FILTER"
             handleActionClick={() => {
               setType("FILTER");
+              setSearchFilterParams({
+                businessService: [],
+                status: []
+              });
               setPopup(true);
             }}
           />
         )}
-        <FilterAction
+        {/* <FilterAction
           text="SORT"
           handleActionClick={() => {
             setType("SORT");
             setPopup(true);
           }}
-        />
+        /> */}
       </div>
       {result}
       {popup && (
         <PopUp>
           {type === "FILTER" && (
             <div className="popup-module">
-              {<FilterComp onFilterChange={onSearchFilter} Close={handlePopupClose} type="mobile" searchParams={searchParams} />}
+              {<FilterComp onFilterChange={onSearchFilter} Close={handlePopupClose} type="mobile" searchParams={searchFilterParams} />}
             </div>
           )}
-          {type === "SORT" && (
+          {/* {type === "SORT" && (
             <div className="popup-module">
               {<SortBy type="mobile" sortParams={sortParams} onClose={handlePopupClose} type="mobile" onSort={onSort} />}
             </div>
-          )}
+          )} */}
           {type === "SEARCH" && (
             <div className="popup-module">
               <SearchApplication
@@ -112,7 +121,7 @@ export const ApplicationCard = ({
                 onClose={handlePopupClose}
                 onSearch={onSearch}
                 isFstpOperator={isFstpOperator}
-                searchParams={searchParams}
+                searchParams={searchFilterParams}
                 searchFields={searchFields}
               />
             </div>
