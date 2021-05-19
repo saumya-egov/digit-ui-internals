@@ -109,7 +109,7 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
             <div>
               <span className="link">
                 <Link to={{ pathname: `/digit-ui/employee/payment/collect/${row.original?.["businessService"]}/${row.original?.["challanNo"]}/tenantId=${row.original?.["tenantId"]}`}}>
-                  {action}
+                  {t(`UC_${action}`)}
                 </Link>
               </span>
             </div>
