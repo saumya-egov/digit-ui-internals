@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export const printReciept = async (businessService, receiptNumber) => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -14,6 +15,7 @@ export const printReciept = async (businessService, receiptNumber) => {
 };
 
 export const getActionButton = (businessService, receiptNumber) => {
+    const { t } = useTranslation();
     return (
         <a href="javascript:void(0)"
             style={{
@@ -23,6 +25,6 @@ export const getActionButton = (businessService, receiptNumber) => {
             onClick={value => {
                 printReciept(businessService, receiptNumber);
             }}
-        > DOWNLOAD RECEIPT </a>
+        > {t(`${"UC_DOWNLOAD_RECEIPT"}`)} </a>
     )
 }
