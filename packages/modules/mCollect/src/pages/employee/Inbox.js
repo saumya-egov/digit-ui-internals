@@ -57,7 +57,6 @@ const Inbox = ({
   let businessIdToOwnerMapping = {};
 
   useEffect(() => {
-    debugger;
     async function fetchMyAPI() {
       let businessIds = [];
       let businessServiceMap = {};
@@ -125,7 +124,17 @@ const Inbox = ({
   const handleFilterChange = (filterParam) => {
     let keys_to_delete = filterParam.delete;
     console.log(keys_to_delete);
-    let _new = { ...searchParams, ...filterParam };
+    let _new = {};
+    if(isMobile) {
+      _new = { ...filterParam };
+      // setSearchParams({
+      //   businessService: [],
+      //   status: []
+      // })
+    } else {
+      _new = { ...searchParams, ...filterParam };
+    }
+    // let _new = { ...searchParams, ...filterParam };
     // if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     // delete filterParam.delete;
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
@@ -163,7 +172,7 @@ const Inbox = ({
     if (isMobile) {
       return (
         <MobileInbox
-          data={data}
+          data={formedData}
           isLoading={hookLoading}
           isSearch={!isInbox}
           searchFields={getSearchFields()}
