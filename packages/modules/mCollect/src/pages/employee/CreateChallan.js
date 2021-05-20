@@ -104,7 +104,7 @@ const CreateChallen = ({ parentUrl }) => {
   }, [fetchedLocalities]);
 
   useEffect(() => {
-    Digit.MDMSService.getPaymentRules(tenantId).then((value) => {
+    Digit.MDMSService.getPaymentRules(tenantId, "[?(@.type=='Adhoc')]").then((value) => {
       setAPIcategories(func.setServiceCategory(value.MdmsRes.BillingService.BusinessService));
       setAPITaxHeadMaster(value.MdmsRes.BillingService.TaxHeadMaster);
     });
