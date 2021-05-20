@@ -44,7 +44,7 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
   };
   
   const GetMobCell = (value) => <span className="sla-cell">{value}</span>;
-  const inboxColumns = (props) => [
+  const inboxColumns = () => [
     {
       Header: t("UC_CHALLAN_NUMBER"),
       Cell: ({ row }) => {
