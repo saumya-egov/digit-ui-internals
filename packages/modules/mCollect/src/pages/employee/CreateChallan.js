@@ -77,7 +77,9 @@ const CreateChallen = ({ parentUrl }) => {
     setAPIcategoriesType(
       selectedCategory?.child
         ? selectedCategory.child.map((ele) => {
-            ele.code = "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.split(".").join("_").toUpperCase();
+            ele.code = ele.code.includes("BILLINGSERVICE_BUSINESSSERVICE_")
+              ? ele.code
+              : "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.split(".").join("_").toUpperCase();
             return ele;
           })
         : []
