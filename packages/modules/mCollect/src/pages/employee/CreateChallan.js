@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import { Dropdown, DatePicker } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
-import TaxForm from "../../components/TaxForm";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const CreateChallen = ({ parentUrl }) => {
   const history = useHistory();
@@ -84,12 +82,17 @@ const CreateChallen = ({ parentUrl }) => {
           })
         : []
     );
+    setselectedCategoryType(null);
   }, [selectedCategory]);
 
   useEffect(() => {
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
-        return ele.service == selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase());
+        return (
+          selectedCategoryType &&
+          selectedCategoryType.code.split(selectedCategory.code + "_")[1] &&
+          ele.service == selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
+        );
       })
     );
   }, [selectedCategoryType]);
@@ -131,12 +134,17 @@ const CreateChallen = ({ parentUrl }) => {
   }, [pincode]);
 
   const onSubmit = (data) => {
+    TaxHeadMasterFields.map((ele) => {
+      return { taxHeadCode: ele.code, amount: data[ele] };
+    });
     const Challan = {
       citizen: {
         name: data.name,
         mobileNumber: data.mobileNumber,
       },
-      businessService: selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase()),
+      businessService: selectedCategoryType
+        ? selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
+        : "",
       consumerType: selectedCategory.code,
       description: data.comments,
       taxPeriodFrom: Date.parse(fromDate),
@@ -148,8 +156,14 @@ const CreateChallen = ({ parentUrl }) => {
         street: data.street,
         locality: { code: selectedLocality.code },
       },
-      amount: childRef.current.submit(),
+      amount: TaxHeadMasterFields.map((ele) => {
+        return {
+          taxHeadCode: ele.code,
+          amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+        };
+      }),
     };
+    console.log(Challan);
     Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
       if (result.challans && result.challans.length > 0) {
         const challan = result.challans[0];
@@ -164,173 +178,192 @@ const CreateChallen = ({ parentUrl }) => {
       }
     });
   };
-  const config = [
-    {
-      head: t("CONSUMERDETAILS"),
-      body: [
-        {
-          label: t("UC_CONS_NAME_LABEL"),
-          isMandatory: true,
-          type: "text",
-          populators: {
-            name: "name",
-            validation: {
-              required: true,
-              pattern: /^[A-Za-z]/,
-            },
-            error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
-          },
-        },
-        {
-          label: t("UC_MOBILE_NO_LABEL"),
-          isMandatory: true,
-          type: "text",
-          populators: {
-            name: "mobileNumber",
-            validation: {
-              required: true,
-              pattern: /^[6-9]\d{9}$/,
-            },
-            componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
-            error: t("CORE_COMMON_MOBILE_ERROR"),
-          },
-        },
-        {
-          label: t("UC_DOOR_NO_LABEL"),
-          type: "text",
-          populators: {
-            name: "doorNo",
-          },
-        },
-        {
-          label: t("UC_BLDG_NAME_LABEL"),
-          type: "text",
-          populators: {
-            name: "buildingName",
-          },
-        },
-        {
-          label: t("UC_SRT_NAME_LABEL"),
-          type: "text",
-          populators: {
-            name: "street",
-          },
-        },
-        {
-          label: t("CORE_COMMON_PINCODE"),
-          type: "text",
-          populators: {
-            name: "pincode",
-            validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
-            error: t("CORE_COMMON_PINCODE_INVALID"),
-            onChange: handlePincode,
-          },
-        },
-        {
-          label: t("UC_MOHALLA_LABEL"),
-          type: "dropdown",
-          isMandatory: true,
-          name: "Mohalla",
-          dependency: localities ? true : false,
-          populators: (
-            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
-          ),
-        },
-      ],
-    },
-    {
-      head: t("SERVICEDETAILS"),
-      body: [
-        {
-          label: t("TL_NEW_TRADE_DETAILS_CITY_LABEL"),
-          isMandatory: true,
-          type: "dropdown",
-          name: "city",
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCity}
-              freeze={true}
-              disable={true}
-              option={getCities()}
-              id="city"
-              select={selectCity}
-              optionKey="i18nKey"
-              t={t}
-            />
-          ),
-        },
-        {
-          label: t("UC_SERVICE_CATEGORY_LABEL"),
-          type: "dropdown",
-          isMandatory: true,
-          name: "category",
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCategory}
-              optionKey="code"
-              id="businessService"
-              option={categoires}
-              select={setcategories}
-              t={t}
-            />
-          ),
-        },
-        {
-          label: t("UC_SERVICE_TYPE_LABEL"),
-          type: "dropdown",
-          isMandatory: true,
-          name: "categoryType",
-          dependency: selectedCategory ? true : false,
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCategoryType}
-              optionKey="code"
-              id="businessService"
-              option={categoiresType}
-              select={setcategoriesType}
-              t={t}
-            />
-          ),
-        },
-        {
-          label: t("UC_FROM_DATE_LABEL"),
-          type: "date",
-          name: "fromDate",
-          isMandatory: true,
-          populators: <DatePicker date={fromDate ? fromDate : ""} onChange={setFromDate} />,
-        },
-        {
-          label: t("UC_TO_DATE_LABEL"),
-          type: "date",
-          name: "toDate",
-          disable: fromDate == "" ? true : false,
-          isMandatory: true,
-          dependency: fromDate ? true : false,
-          populators: <DatePicker date={toDate ? toDate : ""} min={fromDate} onChange={ChangesetToDate} />,
-        },
-        {
-          isMandatory: false,
-          type: "custom",
-          populators: <TaxForm ref={childRef} data={TaxHeadMasterFields} />,
-        },
-        {
-          label: t("UC_COMMENT_LABEL"),
-          isMandatory: false,
-          type: "textarea",
-          populators: {
-            name: "comments",
-            validation: {
-              required: false,
-            },
-          },
-        },
-      ],
-    },
-  ];
 
-  return <FormComposer heading={t("UC_COMMON_HEADER")} config={config} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
+  function setconfig() {
+    const config = [
+      {
+        head: t("CONSUMERDETAILS"),
+        body: [
+          {
+            label: t("UC_CONS_NAME_LABEL"),
+            isMandatory: true,
+            type: "text",
+            populators: {
+              name: "name",
+              validation: {
+                required: true,
+                pattern: /^[A-Za-z]/,
+              },
+              error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
+            },
+          },
+          {
+            label: t("UC_MOBILE_NO_LABEL"),
+            isMandatory: true,
+            type: "text",
+            populators: {
+              name: "mobileNumber",
+              validation: {
+                required: true,
+                pattern: /^[6-9]\d{9}$/,
+              },
+              componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
+              error: t("CORE_COMMON_MOBILE_ERROR"),
+            },
+          },
+          {
+            label: t("UC_DOOR_NO_LABEL"),
+            type: "text",
+            populators: {
+              name: "doorNo",
+            },
+          },
+          {
+            label: t("UC_BLDG_NAME_LABEL"),
+            type: "text",
+            populators: {
+              name: "buildingName",
+            },
+          },
+          {
+            label: t("UC_SRT_NAME_LABEL"),
+            type: "text",
+            populators: {
+              name: "street",
+            },
+          },
+          {
+            label: t("CORE_COMMON_PINCODE"),
+            type: "text",
+            populators: {
+              name: "pincode",
+              validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
+              error: t("CORE_COMMON_PINCODE_INVALID"),
+              onChange: handlePincode,
+            },
+          },
+          {
+            label: t("UC_MOHALLA_LABEL"),
+            type: "dropdown",
+            isMandatory: true,
+            name: "Mohalla",
+            dependency: localities ? true : false,
+            populators: (
+              <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
+            ),
+          },
+        ],
+      },
+      {
+        head: t("SERVICEDETAILS"),
+        body: [
+          {
+            label: t("TL_NEW_TRADE_DETAILS_CITY_LABEL"),
+            isMandatory: true,
+            type: "dropdown",
+            name: "city",
+            populators: (
+              <Dropdown
+                isMandatory
+                selected={selectedCity}
+                freeze={true}
+                disable={true}
+                option={getCities()}
+                id="city"
+                select={selectCity}
+                optionKey="i18nKey"
+                t={t}
+              />
+            ),
+          },
+          {
+            label: t("UC_SERVICE_CATEGORY_LABEL"),
+            type: "dropdown",
+            isMandatory: true,
+            name: "category",
+            populators: (
+              <Dropdown
+                isMandatory
+                selected={selectedCategory}
+                optionKey="code"
+                id="businessService"
+                option={categoires}
+                select={setcategories}
+                t={t}
+              />
+            ),
+          },
+          {
+            label: t("UC_SERVICE_TYPE_LABEL"),
+            type: "dropdown",
+            isMandatory: true,
+            name: "categoryType",
+            dependency: selectedCategory ? true : false,
+            populators: (
+              <Dropdown
+                isMandatory
+                selected={selectedCategoryType}
+                optionKey="code"
+                id="businessService"
+                option={categoiresType}
+                select={setcategoriesType}
+                t={t}
+              />
+            ),
+          },
+          {
+            label: t("UC_FROM_DATE_LABEL"),
+            type: "date",
+            name: "fromDate",
+            isMandatory: true,
+            populators: <DatePicker date={fromDate ? fromDate : ""} onChange={setFromDate} />,
+          },
+          {
+            label: t("UC_TO_DATE_LABEL"),
+            type: "date",
+            name: "toDate",
+            disable: fromDate == "" ? true : false,
+            isMandatory: true,
+            dependency: fromDate ? true : false,
+            populators: <DatePicker date={toDate ? toDate : ""} min={fromDate} onChange={ChangesetToDate} />,
+          },
+          {
+            label: t("UC_COMMENT_LABEL"),
+            isMandatory: false,
+            type: "textarea",
+            populators: {
+              name: "comments",
+              validation: {
+                required: false,
+              },
+            },
+          },
+        ],
+      },
+    ];
+    if (TaxHeadMasterFields.length > 0 && config.length > 0) {
+      const tempConfig = config;
+      if (config[1].head == "Service Details") {
+        const temp = TaxHeadMasterFields.map((ele) => ({
+          label: t(ele.name.split(".").join("_")),
+          isMandatory: ele.isRequired,
+          type: "text",
+          populators: {
+            name: ele.name.split(".").join("_"),
+            validation: { required: ele.isRequired, pattern: /^(0|[1-9][0-9]*)$/ },
+            error: t("CORE_COMMON_FIELD_ERROR"),
+          },
+        }));
+        if (temp.length > 0) {
+          tempConfig[1].body = [...tempConfig[1].body, ...temp];
+        }
+      }
+      return tempConfig;
+    } else {
+      return config;
+    }
+  }
+
+  return <FormComposer heading={t("UC_COMMON_HEADER")} config={setconfig()} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
 };
 export default CreateChallen;

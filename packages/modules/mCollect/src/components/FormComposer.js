@@ -35,6 +35,8 @@ export const FormComposer = (props) => {
         );
       case "textarea":
         return <TextArea className="field desktop-w-full" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} />;
+      case "custom":
+        return <TaxForm register={register} {...populators} errors={errors} />;
       default:
         return populators.dependency !== false ? populators : null;
     }
