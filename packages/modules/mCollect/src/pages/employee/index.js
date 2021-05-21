@@ -6,6 +6,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import EmployeeChallan from "../../EmployeeChallan";
 import CreateChallen from "../employee/CreateChallan";
+import EditChallan from "../employee/EditChallan/index";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -78,6 +79,7 @@ const EmployeeApp = ({ path, url, userType }) => {
           />
           <PrivateRoute path={`${path}/acknowledgement`} component={() => <MCollectAcknowledgement />} />
           <PrivateRoute path={`${path}/challansearch/:challanno`} component={() => <EmployeeChallan />} />
+          <PrivateRoute path={`${path}/modify-challan/:challanNo`} component={() => <EditChallan />} />
         </div>
       </React.Fragment>
     </Switch>
