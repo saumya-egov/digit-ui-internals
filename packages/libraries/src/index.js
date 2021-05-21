@@ -22,6 +22,7 @@ import { Complaint } from "./services/elements/Complaint";
 import { UserService } from "./services/elements/User";
 import { PTService } from "./services/elements/PT";
 import { MCollectService } from "./services/elements/MCollect";
+import { HRMSService } from "./services/elements/HRMS";
 
 import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
 import { ULBService } from "./services/molecules/Ulb";
@@ -56,6 +57,7 @@ const initLibraries = () => {
   setupLibraries("FSMService", FSMService);
   setupLibraries("PTService", PTService);
   setupLibraries("MCollectService", MCollectService);
+  setupLibraries("HRMSService", HRMSService);
   setupLibraries("PaymentService", PaymentService);
   setupLibraries("DateUtils", dateUtils);
   setupLibraries("WorkflowService", WorkflowService);

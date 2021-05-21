@@ -71,6 +71,10 @@ const Urls = {
     search_bill: "/egov-searcher/bill-genie/mcollectbills/_get",
     search_bill_pt: "/egov-searcher/bill-genie/billswithaddranduser/_get",
   },
+
+  hrms: {
+    employeedetails: "/egov-hrms/employees/_search?",
+  },
 };
 
 export default Urls;
