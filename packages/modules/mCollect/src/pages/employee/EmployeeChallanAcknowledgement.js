@@ -27,7 +27,7 @@ const printReciept = async () => {
       {params?.applicationStatus === "CANCELLED" ?
         <Card>
           <Banner message={t("UC_BILL_CANCELLED_SUCCESS_MESSAGE")} applicationNumber={params?.challanNumber} info={t("UC_CHALLAN_NO")} successful={true} />
-          <CardText>{t("UC_BILL_GENERATION_MESSAGE_SUB")}</CardText>
+          <CardText>{t("UC_BILL_CANCELLED_SUCCESS_SUB_MESSAGE")}</CardText>
           {"generatePdfKey" ? (
             <div className="primary-label-btn d-grid" style={{ marginLeft: "unset" }} onClick={printReciept}>
               <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">

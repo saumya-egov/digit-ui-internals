@@ -45,7 +45,7 @@ const ActionModal = ({ t, action, tenantId, closeModal, submitAction, applicatio
   }
   useEffect(() => {
     switch (action) {
-      case "UC_CANCEL_CHALLAN":
+      case "CANCEL_CHALLAN":
         return setConfig(
           configMCollectRejectApplication({
             t,
