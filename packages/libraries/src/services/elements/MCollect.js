@@ -41,4 +41,36 @@ export const MCollectService = {
       userService: false,
       //params: { tenantId, ...filters },
     }),
+  update: (details, tenantId) =>
+    Request({
+      url: Urls.mcollect.update,
+      data: details,
+      useCache: true,
+      method: "POST",
+      params: { tenantId },
+      auth: true,
+      userService: true,
+    }),
+  downloadPdf: (challanNo, tenantId) =>
+    Request({
+      url: Urls.mcollect.download_pdf,
+      data: {},
+      useCache: true,
+      method: "POST",
+      params: { challanNo, tenantId },
+      auth: true,
+      userService: true,
+      userDownload: true
+    }),
+  receipt_download: (businessService, consumerCode, tenantId) =>
+    Request({
+      url: Urls.mcollect.receipt_download,
+      data: {},
+      useCache: true,
+      method: "POST",
+      params: { businessService, consumerCode, tenantId },
+      auth: true,
+      userService: true,
+      userDownload: true
+    }),
 };
