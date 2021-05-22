@@ -78,6 +78,9 @@ import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
 import usemcollectTenants from "./mcollect/useTenants";
 
+import useHRMSSearch from "./hrms/useHRMSsearch";
+import useHrmsMDMS from "./hrms/useHRMSMDMS";
+
 const pgr = {
   useComplaintDetails,
   useComplaintsList,
@@ -146,6 +149,11 @@ const mcollect = {
   usemcollectTenants,
 };
 
+const hrms = {
+  useHRMSSearch,
+  useHrmsMDMS,
+};
+
 const Hooks = {
   useSessionStorage,
   useQueryParams,
@@ -172,6 +180,7 @@ const Hooks = {
   pt,
   dss,
   mcollect,
+  hrms,
 };
 
 export default Hooks;

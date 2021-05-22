@@ -23,6 +23,8 @@ const Urls = {
   ChangePassword: "/user/password/nologin/_update",
   UserProfileUpdate: "/user/profile/_update",
   EmployeeSearch: "/egov-hrms/employees/_search",
+
+
   UserSearch: "/user/_search",
 
   fsm: {
@@ -69,6 +71,10 @@ const Urls = {
     create: "/echallan-services/eChallan/v1/_create?",
     fetch_bill: "/billing-service/bill/v2/_fetchbill?",
   },
+  hrms: {
+    search: "/egov-hrms/employees/_search",
+    count: "/egov-hrms/employees/_count",
+  }
 };
 
 export default Urls;

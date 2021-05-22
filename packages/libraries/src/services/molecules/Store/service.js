@@ -97,6 +97,11 @@ export const StoreService = {
     });
 
     initData.modules.push({
+      module: "HRMS",
+      code: "HRMS",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
+    initData.modules.push({
       module: "DSS",
       code: "DSS",
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),

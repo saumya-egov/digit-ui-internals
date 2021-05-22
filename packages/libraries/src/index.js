@@ -26,6 +26,7 @@ import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
 import { ULBService } from "./services/molecules/Ulb";
 import { FileDesludging } from "./services/molecules/FSM/FileDesludging";
 import { ComponentRegistryService } from "./services/elements/ComponentRegistry";
+import  HrmsService from "./services/elements/HRMS"
 
 import Contexts from "./contexts";
 import Hooks from "./hooks";
@@ -54,6 +55,7 @@ const initLibraries = () => {
   setupLibraries("PGRService", PGRService);
   setupLibraries("FSMService", FSMService);
   setupLibraries("PTService", PTService);
+  setupLibraries("HRMSService", HrmsService);
   setupLibraries("MCollectService", MCollectService);
   setupLibraries("PaymentService", PaymentService);
   setupLibraries("DateUtils", dateUtils);

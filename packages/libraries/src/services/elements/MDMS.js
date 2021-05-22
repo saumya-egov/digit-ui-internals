@@ -541,6 +541,21 @@ const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getHrmsEmployeeRolesandDesignations = () => ({
+  moduleDetails: [
+    {
+      moduleName: "common-masters",
+      masterDetails: [{ name: "Department", filter: "[?(@.active == true)]" },
+      { name: "Designation", filter: "[?(@.active == true)]" }
+      ],
+    },
+    {
+      moduleName: "ACCESSCONTROL-ROLES",
+      masterDetails: [{ name: "roles", filter: "$.[?(@.code!='CITIZEN')]" }],
+    }
+  ]
+})
+
 const GetEgovLocations = (MdmsRes) => {
   return MdmsRes["egov-location"].TenantBoundary[0].boundary.children.map((obj) => ({
     name: obj.localname,
@@ -590,24 +605,24 @@ const GetSlumLocalityMapping = (MdmsRes, tenantId) =>
     // console.log("find prev",prev, curr)
     return prev[curr.locality]
       ? {
-          ...prev,
-          [curr.locality]: [
-            ...prev[curr.locality],
-            {
-              ...curr,
-              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
-            },
-          ],
-        }
+        ...prev,
+        [curr.locality]: [
+          ...prev[curr.locality],
+          {
+            ...curr,
+            i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
+          },
+        ],
+      }
       : {
-          ...prev,
-          [curr.locality]: [
-            {
-              ...curr,
-              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
-            },
-          ],
-        };
+        ...prev,
+        [curr.locality]: [
+          {
+            ...curr,
+            i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
+          },
+        ],
+      };
   }, {});
 
 const GetPropertyOwnerShipCategory = (MdmsRes) =>
@@ -987,4 +1002,8 @@ export const MdmsService = {
   getMCollectApplcationStatus: (tenantId, moduleCode, type, filter) => {
     return MdmsService.getDataByCriteria(tenantId, getMCollectApplicationStatusCriteria(tenantId, moduleCode, type, filter), moduleCode);
   },
+  getHrmsEmployeeRolesandDesignation: (tenantId) => {
+    console.log(tenantId)
+    return MdmsService.call(tenantId, getHrmsEmployeeRolesandDesignations());
+  }
 };
