@@ -1,5 +1,6 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+const { forwardRef, useRef, useImperativeHandle } = React;
 import {
   BreakLine,
   Card,
@@ -16,13 +17,48 @@ import {
 
 import { useTranslation } from "react-i18next";
 
-export const FormComposer = (props) => {
-  const { register, handleSubmit, errors } = useForm();
+export const FormComposer = forwardRef((props, ref) => {
+  debugger;
+  let setFormData = props.setFormData;
+  console.log(props);
+  console.log(setFormData);
+  const { register, handleSubmit, errors, setValue } = useForm();
   const { t } = useTranslation();
 
   function onSubmit(data) {
     props.onSubmit(data);
   }
+
+  /*  {
+    debugger;
+    setValue("ADVT_HOARDINGS_CGST", `10`);
+  }
+
+  useEffect(() => {
+    setValue("ADVT_HOARDINGS_CGST", `10`);
+  }, ["ADVT_HOARDINGS_CGST"]);
+ */
+  if (setFormData) {
+    setValue("name", `${setFormData["name"]}`);
+    setValue("mobileNumber", `${setFormData["mobileNumber"]}`);
+    //setValue("ADVT_HOARDINGS_CGST", `${setFormData["ADVT_HOARDINGS_CGST"]}`);
+    setValue("doorNo", `${setFormData["doorNo"]}`);
+    setValue("buildingName", `${setFormData["buildingName"]}`);
+    setValue("street", `${setFormData["street"]}`);
+    setValue("pincode", `${setFormData["pincode"]}`);
+    setValue("Mohalla", `${setFormData["locality"]}`);
+    setValue("categoryType", `${setFormData["category"]}`);
+  }
+  useImperativeHandle(ref, () => ({
+    setValues() {
+      debugger;
+      if (setFormData) {
+        setValue("name", `${setFormData["name"]}`);
+        setValue("mobileNumber", `${setFormData["mobileNumber"]}`);
+        setValue("ADVT_HOARDINGS_CGST", `${setFormData["ADVT_HOARDINGS_CGST"]}`);
+      }
+    },
+  }));
 
   const fieldSelector = (type, populators) => {
     switch (type) {
@@ -35,6 +71,8 @@ export const FormComposer = (props) => {
         );
       case "textarea":
         return <TextArea className="field desktop-w-full" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} />;
+      case "custom":
+        return <TaxForm register={register} {...populators} errors={errors} />;
       default:
         return populators.dependency !== false ? populators : null;
     }
@@ -87,4 +125,4 @@ export const FormComposer = (props) => {
       </Card>
     </form>
   );
-};
+});
