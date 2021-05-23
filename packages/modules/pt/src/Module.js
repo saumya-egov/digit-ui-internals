@@ -1,6 +1,7 @@
 import { Header, HomeLink } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
 import Area from "./pageComponents/Area";
 import GroundFloorDetails from "./pageComponents/GroundFloorDetails";
@@ -89,8 +90,13 @@ const addComponentsToRegistry = () => {
   });
 };
 
-export const PTModule = ({ userType, tenants }) => {
+export const PTModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
+
+  const moduleCode = "PT";
+  const state = useSelector((state) => state);
+  const language = state?.common?.selectedLanguage;
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
 
   addComponentsToRegistry();
 

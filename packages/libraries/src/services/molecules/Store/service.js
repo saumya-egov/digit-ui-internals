@@ -103,11 +103,7 @@ export const StoreService = {
     });
 
     await LocalizationService.getLocale({
-      modules: [
-        `rainmaker-${stateCode.toLowerCase()}`,
-        ...initData.localizationModules.map((module) => module.value),
-        ...initData.tenants.map((tenant) => `rainmaker-${tenant.code.toLowerCase()}`),
-      ],
+      modules: [`rainmaker-${stateCode.toLowerCase()}`, ...initData.tenants.map((tenant) => `rainmaker-${tenant.code.toLowerCase()}`)],
       locale: initData.selectedLanguage,
       tenantId: stateCode,
     });
