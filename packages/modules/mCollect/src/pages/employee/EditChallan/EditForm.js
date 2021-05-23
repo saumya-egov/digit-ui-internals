@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { Dropdown, DatePicker } from "@egovernments/digit-ui-react-components";
 import * as func from "../Utils/Category";
 import { FormComposer } from "../../../components/FormComposer";
-import TaxForm from "../../../components/TaxForm";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 
 //import { newConfig } from "../../../config/Create/config";

@@ -5,9 +5,9 @@ import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const CreateChallen = ({ parentUrl }) => {
+  const childRef = useRef();
   const history = useHistory();
   const { url } = useRouteMatch();
-  const childRef = useRef();
   const cities = Digit.Hooks.mcollect.usemcollectTenants();
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
@@ -77,9 +77,7 @@ const CreateChallen = ({ parentUrl }) => {
     setAPIcategoriesType(
       selectedCategory?.child
         ? selectedCategory.child.map((ele) => {
-            ele.code = ele.code.includes("BILLINGSERVICE_BUSINESSSERVICE_")
-              ? ele.code
-              : "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.split(".").join("_").toUpperCase();
+            ele.code = "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.split(".").join("_").toUpperCase();
             return ele;
           })
         : []
@@ -88,6 +86,7 @@ const CreateChallen = ({ parentUrl }) => {
   }, [selectedCategory]);
 
   useEffect(() => {
+    childRef.current.setValues({});
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
         return (
@@ -104,7 +103,7 @@ const CreateChallen = ({ parentUrl }) => {
   }, [fetchedLocalities]);
 
   useEffect(() => {
-    Digit.MDMSService.getPaymentRules(tenantId, "[?(@.type=='Adhoc')]").then((value) => {
+    Digit.MDMSService.getPaymentRules(tenantId).then((value) => {
       setAPIcategories(func.setServiceCategory(value.MdmsRes.BillingService.BusinessService));
       setAPITaxHeadMaster(value.MdmsRes.BillingService.TaxHeadMaster);
     });
@@ -159,6 +158,9 @@ const CreateChallen = ({ parentUrl }) => {
         locality: { code: selectedLocality.code },
       },
       amount: TaxHeadMasterFields.map((ele) => {
+        console.log(data);
+        console.log(ele.code);
+        debugger;
         return {
           taxHeadCode: ele.code,
           amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
@@ -346,6 +348,7 @@ const CreateChallen = ({ parentUrl }) => {
     if (TaxHeadMasterFields.length > 0 && config.length > 0) {
       const tempConfig = config;
       if (config[1].head == "Service Details") {
+        debugger;
         const temp = TaxHeadMasterFields.map((ele) => ({
           label: t(ele.name.split(".").join("_")),
           isMandatory: ele.isRequired,
@@ -356,16 +359,29 @@ const CreateChallen = ({ parentUrl }) => {
             error: t("CORE_COMMON_FIELD_ERROR"),
           },
         }));
+        console.log(temp);
+        debugger;
         if (temp.length > 0) {
           tempConfig[1].body = [...tempConfig[1].body, ...temp];
         }
       }
+      console.log(tempConfig);
       return tempConfig;
     } else {
       return config;
     }
   }
 
-  return <FormComposer heading={t("UC_COMMON_HEADER")} config={setconfig()} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
+  return (
+    <FormComposer
+      ref={childRef}
+      heading={t("UC_COMMON_HEADER")}
+      config={setconfig()}
+      onSubmit={onSubmit}
+      setFormData={{ name: "Naveen", mobileNumber: "7878787878", ADVT_HOARDINGS_CGST: "10" }}
+      isDisabled={!canSubmit}
+      label={t("UC_ECHALLAN")}
+    />
+  );
 };
 export default CreateChallen;
