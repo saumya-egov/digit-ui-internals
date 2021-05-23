@@ -6,6 +6,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import EmployeeChallan from "../../EmployeeChallan";
 import CreateChallen from "../employee/CreateChallan";
+import MCollectAcknowledgement from "../employee/EmployeeChallanAcknowledgement";
 import EditChallan from "../employee/EditChallan/index";
 
 const EmployeeApp = ({ path, url, userType }) => {
