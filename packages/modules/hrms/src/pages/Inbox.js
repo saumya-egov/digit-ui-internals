@@ -1,8 +1,8 @@
 import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import DesktopInbox from "../components/DesktopInbox";
-import MobileInbox from "../../../mCollect/src/components/MobileInbox";
+import DesktopInbox from "../components/inbox/DesktopInbox";
+import  MobileInbox  from "../components/inbox/MobileInbox";
 
 const Inbox = ({
   parentRoute,
@@ -22,7 +22,7 @@ const Inbox = ({
     return initialStates.searchParams || {};
   });
 
-  let isMobile = window.Digit.Utils.browser.isMobile();
+  let isMobile = false;
   let paginationParams = isMobile
     ? { limit: 100, offset: 0, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
@@ -41,7 +41,6 @@ const Inbox = ({
 
 
   useEffect(() => {
-    console.log("data from the hook", hookLoading, rest, data);
   }, [hookLoading, rest]);
 
   useEffect(() => {
@@ -98,19 +97,26 @@ const Inbox = ({
     if (isMobile) {
       return (
         <MobileInbox
-          data={data}
-          isLoading={hookLoading}
-          isSearch={!isInbox}
-          searchFields={getSearchFields()}
-          onFilterChange={handleFilterChange}
-          onSearch={handleFilterChange}
-          onSort={handleSort}
-          parentRoute={parentRoute}
-          searchParams={searchParams}
-          sortParams={sortParams}
-          linkPrefix={`${parentRoute}/application-details/`}
-          tableConfig={rest?.tableConfig}
-          filterComponent={filterComponent}
+        businessService={businessService}
+        data={data}
+        isLoading={hookLoading}
+        defaultSearchParams={initialStates.searchParams}
+        isSearch={!isInbox}
+        onFilterChange={handleFilterChange}
+        searchFields={getSearchFields()}
+        onSearch={handleFilterChange}
+        onSort={handleSort}
+        onNextPage={fetchNextPage}
+        onPrevPage={fetchPrevPage}
+        currentPage={Math.floor(pageOffset / pageSize)}
+        pageSizeLimit={pageSize}
+        disableSort={false}
+        onPageSizeChange={handlePageSizeChange}
+        parentRoute={parentRoute}
+        searchParams={searchParams}
+        sortParams={sortParams}
+        totalRecords={Number(data?.[0]?.totalCount)}
+        filterComponent={filterComponent}
         />
         // <div></div>
       );

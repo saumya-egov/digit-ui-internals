@@ -10,7 +10,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
 
   const [tenantId, settenantId] = useState(() => {
     console.log(searchParams?.tenantId != undefined ? { code: searchParams?.tenantId } : { code: Digit.ULBService.getCurrentTenantId() })
-    return searchParams?.tenantId != undefined ? { code: searchParams?.tenantId } : { code: Digit.ULBService.getCurrentTenantId() };
+    return tenantIds.filter(ele=> ele.code == (searchParams?.tenantId != undefined ? { code: searchParams?.tenantId } : { code: Digit.ULBService.getCurrentTenantId() })?.code)[0]
   });
   const [departments, setDepartments] = useState(() => {
     return { departments: null };
@@ -24,7 +24,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   })
 
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(
-    tenantId.code
+    tenantId ? tenantId.code : searchParams?.tenantId
   );
 
   useEffect(() => {
@@ -52,8 +52,9 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
 
   }, [isActive])
   const clearAll = () => {
+    console.log(tenantId)
     onFilterChange({ delete: Object.keys(searchParams) });
-    settenantId({ code: Digit.ULBService.getCurrentTenantId() });
+    settenantId(tenantIds.filter((ele=>ele.code==Digit.ULBService.getCurrentTenantId()))[0]);
     setDepartments(null);
     setRoles(null);
     props?.onClose?.();

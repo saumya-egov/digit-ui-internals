@@ -5,6 +5,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import Inbox from "./pages/Inbox";
 import HRMSCard from "./components/hrmscard";
 import CreateEmployee from "./pages/createEmployee";
+import Jurisdictions from "../src/components/jurisdiction";
 import InboxFilter from "./components/InboxFilter";
 
 export const HRMSModule = ({ userType, tenants }) => {
@@ -14,12 +15,10 @@ export const HRMSModule = ({ userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const inboxInitialState = {
     searchParams: {
-      tenantId: tenantId.code,
-      isActive: { code: true }
+      tenantId: tenantId,
     }
   };
   const moduleCode = "HRMSmodule";
-  console.log(moduleCode, "module integrated");
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
 
   const { path, url } = useRouteMatch();
@@ -34,7 +33,6 @@ export const HRMSModule = ({ userType, tenants }) => {
             </Link>{" "}
             / <span>{location.pathname === "/digit-ui/employee/hrms/inbox" ? t("HR_COMMON_HEADER") : "HRMS"}</span>
           </p>
-          <PrivateRoute exact path={`${path}/`} component={() => <MCollectLinks matchPath={path} userType={userType} />} />
           <PrivateRoute
             path={`${path}/inbox`}
             component={() => (
@@ -57,6 +55,7 @@ export const HRMSModule = ({ userType, tenants }) => {
 
 const componentsToRegister = {
   HRMSCard,
+  Jurisdictions,
   HRMSModule,
   HRMS_INBOX_FILTER: (props) => <InboxFilter {...props} />,
 };
