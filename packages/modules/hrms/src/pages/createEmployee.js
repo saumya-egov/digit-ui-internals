@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FormComposer } from "@egovernments/digit-ui-react-components";
 const CreateEmployee = () => {
-
+  const [canSubmit, setSubmitValve] = useState(false);
   const { t } = useTranslation();
 
 
