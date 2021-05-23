@@ -4,10 +4,27 @@ import { Dropdown, DatePicker } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
-const CreateChallen = ({ parentUrl }) => {
+const CreateChallen = ({ ChallanData }) => {
+  console.log(ChallanData);
+  debugger;
+  const childRef = useRef();
   const history = useHistory();
   const { url } = useRouteMatch();
-  const childRef = useRef();
+  let defaultval;
+  let isEdit = false;
+  console.log(url);
+  debugger;
+  if (url.includes("modify-challan")) {
+    isEdit = true;
+  }
+
+  const { data: fetchBillData } = Digit.Hooks.useFetchBillsForBuissnessService({
+    businessService: ChallanData[0].businessService,
+    consumerCode: ChallanData[0].challanNo,
+  });
+  console.log(fetchBillData);
+  debugger;
+
   const cities = Digit.Hooks.mcollect.usemcollectTenants();
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
@@ -31,10 +48,14 @@ const CreateChallen = ({ parentUrl }) => {
   const isPincodeValid = () => !pincodeNotValid;
 
   function selectLocality(locality) {
+    console.log(locality);
+    debugger;
     setSelectedLocality(locality);
   }
 
   function setcategories(category) {
+    console.log(category);
+    debugger;
     setSelectedcategories(category);
   }
 
@@ -44,6 +65,8 @@ const CreateChallen = ({ parentUrl }) => {
     }
   }
   function setcategoriesType(categoryType) {
+    console.log(categoryType);
+    debugger;
     setselectedCategoryType(categoryType);
   }
   function humanize(str) {
@@ -73,6 +96,28 @@ const CreateChallen = ({ parentUrl }) => {
     return;
   };
 
+  if (isEdit == true && fetchBillData && ChallanData) {
+    defaultval = {
+      name: fetchBillData.Bill[0].payerName,
+      mobileNumber: fetchBillData.Bill[0].mobileNumber,
+      doorNo: ChallanData[0].address.doorNo,
+      buildingName: ChallanData[0].address.buildingName,
+      street: ChallanData[0].address.street,
+      pincode: ChallanData[0].address.pincode,
+      //Mohalla : ChallanData[0].address.locality,
+      locality: {
+        code: "SUN13",
+        i18nKey: `${ChallanData[0].tenantId.replaceAll(".", "_").toUpperCase()}_ADMIN_${ChallanData[0].address.locality.code}`,
+        area: "A1",
+        label: "Locality",
+        ame: "Back Side Civil Courts Colony",
+      },
+      categoryType: "BILLINGSERVICE_BUSINESSSERVICE_ADVT_HOARDINGS",
+    };
+  }
+  console.log(defaultval);
+  debugger;
+
   useEffect(() => {
     setAPIcategoriesType(
       selectedCategory?.child
@@ -88,6 +133,7 @@ const CreateChallen = ({ parentUrl }) => {
   }, [selectedCategory]);
 
   useEffect(() => {
+    childRef.current.setValues({});
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
         return (
@@ -356,16 +402,29 @@ const CreateChallen = ({ parentUrl }) => {
             error: t("CORE_COMMON_FIELD_ERROR"),
           },
         }));
+        console.log(temp);
+        debugger;
         if (temp.length > 0) {
           tempConfig[1].body = [...tempConfig[1].body, ...temp];
         }
       }
+      console.log(tempConfig);
       return tempConfig;
     } else {
       return config;
     }
   }
 
-  return <FormComposer heading={t("UC_COMMON_HEADER")} config={setconfig()} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
+  return (
+    <FormComposer
+      ref={childRef}
+      heading={t("UC_COMMON_HEADER")}
+      config={setconfig()}
+      onSubmit={onSubmit}
+      setFormData={defaultval}
+      isDisabled={!canSubmit}
+      label={t("UC_ECHALLAN")}
+    />
+  );
 };
 export default CreateChallen;
