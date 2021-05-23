@@ -11,7 +11,7 @@ export const useChequeDetails = (props, t) => {
           withoutLabel: true,
           type: "custom",
           populators: {
-            name: "chequeDetails",
+            name: "paymentModeDetails",
             customProps: {},
             defaultValue: { instrumentNumber: "", instrumentDate: "", ifscCode: "", bankName: "", bankBranch: "" },
             component: (props, customProps) => <ChequeDetailsComponent onChange={props.onChange} chequeDetails={props.value} {...customProps} />,
@@ -39,7 +39,7 @@ export const ChequeDetailsComponent = (props) => {
       if (!instrumentDate) errorObj.instrumentDate = "ES_COMMON_INSTRUMENT_DATE";
       if (!instrumentNumber) errorObj.instrumentNumber = "ES_COMMON_INSTR_NUMBER";
       if (!ifscCode) errorObj.ifscCode = "ES_COMMON_IFSC";
-      props.onChange({ instrumentDate, instrumentNumber, ifscCode, bankName, bankBranch, errorObj });
+      props.onChange({ instrumentDate, instrumentNumber, ifscCode, bankName, bankBranch, errorObj, transactionNumber: instrumentNumber });
     }
   }, [bankName, bankBranch, instrumentDate, instrumentNumber]);
 
@@ -78,21 +78,6 @@ export const ChequeDetailsComponent = (props) => {
         <h2 className="card-label">{t("PAYMENT_CHEQUE_DATE_LABEL")} *</h2>
         <div className="field">
           <div className="field-container">
-            {/* <input
-              type="text"
-              value={getDatePrint()}
-              readOnly
-              className="employee-card-input"
-              style={{ width: "calc(100%-62px)", borderRight: "0" }}
-            />
-            <input
-              className="employee-card-input"
-              value={instrumentDate}
-              type="date"
-              style={{ width: "62px", borderLeft: "0px" }}
-              name="instrumentDate"
-              onChange={(e) => setChequeDate(e.target.value)}
-            /> */}
             <DatePicker
               date={instrumentDate}
               onChange={(d) => {

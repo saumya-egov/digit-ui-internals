@@ -1,12 +1,12 @@
 import React from "react";
 import { MCollectLinks } from "../../Module";
 import Inbox from "./Inbox";
-import CreateChallen from "./CreateChallan";
-import MCollectAcknowledgement from "./EmployeeChallanAcknowledgement";
 import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import EmployeeChallan from "../../EmployeeChallan";
+import CreateChallen from "../employee/CreateChallan";
+import MCollectAcknowledgement from "../employee/EmployeeChallanAcknowledgement";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -15,10 +15,11 @@ const EmployeeApp = ({ path, url, userType }) => {
 
   const inboxInitialState = {
     searchParams: {
-      uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
-      services: ["PT.CREATE"],
-      applicationStatus: [],
-      locality: [],
+      // uuid: { code: "ASSIGNED_TO_ALL", name: "ES_INBOX_ASSIGNED_TO_ALL" },
+      // services: ["PT.CREATE"],
+      status: [],
+      businessService: [],
+      // locality: [],
     },
   };
 

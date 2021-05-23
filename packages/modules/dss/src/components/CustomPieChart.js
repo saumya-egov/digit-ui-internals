@@ -23,14 +23,14 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
   const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`PROPERTYTYPE_MASTERS_${value}`)}</span>;
 
   const renderCustomLabel = (args) => {
-    const { value, endAngle, startAngle } = args;
+    const { value, endAngle, startAngle, x, cx, y, cy, percent, name } = args;
     const diffAngle = endAngle - startAngle;
     if (diffAngle < 7) {
       return null;
     }
     return (
-      <text {...args} fill="#505A5F" alignmentBaseline="middle" className="recharts-pie-label-text" fontSize="14px">
-        {value}
+      <text x={x} cx={cx} y={y} cy={cy} percent={percent} name={name} fill="#505A5F" alignmentBaseline="middle" className="recharts-pie-label-text" fontSize="14px">
+        {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
   };

@@ -1,6 +1,7 @@
-import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Header } from "@egovernments/digit-ui-react-components";
+
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
@@ -48,10 +49,8 @@ const Inbox = ({
   //   middlewaresWf,
   //   middlewareSearch,
   // });
-  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({
-    tenantId,
-    filters: { ...searchParams, ...paginationParams },
-  });
+  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({tenantId, filters: { ...searchParams, ...paginationParams } });
+
 
   let formedData = [];
   let res;
@@ -63,8 +62,8 @@ const Inbox = ({
       let businessServiceMap = {};
       let challanNumbers = [];
       let challanNums = [];
-
-      data?.challans?.forEach((item) => {
+  
+      data?.challans?.forEach(item => {
         challanNums = businessServiceMap[item.businessService] || [];
         challanNumbers = challanNums;
         challanNums.push(item.challanNo);
@@ -74,18 +73,18 @@ const Inbox = ({
 
       for (var key in businessServiceMap) {
         let consumerCodes = businessServiceMap[key].toString();
-        res = await Digit.PaymentService.searchBill(tenantId, { consumerCode: consumerCodes, service: key });
-        processInstanceArray = processInstanceArray.concat(res.Bill);
+        res = await Digit.PaymentService.fetchBill(tenantId, { consumerCode: consumerCodes, businessService: key });
+        processInstanceArray = processInstanceArray.concat(res.Bill)
         businessIdToOwnerMapping = {};
-        processInstanceArray
-          .filter((record) => record.businessService)
-          .forEach((item) => {
-            businessIdToOwnerMapping[item.consumerCode] = {
-              businessService: item.businessService,
-              totalAmount: item.totalAmount || 0,
-              dueDate: item?.billDetails[0]?.expiryDate,
-            };
-          });
+        processInstanceArray.filter(
+          record => record.businessService
+        ).forEach(item => {
+          businessIdToOwnerMapping[item.consumerCode] = {
+            businessService: item.businessService,
+            totalAmount: item.totalAmount || 0,
+            dueDate: item?.billDetails[0]?.expiryDate
+          };
+        });
       }
       setBusinessIdToOwnerMappings(businessIdToOwnerMapping);
     }
@@ -93,16 +92,17 @@ const Inbox = ({
       fetchMyAPI();
     }
   }, [data]);
-
-  data?.challans?.map((data) => {
+  
+  data?.challans?.map(data => {
     formedData.push({
-      challanNo: data.challanNo,
-      name: data.citizen.name,
-      applicationStatus: data.applicationStatus,
-      businessService: data.businessService,
-      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount,
-      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate,
-    });
+      challanNo: data?.challanNo,
+      name: data?.citizen?.name,
+      applicationStatus: data?.applicationStatus,
+      businessService: data?.businessService,
+      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount || 0,
+      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate || "NA",
+      tenantId: data?.tenantId
+    })
   });
 
   useEffect(() => {
@@ -124,8 +124,21 @@ const Inbox = ({
   const handleFilterChange = (filterParam) => {
     let keys_to_delete = filterParam.delete;
     console.log(keys_to_delete);
-    let _new = { ...searchParams, ...filterParam };
+    let _new = {};
+    if(isMobile) {
+      _new = { ...filterParam };
+      // setSearchParams({
+      //   businessService: [],
+      //   status: []
+      // })
+    } else {
+      _new = { ...searchParams, ...filterParam };
+    }
+    // let _new = { ...searchParams, ...filterParam };
+    // if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
+    // delete filterParam.delete;
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
+    delete _new.delete;
     delete filterParam.delete;
     setSearchParams({ ..._new });
   };
@@ -140,26 +153,26 @@ const Inbox = ({
   };
 
   const getSearchFields = () => {
-    return [
-      {
-        label: t("UC_CHALLAN_NO_LABEL"),
-        name: "Challan No.",
-      },
-      {
-        label: t("ES_SEARCH_APPLICATION_MOBILE_NO"),
-        name: "mobileNumber",
-        maxlength: 10,
-        pattern: "[6-9][0-9]{9}",
-        title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
-      },
-    ];
+      return [
+        {
+          label: t("UC_CHALLAN_NO_LABEL"),
+          name: "challanNo",
+        },
+        {
+          label: t("ES_SEARCH_APPLICATION_MOBILE_NO"),
+          name: "mobileNumber",
+          maxlength: 10,
+          pattern: "[6-9][0-9]{9}",
+          title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        }
+      ];
   };
 
   if (rest?.data?.length !== null) {
     if (isMobile) {
       return (
         <MobileInbox
-          data={data}
+          data={formedData}
           isLoading={hookLoading}
           isSearch={!isInbox}
           searchFields={getSearchFields()}
@@ -181,7 +194,7 @@ const Inbox = ({
           {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
           <DesktopInbox
             businessService={businessService}
-            data={data}
+            data={formedData}
             tableConfig={rest?.tableConfig}
             isLoading={hookLoading}
             defaultSearchParams={initialStates.searchParams}

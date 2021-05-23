@@ -6,6 +6,7 @@ import { initI18n } from "./translations/index";
 
 import { Storage, PersistantStorage } from "./services/atoms/Utils/Storage";
 import { UploadServices } from "./services/atoms/UploadServices";
+import Download from "./services/atoms/Download";
 
 import { LocationService } from "./services/elements/Location";
 import { LocalityService } from "./services/elements/Localities";
@@ -62,6 +63,7 @@ const initLibraries = () => {
   setupLibraries("WorkflowService", WorkflowService);
   setupLibraries("MDMSService", MdmsService);
   setupLibraries("UploadServices", UploadServices);
+  setupLibraries("Download", Download);
   setupLibraries("GetServiceDefinitions", GetServiceDefinitions);
   setupLibraries("Complaint", Complaint);
   setupLibraries("FileDesludging", FileDesludging);

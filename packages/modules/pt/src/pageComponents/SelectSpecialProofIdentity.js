@@ -9,6 +9,7 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const isUpdateProperty = formData?.isUpdateProperty || false;
+  let isEditProperty = formData?.isEditProperty || false;
   const [dropdownValue, setDropdownValue] = useState(formData?.owners[index]?.documents?.specialProofIdentity?.documentType);
   let dropdownData = [];
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -93,7 +94,7 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
         optionKey="i18nKey"
         select={setTypeOfDropdownValue}
         placeholder={t(`PT_MUTATION_SELECT_DOC_LABEL`)}
-        disable={isUpdateProperty}
+        disable={isUpdateProperty || isEditProperty}
       />
       <UploadFile
         extraStyleName={"propertyCreate"}
