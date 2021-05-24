@@ -18,10 +18,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 export const FormComposer = forwardRef((props, ref) => {
-  debugger;
   let setFormData = props.setFormData;
-  console.log(props);
-  console.log(setFormData);
   const { register, handleSubmit, errors, setValue } = useForm();
   const { t } = useTranslation();
 
@@ -38,6 +35,13 @@ export const FormComposer = forwardRef((props, ref) => {
     setValue("ADVT_HOARDINGS_CGST", `10`);
   }, ["ADVT_HOARDINGS_CGST"]);
  */
+  useEffect(() => {
+    //setFormData && setValue("ADVT_HOARDINGS_CGST", `${setFormData["ADVT_HOARDINGS_CGST"]}`);
+    if (setFormData) {
+      const entries = Object.keys(setFormData);
+      setFormData && entries.map((entry) => setValue(`${entry}`, `${setFormData[`${entry}`] == null ? "" : setFormData[`${entry}`]}`));
+    }
+  }, [setFormData]);
   if (setFormData) {
     setValue("name", `${setFormData["name"]}`);
     setValue("mobileNumber", `${setFormData["mobileNumber"]}`);
@@ -45,20 +49,18 @@ export const FormComposer = forwardRef((props, ref) => {
     setValue("doorNo", `${setFormData["doorNo"]}`);
     setValue("buildingName", `${setFormData["buildingName"]}`);
     setValue("street", `${setFormData["street"]}`);
-    setValue("pincode", `${setFormData["pincode"]}`);
-    setValue("Mohalla", `${setFormData["locality"]}`);
-    setValue("categoryType", `${setFormData["category"]}`);
+    setValue("pincode", `${setFormData["pincode"] === null ? "" : setFormData["pincode"]}`);
+    setValue("comments", `${setFormData["comments"]}`);
   }
-  useImperativeHandle(ref, () => ({
+  /* useImperativeHandle(ref, () => ({
     setValues() {
-      debugger;
+      //debugger;
       if (setFormData) {
         setValue("name", `${setFormData["name"]}`);
         setValue("mobileNumber", `${setFormData["mobileNumber"]}`);
-        setValue("ADVT_HOARDINGS_CGST", `${setFormData["ADVT_HOARDINGS_CGST"]}`);
       }
     },
-  }));
+  }));  */
 
   const fieldSelector = (type, populators) => {
     switch (type) {
