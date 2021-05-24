@@ -47,7 +47,7 @@ export const MCollectService = {
       data: details,
       useCache: true,
       method: "POST",
-      params: { tenantId },
+      //params: { tenantId },
       auth: true,
       userService: true,
     }),

@@ -18,10 +18,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 export const FormComposer = forwardRef((props, ref) => {
-  debugger;
   let setFormData = props.setFormData;
-  console.log(props);
-  console.log(setFormData);
   const { register, handleSubmit, errors, setValue } = useForm();
   const { t } = useTranslation();
 
@@ -29,7 +26,7 @@ export const FormComposer = forwardRef((props, ref) => {
     props.onSubmit(data);
   }
 
-  {
+  /*  {
     debugger;
     setValue("ADVT_HOARDINGS_CGST", `10`);
   }
@@ -37,15 +34,33 @@ export const FormComposer = forwardRef((props, ref) => {
   useEffect(() => {
     setValue("ADVT_HOARDINGS_CGST", `10`);
   }, ["ADVT_HOARDINGS_CGST"]);
-
-  useImperativeHandle(ref, () => ({
+ */
+  useEffect(() => {
+    //setFormData && setValue("ADVT_HOARDINGS_CGST", `${setFormData["ADVT_HOARDINGS_CGST"]}`);
+    if (setFormData) {
+      const entries = Object.keys(setFormData);
+      setFormData && entries.map((entry) => setValue(`${entry}`, `${setFormData[`${entry}`] == null ? "" : setFormData[`${entry}`]}`));
+    }
+  }, [setFormData]);
+  if (setFormData) {
+    setValue("name", `${setFormData["name"]}`);
+    setValue("mobileNumber", `${setFormData["mobileNumber"]}`);
+    //setValue("ADVT_HOARDINGS_CGST", `${setFormData["ADVT_HOARDINGS_CGST"]}`);
+    setValue("doorNo", `${setFormData["doorNo"]}`);
+    setValue("buildingName", `${setFormData["buildingName"]}`);
+    setValue("street", `${setFormData["street"]}`);
+    setValue("pincode", `${setFormData["pincode"] === null ? "" : setFormData["pincode"]}`);
+    setValue("comments", `${setFormData["comments"]}`);
+  }
+  /* useImperativeHandle(ref, () => ({
     setValues() {
-      debugger;
-      setValue("name", `${setFormData["name"]}`);
-      setValue("mobileNumber", `${setFormData["mobileNumber"]}`);
-      setValue("ADVT_HOARDINGS_CGST", `${setFormData["ADVT_HOARDINGS_CGST"]}`);
+      //debugger;
+      if (setFormData) {
+        setValue("name", `${setFormData["name"]}`);
+        setValue("mobileNumber", `${setFormData["mobileNumber"]}`);
+      }
     },
-  }));
+  }));  */
 
   const fieldSelector = (type, populators) => {
     switch (type) {
