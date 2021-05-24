@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, DatePicker } from "@egovernments/digit-ui-react-components";
+import { Dropdown, DatePicker, Toast } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
@@ -9,6 +9,7 @@ const CreateChallen = ({ parentUrl }) => {
   const { url } = useRouteMatch();
   const childRef = useRef();
   const cities = Digit.Hooks.mcollect.usemcollectTenants();
+  const [showToast, setShowToast] = useState(null);
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
@@ -46,6 +47,20 @@ const CreateChallen = ({ parentUrl }) => {
   function setcategoriesType(categoryType) {
     setselectedCategoryType(categoryType);
   }
+
+  function humanized(str, key) {
+    if (Array.isArray(str)) {
+      str = str[0];
+    }
+    str = str.replace("BILLINGSERVICE_BUSINESSSERVICE_", "");
+    str = str.replace(key + "_", "");
+    var frags = str.split("_");
+    for (let i = 0; i < frags.length; i++) {
+      frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].toLowerCase().slice(1);
+    }
+    return frags.join("_");
+  }
+
   function humanize(str) {
     var frags = str.split("_");
     for (let i = 0; i < frags.length; i++) {
@@ -144,9 +159,7 @@ const CreateChallen = ({ parentUrl }) => {
         name: data.name,
         mobileNumber: data.mobileNumber,
       },
-      businessService: selectedCategoryType
-        ? selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
-        : "",
+      businessService: selectedCategoryType ? selectedCategory.code + "." + humanized(selectedCategoryType.code, selectedCategory.code) : "",
       consumerType: selectedCategory.code,
       description: data.comments,
       taxPeriodFrom: Date.parse(fromDate),
@@ -161,24 +174,31 @@ const CreateChallen = ({ parentUrl }) => {
       amount: TaxHeadMasterFields.map((ele) => {
         return {
           taxHeadCode: ele.code,
-          amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+          amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : 0,
         };
       }),
     };
-    console.log(Challan);
-    Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
-      if (result.challans && result.challans.length > 0) {
-        const challan = result.challans[0];
-        Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
-          if (response.Bill && response.Bill.length > 0) {
-            history.push(
-              `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`,
-              { from: url }
-            );
-          }
+
+    Digit.MCollectService.create({ Challan: Challan }, tenantId)
+      .then((result, error) => {
+        if (result.challans && result.challans.length > 0) {
+          const challan = result.challans[0];
+          Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
+            if (response.Bill && response.Bill.length > 0) {
+              history.push(
+                `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`,
+                { from: url }
+              );
+            }
+          });
+        }
+      })
+      .catch((err) => {
+        setShowToast({
+          key: true,
+          label: err?.response?.data?.Errors[0].message,
         });
-      }
-    });
+      });
   };
 
   function setconfig() {
@@ -200,7 +220,7 @@ const CreateChallen = ({ parentUrl }) => {
             },
           },
           {
-            label: t("UC_MOBILE_NO_LABEL"),
+            label: t("UC_MOBILE_NUMBER"),
             isMandatory: true,
             type: "text",
             populators: {
@@ -235,7 +255,7 @@ const CreateChallen = ({ parentUrl }) => {
             },
           },
           {
-            label: t("CORE_COMMON_PINCODE"),
+            label: t("UC_PINCODE_LABEL"),
             type: "text",
             populators: {
               name: "pincode",
@@ -260,7 +280,7 @@ const CreateChallen = ({ parentUrl }) => {
         head: t("SERVICEDETAILS"),
         body: [
           {
-            label: t("TL_NEW_TRADE_DETAILS_CITY_LABEL"),
+            label: t("UC_CITY_LABEL"),
             isMandatory: true,
             type: "dropdown",
             name: "city",
@@ -329,17 +349,17 @@ const CreateChallen = ({ parentUrl }) => {
             dependency: fromDate ? true : false,
             populators: <DatePicker date={toDate ? toDate : ""} min={fromDate} onChange={ChangesetToDate} />,
           },
-          {
-            label: t("UC_COMMENT_LABEL"),
-            isMandatory: false,
-            type: "textarea",
-            populators: {
-              name: "comments",
-              validation: {
-                required: false,
-              },
-            },
-          },
+          // {
+          //   label: t("UC_COMMENT_LABEL"),
+          //   isMandatory: false,
+          //   type: "textarea",
+          //   populators: {
+          //     name: "comments",
+          //     validation: {
+          //       required: false,
+          //     },
+          //   },
+          // },
         ],
       },
     ];
@@ -366,6 +386,11 @@ const CreateChallen = ({ parentUrl }) => {
     }
   }
 
-  return <FormComposer heading={t("UC_COMMON_HEADER")} config={setconfig()} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
+  return (
+    <div>
+      <FormComposer heading={t("UC_COMMON_HEADER")} config={setconfig()} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />
+      {showToast && <Toast error={showToast.key} label={t(showToast.label)} onClose={() => setShowToast(null)} />}
+    </div>
+  );
 };
 export default CreateChallen;
