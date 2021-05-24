@@ -19,7 +19,6 @@ const EditChallan = () => {
   const { isLoading, data: result } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanNo } });
   console.log("result");
   console.log(result);
-  debugger;
   //return;
   return result && !isLoading ? <CreateChallen ChallanData={result?.challans} tenantId={tenantId} /> : null;
 };
