@@ -9,22 +9,22 @@ const InboxLinks = ({ parentRoute, businessService }) => {
   const allLinks = [
     {
       text: t("UC_GENERATE_NEW_CHALLAN"),
-      link: "/digit-ui/employee/pt/new-application",
+      link: "/digit-ui/employee/mcollect/new-application",
       // businessService: "PT",
       roles: [],
     },
-    {
-      text: t("UC_REPORT"),
-      link: "/digit-ui/employee/pt/new-application",
-      businessService: "PT",
-      roles: ["PT_CEMP"],
-    },
-    {
-      text: t("UC_DASHBOARD"),
-      link: `/digit-ui/employee/pt/search`,
-      // businessService: "PT",
-      roles: [],
-    },
+    // {
+    //   text: t("UC_REPORT"),
+    //   link: "/digit-ui/employee/pt/new-application",
+    //   businessService: "PT",
+    //   roles: ["PT_CEMP"],
+    // },
+    // {
+    //   text: t("UC_DASHBOARD"),
+    //   link: `/digit-ui/employee/pt/search`,
+    //   // businessService: "PT",
+    //   roles: [],
+    // },
   ];
 
   const [links, setLinks] = useState([]);
