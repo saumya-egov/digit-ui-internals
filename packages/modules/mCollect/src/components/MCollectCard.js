@@ -34,7 +34,7 @@ const MCollectCard = () => {
             {<ArrowRight to={`/digit-ui/employee/mcollect/inbox`} />}
           </span>
           <span className="link">
-            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("ES_TITLE_NEW_REGISTRATION")}</Link>
+            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("UC_GENERATE_NEW_CHALLAN")}</Link>
           </span>
         </div>
       </div>
