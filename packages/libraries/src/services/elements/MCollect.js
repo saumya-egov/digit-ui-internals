@@ -62,13 +62,13 @@ export const MCollectService = {
       userService: true,
       userDownload: true
     }),
-  receipt_download: (businessService, consumerCode, tenantId) =>
+  receipt_download: (bussinessService, consumerCode, tenantId) =>
     Request({
       url: Urls.mcollect.receipt_download,
       data: {},
       useCache: true,
       method: "POST",
-      params: { businessService, consumerCode, tenantId },
+      params: { bussinessService, consumerCode, tenantId },
       auth: true,
       userService: true,
       userDownload: true
