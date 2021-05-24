@@ -6,6 +6,16 @@ import Inbox from "./pages/Inbox";
 import HRMSCard from "./components/hrmscard";
 import CreateEmployee from "./pages/createEmployee";
 import InboxFilter from "./components/InboxFilter";
+import Jurisdictions from "./components/pageComponents/jurisdiction";
+import Assignments from "./components/pageComponents/assignment";
+import SelectEmployeeId from "./components/pageComponents/SelectEmployeeId";
+import SelectDateofEmployment from "./components/pageComponents/SelectDateofEmployment";
+import SelectEmployeeType from "./components/pageComponents/SelectEmployeeType";
+import SelectEmployeePhoneNumber from "./components/pageComponents/EmployeePhoneNumber";
+import SelectEmployeeName from "./components/pageComponents/SelectEmployeeName";
+import SelectEmployeeEmailId from "./components/pageComponents/SelectEmailId";
+import SelectEmployeeCorrespondenceAddress from "./components/pageComponents/SelectEmployeeCorrespondenceAddress";
+import SelectEmployeeGender from "./components/pageComponents/SelectEmployeeGender";
 
 export const HRMSModule = ({ userType, tenants }) => {
   const mobileView = innerWidth <= 640;
@@ -57,6 +67,16 @@ export const HRMSModule = ({ userType, tenants }) => {
 
 const componentsToRegister = {
   HRMSCard,
+  SelectEmployeeEmailId,
+  SelectEmployeeName,
+  SelectEmployeeId,
+  Jurisdictions,
+  Assignments,
+  SelectEmployeePhoneNumber,
+  SelectDateofEmployment,
+  SelectEmployeeType,
+  SelectEmployeeCorrespondenceAddress,
+  SelectEmployeeGender,
   HRMSModule,
   HRMS_INBOX_FILTER: (props) => <InboxFilter {...props} />,
 };

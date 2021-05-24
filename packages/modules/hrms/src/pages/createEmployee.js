@@ -1,35 +1,20 @@
 import React, { useState } from "react";
-const CreateEmployee = ({ parentUrl }) => {
+import { useTranslation } from "react-i18next";
+import { FormComposer } from "@egovernments/digit-ui-react-components";
+import { newConfig } from "../components/config/config"
+const CreateEmployee = () => {
+  const [canSubmit, setSubmitValve] = useState(false);
+  const { t } = useTranslation();
 
 
-  const [canSubmit, setSubmitValve] = useState(true);
 
 
   const onSubmit = (data) => {
   };
 
-  const config = [
-    {
-      head: t("CONSUMERDETAILS"),
-      body: [
-        {
-          label: t("UC_CONS_NAME_LABEL"),
-          isMandatory: true,
-          type: "text",
-          populators: {
-            name: "name",
-            validation: {
-              required: true,
-              pattern: /^[A-Za-z]/,
-            },
-            error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
-          },
-        },
+  const config = newConfig;
+  console.log(config)
 
-      ],
-    },
-  ];
-
-  return <FormComposer heading={t("UC_COMMON_HEADER")} config={config} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
+  return <FormComposer heading={t("HR_COMMON_CREATE_EMPLOYEE_HEADER")} config={config} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
 };
 export default CreateEmployee;
