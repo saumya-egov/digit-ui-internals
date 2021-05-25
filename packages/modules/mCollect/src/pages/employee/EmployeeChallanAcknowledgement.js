@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import * as func from "./Utils/getQueryParams";
 import { downloadAndPrintChallan } from "../../utils";
 
-
 const MCollectAcknowledgement = () => {
   const location = useLocation();
   const [params, setParams] = useState({});
@@ -15,18 +14,26 @@ const MCollectAcknowledgement = () => {
     // console.log(location); // result: 'some_value'
   }, [location]);
   const { t } = useTranslation();
-  function proceedToPayment() { }
+  function proceedToPayment() {
+    console.log("function called");
+    history.push(`/digit-ui/citizen/payment/my-bills/${params?.serviceCategory}/${params?.challanNumber}`, { from: url });
+  }
 
-const printReciept = async () => {
+  const printReciept = async () => {
     const challanNo = params?.challanNumber;
     downloadAndPrintChallan(challanNo, "print");
-}
+  };
 
   return (
     <div>
-      {params?.applicationStatus === "CANCELLED" ?
+      {params?.applicationStatus === "CANCELLED" ? (
         <Card>
-          <Banner message={t("UC_BILL_CANCELLED_SUCCESS_MESSAGE")} applicationNumber={params?.challanNumber} info={t("UC_CHALLAN_NO")} successful={true} />
+          <Banner
+            message={t("UC_BILL_CANCELLED_SUCCESS_MESSAGE")}
+            applicationNumber={params?.challanNumber}
+            info={t("UC_CHALLAN_NO")}
+            successful={true}
+          />
           <CardText>{t("UC_BILL_CANCELLED_SUCCESS_SUB_MESSAGE")}</CardText>
           {"generatePdfKey" ? (
             <div className="primary-label-btn d-grid" style={{ marginLeft: "unset" }} onClick={printReciept}>
@@ -37,24 +44,46 @@ const printReciept = async () => {
               {t("CS_COMMON_PRINT_RECEIPT")}
             </div>
           ) : null}
-          <ActionBar style={{display: "flex", justifyContent: "flex-end", alignItems: "baseline",}}>
+          <ActionBar style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline" }}>
             <Link to={`/digit-ui/employee`} style={{ marginRight: "1rem" }}>
               <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
             </Link>
           </ActionBar>
-        </Card> :
+        </Card>
+      ) : (
         <Card>
-          <Banner message={t("UC_BILL_GENERATED_SUCCESS_MESSAGE")} applicationNumber={params.billNumber} info={t("UC_BILL_NO_LABEL")} successful={true} />
+          <Banner
+            message={t("UC_BILL_GENERATED_SUCCESS_MESSAGE")}
+            applicationNumber={params?.challanNumber}
+            info={t("UC_CHALLAN_NO")}
+            successful={true}
+          />
           <CardText>{t("UC_BILL_GENERATION_MESSAGE_SUB")}</CardText>
-          <ActionBar style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline",}}>
+          {"generatePdfKey" ? (
+            <div className="primary-label-btn d-grid" style={{ marginLeft: "unset" }} onClick={printReciept}>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" />
+              </svg>
+              {t("CS_COMMON_PRINT_RECEIPT")}
+            </div>
+          ) : null}
+          <ActionBar style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline" }}>
             <Link to={`/digit-ui/employee`} style={{ marginRight: "1rem" }}>
               <LinkButton label={t("CORE_COMMON_GO_TO_HOME")} />
             </Link>
-            <SubmitBar label={t("UC_BUTTON_PAY")} onClick={proceedToPayment} />
-          </ActionBar>
-        </Card>}
-    </div>
 
+            <Link
+              to={{
+                pathname: `/digit-ui/employee/payment/my-bills/${params?.serviceCategory}/${params?.challanNumber}`,
+              }}
+            >
+              <SubmitBar label={t("UC_BUTTON_PAY")} />
+            </Link>
+          </ActionBar>
+        </Card>
+      )}
+    </div>
   );
 };
 export default MCollectAcknowledgement;

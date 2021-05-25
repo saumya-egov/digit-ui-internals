@@ -186,7 +186,7 @@ const CreateChallen = ({ parentUrl }) => {
           Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
             if (response.Bill && response.Bill.length > 0) {
               history.push(
-                `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`,
+                `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response?.Bill[0]?.consumerCode}`,
                 { from: url }
               );
             }
@@ -365,7 +365,7 @@ const CreateChallen = ({ parentUrl }) => {
     ];
     if (TaxHeadMasterFields.length > 0 && config.length > 0) {
       const tempConfig = config;
-      if (config[1].head == "Service Details") {
+      if ((config[1].head == "Service Details") | (config[1].head == "SERVICEDETAILS")) {
         const temp = TaxHeadMasterFields.map((ele) => ({
           label: t(ele.name.split(".").join("_")),
           isMandatory: ele.isRequired,
