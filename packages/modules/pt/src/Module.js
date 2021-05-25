@@ -32,6 +32,7 @@ import Units from "./pageComponents/Units";
 import SelectAltContactNumber from "./pageComponents/SelectAltContactNumber";
 import SelectDocuments from "./pageComponents/SelectDocuments";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
+import PTEmployeeOwnershipDetails from "./pageComponents/OwnerDetailsEmployee";
 import CitizenApp from "./pages/citizen";
 
 import PropertyInformation from "./pages/citizen/MyProperties/propertyInformation";
@@ -82,6 +83,7 @@ const componentsToRegister = {
   Units,
   SelectAltContactNumber,
   SelectDocuments,
+  PTEmployeeOwnershipDetails,
 };
 
 const addComponentsToRegistry = () => {

@@ -32,11 +32,13 @@ const CardDetailsComponent = ({ ...props }) => {
 
   useEffect(() => {
     if (props.onChange) {
+      let errorMsg = "";
+      if (last4Digits.length !== 4) errorMsg = "ES_COMMON_ERROR_LAST_4_DIGITS";
       let errorObj = {};
       if (!last4Digits) errorObj.last4Digits = "ES_COMMON_LAST_4_DIGITS";
       if (!transactionNumber) errorObj.transactionNumber = "ES_COMMON_TRANSANCTION_NO";
       if (!reTransanctionNumber) errorObj.reTransanctionNumber = "ES_COMMON_RE_TRANSANCTION_NO";
-      props.onChange({ last4Digits, transactionNumber, reTransanctionNumber, instrumentNumber: transactionNumber, errorObj });
+      props.onChange({ transactionNumber, reTransanctionNumber, instrumentNumber: last4Digits, errorObj });
     }
   }, [last4Digits, transactionNumber, reTransanctionNumber]);
 
@@ -51,6 +53,8 @@ const CardDetailsComponent = ({ ...props }) => {
               value={last4Digits}
               type="text"
               name="instrumentNumber"
+              maxLength="4"
+              minLength="4"
               onChange={(e) => setLast4Digits(e.target.value)}
             />
           </div>

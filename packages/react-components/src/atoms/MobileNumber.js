@@ -15,7 +15,7 @@ const MobileNumber = (props) => {
   return (
     <React.Fragment>
       <div className="field-container">
-        <span style={{ maxWidth: "50px" }} className="citizen-card-input citizen-card-input--front">
+        <span style={{ maxWidth: "50px", ...props.labelStyle }} className="citizen-card-input citizen-card-input--front">
           +91
         </span>
         <div className={`text-input ${props.className}`}>
@@ -39,6 +39,7 @@ const MobileNumber = (props) => {
             title={props.title}
             step={props.step}
             autoFocus={props.autoFocus}
+            onBlur={props.onBlur}
           />
         </div>
       </div>
