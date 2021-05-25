@@ -62,6 +62,20 @@ const CreateChallen = ({ ChallanData }) => {
   function setcategoriesType(categoryType) {
     setselectedCategoryType(categoryType);
   }
+
+  function humanized(str, key) {
+    if (Array.isArray(str)) {
+      str = str[0];
+    }
+    str = str.replace("BILLINGSERVICE_BUSINESSSERVICE_", "");
+    str = str.replace(key + "_", "");
+    var frags = str.split("_");
+    for (let i = 0; i < frags.length; i++) {
+      frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].toLowerCase().slice(1);
+    }
+    return frags.join("_");
+  }
+
   function humanize(str) {
     var frags = str.split("_");
     for (let i = 0; i < frags.length; i++) {
@@ -234,9 +248,7 @@ const CreateChallen = ({ ChallanData }) => {
           name: data.name,
           mobileNumber: data.mobileNumber,
         },
-        businessService: selectedCategoryType
-          ? selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
-          : "",
+        businessService: selectedCategoryType ? selectedCategory.code + "." + humanized(selectedCategoryType.code, selectedCategory.code) : "",
         consumerType: selectedCategory.code,
         description: data.comments,
         taxPeriodFrom: Date.parse(fromDate),
@@ -251,7 +263,7 @@ const CreateChallen = ({ ChallanData }) => {
         amount: TaxHeadMasterFields.map((ele) => {
           return {
             taxHeadCode: ele.code,
-            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : 0,
           };
         }),
       };
@@ -286,31 +298,33 @@ const CreateChallen = ({ ChallanData }) => {
         amount: TaxHeadMasterFields.map((ele) => {
           return {
             taxHeadCode: ele.code,
-            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : 0,
           };
         }),
       };
     }
-    console.log(Challan);
+    console.log(Challan, isEdit);
     if (isEdit) {
-      Digit.MCollectService.update({ Challan: Challan }, tenantId).then((result) => {
-        if (result.challans && result.challans.length > 0) {
-          const challan = result.challans[0];
-          Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
-            if (response.Bill && response.Bill.length > 0) {
-              history.push(
-                `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${
-                  response.Bill[0].billNumber
-                }&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}&isEdit=${true}`,
-                { from: url }
-              );
-            }
-          });
-        }
-      });
+      Digit.MCollectService.update({ Challan: Challan }, tenantId)
+        .then((result, err) => {
+          if (result.challans && result.challans.length > 0) {
+            const challan = result.challans[0];
+            Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
+              if (response.Bill && response.Bill.length > 0) {
+                history.push(
+                  `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${
+                    response.Bill[0].billNumber
+                  }&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}&isEdit=${true}`,
+                  { from: url }
+                );
+              }
+            });
+          }
+        })
+        .catch((e) => setShowToast({ key: true, label: e?.response?.data?.Errors[0].message }));
     } else {
-      try {
-        Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
+      Digit.MCollectService.create({ Challan: Challan }, tenantId)
+        .then((result, err) => {
           if (result.challans && result.challans.length > 0) {
             const challan = result.challans[0];
             Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
@@ -322,13 +336,10 @@ const CreateChallen = ({ ChallanData }) => {
               }
             });
           }
-        });
-      } catch (e) {
-        setShowToast({ key: true, label: e?.response?.data?.Errors[0].message });
-      }
+        })
+        .catch((e) => setShowToast({ key: true, label: e?.response?.data?.Errors[0].message }));
     }
   };
-
   function setconfig() {
     const config = [
       {
@@ -350,7 +361,7 @@ const CreateChallen = ({ ChallanData }) => {
             },
           },
           {
-            label: t("UC_MOBILE_NO_LABEL"),
+            label: t("UC_MOBILE_NUMBER"),
             isMandatory: true,
             type: "text",
             populators: {
@@ -389,7 +400,7 @@ const CreateChallen = ({ ChallanData }) => {
             },
           },
           {
-            label: t("CORE_COMMON_PINCODE"),
+            label: t("UC_PINCODE_LABEL"),
             type: "text",
             populators: {
               name: "pincode",
@@ -424,7 +435,7 @@ const CreateChallen = ({ ChallanData }) => {
         head: t("SERVICEDETAILS"),
         body: [
           {
-            label: t("TL_NEW_TRADE_DETAILS_CITY_LABEL"),
+            label: t("UC_CITY_LABEL"),
             isMandatory: true,
             type: "dropdown",
             name: "city",
@@ -502,23 +513,23 @@ const CreateChallen = ({ ChallanData }) => {
             dependency: fromDate ? true : false,
             populators: <DatePicker date={toDate ? toDate : ""} min={fromDate} onChange={ChangesetToDate} /* defaultValue="2021-05-30" */ />,
           },
-          {
-            label: t("UC_COMMENT_LABEL"),
-            isMandatory: false,
-            type: "textarea",
-            populators: {
-              name: "comments",
-              validation: {
-                required: false,
-              },
-            },
-          },
+          // {
+          //   label: t("UC_COMMENT_LABEL"),
+          //   isMandatory: false,
+          //   type: "textarea",
+          //   populators: {
+          //     name: "comments",
+          //     validation: {
+          //       required: false,
+          //     },
+          //   },
+          // },
         ],
       },
     ];
     if (TaxHeadMasterFields.length > 0 && config.length > 0) {
       const tempConfig = config;
-      if (config[1].head == "Service Details") {
+      if ((config[1].head == "Service Details") | (config[1].head == "SERVICEDETAILS")) {
         const temp = TaxHeadMasterFields.map((ele) => ({
           label: t(ele.name.split(".").join("_")),
           isMandatory: ele.isRequired,
@@ -551,7 +562,7 @@ const CreateChallen = ({ ChallanData }) => {
         isDisabled={!canSubmit}
         label={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_ECHALLAN")}
       />
-      {showToast && <Toast error={showToast.key} label={t(showToast.label)} />}
+      {showToast && <Toast error={showToast.key} label={t(showToast.label)} onClose={setShowToast(null)} />}
     </div>
   );
 };
