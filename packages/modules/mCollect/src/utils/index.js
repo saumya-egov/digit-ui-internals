@@ -23,8 +23,8 @@ export const getActionButton = (businessService, receiptNumber) => {
                 cursor: "pointer"
             }}
             onClick={value => {
-                printReciept(businessService, receiptNumber);
-                // downloadAndPrintReciept(businessService, receiptNumber)
+                // printReciept(businessService, receiptNumber);
+                downloadAndPrintReciept(businessService, receiptNumber)
             }}
         > {t(`${"UC_DOWNLOAD_RECEIPT"}`)} </a>
     )
@@ -90,6 +90,6 @@ export const downloadAndPrintReciept = async (bussinessService, consumerCode, mo
     const response = await Digit.MCollectService.receipt_download(bussinessService, consumerCode, tenantId);
     const responseStatus = parseInt(response.status, 10);
     if (responseStatus === 201 || responseStatus === 200) {
-        let fileName = mode == "print" ? printPdf(new Blob([response.data], { type: "application/pdf" })) : downloadPdf(new Blob([response.data], { type: "application/pdf" }), `CHALLAN-${challanNo}.pdf`);
+        let fileName = mode == "print" ? printPdf(new Blob([response.data], { type: "application/pdf" })) : downloadPdf(new Blob([response.data], { type: "application/pdf" }), `CHALLAN-${consumerCode}.pdf`);
     }
 }
