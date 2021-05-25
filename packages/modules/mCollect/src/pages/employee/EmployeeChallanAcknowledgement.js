@@ -18,7 +18,7 @@ const MCollectAcknowledgement = () => {
 
   const printReciept = async () => {
     const challanNo = params?.challanNumber;
-    downloadAndPrintChallan(challanNo, "print");
+    downloadAndPrintChallan(challanNo);
   };
 
   return (
@@ -72,7 +72,7 @@ const MCollectAcknowledgement = () => {
 
             <Link
               to={{
-                pathname: `/digit-ui/employee/payment/my-bills/${params?.serviceCategory}/${params?.challanNumber}`,
+                pathname: `/digit-ui/employee/payment/collect/${params?.serviceCategory}/${params?.challanNumber}/tenantId=${params?.tenantId}`,
               }}
             >
               <SubmitBar label={t("UC_BUTTON_PAY")} />

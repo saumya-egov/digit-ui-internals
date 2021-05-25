@@ -263,7 +263,7 @@ const CreateChallen = ({ ChallanData }) => {
         amount: TaxHeadMasterFields.map((ele) => {
           return {
             taxHeadCode: ele.code,
-            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : 0,
           };
         }),
       };
@@ -298,15 +298,15 @@ const CreateChallen = ({ ChallanData }) => {
         amount: TaxHeadMasterFields.map((ele) => {
           return {
             taxHeadCode: ele.code,
-            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : 0,
           };
         }),
       };
     }
-    console.log(Challan);
+    console.log(Challan, isEdit);
     if (isEdit) {
-      try {
-        Digit.MCollectService.update({ Challan: Challan }, tenantId).then((result) => {
+      Digit.MCollectService.update({ Challan: Challan }, tenantId)
+        .then((result, err) => {
           if (result.challans && result.challans.length > 0) {
             const challan = result.challans[0];
             Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
@@ -320,13 +320,11 @@ const CreateChallen = ({ ChallanData }) => {
               }
             });
           }
-        });
-      } catch (e) {
-        setShowToast({ key: true, label: e?.response?.data?.Errors[0].message });
-      }
+        })
+        .catch((e) => setShowToast({ key: true, label: e?.response?.data?.Errors[0].message }));
     } else {
-      try {
-        Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
+      Digit.MCollectService.create({ Challan: Challan }, tenantId)
+        .then((result, err) => {
           if (result.challans && result.challans.length > 0) {
             const challan = result.challans[0];
             Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
@@ -338,13 +336,10 @@ const CreateChallen = ({ ChallanData }) => {
               }
             });
           }
-        });
-      } catch (e) {
-        setShowToast({ key: true, label: e?.response?.data?.Errors[0].message });
-      }
+        })
+        .catch((e) => setShowToast({ key: true, label: e?.response?.data?.Errors[0].message }));
     }
   };
-
   function setconfig() {
     const config = [
       {
@@ -567,7 +562,7 @@ const CreateChallen = ({ ChallanData }) => {
         isDisabled={!canSubmit}
         label={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_ECHALLAN")}
       />
-      {showToast && <Toast error={showToast.key} label={t(showToast.label)} />}
+      {showToast && <Toast error={showToast.key} label={t(showToast.label)} setShowToast={setShowToast(null)} />}
     </div>
   );
 };
