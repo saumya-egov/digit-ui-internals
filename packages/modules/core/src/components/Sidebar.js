@@ -3,6 +3,8 @@ import { NavBar, LogoutIcon } from "@egovernments/digit-ui-react-components";
 import SideBarMenu from "../config/sidebar-menu";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { digitImg } from "../Images/digit.js";
+import { powered } from "../Images/powered.js";
 
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
@@ -46,6 +48,13 @@ const Profile = ({ info, stateName }) => (
   </div>
 );
 
+const PoweredBy = () => (
+  <div className="digit-footer">
+    <img src={powered} alt="Powered by" />
+    <img src={digitImg} alt="DIGIT" />
+  </div>
+);
+
 export const CitizenSidebar = ({ isOpen, isMobile, toggleSidebar, onLogout }) => {
   const { stateInfo } = useSelector((state) => state.common);
   const user = Digit.UserService.getUser();
@@ -74,7 +83,7 @@ export const CitizenSidebar = ({ isOpen, isMobile, toggleSidebar, onLogout }) =>
   }
   return (
     <div>
-      <NavBar open={isOpen} profileItem={profileItem} menuItems={menuItems} onClose={closeSidebar} />
+      <NavBar open={isOpen} profileItem={profileItem} menuItems={menuItems} onClose={closeSidebar} Footer={<PoweredBy />} />
     </div>
   );
 };

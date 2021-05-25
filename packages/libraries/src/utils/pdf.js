@@ -1,6 +1,20 @@
+import { Fonts } from "./fonts";
 const pdfMake = require("pdfmake/build/pdfmake.js");
-const pdfFonts = require("pdfmake/build/vfs_fonts.js");
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// const pdfFonts = require("pdfmake/build/vfs_fonts.js");
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+pdfMake.vfs = Fonts;
+
+pdfMake.fonts = {
+  //   Roboto: {
+  //     normal: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf",
+  //     bold: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf"
+  //   },
+  Hind: {
+    normal: "Hind-Regular.ttf",
+    bold: "Hind-Bold.ttf",
+  },
+};
 
 function getBase64Image(tenantId) {
   try {
@@ -55,18 +69,21 @@ const jsPdfGenerator = async ({ tenantId, logo, name, email, phoneNumber, headin
         {
           text: name,
           margin: [20, 25],
+          font: "Hind",
           fontSize: 14,
           bold: true,
         },
         {
           text: email,
           margin: [emailLeftMargin, 25, 0, 25],
+          font: "Hind",
           fontSize: 11,
           color: "#464747",
         },
         {
           text: phoneNumber,
           color: "#6f777c",
+          font: "Hind",
           fontSize: 11,
           margin: [-65, 45, 0, 25],
         },
@@ -76,14 +93,15 @@ const jsPdfGenerator = async ({ tenantId, logo, name, email, phoneNumber, headin
     footer: function (currentPage, pageCount) {
       return {
         columns: [
-          { text: `${name} / ${heading}`, margin: [15, 0, 0, 0], fontSize: 11, color: "#6f777c", width: 400 },
-          { text: `Page ${currentPage}`, alignment: "right", margin: [0, 0, 25, 0], fontSize: 11, color: "#6f777c" },
+          { text: `${name} / ${heading}`, margin: [15, 0, 0, 0], fontSize: 11, color: "#6f777c", width: 400, font: "Hind" },
+          { text: `Page ${currentPage}`, alignment: "right", margin: [0, 0, 25, 0], fontSize: 11, color: "#6f777c", font: "Hind" },
         ],
       };
     },
     content: [
       {
         text: heading,
+        font: "Hind",
         fontSize: 24,
         bold: true,
         margin: [-25, 5, 0, 0],
@@ -91,11 +109,15 @@ const jsPdfGenerator = async ({ tenantId, logo, name, email, phoneNumber, headin
       ...createContent(details, phoneNumber),
       {
         text: t("PDF_SYSTEM_GENERATED_ACKNOWLEDGEMENT"),
+        font: "Hind",
         fontSize: 11,
         color: "#6f777c",
         margin: [-25, 32],
       },
     ],
+    defaultStyle: {
+      font: "Hind",
+    },
   };
   pdfMake.createPdf(dd).download();
 };
@@ -118,6 +140,7 @@ function createContent(details, phoneNumber) {
 
     data.push({
       text: `${detail.title}`,
+      font: "Hind",
       fontSize: 18,
       bold: true,
       margin: [-25, 20, 0, 20],
@@ -156,6 +179,7 @@ function createContent(details, phoneNumber) {
           if (index === 3) margin = [30, 0, 0, 5];
           column1.push({
             text: value.title,
+            font: "Hind",
             fontSize: 11,
             bold: true,
             margin,
@@ -165,6 +189,7 @@ function createContent(details, phoneNumber) {
           if (index === 3) margin = [30, 0, 0, 10];
           column2.push({
             text: value.value,
+            font: "Hind",
             fontSize: 9,
             margin,
             color: "#1a1a1a",
@@ -187,12 +212,14 @@ function createContentForDetailsWithLengthOfTwo(values, data, column1, column2, 
     if (index === 0) {
       column1.push({
         text: value.title,
+        font: "Hind",
         fontSize: 12,
         bold: true,
         margin: [-25, num - 10, -25, 0],
       });
       column2.push({
         text: value.value,
+        font: "Hind",
         fontSize: 9,
         margin: [-25, 5, 0, 0],
         color: "#1a1a1a",
@@ -201,12 +228,14 @@ function createContentForDetailsWithLengthOfTwo(values, data, column1, column2, 
     } else {
       column1.push({
         text: value.title,
+        font: "Hind",
         fontSize: 12,
         bold: true,
         margin: [-115, num - 10, -115, 0],
       });
       column2.push({
         text: value.value,
+        font: "Hind",
         fontSize: 9,
         margin: [15, 5, 0, 0],
         color: "#1a1a1a",
@@ -223,12 +252,14 @@ function createContentForDetailsWithLengthOfOneAndThree(values, data, column1, c
     if (index === 0) {
       column1.push({
         text: value.title,
+        font: "Hind",
         fontSize: 12,
         bold: true,
         margin: values.length > 1 ? [-25, -5, 0, 0] : [-25, 0, 0, 0],
       });
       column2.push({
         text: value.value,
+        font: "Hind",
         fontSize: 9,
         color: "#1a1a1a",
         margin: values.length > 1 ? [-25, 5, 0, 0] : [-25, 5, 0, 0],
@@ -237,12 +268,14 @@ function createContentForDetailsWithLengthOfOneAndThree(values, data, column1, c
     } else if (index === 2) {
       column1.push({
         text: value.title,
+        font: "Hind",
         fontSize: 12,
         bold: true,
         margin: [-60, -5, 0, 0],
       });
       column2.push({
         text: value.value,
+        font: "Hind",
         fontSize: 9,
         margin: [26, 5, 0, 0],
         color: "#1a1a1a",
@@ -251,12 +284,14 @@ function createContentForDetailsWithLengthOfOneAndThree(values, data, column1, c
     } else {
       column1.push({
         text: value.title,
+        font: "Hind",
         fontSize: 12,
         bold: true,
         margin: [-28, -5, 0, 0],
       });
       column2.push({
         text: value.value,
+        font: "Hind",
         fontSize: 9,
         margin: [15, 5, 0, 0],
         color: "#1a1a1a",
