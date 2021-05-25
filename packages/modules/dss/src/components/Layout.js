@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import CustomAreaChart from "./CustomAreaChart";
 import CustomBarChart from "./CustomBarChart";
 import CustomHorizontalBarChart from "./CustomHorizontalBarChart";
 import CustomPieChart from "./CustomPieChart";
 import CustomTable from "./CustomTable";
+import FilterContext from "./FilterContext";
 import GenericChart from "./GenericChart";
 import MetricChart from "./MetricChart";
 import Summary from "./Summary";
@@ -11,6 +12,7 @@ import Summary from "./Summary";
 let index = 1;
 
 const Layout = ({ rowData }) => {
+  const { value } = useContext(FilterContext);
   const [searchQuery, onSearch] = useState();
 
   const renderChart = (chart, key) => {
@@ -37,6 +39,7 @@ const Layout = ({ rowData }) => {
           </GenericChart>
         );
       case "chart":
+        if (value?.filters?.tenantId?.length === 0 && (visualizer?.charts?.[0].id === "fsmTopDsoByPerformance" || visualizer?.charts?.[0].id === "fsmBottomDsoByPerformance")) return null;
         return (
           <GenericChart
             key={key}

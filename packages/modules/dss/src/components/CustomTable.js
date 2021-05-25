@@ -29,10 +29,18 @@ const CustomTable = ({ data, onSearch }) => {
     filters: value?.filters,
   });
 
+  const renderHeader = (plot) => {
+    const units = ["Total Waste Dumped", "Total Waste Collected"]
+    if (id === "fsmVehicleLogReportByDDR" && units.includes(plot?.name)) {
+      return `${plot?.name} (${t('DSS_KL')})`;
+    }
+    return plot?.name;
+  }
+
   const tableColumns = useMemo(
     () =>
       response?.responseData?.data?.[0]?.plots?.map((plot) => ({
-        Header: plot?.name,
+        Header: renderHeader(plot),
         accessor: plot?.name.replaceAll(".", " "),
         symbol: plot?.symbol,
         Cell: ({ value }) => {

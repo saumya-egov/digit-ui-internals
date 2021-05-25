@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, Legend, Label } from "recharts";
 import { Card, CardHeader, Loader } from "@egovernments/digit-ui-react-components";
-import { startOfMonth, endOfMonth, sub, getTime } from "date-fns";
+import { startOfMonth, endOfMonth, sub, getTime, format } from "date-fns";
 import FilterContext from "./FilterContext";
 
 const getValue = (plot) => plot.value;
@@ -45,12 +45,26 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
 
   const renderLegend = (value) => <span>{value}</span>;
 
+  const tickFormatter = (value) => value !== "auto" ? format(new Date(value), "MMM, yy") : "";
+
+  const renderTooltip = ({ payload, label, unit }) => {
+    return (
+      <div style={{ margin: "0px",
+        padding: "10px",
+        backgroundColor: "rgb(255, 255, 255)",
+        border: "1px solid rgb(204, 204, 204)",
+        whiteSpace: "nowrap" }}>
+        <p>{`${label !== undefined ? format(new Date(label), "MMM, yy"): ""} :${id === "fsmTotalCumulativeCollection" ? " ₹" : ""}${payload?.[0]?.value} ${(id === "fsmTotalCumulativeCollection" && value?.denomination !== "Unit") ? value?.denomination : ""}`}</p>
+      </div>
+    )
+  }
+
   if (isLoading) {
     return <Loader />;
   }
   return (
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "85%" }}>
-      <ResponsiveContainer width="99%" height={300}>
+      <ResponsiveContainer width="99%" height={id === "fsmTotalCumulativeCollection" ? 400 : 300}>
         <AreaChart width="100%" height="100%" data={response?.responseData?.data?.[0]?.plots} margin={{ left: 30 }}>
           <defs>
             <linearGradient id="colorUv" x1=".5" x2=".5" y2="1">
@@ -59,8 +73,10 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
             </linearGradient>
           </defs>
           <CartesianGrid />
-          <Tooltip />
-          <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} />
+          <Tooltip
+            content={renderTooltip}
+          />
+          <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} tickFormatter={tickFormatter} />
           <YAxis
             label={{
               value: `${response?.responseData?.data?.[0]?.headerName} ${renderUnits(t, value.denomination)}`,
