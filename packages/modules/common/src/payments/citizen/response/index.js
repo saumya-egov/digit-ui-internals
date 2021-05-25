@@ -7,7 +7,7 @@ import { useQueryClient } from "react-query";
 export const SuccessfulPayment = (props) => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const { eg_pg_txnid: egId } = Digit.Hooks.useQueryParams();
+  const { eg_pg_txnid: egId, workflow: workflw } = Digit.Hooks.useQueryParams();
   const [printing, setPrinting] = useState(false);
   const [allowFetchBill, setallowFetchBill] = useState(false);
   const { businessService: business_service, consumerCode, tenantId } = useParams();
