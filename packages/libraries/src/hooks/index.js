@@ -76,6 +76,7 @@ import useGetChart from "./dss/useGetChart";
 
 import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
+import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
 import usemcollectTenants from "./mcollect/useTenants";
 
 const pgr = {
@@ -143,6 +144,7 @@ const dss = {
 const mcollect = {
   useMCollectMDMS,
   useMCollectSearch,
+  useMcollectSearchBill,
   usemcollectTenants,
 };
 

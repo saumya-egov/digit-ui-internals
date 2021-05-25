@@ -22,7 +22,7 @@ const Layout = ({ rowData }) => {
       case "line":
         return <CustomAreaChart data={chart} />;
       case "horizontalBar":
-        return <CustomHorizontalBarChart data={chart} />;
+        return <CustomHorizontalBarChart data={chart} xAxisType="number" yAxisType="category" layout="vertical" yDataKey="name" xDataKey="" />;
       case "bar":
         return <CustomHorizontalBarChart data={chart} />;
     }
@@ -32,13 +32,14 @@ const Layout = ({ rowData }) => {
     switch (visualizer.vizType) {
       case "metric-collection":
         return (
-          <GenericChart header={visualizer.name} className="metricsTable">
+          <GenericChart header={visualizer.name} className="metricsTable" key={key}>
             <MetricChart data={visualizer} />
           </GenericChart>
         );
       case "chart":
         return (
           <GenericChart
+            key={key}
             header={visualizer.name}
             showDownload={visualizer?.charts?.[0].chartType === "table"}
             showSearch={visualizer?.charts?.[0].chartType === "table"}
@@ -51,13 +52,13 @@ const Layout = ({ rowData }) => {
         );
       case "performing-metric":
         return (
-          <GenericChart header={visualizer.name}>
+          <GenericChart header={visualizer.name} key={key}>
             <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} />
           </GenericChart>
         );
       case "collection":
       case "module":
-        return <Summary key={key} ttile={visualizer.name} data={visualizer} />;
+        return <Summary key={key} ttile={visualizer.name} data={visualizer} key={key} />;
     }
   };
   return <div className="chart-row">{rowData.vizArray.map((chart, key) => renderVisualizer(chart, key))}</div>;

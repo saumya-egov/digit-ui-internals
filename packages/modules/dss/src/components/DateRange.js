@@ -7,7 +7,7 @@ function isEndDateFocused(focusNumber) {
   return focusNumber === 1;
 }
 
-const DateRange = ({ values, onFilterChange }) => {
+const DateRange = ({ values, onFilterChange, t }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [focusedRange, setFocusedRange] = useState([0, 0]);
   const [selectionRange, setSelectionRange] = useState({
@@ -68,10 +68,10 @@ const DateRange = ({ values, onFilterChange }) => {
   };
   return (
     <>
-      <div>Date Range</div>
+      <div>{t(`ES_DSS_DATE_RANGE`)}</div>
       <div className="employee-select-wrap" ref={wrapperRef}>
         <div className="select">
-          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
+          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} readOnly />
           <Calender onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
         {isModalOpen && (

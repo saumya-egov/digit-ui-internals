@@ -8,23 +8,23 @@ const InboxLinks = ({ parentRoute, businessService }) => {
 
   const allLinks = [
     {
-      text: "UC_GENERATE_NEW_CHALLAN",
-      link: "/digit-ui/employee/pt/new-application",
-      businessService: "PT",
-      roles: ["PT_DOC_VERIFIER"],
-    },
-    {
-      text: "UC_REPORT",
-      link: "/digit-ui/employee/pt/new-application",
-      businessService: "PT",
-      roles: ["PT_CEMP"],
-    },
-    {
-      text: "UC_DASHBOARD",
-      link: `/digit-ui/employee/pt/search`,
-      businessService: "PT",
+      text: t("UC_GENERATE_NEW_CHALLAN"),
+      link: "/digit-ui/employee/mcollect/new-application",
+      // businessService: "PT",
       roles: [],
     },
+    // {
+    //   text: t("UC_REPORT"),
+    //   link: "/digit-ui/employee/pt/new-application",
+    //   businessService: "PT",
+    //   roles: ["PT_CEMP"],
+    // },
+    // {
+    //   text: t("UC_DASHBOARD"),
+    //   link: `/digit-ui/employee/pt/search`,
+    //   // businessService: "PT",
+    //   roles: [],
+    // },
   ];
 
   const [links, setLinks] = useState([]);
@@ -33,9 +33,9 @@ const InboxLinks = ({ parentRoute, businessService }) => {
 
   useEffect(() => {
     let linksToShow = allLinks
-      .filter((e) => e.businessService === businessService)
-      .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
-    console.log(linksToShow, "inside the links");
+      // .filter((e) => e.businessService === businessService)
+      // .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
+    // console.log(linksToShow, "inside the links");
     setLinks(linksToShow);
   }, []);
 
@@ -44,7 +44,7 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       <span className="logo">
         <PropertyHouse />
       </span>{" "}
-      <span className="text">{t("ES_TITLE_PROPERTY_TAX")}</span>
+      <span className="text">{t("mCollect")}</span>
     </div>
   );
 

@@ -48,13 +48,16 @@ export const CollectPayment = (props) => {
   }, []);
 
   const getPaymentModes = () => defaultPaymentModes;
-  const paidByMenu = [{ name: t("COMMON_OWNER") }, { name: t("COMMON_OTHER") }];
+  const paidByMenu = [
+    { code: "OWNER", name: t("COMMON_OWNER") },
+    { code: "OTHER", name: t("COMMON_OTHER") },
+  ];
   const [selectedPaymentMode, setPaymentMode] = useState(formState?.selectedPaymentMode || getPaymentModes()[0]);
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     bill.totalAmount = Math.round(bill.totalAmount);
-    data.paidBy = data.paidBy.name;
+    data.paidBy = data.paidBy.code;
     // console.log(data, bill.totalAmount);
 
     const { ManualRecieptDetails, paymentModeDetails, ...rest } = data;
@@ -67,12 +70,12 @@ export const CollectPayment = (props) => {
             businessService,
             billId: bill.id,
             totalDue: bill.totalAmount,
-            totalAmountPaid: data.amount,
+            totalAmountPaid: data.amount || bill.totalAmount,
           },
         ],
         tenantId: bill.tenantId,
         totalDue: bill.totalAmount,
-        totalAmountPaid: data.amount,
+        totalAmountPaid: data.amount || bill.totalAmount,
         paymentMode: data.paymentMode.code,
         payerName: data.payerName,
         paidBy: data.paidBy,
@@ -116,7 +119,7 @@ export const CollectPayment = (props) => {
       delete recieptRequest.Payment.reTransanctionNumber;
     }
 
-    console.log(recieptRequest);
+    // console.log(recieptRequest);
 
     try {
       const resposne = await Digit.PaymentService.createReciept(tenantId, recieptRequest);
@@ -159,7 +162,7 @@ export const CollectPayment = (props) => {
                 {...customProps}
                 selected={props.value}
                 select={(d) => {
-                  if (isEqual(d, paidByMenu[0])) {
+                  if (d.name == paidByMenu[0].name) {
                     props.setValue("payerName", bill?.payerName);
                     props.setValue("payerMobile", bill?.mobileNumber);
                   } else {
@@ -242,8 +245,10 @@ export const CollectPayment = (props) => {
 
   const getFormConfig = () => {
     let conf = config.concat(formConfigMap[formState?.paymentMode?.code] || []);
-    conf = conf.concat(cashConfig);
-    return BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf);
+    conf = conf?.concat(cashConfig);
+    return BillDetailsFormConfig({ consumerCode }, t)[businessService]
+      ? BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf)
+      : conf;
   };
 
   if (isLoading) {

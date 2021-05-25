@@ -741,7 +741,24 @@ export const convertToUpdateProperty = (data = {}) => {
     });
     formdata.Property?.units.push(...oldUnits);
   }
+  /* if (
+    checkArrayLength(propertyInitialObject?.owners) &&
+    checkIsAnArray(formdata.Property?.owners) &&
+    data?.isEditProperty &&
+    data.isUpdateProperty == false
+  ) {
+    propertyInitialObject.owners = propertyInitialObject.owners.filter((owner) => owner.status === "ACTIVE");
+    let oldOwners = propertyInitialObject.owners.map((owner) => {
+      return { ...owner, status: "INACTIVE" };
+    });
+    formdata.Property?.owners.push(...oldOwners);
+  } else {
+    formdata.Property.owners = [...propertyInitialObject.owners];
+  } */
 
+  if (checkArrayLength(propertyInitialObject?.owners) && checkIsAnArray(formdata.Property?.owners)) {
+    formdata.Property.owners = [...propertyInitialObject.owners];
+  }
   if (propertyInitialObject?.auditDetails) {
     formdata.Property["auditDetails"] = { ...propertyInitialObject.auditDetails };
   }

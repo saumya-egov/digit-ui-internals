@@ -89,6 +89,7 @@ import InfoBanner from "./atoms/InfoBanner";
 import { SearchIconSvg } from "./atoms/svgindex";
 import MobileNumber from "./atoms/MobileNumber";
 import MultiSelectDropdown from "./atoms/MultiSelectDropdown";
+import EllipsisMenu from "./atoms/EllipsisMenu";
 
 import RemoveableTag from "./molecules/RemoveableTag";
 import TypeSelectCard from "./molecules/TypeSelectCard";
@@ -181,6 +182,7 @@ export {
   DatePicker,
   InfoBanner,
   MobileNumber,
+  EllipsisMenu,
   // Icons
   GetApp,
   ArrowLeft,

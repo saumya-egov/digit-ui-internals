@@ -7,14 +7,14 @@ const ApplicationLinks = ({ linkPrefix }) => {
   const { t } = useTranslation();
 
   const allLinks = [
-    {
-      text: t("ES_TITLE_NEW_REGISTRATION"),
-      link: "/digit-ui/employee/pt/new-application",
-    },
-    {
-      text: t("ES_TITILE_SEARCH_APPLICATION"),
-      link: `${linkPrefix}/search`,
-    },
+    // {
+    //   text: t("ES_TITLE_NEW_REGISTRATION"),
+    //   link: "/digit-ui/employee/pt/new-application",
+    // },
+    // {
+    //   text: t("ES_TITILE_SEARCH_APPLICATION"),
+    //   link: `${linkPrefix}/search`,
+    // },
   ];
 
   const [links, setLinks] = useState([]);

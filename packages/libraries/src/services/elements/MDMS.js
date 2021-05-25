@@ -460,12 +460,12 @@ const getReasonCriteria = (tenantId, moduleCode, type, payload) => ({
   },
 });
 
-const getBillingServiceForBusinessServiceCriteria = () => ({
+const getBillingServiceForBusinessServiceCriteria = (filter) => ({
   moduleDetails: [
     {
       moduleName: "BillingService",
       masterDetails: [
-        { name: "BusinessService" },
+        { name: "BusinessService", filter },
         {
           name: "TaxHeadMaster",
         },
@@ -928,8 +928,8 @@ export const MdmsService = {
   getChecklist: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getChecklistCriteria(tenantId, moduleCode), moduleCode);
   },
-  getPaymentRules: (tenantId) => {
-    return MdmsService.call(tenantId, getBillingServiceForBusinessServiceCriteria());
+  getPaymentRules: (tenantId, filter) => {
+    return MdmsService.call(tenantId, getBillingServiceForBusinessServiceCriteria(filter));
   },
 
   getCustomizationConfig: (tenantId, moduleCode) => {

@@ -1,15 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { Dropdown, DatePicker } from "@egovernments/digit-ui-react-components";
+import { Dropdown, DatePicker, Toast } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
-import TaxForm from "../../components/TaxForm";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
-const CreateChallen = ({ parentUrl }) => {
+const CreateChallen = ({ ChallanData }) => {
+  //console.log(ChallanData);
+  const childRef = useRef();
   const history = useHistory();
   const { url } = useRouteMatch();
-  const childRef = useRef();
+  let defaultval;
+  let isEdit = false;
+  //console.log(url);
+  if (url.includes("modify-challan")) {
+    isEdit = true;
+  }
+
+  const { data: fetchBillData } = ChallanData
+    ? Digit.Hooks.useFetchBillsForBuissnessService({
+        businessService: ChallanData[0].businessService,
+        consumerCode: ChallanData[0].challanNo,
+      })
+    : {};
+  //console.log(fetchBillData);
+
   const cities = Digit.Hooks.mcollect.usemcollectTenants();
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
   const { t } = useTranslation();
@@ -55,6 +69,7 @@ const CreateChallen = ({ parentUrl }) => {
     }
     return frags.join("_");
   }
+  const [showToast, setShowToast] = useState(null);
   const [canSubmit, setSubmitValve] = useState(true);
   const [localities, setLocalities] = useState(fetchedLocalities);
   const [categoires, setAPIcategories] = useState([]);
@@ -75,6 +90,78 @@ const CreateChallen = ({ parentUrl }) => {
     return;
   };
 
+  if (isEdit == true && fetchBillData && ChallanData[0]) {
+    defaultval = {
+      name: fetchBillData.Bill[0].payerName,
+      mobileNumber: fetchBillData.Bill[0].mobileNumber,
+      doorNo: ChallanData[0].address.doorNo,
+      buildingName: ChallanData[0].address.buildingName,
+      street: ChallanData[0].address.street,
+      pincode: ChallanData[0].address.pincode,
+      //Mohalla : ChallanData[0].address.locality,
+      ADVT_HOARDINGS_CGST: "10",
+      comments: ChallanData[0].description,
+    };
+    if (fetchBillData.Bill[0].billDetails[0].billAccountDetails.length > 0) {
+      fetchBillData.Bill[0].billDetails[0].billAccountDetails.map(
+        (ele) => (defaultval[`${ele.taxHeadCode.replaceAll(".", "_").toUpperCase()}`] = `${ele.amount}`)
+      );
+    }
+  }
+  //console.log(defaultval);
+
+  useEffect(() => {
+    if (isEdit && ChallanData[0] && fetchBillData) {
+      let setlocalit =
+        localities &&
+        localities.filter((el) => {
+          return el["code"] == ChallanData[0].address.locality.code;
+        });
+      localities && setSelectedLocality(setlocalit[0]);
+      let setcategory = categoires.filter((el) => {
+        return el["code"] == ChallanData[0].businessService.split(".")[0];
+      });
+      setSelectedcategories(setcategory[0]);
+      let setcategorytype = categoiresType.filter((el) => {
+        return el["code"] == `BILLINGSERVICE_BUSINESSSERVICE_${ChallanData[0].businessService.replaceAll(".", "_").toUpperCase()}`;
+      });
+      //setselectedCategoryType({businessService: "Advertisement Tax.Hoardings", code: "BILLINGSERVICE_BUSINESSSERVICE_ADVT_HOARDINGS", collectionModesNotAllowed: Array(1), partPaymentAllowed: false, isAdvanceAllowed: false, isVoucherCreationEnabled: false,partPaymentAllowed: false,type: "Adhoc"});
+      setselectedCategoryType(setcategorytype[0]);
+    }
+  }, [fetchBillData, ChallanData, categoires]);
+
+  useEffect(() => {
+    if (isEdit && ChallanData[0] && fetchBillData) {
+      //console.log(categoiresType);
+      let setcategorytype = categoiresType.filter((el) => {
+        return el["code"] == `BILLINGSERVICE_BUSINESSSERVICE_${ChallanData[0].businessService.replaceAll(".", "_").toUpperCase()}`;
+      });
+      //setselectedCategoryType({businessService: "Advertisement Tax.Hoardings", code: "BILLINGSERVICE_BUSINESSSERVICE_ADVT_HOARDINGS", collectionModesNotAllowed: Array(1), partPaymentAllowed: false, isAdvanceAllowed: false, isVoucherCreationEnabled: false,partPaymentAllowed: false,type: "Adhoc"});
+      setselectedCategoryType(setcategorytype[0]);
+    }
+  }, [categoiresType]);
+
+  useEffect(() => {
+    if (isEdit && ChallanData[0] && fetchBillData && !fromDate && !toDate) {
+      let fromdate = ChallanData[0]
+        ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString() +
+          "-" +
+          new Date(ChallanData[0].taxPeriodFrom).getMonth() +
+          "-" +
+          new Date(ChallanData[0].taxPeriodFrom).getDate()
+        : null;
+      ChallanData[0] && setFromDate(fromdate);
+      let todate = ChallanData[0]
+        ? new Date(ChallanData[0].taxPeriodTo).getFullYear().toString() +
+          "-" +
+          new Date(ChallanData[0].taxPeriodTo).getMonth().toString() +
+          "-" +
+          new Date(ChallanData[0].taxPeriodTo).getDate()
+        : null;
+      ChallanData[0] && setToDate(todate);
+    }
+  });
+
   useEffect(() => {
     setAPIcategoriesType(
       selectedCategory?.child
@@ -84,12 +171,18 @@ const CreateChallen = ({ parentUrl }) => {
           })
         : []
     );
+    //setselectedCategoryType(null);
   }, [selectedCategory]);
 
   useEffect(() => {
+    //childRef.current.setValues({});
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
-        return ele.service == selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase());
+        return (
+          selectedCategoryType &&
+          selectedCategoryType.code.split(selectedCategory.code + "_")[1] &&
+          ele.service == selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
+        );
       })
     );
   }, [selectedCategoryType]);
@@ -99,7 +192,7 @@ const CreateChallen = ({ parentUrl }) => {
   }, [fetchedLocalities]);
 
   useEffect(() => {
-    Digit.MDMSService.getPaymentRules(tenantId).then((value) => {
+    Digit.MDMSService.getPaymentRules(tenantId, "[?(@.type=='Adhoc')]").then((value) => {
       setAPIcategories(func.setServiceCategory(value.MdmsRes.BillingService.BusinessService));
       setAPITaxHeadMaster(value.MdmsRes.BillingService.TaxHeadMaster);
     });
@@ -131,206 +224,335 @@ const CreateChallen = ({ parentUrl }) => {
   }, [pincode]);
 
   const onSubmit = (data) => {
-    const Challan = {
-      citizen: {
+    TaxHeadMasterFields.map((ele) => {
+      return { taxHeadCode: ele.code, amount: data[ele] };
+    });
+    let Challan = {};
+    if (!isEdit) {
+      Challan = {
+        citizen: {
+          name: data.name,
+          mobileNumber: data.mobileNumber,
+        },
+        businessService: selectedCategoryType
+          ? selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
+          : "",
+        consumerType: selectedCategory.code,
+        description: data.comments,
+        taxPeriodFrom: Date.parse(fromDate),
+        taxPeriodTo: Date.parse(toDate),
+        tenantId: tenantId,
+        address: {
+          buildingName: data.buildingName,
+          doorNo: data.doorNo,
+          street: data.street,
+          locality: { code: selectedLocality.code },
+        },
+        amount: TaxHeadMasterFields.map((ele) => {
+          return {
+            taxHeadCode: ele.code,
+            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+          };
+        }),
+      };
+    } else {
+      Challan = {
+        /* citizen: {
         name: data.name,
         mobileNumber: data.mobileNumber,
-      },
-      businessService: selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase()),
-      consumerType: selectedCategory.code,
-      description: data.comments,
-      taxPeriodFrom: Date.parse(fromDate),
-      taxPeriodTo: Date.parse(toDate),
-      tenantId: tenantId,
-      address: {
+      }, */
+        accountId: ChallanData[0].accountId,
+        citizen: ChallanData[0].citizen,
+        applicationStatus: ChallanData[0].applicationStatus,
+        auditDetails: ChallanData[0].auditDetails,
+        id: ChallanData[0].id,
+        /* businessService: selectedCategoryType
+        ? selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
+        : "", */
+        businessService: ChallanData[0].businessService,
+        challanNo: ChallanData[0].challanNo,
+        consumerType: selectedCategory.code,
+        description: data.comments,
+        taxPeriodFrom: Date.parse(fromDate),
+        taxPeriodTo: Date.parse(toDate),
+        tenantId: tenantId,
+        /* address: {
         buildingName: data.buildingName,
         doorNo: data.doorNo,
         street: data.street,
         locality: { code: selectedLocality.code },
-      },
-      amount: childRef.current.submit(),
-    };
-    Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
-      if (result.challans && result.challans.length > 0) {
-        const challan = result.challans[0];
-        Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
-          if (response.Bill && response.Bill.length > 0) {
-            history.push(
-              `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`,
-              { from: url }
-            );
+      }, */
+        address: ChallanData[0].address,
+        amount: TaxHeadMasterFields.map((ele) => {
+          return {
+            taxHeadCode: ele.code,
+            amount: data[ele.code.split(".").join("_").toUpperCase()] ? data[ele.code.split(".").join("_").toUpperCase()] : undefined,
+          };
+        }),
+      };
+    }
+    console.log(Challan);
+    if (isEdit) {
+      Digit.MCollectService.update({ Challan: Challan }, tenantId).then((result) => {
+        if (result.challans && result.challans.length > 0) {
+          const challan = result.challans[0];
+          Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
+            if (response.Bill && response.Bill.length > 0) {
+              history.push(
+                `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${
+                  response.Bill[0].billNumber
+                }&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}&isEdit=${true}`,
+                { from: url }
+              );
+            }
+          });
+        }
+      });
+    } else {
+      try {
+        Digit.MCollectService.create({ Challan: Challan }, tenantId).then((result) => {
+          if (result.challans && result.challans.length > 0) {
+            const challan = result.challans[0];
+            Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
+              if (response.Bill && response.Bill.length > 0) {
+                history.push(
+                  `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${tenantId}&billNumber=${response.Bill[0].billNumber}&serviceCategory=${response.Bill[0].businessService}&challanNumber=${response.Bill[0].consumerCode}`,
+                  { from: url }
+                );
+              }
+            });
           }
         });
+      } catch (e) {
+        setShowToast({ key: true, label: e?.response?.data?.Errors[0].message });
       }
-    });
+    }
   };
-  const config = [
-    {
-      head: t("CONSUMERDETAILS"),
-      body: [
-        {
-          label: t("UC_CONS_NAME_LABEL"),
-          isMandatory: true,
-          type: "text",
-          populators: {
-            name: "name",
-            validation: {
-              required: true,
-              pattern: /^[A-Za-z]/,
-            },
-            error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
-          },
-        },
-        {
-          label: t("UC_MOBILE_NO_LABEL"),
-          isMandatory: true,
-          type: "text",
-          populators: {
-            name: "mobileNumber",
-            validation: {
-              required: true,
-              pattern: /^[6-9]\d{9}$/,
-            },
-            componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
-            error: t("CORE_COMMON_MOBILE_ERROR"),
-          },
-        },
-        {
-          label: t("UC_DOOR_NO_LABEL"),
-          type: "text",
-          populators: {
-            name: "doorNo",
-          },
-        },
-        {
-          label: t("UC_BLDG_NAME_LABEL"),
-          type: "text",
-          populators: {
-            name: "buildingName",
-          },
-        },
-        {
-          label: t("UC_SRT_NAME_LABEL"),
-          type: "text",
-          populators: {
-            name: "street",
-          },
-        },
-        {
-          label: t("CORE_COMMON_PINCODE"),
-          type: "text",
-          populators: {
-            name: "pincode",
-            validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
-            error: t("CORE_COMMON_PINCODE_INVALID"),
-            onChange: handlePincode,
-          },
-        },
-        {
-          label: t("UC_MOHALLA_LABEL"),
-          type: "dropdown",
-          isMandatory: true,
-          name: "Mohalla",
-          dependency: localities ? true : false,
-          populators: (
-            <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" id="locality" option={localities} select={selectLocality} t={t} />
-          ),
-        },
-      ],
-    },
-    {
-      head: t("SERVICEDETAILS"),
-      body: [
-        {
-          label: t("TL_NEW_TRADE_DETAILS_CITY_LABEL"),
-          isMandatory: true,
-          type: "dropdown",
-          name: "city",
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCity}
-              freeze={true}
-              disable={true}
-              option={getCities()}
-              id="city"
-              select={selectCity}
-              optionKey="i18nKey"
-              t={t}
-            />
-          ),
-        },
-        {
-          label: t("UC_SERVICE_CATEGORY_LABEL"),
-          type: "dropdown",
-          isMandatory: true,
-          name: "category",
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCategory}
-              optionKey="code"
-              id="businessService"
-              option={categoires}
-              select={setcategories}
-              t={t}
-            />
-          ),
-        },
-        {
-          label: t("UC_SERVICE_TYPE_LABEL"),
-          type: "dropdown",
-          isMandatory: true,
-          name: "categoryType",
-          dependency: selectedCategory ? true : false,
-          populators: (
-            <Dropdown
-              isMandatory
-              selected={selectedCategoryType}
-              optionKey="code"
-              id="businessService"
-              option={categoiresType}
-              select={setcategoriesType}
-              t={t}
-            />
-          ),
-        },
-        {
-          label: t("UC_FROM_DATE_LABEL"),
-          type: "date",
-          name: "fromDate",
-          isMandatory: true,
-          populators: <DatePicker date={fromDate ? fromDate : ""} onChange={setFromDate} />,
-        },
-        {
-          label: t("UC_TO_DATE_LABEL"),
-          type: "date",
-          name: "toDate",
-          disable: fromDate == "" ? true : false,
-          isMandatory: true,
-          dependency: fromDate ? true : false,
-          populators: <DatePicker date={toDate ? toDate : ""} min={fromDate} onChange={ChangesetToDate} />,
-        },
-        {
-          isMandatory: false,
-          type: "custom",
-          populators: <TaxForm ref={childRef} data={TaxHeadMasterFields} />,
-        },
-        {
-          label: t("UC_COMMENT_LABEL"),
-          isMandatory: false,
-          type: "textarea",
-          populators: {
-            name: "comments",
-            validation: {
-              required: false,
-            },
-          },
-        },
-      ],
-    },
-  ];
 
-  return <FormComposer heading={t("UC_COMMON_HEADER")} config={config} onSubmit={onSubmit} isDisabled={!canSubmit} label={t("UC_ECHALLAN")} />;
+  function setconfig() {
+    const config = [
+      {
+        head: t("CONSUMERDETAILS"),
+        body: [
+          {
+            label: t("UC_CONS_NAME_LABEL"),
+            isMandatory: true,
+            type: "text",
+            //isDisabled : {isEdit},
+            populators: {
+              name: "name",
+              disable: isEdit,
+              validation: {
+                required: true,
+                pattern: /^[A-Za-z]/,
+              },
+              error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
+            },
+          },
+          {
+            label: t("UC_MOBILE_NO_LABEL"),
+            isMandatory: true,
+            type: "text",
+            populators: {
+              name: "mobileNumber",
+              disable: isEdit,
+              validation: {
+                required: true,
+                pattern: /^[6-9]\d{9}$/,
+              },
+              componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
+              error: t("CORE_COMMON_MOBILE_ERROR"),
+            },
+          },
+          {
+            label: t("UC_DOOR_NO_LABEL"),
+            type: "text",
+            populators: {
+              name: "doorNo",
+              disable: isEdit,
+            },
+          },
+          {
+            label: t("UC_BLDG_NAME_LABEL"),
+            type: "text",
+            populators: {
+              name: "buildingName",
+              disable: isEdit,
+            },
+          },
+          {
+            label: t("UC_SRT_NAME_LABEL"),
+            type: "text",
+            populators: {
+              name: "street",
+              disable: isEdit,
+            },
+          },
+          {
+            label: t("CORE_COMMON_PINCODE"),
+            type: "text",
+            populators: {
+              name: "pincode",
+              disable: isEdit,
+              validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
+              error: t("CORE_COMMON_PINCODE_INVALID"),
+              onChange: handlePincode,
+            },
+          },
+          {
+            label: t("UC_MOHALLA_LABEL"),
+            type: "dropdown",
+            isMandatory: true,
+            name: "Mohalla",
+            dependency: localities ? true : false,
+            populators: (
+              <Dropdown
+                isMandatory
+                selected={selectedLocality}
+                disable={isEdit}
+                optionKey="i18nkey"
+                id="locality"
+                option={localities}
+                select={selectLocality}
+                t={t}
+              />
+            ),
+          },
+        ],
+      },
+      {
+        head: t("SERVICEDETAILS"),
+        body: [
+          {
+            label: t("TL_NEW_TRADE_DETAILS_CITY_LABEL"),
+            isMandatory: true,
+            type: "dropdown",
+            name: "city",
+            populators: (
+              <Dropdown
+                isMandatory
+                selected={selectedCity}
+                freeze={true}
+                disable={true}
+                option={getCities()}
+                id="city"
+                select={selectCity}
+                optionKey="i18nKey"
+                t={t}
+              />
+            ),
+          },
+          {
+            label: t("UC_SERVICE_CATEGORY_LABEL"),
+            type: "dropdown",
+            isMandatory: true,
+            name: "category",
+            populators: (
+              <Dropdown
+                isMandatory
+                selected={selectedCategory}
+                optionKey="code"
+                disable={isEdit}
+                id="businessService"
+                option={categoires}
+                select={setcategories}
+                t={t}
+              />
+            ),
+          },
+          {
+            label: t("UC_SERVICE_TYPE_LABEL"),
+            type: "dropdown",
+            isMandatory: true,
+            name: "categoryType",
+            dependency: selectedCategory ? true : false,
+            populators: (
+              <Dropdown
+                isMandatory
+                selected={selectedCategoryType}
+                disable={isEdit}
+                optionKey="code"
+                id="businessService"
+                option={categoiresType}
+                select={setcategoriesType}
+                t={t}
+              />
+            ),
+          },
+          {
+            label: t("UC_FROM_DATE_LABEL"),
+            type: "date",
+            name: "fromDate",
+            isMandatory: true,
+            populators: (
+              <DatePicker
+                date={fromDate ? fromDate : ""}
+                onChange={
+                  setFromDate
+                } /* defaultValue={ChallanData ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString()+"/"+ new Date(ChallanData[0].taxPeriodFrom).getMonth().toString()+"/"+new Date(ChallanData[0].taxPeriodFrom).getDate() : null} */
+              />
+            ),
+          },
+          {
+            label: t("UC_TO_DATE_LABEL"),
+            type: "date",
+            name: "toDate",
+            disable: fromDate == "" ? true : false,
+            isMandatory: true,
+            dependency: fromDate ? true : false,
+            populators: <DatePicker date={toDate ? toDate : ""} min={fromDate} onChange={ChangesetToDate} /* defaultValue="2021-05-30" */ />,
+          },
+          {
+            label: t("UC_COMMENT_LABEL"),
+            isMandatory: false,
+            type: "textarea",
+            populators: {
+              name: "comments",
+              validation: {
+                required: false,
+              },
+            },
+          },
+        ],
+      },
+    ];
+    if (TaxHeadMasterFields.length > 0 && config.length > 0) {
+      const tempConfig = config;
+      if (config[1].head == "Service Details") {
+        const temp = TaxHeadMasterFields.map((ele) => ({
+          label: t(ele.name.split(".").join("_")),
+          isMandatory: ele.isRequired,
+          type: "text",
+          populators: {
+            name: ele.name.split(".").join("_"),
+            validation: { required: ele.isRequired, pattern: /^(0|[1-9][0-9]*)$/ },
+            error: t("CORE_COMMON_FIELD_ERROR"),
+          },
+        }));
+        if (temp.length > 0) {
+          tempConfig[1].body = [...tempConfig[1].body, ...temp];
+        }
+      }
+      //console.log(tempConfig);
+      return tempConfig;
+    } else {
+      return config;
+    }
+  }
+
+  return (
+    <div>
+      <FormComposer
+        ref={childRef}
+        heading={t("UC_COMMON_HEADER")}
+        config={setconfig()}
+        onSubmit={onSubmit}
+        setFormData={defaultval}
+        isDisabled={!canSubmit}
+        label={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_ECHALLAN")}
+      />
+      {showToast && <Toast error={showToast.key} label={t(showToast.label)} />}
+    </div>
+  );
 };
 export default CreateChallen;

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, Line, LineChart, XAxis, YAxis, Tooltip, Legend, Label } from "recharts";
 import { Card, CardHeader, Loader } from "@egovernments/digit-ui-react-components";
 import { startOfMonth, endOfMonth, sub, getTime } from "date-fns";
@@ -6,7 +7,19 @@ import FilterContext from "./FilterContext";
 
 const getValue = (plot) => plot.value;
 
+const renderUnits = (t, denomination) => {
+  switch (denomination) {
+    case "Unit":
+      return "";
+    case "Lac":
+      return `(${t("DSS_LAC")})`;
+    case "Cr":
+      return `(${t("DSS_CR")})`;
+  }
+};
+
 const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
+  const { t } = useTranslation();
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { value } = useContext(FilterContext);
@@ -50,10 +63,11 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
           <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} />
           <YAxis
             label={{
-              value: response?.responseData?.data?.[0]?.headerName,
+              value: `${response?.responseData?.data?.[0]?.headerName} ${renderUnits(t, value.denomination)}`,
               angle: -90,
-              position: "left",
-              offset: 15,
+              position: "insideLeft",
+              dy: 40,
+              offset: -10,
               fontSize: "14px",
               fill: "#505A5F",
             }}

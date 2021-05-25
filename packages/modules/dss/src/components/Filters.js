@@ -53,7 +53,7 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters }) => {
         </div>
       )}
       <div className="filters-input">
-        <DateRange onFilterChange={handleFilterChange} values={value?.range} />
+        <DateRange onFilterChange={handleFilterChange} values={value?.range} t={t} />
       </div>
       <div className="filters-input">
         <div>{t("ES_DSS_DDR")}</div>
@@ -78,10 +78,10 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters }) => {
         />
       </div>
       <div className="filters-input" style={{ flexBasis: "16%" }}>
-        <Switch onSelect={handleFilterChange} />
-        <p className="clearText" onClick={handleClear}>
+        <Switch onSelect={handleFilterChange} t={t} />
+        {/* <p className="clearText" onClick={handleClear}>
           {t(`DSS_FILTER_CLEAR`)}
-        </p>
+        </p> */}
       </div>
     </div>
   );

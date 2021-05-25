@@ -42,6 +42,7 @@ export const Request = async ({
   reciept = false,
   authHeader = false,
   setTimeParam = true,
+  userDownload = false
 }) => {
   // console.log("params:", params);
   // console.log("in request", method);
@@ -61,7 +62,15 @@ export const Request = async ({
     }
   }
 
+  const headers1 =  {
+    "Content-Type": "application/json",
+    "Accept": "application/pdf"
+  }
+
   if (authHeader) headers = { ...headers, ...authHeaders() };
+  
+  if (userDownload) headers = { ... headers, ...headers1 };
+    
 
   let key = "";
   if (useCache) {
@@ -76,7 +85,10 @@ export const Request = async ({
     params._ = Date.now();
   }
 
-  const res = await Axios({ method, url, data, params, headers });
+  const res = userDownload ? await Axios({ method, url, data, params, headers, responseType: "arraybuffer", }) : await Axios({ method, url, data, params, headers });
+  
+  if (userDownload) return res;
+
   const returnData = res?.data || res?.response?.data || {};
   if (useCache && res?.data && Object.keys(returnData).length !== 0) {
     window.Digit.RequestCache[key] = returnData;
@@ -118,6 +130,7 @@ export const ServiceRequest = async ({
     reqData = preHookRes.data;
   }
   const resData = await Request({ method, url, data: reqData, headers, useCache, params: reqParams, auth, userService });
+
   if (window[postHookName] && typeof window[postHookName] === "function") {
     return await window[postHookName](resData);
   }

@@ -1,27 +1,6 @@
-import React, { Fragment, useContext } from "react";
+import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Card,
-  CardSubHeader,
-  DownloadIcon,
-  TextInput,
-  CardCaption,
-  CardLabel,
-  Ellipsis,
-  SearchIconSvg,
-} from "@egovernments/digit-ui-react-components";
-import FilterContext from "./FilterContext";
-
-const renderUnits = (denomination) => {
-  switch (denomination) {
-    case "Unit":
-      return "";
-    case "Lac":
-      return "(In Lac)";
-    case "Cr":
-      return "(In Cr)";
-  }
-};
+import { Card, DownloadIcon, TextInput, CardCaption, CardLabel, EllipsisMenu, SearchIconSvg } from "@egovernments/digit-ui-react-components";
 
 const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
@@ -30,16 +9,36 @@ const SearchImg = () => {
 const GenericChart = ({ header, className, caption, children, showSearch = false, showDownload = false, onChange }) => {
   const { t } = useTranslation();
 
-  const { value } = useContext(FilterContext);
+  const chart = useRef();
+
+  function download(data) {
+    setTimeout(() => {
+      if (data.code === "pdf") Digit.Download.PDF(chart, t(header));
+      if (data.code === "image") Digit.Download.Image(chart, t(header));
+    }, 500);
+  }
 
   return (
-    <Card className={`chart-item ${className}`}>
+    <Card className={`chart-item ${className}`} ReactRef={chart}>
       <div className="chartHeader">
         <CardLabel style={{ fontWeight: "bold" }}>{`${t(header)}`}</CardLabel>
         <div className="sideContent">
           {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
-          {showDownload && <DownloadIcon className="mrlg" />}
-          <Ellipsis />
+          {showDownload && <DownloadIcon className="mrlg" onClick={() => download({ code: "pdf" })} />}
+          <EllipsisMenu
+            menuItems={[
+              {
+                code: "pdf",
+                i18nKey: "ES_COMMON_DOWNLOAD_PDF",
+              },
+              {
+                code: "image",
+                i18nKey: "ES_COMMON_DOWNLOAD_IMAGE",
+              },
+            ]}
+            displayKey="i18nKey"
+            onSelect={(data) => download(data)}
+          />
         </div>
       </div>
       {caption && <CardCaption>{caption}</CardCaption>}
