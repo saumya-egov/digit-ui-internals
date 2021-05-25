@@ -5,13 +5,11 @@ import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const CreateChallen = ({ ChallanData }) => {
-  //console.log(ChallanData);
   const childRef = useRef();
   const history = useHistory();
   const { url } = useRouteMatch();
   let defaultval;
   let isEdit = false;
-  //console.log(url);
   if (url.includes("modify-challan")) {
     isEdit = true;
   }
@@ -22,7 +20,6 @@ const CreateChallen = ({ ChallanData }) => {
         consumerCode: ChallanData[0].challanNo,
       })
     : {};
-  //console.log(fetchBillData);
 
   const cities = Digit.Hooks.mcollect.usemcollectTenants();
   const getCities = () => cities?.filter((e) => e.code === Digit.ULBService.getCurrentTenantId()) || [];
@@ -100,7 +97,6 @@ const CreateChallen = ({ ChallanData }) => {
   const [pincode, setPincode] = useState("");
   const [selectedCity, setSelectedCity] = useState(getCities()[0] ? getCities()[0] : null);
   const selectCity = async (city) => {
-    // if (selectedCity?.code !== city.code) {}
     return;
   };
 
@@ -112,7 +108,6 @@ const CreateChallen = ({ ChallanData }) => {
       buildingName: ChallanData[0].address.buildingName,
       street: ChallanData[0].address.street,
       pincode: ChallanData[0].address.pincode,
-      //Mohalla : ChallanData[0].address.locality,
       ADVT_HOARDINGS_CGST: "10",
       comments: ChallanData[0].description,
     };
@@ -122,7 +117,6 @@ const CreateChallen = ({ ChallanData }) => {
       );
     }
   }
-  //console.log(defaultval);
 
   useEffect(() => {
     if (isEdit && ChallanData[0] && fetchBillData) {
@@ -139,18 +133,15 @@ const CreateChallen = ({ ChallanData }) => {
       let setcategorytype = categoiresType.filter((el) => {
         return el["code"] == `BILLINGSERVICE_BUSINESSSERVICE_${ChallanData[0].businessService.replaceAll(".", "_").toUpperCase()}`;
       });
-      //setselectedCategoryType({businessService: "Advertisement Tax.Hoardings", code: "BILLINGSERVICE_BUSINESSSERVICE_ADVT_HOARDINGS", collectionModesNotAllowed: Array(1), partPaymentAllowed: false, isAdvanceAllowed: false, isVoucherCreationEnabled: false,partPaymentAllowed: false,type: "Adhoc"});
       setselectedCategoryType(setcategorytype[0]);
     }
   }, [fetchBillData, ChallanData, categoires]);
 
   useEffect(() => {
     if (isEdit && ChallanData[0] && fetchBillData) {
-      //console.log(categoiresType);
       let setcategorytype = categoiresType.filter((el) => {
         return el["code"] == `BILLINGSERVICE_BUSINESSSERVICE_${ChallanData[0].businessService.replaceAll(".", "_").toUpperCase()}`;
       });
-      //setselectedCategoryType({businessService: "Advertisement Tax.Hoardings", code: "BILLINGSERVICE_BUSINESSSERVICE_ADVT_HOARDINGS", collectionModesNotAllowed: Array(1), partPaymentAllowed: false, isAdvanceAllowed: false, isVoucherCreationEnabled: false,partPaymentAllowed: false,type: "Adhoc"});
       setselectedCategoryType(setcategorytype[0]);
     }
   }, [categoiresType]);
@@ -185,11 +176,9 @@ const CreateChallen = ({ ChallanData }) => {
           })
         : []
     );
-    //setselectedCategoryType(null);
   }, [selectedCategory]);
 
   useEffect(() => {
-    //childRef.current.setValues({});
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
         return (
@@ -269,18 +258,11 @@ const CreateChallen = ({ ChallanData }) => {
       };
     } else {
       Challan = {
-        /* citizen: {
-        name: data.name,
-        mobileNumber: data.mobileNumber,
-      }, */
         accountId: ChallanData[0].accountId,
         citizen: ChallanData[0].citizen,
         applicationStatus: ChallanData[0].applicationStatus,
         auditDetails: ChallanData[0].auditDetails,
         id: ChallanData[0].id,
-        /* businessService: selectedCategoryType
-        ? selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
-        : "", */
         businessService: ChallanData[0].businessService,
         challanNo: ChallanData[0].challanNo,
         consumerType: selectedCategory.code,
@@ -288,12 +270,6 @@ const CreateChallen = ({ ChallanData }) => {
         taxPeriodFrom: Date.parse(fromDate),
         taxPeriodTo: Date.parse(toDate),
         tenantId: tenantId,
-        /* address: {
-        buildingName: data.buildingName,
-        doorNo: data.doorNo,
-        street: data.street,
-        locality: { code: selectedLocality.code },
-      }, */
         address: ChallanData[0].address,
         amount: TaxHeadMasterFields.map((ele) => {
           return {
@@ -303,7 +279,7 @@ const CreateChallen = ({ ChallanData }) => {
         }),
       };
     }
-    console.log(Challan, isEdit);
+
     if (isEdit) {
       Digit.MCollectService.update({ Challan: Challan }, tenantId)
         .then((result, err) => {
@@ -349,7 +325,6 @@ const CreateChallen = ({ ChallanData }) => {
             label: t("UC_CONS_NAME_LABEL"),
             isMandatory: true,
             type: "text",
-            //isDisabled : {isEdit},
             populators: {
               name: "name",
               disable: isEdit,
@@ -495,14 +470,7 @@ const CreateChallen = ({ ChallanData }) => {
             type: "date",
             name: "fromDate",
             isMandatory: true,
-            populators: (
-              <DatePicker
-                date={fromDate ? fromDate : ""}
-                onChange={
-                  setFromDate
-                } /* defaultValue={ChallanData ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString()+"/"+ new Date(ChallanData[0].taxPeriodFrom).getMonth().toString()+"/"+new Date(ChallanData[0].taxPeriodFrom).getDate() : null} */
-              />
-            ),
+            populators: <DatePicker date={fromDate ? fromDate : ""} onChange={setFromDate} />,
           },
           {
             label: t("UC_TO_DATE_LABEL"),
@@ -544,7 +512,6 @@ const CreateChallen = ({ ChallanData }) => {
           tempConfig[1].body = [...tempConfig[1].body, ...temp];
         }
       }
-      //console.log(tempConfig);
       return tempConfig;
     } else {
       return config;
