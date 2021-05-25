@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, Dropdown, CardLabel } from "@egovernments/digit-ui-react-components";
+import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, Dropdown, CardLabel, CardLabelError } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
-const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => {
+const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlur, formState, setError, clearErrors }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const isUpdateProperty = formData?.isUpdateProperty || false;
@@ -50,6 +50,19 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
   }
 
   function getDropdwonForProperty(ownerShipdropDown) {
+    if (userType === "employee") {
+      const arr = ownerShipdropDown
+        ?.filter((e) => e.code.split(".").length <= 2)
+        ?.splice(0, 4)
+        ?.map((ownerShipDetails) => ({
+          ...ownerShipDetails,
+          i18nKey: `PT_OWNERSHIP_${
+            ownerShipDetails.value.split(".")[1] ? ownerShipDetails.value.split(".")[1] : ownerShipDetails.value.split(".")[0]
+          }`,
+        }));
+      return arr;
+    }
+
     return (
       ownerShipdropDown &&
       ownerShipdropDown.length &&
@@ -90,6 +103,8 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
 
   useEffect(() => {
     if (userType === "employee") {
+      if (!ownershipCategory) setError(config.key, { type: "required", message: `${config.key.toUpperCase()}_REQUIRED` });
+      else clearErrors(config.key);
       goNext();
     }
   }, [ownershipCategory]);
@@ -106,20 +121,28 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData }) => 
   if (userType === "employee") {
     return inputs?.map((input, index) => {
       return (
-        <LabelFieldPair key={index}>
-          <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
-            {t(input.label)}
-          </CardLabel>
-          <Dropdown
-            className="form-field"
-            selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
-            disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
-            option={getDropdwonForProperty(ownerShipdropDown)}
-            select={selectedValue}
-            optionKey="i18nKey"
-            t={t}
-          />
-        </LabelFieldPair>
+        <React.Fragment>
+          <LabelFieldPair key={index}>
+            <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
+              {t(input.label)}
+            </CardLabel>
+            <Dropdown
+              className="form-field"
+              selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
+              disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
+              option={getDropdwonForProperty(ownerShipdropDown)}
+              select={selectedValue}
+              optionKey="i18nKey"
+              onBlur={onBlur}
+              t={t}
+            />
+          </LabelFieldPair>
+          {formState.touched?.[config.key] ? (
+            <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
+              {formState.errors[config.key]?.message}
+            </CardLabelError>
+          ) : null}
+        </React.Fragment>
       );
     });
   }

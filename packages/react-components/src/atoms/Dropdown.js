@@ -4,7 +4,7 @@ import { ArrowDown } from "./svgindex";
 
 const TextField = (props) => {
   const [value, setValue] = useState(props.selectedVal ? props.selectedVal : "");
-  const wrapperRef = useRef(null);
+  // const wrapperRef = useRef(null);
   // Digit.Hooks.useClickOutside(wrapperRef, () => props.setOutsideClicked(true));
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const TextField = (props) => {
 
   return (
     <input
-      ref={wrapperRef}
+      ref={props.inputRef}
       className={`employee-select-wrap--elipses ${props.disable && "disabled"}`}
       type="text"
       value={value}
@@ -39,7 +39,10 @@ const TextField = (props) => {
       onChange={inputChange}
       onClick={props.onClick}
       onFocus={broadcastToOpen}
-      onBlur={broadcastToClose}
+      onBlur={(e) => {
+        broadcastToClose();
+        props?.onBlur?.(e);
+      }}
       readOnly={props.disable}
       autoFocus={props.autoFocus}
       placeholder={props.placeholder}
@@ -88,6 +91,7 @@ const Dropdown = (props) => {
         document.addEventListener("mousedown", handleClick, false);
       }
       setDropdownStatus(!current);
+      props?.onBlur?.();
     }
   }
 
@@ -158,6 +162,8 @@ const Dropdown = (props) => {
             freeze={props.freeze ? true : false}
             autoFocus={props.autoFocus}
             placeholder={props.placeholder}
+            onBlur={props?.onBlur}
+            inputRef={props.ref}
             // setOutsideClicked={setOutsideClicked}
           />
           <ArrowDown onClick={dropdownSwitch} className="cp" disable={props.disable} />

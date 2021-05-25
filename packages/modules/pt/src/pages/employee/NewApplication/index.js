@@ -11,37 +11,39 @@ const NewApplication = () => {
   const defaultValues = {};
   const history = useHistory();
 
-  const onFormValueChange = (setValue, formData) => {
-    if (
-      formData?.address?.city?.code &&
-      formData?.address?.locality?.code &&
-      formData?.PropertyType?.code &&
-      formData?.ownershipCategory?.code &&
-      formData?.owners?.name &&
-      formData?.owners?.mobileNumber &&
-      formData?.usageCategoryMajor?.code &&
-      formData?.usageCategoryMinor?.subuagecode &&
-      formData?.owners?.ownerType?.code &&
-      formData?.documents?.documents?.length === formData?.documents?.propertyTaxDocumentsLength &&
-      formData?.landarea
-    ) {
-      if (formData?.ownershipCategory?.code !== "INDIVIDUAL.SINGLEOWNER" && formData?.owners?.altContactNumber) {
-        const filteredUnitsArray = formData?.units?.filter(
-          (unit) => unit?.constructionDetail?.builtUpArea && unit?.floorNo && unit?.occupancyType && unit?.usageCategory
-        );
-        if (formData?.PropertyType?.code === "VACANT") {
-          setSubmitValve(true);
-        } else if (formData?.PropertyType?.code !== "VACANT" && filteredUnitsArray?.length >= formData?.noOfFloors?.code) {
-          setSubmitValve(true);
-        } else {
-          setSubmitValve(false);
-        }
-      } else {
-        setSubmitValve(false);
-      }
-    } else {
-      setSubmitValve(false);
-    }
+  const onFormValueChange = (setValue, formData, formState) => {
+    console.log(formData, formState.errors.documents, "in new application");
+    setSubmitValve(!Object.keys(formState.errors).length);
+    // if (
+    //   formData?.address?.city?.code &&
+    //   formData?.address?.locality?.code &&
+    //   formData?.PropertyType?.code &&
+    //   formData?.ownershipCategory?.code &&
+    //   formData?.owners?.name &&
+    //   formData?.owners?.mobileNumber &&
+    //   formData?.usageCategoryMajor?.code &&
+    //   formData?.usageCategoryMinor?.subuagecode &&
+    //   formData?.owners?.ownerType?.code &&
+    //   formData?.documents?.documents?.length === formData?.documents?.propertyTaxDocumentsLength &&
+    //   formData?.landarea
+    // ) {
+    //   if (formData?.ownershipCategory?.code !== "INDIVIDUAL.SINGLEOWNER" && formData?.owners?.altContactNumber) {
+    //     const filteredUnitsArray = formData?.units?.filter(
+    //       (unit) => unit?.constructionDetail?.builtUpArea && unit?.floorNo && unit?.occupancyType && unit?.usageCategory
+    //     );
+    //     if (formData?.PropertyType?.code === "VACANT") {
+    //       setSubmitValve(true);
+    //     } else if (formData?.PropertyType?.code !== "VACANT" && filteredUnitsArray?.length >= formData?.noOfFloors?.code) {
+    //       setSubmitValve(true);
+    //     } else {
+    //       setSubmitValve(false);
+    //     }
+    //   } else {
+    //     setSubmitValve(false);
+    //   }
+    // } else {
+    //   setSubmitValve(false);
+    // }
   };
 
   const onSubmit = (data) => {
@@ -50,10 +52,11 @@ const NewApplication = () => {
       address: {
         ...data?.address,
         city: data?.address?.city?.name,
+        locality: { code: data?.address?.locality?.code, area: data?.address?.locality?.area },
       },
-      usageCategory: data?.usageCategoryMinor?.subuagecode ? data?.usageCategoryMinor?.subuagecode : data?.usageCategoryMajor?.code,
-      usageCategoryMinor: data?.usageCategoryMinor?.subuagecode,
-      usageCategoryMajor: data?.usageCategoryMajor?.code,
+      usageCategory: data?.usageCategoryMajor.code,
+      usageCategoryMajor: data?.usageCategoryMajor?.code.split(".")[0],
+      usageCategoryMinor: data?.usageCategoryMajor?.code.split(".")[1] || null,
       landArea: data?.landarea,
       propertyType: data?.PropertyType?.code,
       noOfFloors: Number(data?.noOfFloors?.code),

@@ -8,16 +8,13 @@ import { downloadAndPrintChallan } from "../../utils";
 const MCollectAcknowledgement = () => {
   const location = useLocation();
   const [params, setParams] = useState({});
+  const { isEdit } = Digit.Hooks.useQueryParams();
   useEffect(() => {
     // console.log(location.pathname); // result: '/secondpage'
     setParams(func.getQueryStringParams(location.search)); // result: '?query=abc'
     // console.log(location); // result: 'some_value'
   }, [location]);
   const { t } = useTranslation();
-  function proceedToPayment() {
-    console.log("function called");
-    history.push(`/digit-ui/citizen/payment/my-bills/${params?.serviceCategory}/${params?.challanNumber}`, { from: url });
-  }
 
   const printReciept = async () => {
     const challanNo = params?.challanNumber;
@@ -53,9 +50,9 @@ const MCollectAcknowledgement = () => {
       ) : (
         <Card>
           <Banner
-            message={t("UC_BILL_GENERATED_SUCCESS_MESSAGE")}
-            applicationNumber={params?.challanNumber}
-            info={t("UC_CHALLAN_NO")}
+            message={!isEdit ? t("UC_BILL_GENERATED_SUCCESS_MESSAGE") : t("UC_BILL_UPDATED_SUCCESS_MESSAGE")}
+            applicationNumber={params.billNumber}
+            info={t("UC_BILL_NO_LABEL")}
             successful={true}
           />
           <CardText>{t("UC_BILL_GENERATION_MESSAGE_SUB")}</CardText>

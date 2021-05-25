@@ -80,6 +80,17 @@ export const getGeneralCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+export const getMultipleTypes = (tenantId, moduleCode, types) => ({
+  details: {
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: types.map((type) => ({ name: type })),
+      },
+    ],
+  },
+});
+
 const getReceiptKey = (tenantId, moduleCode) => ({
   details: {
     tenantId,
@@ -986,5 +997,8 @@ export const MdmsService = {
   },
   getMCollectApplcationStatus: (tenantId, moduleCode, type, filter) => {
     return MdmsService.getDataByCriteria(tenantId, getMCollectApplicationStatusCriteria(tenantId, moduleCode, type, filter), moduleCode);
+  },
+  getMultipleTypes: (tenantId, moduleCode, types) => {
+    return MdmsService.getDataByCriteria(tenantId, getMultipleTypes(tenantId, moduleCode, types), moduleCode);
   },
 };
