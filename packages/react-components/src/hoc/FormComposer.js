@@ -19,7 +19,9 @@ import { useTranslation } from "react-i18next";
 import MobileNumber from "../atoms/MobileNumber";
 
 export const FormComposer = (props) => {
-  const { register, handleSubmit, setValue, getValues, watch, control, formState, errors } = useForm({ defaultValues: props.defaultValues });
+  const { register, handleSubmit, setValue, getValues, watch, control, formState, errors, setError, clearErrors, unregister } = useForm({
+    defaultValues: props.defaultValues,
+  });
   const { t } = useTranslation();
   const formData = watch();
 
@@ -101,6 +103,10 @@ export const FormComposer = (props) => {
                 register={register}
                 errors={errors}
                 props={props}
+                setError={setError}
+                clearErrors={clearErrors}
+                formState={formState}
+                onBlur={props.onBlur}
               />
             )}
             name={config.key}

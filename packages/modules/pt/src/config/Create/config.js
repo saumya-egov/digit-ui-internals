@@ -422,6 +422,7 @@ export const newConfig = [
         },
         withoutLabel: true,
         nextStep: "special-owner-category",
+        hideInEmployee: true,
       },
       {
         type: "component",
@@ -437,6 +438,7 @@ export const newConfig = [
         key: "owners",
         withoutLabel: true,
         nextStep: "owner-address",
+        hideInEmployee: true,
       },
       {
         type: "component",
@@ -452,12 +454,14 @@ export const newConfig = [
         key: "owners",
         withoutLabel: true,
         nextStep: "special-owner-category-proof",
+        hideInEmployee: true,
       },
       {
         type: "component",
         component: "SelectAltContactNumber",
         key: "owners",
         withoutLabel: true,
+        hideInEmployee: true,
       },
       {
         type: "component",
@@ -540,6 +544,13 @@ export const newConfig = [
         //nextStep: "",
         nextStep: null,
         hideInEmployee: true,
+      },
+      {
+        type: "component",
+        component: "PTEmployeeOwnershipDetails",
+        key: "owners",
+        withoutLabel: true,
+        hideInCitizen: true,
       },
     ],
   },

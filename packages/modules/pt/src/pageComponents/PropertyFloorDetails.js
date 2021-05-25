@@ -66,6 +66,7 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
   ];
 
   if (userType === "employee") {
+    return null;
     return inputs?.map((input, index) => {
       return (
         <LabelFieldPair key={index}>
@@ -77,7 +78,7 @@ const PropertyFloorsDetails = ({ t, config, onSelect, formData, userType }) => {
             disable={employeeMenu?.length === 1}
             option={employeeMenu}
             select={selectFloorDetails}
-            optionKey="name"
+            optionKey="code"
             t={t}
           />
         </LabelFieldPair>
