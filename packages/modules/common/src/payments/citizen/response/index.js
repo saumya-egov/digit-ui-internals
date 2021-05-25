@@ -117,7 +117,12 @@ export const SuccessfulPayment = (props) => {
     } else return "N/A";
   };
 
-  const bannerText = `CITIZEN_SUCCESS_${paymentData?.paymentDetails[0].businessService.replace(/\./g, "_")}_PAYMENT_MESSAGE`;
+  let bannerText;
+  if (workflw) {
+    bannerText = `CITIZEN_SUCCESS_MCOLLECT_PAYMENT_MESSAGE`;
+  } else {
+    bannerText = `CITIZEN_SUCCESS_${paymentData?.paymentDetails[0].businessService.replace(/\./g, "_")}_PAYMENT_MESSAGE`;
+  }
 
   // https://dev.digit.org/collection-services/payments/FSM.TRIP_CHARGES/_search?tenantId=pb.amritsar&consumerCodes=107-FSM-2021-02-18-063433
 
@@ -159,11 +164,11 @@ export const SuccessfulPayment = (props) => {
       <StatusTable>
         <Row rowContainerStyle={rowContainerStyle} last label={t(label)} text={applicationNo} />
         {/** TODO : move this key and value into the hook based on business Service */}
-        {business_service === "PT" && (
+        {(business_service === "PT" || workflw) && (
           <Row rowContainerStyle={rowContainerStyle} last label={t("CS_PAYMENT_BILLING_PERIOD")} text={getBillingPeriod(demand?.Demands?.[0])} />
         )}
 
-        {business_service === "PT" &&
+        {(business_service === "PT" || workflw) &&
           (isBillDataLoading ? (
             <Loader />
           ) : (
@@ -182,7 +187,7 @@ export const SuccessfulPayment = (props) => {
           label={t(ommitRupeeSymbol ? "CS_PAYMENT_AMOUNT_PAID_WITHOUT_SYMBOL" : "CS_PAYMENT_AMOUNT_PAID")}
           text={"₹ " + amount}
         />
-        {business_service !== "PT" && (
+        {(business_service !== "PT" || workflw) && (
           <Row
             rowContainerStyle={rowContainerStyle}
             last
