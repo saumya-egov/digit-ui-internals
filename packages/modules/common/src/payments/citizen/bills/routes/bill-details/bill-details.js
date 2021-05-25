@@ -66,7 +66,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
   const onSubmit = () => {
     let paymentAmount = paymentType === t("CS_PAYMENT_FULL_AMOUNT") ? getTotal() : amount;
     if (window.location.href.includes("mcollect")) {
-      history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}?workflow:mcollect`, {
+      history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}?workflow=mcollect`, {
         paymentAmount,
         tenantId: billDetails.tenantId,
       });
