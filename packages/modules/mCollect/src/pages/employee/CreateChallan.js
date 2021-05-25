@@ -562,7 +562,7 @@ const CreateChallen = ({ ChallanData }) => {
         isDisabled={!canSubmit}
         label={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_ECHALLAN")}
       />
-      {showToast && <Toast error={showToast.key} label={t(showToast.label)} setShowToast={setShowToast(null)} />}
+      {showToast && <Toast error={showToast.key} label={t(showToast.label)} onClose={setShowToast(null)} />}
     </div>
   );
 };
