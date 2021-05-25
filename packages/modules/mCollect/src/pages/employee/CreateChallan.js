@@ -48,6 +48,7 @@ const CreateChallen = ({ ChallanData }) => {
   }
 
   function setcategories(category) {
+    setcategoriesType(null);
     setSelectedcategories(category);
   }
 
@@ -171,7 +172,9 @@ const CreateChallen = ({ ChallanData }) => {
     setAPIcategoriesType(
       selectedCategory?.child
         ? selectedCategory.child.map((ele) => {
-            ele.code = "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.split(".").join("_").toUpperCase();
+            if (!ele.code.includes("BILLINGSERVICE_BUSINESSSERVICE_")) {
+              ele.code = "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.split(".").join("_").toUpperCase();
+            }
             return ele;
           })
         : []
@@ -381,7 +384,7 @@ const CreateChallen = ({ ChallanData }) => {
               name: "pincode",
               disable: isEdit,
               validation: { pattern: /^[1-9][0-9]{5}$/, validate: isPincodeValid },
-              error: t("CORE_COMMON_PINCODE_INVALID"),
+              error: t("UC_PINCODE_INVALID"),
               onChange: handlePincode,
             },
           },
@@ -505,7 +508,7 @@ const CreateChallen = ({ ChallanData }) => {
           populators: {
             name: ele.name.split(".").join("_"),
             validation: { required: ele.isRequired, pattern: /^(0|[1-9][0-9]*)$/ },
-            error: t("CORE_COMMON_FIELD_ERROR"),
+            error: t("UC_COMMON_FIELD_ERROR"),
           },
         }));
         if (temp.length > 0) {
