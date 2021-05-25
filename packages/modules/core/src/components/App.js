@@ -166,16 +166,14 @@ function TopBar(props) {
   return (
     <div className="topbar">
       <img className="city" src={cityDetails?.logoId} />
-      <span className="ulb" style={mobileView ? { fontSize: "14px" } : {}}>
+      <p className="ulb" style={mobileView ? { fontSize: "14px", width: "50%", display: "inline-block", marginTop: "15px" } : {}}>
         {t(cityDetails?.i18nKey).toUpperCase()}{" "}
         {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
-      </span>
+      </p>
       <div className={mobileView ? "right" : "flex-right right w-80 column-gap-15"}>
-        {!mobileView && (
-          <div className="left">
-            <ChangeLanguage dropdown={true} />
-          </div>
-        )}
+        <div className="left">
+          <ChangeLanguage dropdown={true} />
+        </div>
         {userDetails?.access_token && (
           <div className="left">
             <Dropdown
