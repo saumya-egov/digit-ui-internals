@@ -150,20 +150,20 @@ const CreateChallen = ({ ChallanData }) => {
   useEffect(() => {
     if (isEdit && ChallanData[0] && fetchBillData && !fromDate && !toDate) {
       let fromdate = ChallanData[0]
-        ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString() +
-          "-" +
-          new Date(ChallanData[0].taxPeriodFrom).getMonth() +
-          "-" +
-          new Date(ChallanData[0].taxPeriodFrom).getDate()
-        : null;
+      ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString() +
+      "-" +
+      (new Date(ChallanData[0].taxPeriodFrom).getMonth()+1) +
+      "-" +
+      new Date(ChallanData[0].taxPeriodFrom).getDate()
+      : null;
       ChallanData[0] && setFromDate(fromdate);
       let todate = ChallanData[0]
-        ? new Date(ChallanData[0].taxPeriodTo).getFullYear().toString() +
-          "-" +
-          new Date(ChallanData[0].taxPeriodTo).getMonth().toString() +
-          "-" +
-          new Date(ChallanData[0].taxPeriodTo).getDate()
-        : null;
+      ? new Date(ChallanData[0].taxPeriodTo).getFullYear().toString() +
+      "-" +
+      (new Date(ChallanData[0].taxPeriodTo).getMonth()+1) +
+      "-" +
+      new Date(ChallanData[0].taxPeriodTo).getDate()
+      : null;
       ChallanData[0] && setToDate(todate);
     }
   });
