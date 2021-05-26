@@ -51,8 +51,8 @@ const MCollectAcknowledgement = () => {
         <Card>
           <Banner
             message={!isEdit ? t("UC_BILL_GENERATED_SUCCESS_MESSAGE") : t("UC_BILL_UPDATED_SUCCESS_MESSAGE")}
-            applicationNumber={params.billNumber}
-            info={t("UC_BILL_NO_LABEL")}
+            applicationNumber={params?.challanNumber}
+            info={t("UC_CHALLAN_NO")}
             successful={true}
           />
           <CardText>{t("UC_BILL_GENERATION_MESSAGE_SUB")}</CardText>
