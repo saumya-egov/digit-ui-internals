@@ -11,10 +11,10 @@ export const setServiceCategory = (businessServiceData, dispatch, state, setCate
     if(item.code.includes("BILLINGSERVICE_BUSINESSSERVICE_")){
       let str = item.code.replace("BILLINGSERVICE_BUSINESSSERVICE_","")
       var frags = str.split("_");
-
       for (let i = 0; i < frags.length; i++) {
         frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].toLowerCase().slice(1);
       }
+      frags[0] = frags[0].toUpperCase()
       item.code = frags.join("_");
      item.code =  item.code.replaceAt(item.code.indexOf('_'), '.')
     }
@@ -34,6 +34,5 @@ export const setServiceCategory = (businessServiceData, dispatch, state, setCate
 
   let serviceCategories = Object.values(nestedServiceData).filter((item) =>  item.code
 );
-
   return serviceCategories;
 };
