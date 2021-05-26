@@ -66,7 +66,7 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
         })}
       <div className="filter-button" onClick={() => showMoreStatus(!moreStatus)}>
         {" "}
-        {moreStatus ? t("ES_COMMON_LESS") : t("ES_COMMON_MORE")}{" "}
+        {moreStatus ? t("UC_LESS_LABEL") : t("UC_MORE_LABEL")}{" "}
       </div>
     </div>
   );

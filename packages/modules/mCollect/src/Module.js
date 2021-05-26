@@ -1,4 +1,4 @@
-import { Header, HomeLink } from "@egovernments/digit-ui-react-components";
+import { Header, HomeLink,Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
@@ -6,14 +6,18 @@ import EmployeeApp from "./pages/employee";
 import MCollectCard from "./components/MCollectCard";
 import InboxFilter from "./components/inbox/NewInboxFilter";
 import CitizenApp from "./pages/citizen";
+import { useSelector } from "react-redux";
 
-export const MCollectModule = ({ userType, tenants }) => {
-  const moduleCode = "mCollect";
-  // addComponentsToRegistry();
-  console.log(moduleCode, "module integrated");
 
+export const MCollectModule = ({ stateCode, userType, tenants }) => {
+  const moduleCode = "UC";
+  const state = useSelector((state) => state);
+  const language = state?.common?.selectedLanguage;
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
   Digit.SessionStorage.set("MCollect_TENANTS", tenants);
-
+  if (isLoading) {
+    return <Loader />;
+  }
   const { path, url } = useRouteMatch();
 
   if (userType === "employee") {

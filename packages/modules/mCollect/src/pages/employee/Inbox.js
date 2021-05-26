@@ -155,11 +155,11 @@ const Inbox = ({
   const getSearchFields = () => {
       return [
         {
-          label: t("UC_CHALLAN_NO_LABEL"),
+          label: t("UC_CHALLAN_NUMBER"),
           name: "challanNo",
         },
         {
-          label: t("ES_SEARCH_APPLICATION_MOBILE_NO"),
+          label: t("UC_MOBILE_NUMBER_LABEL"),
           name: "mobileNumber",
           maxlength: 10,
           pattern: "[6-9][0-9]{9}",

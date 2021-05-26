@@ -33,7 +33,6 @@ const EmployeeChallan = (props) => {
   }, [selectedAction]);
 
   function onActionSelect(action) {
-    debugger;
     setSelectedAction(action);
     setDisplayMenu(false);
   }
@@ -44,7 +43,6 @@ const EmployeeChallan = (props) => {
   };
 
   const submitAction = (data) => {
-    debugger;
     Digit.MCollectService.update({ Challan: data?.Challan }, tenantId).then((result) => {
       if (result.challans && result.challans.length > 0) {
         const challan = result.challans[0];
