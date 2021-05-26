@@ -115,9 +115,11 @@ const EmployeeApp = ({ path, url, userType }) => {
 
 const CitizenApp = ({ path }) => {
   const location = useLocation();
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
-      {!location.pathname.includes("/new-application/response") && <BackButton>Back</BackButton>}
+      {!location.pathname.includes("/new-application/response") && <BackButton>{t("CS_COMMON_BACK")}</BackButton>}
       <Switch>
         <PrivateRoute
           path={`${path}/inbox`}
