@@ -5,7 +5,7 @@ import { ResponsiveContainer, Cell, Legend, Pie, PieChart, Tooltip } from "recha
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
-const COLORS = ["#FBC02D", "#048BD0", "#8E29BF", "#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#FBC02D", "#048BD0", "#8E29BF", "#EA8A3B", "#0BABDE", "#FFBB28", "#FF8042"];
 
 const CustomPieChart = ({ dataKey = "value", data }) => {
   const { id } = data;
@@ -57,7 +57,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
           ))}
         </Pie>
         <Tooltip formatter={(value, name) => [value, t(name)]} />
-        <Legend layout="vertical" align="bottom" iconType="circle" formatter={renderLegend} />
+        <Legend layout="horizontal" align="bottom" iconType="circle" formatter={renderLegend} />
       </PieChart>
     </ResponsiveContainer>
   );

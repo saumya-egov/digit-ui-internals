@@ -61,7 +61,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
     const endDate = selectionRange?.endDate;
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
-    onFilterChange({ range: { startDate, endDate, duration, title } });
+    onFilterChange({ range: { startDate, endDate, duration, title }, requestDate: { startDate, endDate, duration, title } });
     if (isEndDateFocused(focusedRange[1])) {
       setIsModalOpen(false);
     }
