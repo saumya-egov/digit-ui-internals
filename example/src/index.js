@@ -93,7 +93,7 @@ const userInfo = {
   QAPTA,
 };
 
-const enabledModules = ["PGR", "FSM", "Payment", "PT", "DSS", "MCollect"];
+const enabledModules = ["PGR", "FSM", "Payment", "PT", "QuickPayLinks", "DSS", "MCollect"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
