@@ -4,10 +4,11 @@ import { Link, Redirect, Route, Switch, useHistory } from "react-router-dom";
 import { TopBar as TopBarComponent, Dropdown, LogoutIcon, HomeIcon, Hamburger } from "@egovernments/digit-ui-react-components";
 import ChangeLanguage from "./ChangeLanguage";
 import { useSelector } from "react-redux";
-
 import { AppModules } from "./AppModules";
 import { CitizenSidebar } from "./Sidebar";
 import { useLocation } from "react-router-dom";
+import { digitImg } from "../Images/digit";
+import { powered } from "../Images/powered";
 
 const TextToImg = (props) => (
   <span className="user-img-txt" onClick={props.toggleMenu} title={props.name}>
@@ -58,7 +59,13 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
             logoUrl={logoUrl}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
+            <div style={{ overflowY: "auto" }}>
+              <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
+            </div>
+            <div class="employee-home-footer">
+              <img src={powered} />
+              <img src={digitImg} />
+            </div>
           </div>
         </div>
       </Route>
@@ -74,8 +81,12 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
             handleUserDropdownSelection={handleUserDropdownSelection}
             logoUrl={logoUrl}
           />
-          <div className={`main center-container`}>
+          <div className={`main center-container mb-50`}>
             <AppModules stateCode={stateCode} userType="citizen" modules={modules} appTenants={appTenants} />
+            <div class="citizen-home-footer">
+              <img src={powered} />
+              <img src={digitImg} />
+            </div>
           </div>
         </div>
       </Route>
