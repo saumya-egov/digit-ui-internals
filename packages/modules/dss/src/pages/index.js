@@ -45,7 +45,7 @@ const DashBoard = () => {
   // const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
-  const { data: ulbTenants } = Digit.Hooks.useModuleTenants("FSM");
+  const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
   const fullPageRef = useRef();
 
   const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
@@ -58,7 +58,7 @@ const DashBoard = () => {
     setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
   };
 
-  if (isLoading) {
+  if (isLoading || isUlbLoading) {
     return <Loader />;
   }
 
