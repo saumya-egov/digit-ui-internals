@@ -19,7 +19,7 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
   return (
     <div className="status-container">
       <div className="filter-label" style={{ fontWeight: "normal" }}>
-        {t("ES_INBOX_STATUS")}
+        {t("UC_COMMON_TABLE_COL_STATUS")}
       </div>
       {applicationStatus?.map((option, index) => {
         return (

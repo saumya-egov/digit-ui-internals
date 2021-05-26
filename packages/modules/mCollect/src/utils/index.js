@@ -81,7 +81,7 @@ export const downloadAndPrintChallan = async (challanNo, mode="download") => {
     const response = await Digit.MCollectService.downloadPdf(challanNo, tenantId);
     const responseStatus = parseInt(response.status, 10);
     if (responseStatus === 201 || responseStatus === 200) {
-        let fileName = mode == "print" ? printPdf(new Blob([response.data], { type: "application/pdf" })) : downloadPdf(new Blob([response.data], { type: "application/pdf" }), `CHALLAN-${challanNo}.pdf`);
+        mode == "print" ? printPdf(new Blob([response.data], { type: "application/pdf" })) : downloadPdf(new Blob([response.data], { type: "application/pdf" }), `CHALLAN-${challanNo}.pdf`);
     }
 }
 

@@ -34,7 +34,6 @@ const ActionModal = ({ t, action, tenantId, closeModal, submitAction, applicatio
         amount: bill?.amount
       })
     })
-    debugger;
     submitAction({
       Challan: {
         ...applicationData,
@@ -58,7 +57,6 @@ const ActionModal = ({ t, action, tenantId, closeModal, submitAction, applicatio
     }
   }, [action]);
 
-  debugger;
   return action && config.form ? (
     <Modal
       headerBarMain={<Heading label={t(config.label.heading)} />}
