@@ -17,22 +17,22 @@ const DssBreadCrumb = ({ location }) => {
       show: true,
     },
     {
-      path: "/digit-ui/employee/dss/dashboard",
+      path: "/digit-ui/employee/dss/dashboard/fsm",
       content: t("ES_COMMON_DSS"),
       show: true,
     },
   ];
 
-  return <BreadCrumb crumbs={crumbs} />
-}
+  return <BreadCrumb crumbs={crumbs} />;
+};
 
-const Routes = ({ path }) => {
+const Routes = ({ path, stateCode }) => {
   const location = useLocation();
   return (
     <div className="chart-wrapper">
       <DssBreadCrumb location={location} />
       <Switch>
-        <PrivateRoute path={`${path}/dashboard`} component={DashBoard} />
+        <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} />
       </Switch>
     </div>
   );
@@ -53,7 +53,7 @@ const DSSModule = ({ stateCode, userType, tenants }) => {
   Digit.SessionStorage.set("DSS_TENANTS", tenants);
 
   if (userType !== "citizen") {
-    return <Routes path={path} />;
+    return <Routes path={path} stateCode={stateCode} />;
   }
 };
 
