@@ -3,7 +3,7 @@ export const config = [
     texts: {
       header: "MCOLLECT_SEARCH_CHALLAN_HEADER",
       submitBarLabel: "ABG_SEARCH_BUTTON",
-      cardText: "CS_PT_HOME_SEARCH_RESULTS_DESC",
+      cardText: "CS_MCOLLECT_HOME_SEARCH_RESULTS_DESC",
     },
     inputs: [
       {
