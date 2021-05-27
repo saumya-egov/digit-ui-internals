@@ -7,6 +7,7 @@ import DashBoard from "./pages";
 import { Route, Switch, useRouteMatch, useLocation } from "react-router-dom";
 import Overview from "./pages/Overview";
 import DSSCard from "./components/DSSCard";
+import DrillDown from "./pages/DrillDown";
 
 const DssBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -21,6 +22,11 @@ const DssBreadCrumb = ({ location }) => {
       content: t("ES_COMMON_DSS"),
       show: true,
     },
+    {
+      path: "/digit-ui/employee/dss/drilldown",
+      content: t("ES_COMMON_DSS_DRILL"),
+      show: location.pathname.includes('drilldown') ? true : false,
+    }
   ];
 
   return <BreadCrumb crumbs={crumbs} />;
@@ -33,6 +39,7 @@ const Routes = ({ path, stateCode }) => {
       <DssBreadCrumb location={location} />
       <Switch>
         <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} />
+        <PrivateRoute path={`${path}/drilldown`} component={() => <DrillDown />} />
       </Switch>
     </div>
   );
