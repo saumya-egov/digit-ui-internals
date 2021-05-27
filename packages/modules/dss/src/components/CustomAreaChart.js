@@ -87,6 +87,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
               fontSize: "14px",
               fill: "#505A5F",
             }}
+            unit={id === "fsmCapacityUtilization" ? "%" : ""}
             tick={{ fontSize: "14px", fill: "#505A5F" }}
           />
           <Area type="monotone" dataKey={renderPlot} stroke="#048BD0" fill="url(#colorUv)" dot={true} />

@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { Loader } from "@egovernments/digit-ui-react-components";
@@ -41,14 +41,24 @@ const CustomBarChart = ({
     requestDate: value?.requestDate,
     filters: value?.filters,
   });
+
+  const chartData =  useMemo(() => {
+    if (!response) return null;
+    return response?.responseData?.data?.map((bar) => {
+      return {
+        name: t(bar?.plots?.[0].name),
+        value: bar?.plots?.[0].value
+      }
+    })
+  }, [response])
   if (isLoading) {
     return <Loader />;
   }
   return (
-    <ResponsiveContainer width="99%" height={200}>
-      <BarChart width="100%" height="100%" data={response?.responseData?.data?.[0]?.plots} layout={layout} maxBarSize={10} margin={{ left: 170 }}>
+    <ResponsiveContainer width="99%" height={320}>
+      <BarChart width="100%" height="100%" data={chartData} layout={layout} maxBarSize={10} margin={{ left: 170 }} barGap={70}>
         {showGrid && <CartesianGrid />}
-        <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} />
+        <XAxis hide={hideAxis} dataKey={xDataKey} type={xAxisType} domain={[0, 100]} />
         <YAxis dataKey={yDataKey} hide={hideAxis} type={yAxisType} padding={{ right: 40 }} />
         <Bar
           dataKey={xDataKey}

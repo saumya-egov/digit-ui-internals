@@ -1,4 +1,4 @@
-import React, { Fragment, useContext, useMemo } from "react";
+import React, { Fragment, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime, subYears } from "date-fns";
 import { UpwardArrow, TextInput, Loader, Table, RemoveableTag } from "@egovernments/digit-ui-react-components";
@@ -6,6 +6,7 @@ import FilterContext from "./FilterContext";
 
 const CustomTable = ({ data, onSearch }) => {
   const { id } = data;
+  const [chartKey, setChartKey] = useState(id);
   const { t } = useTranslation();
   const { value, setValue } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -16,13 +17,13 @@ const CustomTable = ({ data, onSearch }) => {
     title: "",
   }
   const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
-    key: id,
+    key: chartKey,
     type: "metric",
     tenantId,
     requestDate: lastYearDate,
   })
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
+    key: chartKey,
     type: "metric",
     tenantId,
     requestDate: value?.requestDate,
@@ -37,13 +38,21 @@ const CustomTable = ({ data, onSearch }) => {
     return plot?.name;
   }
 
+  const getDrilldownCharts = () => {
+    if (response?.responseData?.drillDownChartId && response?.responseData?.drillDownChartId !== "none") {
+      setChartKey(response?.responseData?.drillDownChartId);
+    }
+  }
+
   const tableColumns = useMemo(
     () =>
       response?.responseData?.data?.[0]?.plots?.map((plot) => ({
         Header: renderHeader(plot),
         accessor: plot?.name.replaceAll(".", " "),
         symbol: plot?.symbol,
-        Cell: ({ value }) => {
+        Cell: (args) => {
+          console.log(args, 'args');
+          const { value, column } = args;
           if (typeof value === 'object') {
             const { insight, value: rowValue } = value;
             return (
@@ -54,6 +63,11 @@ const CustomTable = ({ data, onSearch }) => {
                 {` `}
                 {`${insight}%`}
               </span>
+            )
+          }
+          if (response?.responseData?.filter?.[0]?.column === column.Header) {
+            return (
+              <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value)}>{value}</span>
             )
           }
           return String(value);

@@ -1,4 +1,5 @@
 import React, { Fragment, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CustomAreaChart from "./CustomAreaChart";
 import CustomBarChart from "./CustomBarChart";
 import CustomHorizontalBarChart from "./CustomHorizontalBarChart";
@@ -12,21 +13,22 @@ import Summary from "./Summary";
 let index = 1;
 
 const Layout = ({ rowData }) => {
+  const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [searchQuery, onSearch] = useState();
 
-  const renderChart = (chart, key) => {
+  const renderChart = (chart, title) => {
     switch (chart.chartType) {
       case "table":
-        return <CustomTable data={chart} key={key} onSearch={searchQuery} />;
+        return <CustomTable data={chart} onSearch={searchQuery} title={title} />;
       case "donut":
-        return <CustomPieChart data={chart} key={key} />;
+        return <CustomPieChart data={chart} title={title} />;
       case "line":
-        return <CustomAreaChart data={chart} />;
+        return <CustomAreaChart data={chart} title={title} />;
       case "horizontalBar":
-        return <CustomHorizontalBarChart data={chart} xAxisType="number" yAxisType="category" layout="vertical" yDataKey="name" xDataKey="" />;
+        return <CustomHorizontalBarChart data={chart} xAxisType="number" yAxisType="category" layout="vertical" yDataKey="name" xDataKey="" showDrillDown={true} title={title} />;
       case "bar":
-        return <CustomHorizontalBarChart data={chart} />;
+        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={`${t('DSS_WASTE_RECIEVED')} ${t(`DSS_WASTE_UNIT`)}`} />;
     }
   };
 
@@ -50,7 +52,7 @@ const Layout = ({ rowData }) => {
             onChange={(e) => onSearch(e.target.value)}
           >
             {/* {visualizer.charts.map((chart, key) => renderChart(chart, key))} */}
-            {renderChart(visualizer?.charts?.[0])}
+            {renderChart(visualizer?.charts?.[0], visualizer.name)}
           </GenericChart>
         );
       case "performing-metric":
