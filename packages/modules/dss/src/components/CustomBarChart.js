@@ -38,19 +38,19 @@ const CustomBarChart = ({
     key: id,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
-  const chartData =  useMemo(() => {
+  const chartData = useMemo(() => {
     if (!response) return null;
     return response?.responseData?.data?.map((bar) => {
       return {
         name: t(bar?.plots?.[0].name),
-        value: bar?.plots?.[0].value
-      }
-    })
-  }, [response])
+        value: bar?.plots?.[0].value,
+      };
+    });
+  }, [response]);
   if (isLoading) {
     return <Loader />;
   }

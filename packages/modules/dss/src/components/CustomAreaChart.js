@@ -27,7 +27,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
     key: id,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
@@ -45,19 +45,25 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
 
   const renderLegend = (value) => <span>{value}</span>;
 
-  const tickFormatter = (value) => value !== "auto" ? format(new Date(value), "MMM, yy") : "";
+  const tickFormatter = (value) => (value && value !== "auto" ? format(new Date(value), "MMM, yy") : "");
 
   const renderTooltip = ({ payload, label, unit }) => {
     return (
-      <div style={{ margin: "0px",
-        padding: "10px",
-        backgroundColor: "rgb(255, 255, 255)",
-        border: "1px solid rgb(204, 204, 204)",
-        whiteSpace: "nowrap" }}>
-        <p>{`${label !== undefined ? format(new Date(label), "MMM, yy"): ""} :${id === "fsmTotalCumulativeCollection" ? " ₹" : ""}${payload?.[0]?.value} ${(id === "fsmTotalCumulativeCollection" && value?.denomination !== "Unit") ? value?.denomination : ""}`}</p>
+      <div
+        style={{
+          margin: "0px",
+          padding: "10px",
+          backgroundColor: "rgb(255, 255, 255)",
+          border: "1px solid rgb(204, 204, 204)",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <p>{`${label !== undefined ? format(new Date(label), "MMM, yy") : ""} :${id === "fsmTotalCumulativeCollection" ? " ₹" : ""}${
+          payload?.[0]?.value
+        } ${id === "fsmTotalCumulativeCollection" && value?.denomination !== "Unit" ? value?.denomination : ""}`}</p>
       </div>
-    )
-  }
+    );
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -73,9 +79,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
             </linearGradient>
           </defs>
           <CartesianGrid />
-          <Tooltip
-            content={renderTooltip}
-          />
+          <Tooltip content={renderTooltip} />
           <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} tickFormatter={tickFormatter} />
           <YAxis
             label={{

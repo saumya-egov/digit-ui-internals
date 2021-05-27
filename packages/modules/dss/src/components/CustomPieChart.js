@@ -16,7 +16,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     key: id,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
@@ -29,7 +29,18 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
       return null;
     }
     return (
-      <text x={x} cx={cx} y={y} cy={cy} percent={percent} name={name} fill="#505A5F" alignmentBaseline="middle" className="recharts-pie-label-text" fontSize="14px">
+      <text
+        x={x}
+        cx={cx}
+        y={y}
+        cy={cy}
+        percent={percent}
+        name={name}
+        fill="#505A5F"
+        alignmentBaseline="middle"
+        className="recharts-pie-label-text"
+        fontSize="14px"
+      >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
     );

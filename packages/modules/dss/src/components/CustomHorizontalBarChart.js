@@ -29,7 +29,7 @@ const CustomHorizontalBarChart = ({
     key: id,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
@@ -51,8 +51,8 @@ const CustomHorizontalBarChart = ({
   };
 
   const goToDrillDownCharts = () => {
-    history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`)
-  }
+    history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`);
+  };
 
   const chartData = useMemo(() => constructChartData(response?.responseData?.data), [response]);
 
@@ -67,16 +67,12 @@ const CustomHorizontalBarChart = ({
   return (
     <Fragment>
       <ResponsiveContainer width="99%" height={300}>
-        <BarChart
-          width="100%"
-          height="100%"
-          layout={layout}
-          data={chartData}
-          barGap={14}
-          barSize={15}
-        >
+        <BarChart width="100%" height="100%" layout={layout} data={chartData} barGap={14} barSize={15}>
           <CartesianGrid />
-          <YAxis dataKey={yDataKey} type={yAxisType} tick={{ fontSize: "14px", fill: "#505A5F" }}
+          <YAxis
+            dataKey={yDataKey}
+            type={yAxisType}
+            tick={{ fontSize: "14px", fill: "#505A5F" }}
             label={{
               value: yAxisLabel,
               angle: -90,
@@ -96,7 +92,11 @@ const CustomHorizontalBarChart = ({
           <Tooltip cursor={false} />
         </BarChart>
       </ResponsiveContainer>
-      {showDrillDown && <p style={{ textAlign: "right", color: "#F47738" }} onClick={goToDrillDownCharts}>{t('DSS_SHOW_MORE')}</p>}
+      {showDrillDown && (
+        <p style={{ textAlign: "right", color: "#F47738" }} onClick={goToDrillDownCharts}>
+          {t("DSS_SHOW_MORE")}
+        </p>
+      )}
     </Fragment>
   );
 };

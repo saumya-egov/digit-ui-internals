@@ -23,7 +23,7 @@ const Download = {
       scrollY: -window.scrollY,
       useCORS: true,
     }).then((canvas) => {
-      saveAs(canvas.toDataURL("image/jpeg", 1.0), `${fileName}.jpeg`);
+      saveAs(canvas.toDataURL("image/jpeg", 0.5), `${fileName}.jpeg`);
     });
   },
 
@@ -34,7 +34,7 @@ const Download = {
       const o = width > height ? "l" : "p";
       const format = "a4";
 
-      return new jsPDF(o, "mm", format);
+      return new jsPDF(o, "mm", format, true);
     };
 
     const element = ReactDOM.findDOMNode(node.current);
@@ -43,11 +43,11 @@ const Download = {
       useCORS: true,
     }).then((canvas) => {
       const pdf = getPDF(canvas);
-      const pngImage = canvas.toDataURL("image/png", 1.0);
+      const pngImage = canvas.toDataURL("image/png", 0.5);
       // console.log("pngImage", pngImage, canvas.width, canvas.height)
       const imageWidth = canvas.width > canvas.height ? 297 : 210;
       const imageHeight = canvas.width < canvas.height ? 297 : 210;
-      pdf.addImage(pngImage, "PNG", 0, 0, imageWidth, imageHeight);
+      pdf.addImage(pngImage, "PNG", 0, 0, imageWidth, imageHeight, "", "FAST");
       pdf.save(`${fileName}.pdf`);
     });
   },

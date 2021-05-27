@@ -15,34 +15,34 @@ const CustomTable = ({ data, onSearch }) => {
     endDate: subYears(value?.range?.endDate, 1).getTime(),
     interval: "month",
     title: "",
-  }
+  };
   const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
     requestDate: lastYearDate,
-  })
+  });
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
   const renderHeader = (plot) => {
-    const units = ["Total Waste Dumped", "Total Waste Collected"]
+    const units = ["Total Waste Dumped", "Total Waste Collected"];
     if (id === "fsmVehicleLogReportByDDR" && units.includes(plot?.name)) {
-      return `${plot?.name} (${t('DSS_KL')})`;
+      return `${plot?.name} (${t("DSS_KL")})`;
     }
     return plot?.name;
-  }
+  };
 
   const getDrilldownCharts = () => {
     if (response?.responseData?.drillDownChartId && response?.responseData?.drillDownChartId !== "none") {
       setChartKey(response?.responseData?.drillDownChartId);
     }
-  }
+  };
 
   const tableColumns = useMemo(
     () =>
@@ -51,9 +51,9 @@ const CustomTable = ({ data, onSearch }) => {
         accessor: plot?.name.replaceAll(".", " "),
         symbol: plot?.symbol,
         Cell: (args) => {
-          console.log(args, 'args');
+          console.log(args, "args");
           const { value, column } = args;
-          if (typeof value === 'object') {
+          if (typeof value === "object") {
             const { insight, value: rowValue } = value;
             return (
               <span>
@@ -63,46 +63,45 @@ const CustomTable = ({ data, onSearch }) => {
                 {` `}
                 {`${insight}%`}
               </span>
-            )
+            );
           }
           if (response?.responseData?.filter?.[0]?.column === column.Header) {
             return (
-              <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value)}>{value}</span>
-            )
+              <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value)}>
+                {value}
+              </span>
+            );
           }
           return String(value);
-        }
+        },
       })),
     [response]
   );
 
-  const tableData = useMemo(
-    () => {
-      if (!response || !lastYearResponse) return;
-      return response?.responseData?.data?.map((rows) => {
-        const lyData = lastYearResponse?.responseData?.data?.find(lyRow => lyRow?.headerName === rows?.headerName);
-        return rows?.plots?.reduce((acc, row, currentIndex) => {
-          let value = row?.value !== null ? row?.value : row?.label || "";
-          let insight = null;
-          if (row.symbol === "number" && lyData !== undefined) {
-            let prevData = lyData.plots[currentIndex].value;
-            if (prevData === value) insight = 0;
-            else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
-          }
-          if (typeof value === "number" && !Number.isInteger(value)) {
-            value = Math.round((value + Number.EPSILON) * 100) / 100;
-          }
-          acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : value
-          return acc;
-        }, {})
-      });
-    },
-    [response, lastYearResponse]
-  );
+  const tableData = useMemo(() => {
+    if (!response || !lastYearResponse) return;
+    return response?.responseData?.data?.map((rows) => {
+      const lyData = lastYearResponse?.responseData?.data?.find((lyRow) => lyRow?.headerName === rows?.headerName);
+      return rows?.plots?.reduce((acc, row, currentIndex) => {
+        let value = row?.value !== null ? row?.value : row?.label || "";
+        let insight = null;
+        if (row.symbol === "number" && lyData !== undefined) {
+          let prevData = lyData.plots[currentIndex].value;
+          if (prevData === value) insight = 0;
+          else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
+        }
+        if (typeof value === "number" && !Number.isInteger(value)) {
+          value = Math.round((value + Number.EPSILON) * 100) / 100;
+        }
+        acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : value;
+        return acc;
+      }, {});
+    });
+  }, [response, lastYearResponse]);
 
   const removeULB = (id) => {
-    setValue({ ...value, filters: { ...value?.filters, tenantId: [...value?.filters?.tenantId].filter((tenant, index) => index !== id) } })
-  }
+    setValue({ ...value, filters: { ...value?.filters, tenantId: [...value?.filters?.tenantId].filter((tenant, index) => index !== id) } });
+  };
 
   if (isLoading || isRequestLoading || !tableColumns || !tableData) {
     return <Loader />;
@@ -110,12 +109,14 @@ const CustomTable = ({ data, onSearch }) => {
 
   return (
     <div style={{ width: "100%", overflowX: "auto" }}>
-      {value?.filters?.tenantId.length > 0 && <div className="tag-container">
-        <span style={{ marginTop: '20px' }}>{t('DSS_FILTERS_APPLIED')}:  </span>
-        {value?.filters?.tenantId?.map((filter, id) => (
-          <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
-        ))}
-      </div>}
+      {value?.filters?.tenantId.length > 0 && (
+        <div className="tag-container">
+          <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+          {value?.filters?.tenantId?.map((filter, id) => (
+            <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+          ))}
+        </div>
+      )}
       <Table
         className="customTable"
         t={t}

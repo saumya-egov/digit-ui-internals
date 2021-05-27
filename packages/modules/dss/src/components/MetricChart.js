@@ -12,15 +12,14 @@ const MetricData = ({ t, data, code }) => {
         {code === "citizenAvgRating" ? (
           <Rating currentRating={Math.round(data?.headerValue)} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
         ) : (
-          `${Digit.Utils.dss.formatter(data?.headerValue, data?.headerSymbol, value?.denomination, true)} ${code === "totalSludgeTreated" ? t(`DSS_KL`) : ""}`
+          `${Digit.Utils.dss.formatter(data?.headerValue, data?.headerSymbol, value?.denomination, true)} ${
+            code === "totalSludgeTreated" ? t(`DSS_KL`) : ""
+          }`
         )}
       </p>
       {data?.insight && (
         <div>
-          {data?.insight?.indicator === "upper_green" ?
-            <UpwardArrow /> :
-            <DownwardArrow />
-          }
+          {data?.insight?.indicator === "upper_green" ? <UpwardArrow /> : <DownwardArrow />}
           <p className={`${data?.insight.colorCode}`}>{data?.insight.value.replace(/[+-]/g, "")}</p>
         </div>
       )}
@@ -37,7 +36,7 @@ const MetricChartRow = ({ data }) => {
     key: id,
     type: chartType,
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
