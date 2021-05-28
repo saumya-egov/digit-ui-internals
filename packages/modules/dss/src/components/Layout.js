@@ -58,7 +58,7 @@ const Layout = ({ rowData }) => {
       case "performing-metric":
         return (
           <GenericChart header={visualizer.name} key={key}>
-            <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} />
+            <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} title={visualizer.name} showDrillDown={true} />
           </GenericChart>
         );
       case "collection":
