@@ -119,7 +119,7 @@ export const SuccessfulPayment = (props) => {
 
   let bannerText;
   if (workflw) {
-    bannerText = `CITIZEN_SUCCESS_MCOLLECT_PAYMENT_MESSAGE`;
+    bannerText = `CITIZEN_SUCCESS_UC_PAYMENT_MESSAGE`;
   } else {
     bannerText = `CITIZEN_SUCCESS_${paymentData?.paymentDetails[0].businessService.replace(/\./g, "_")}_PAYMENT_MESSAGE`;
   }
