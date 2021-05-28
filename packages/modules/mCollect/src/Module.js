@@ -1,4 +1,4 @@
-import { Header, HomeLink,Loader } from "@egovernments/digit-ui-react-components";
+import { Header, HomeLink, Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
@@ -7,7 +7,6 @@ import MCollectCard from "./components/MCollectCard";
 import InboxFilter from "./components/inbox/NewInboxFilter";
 import CitizenApp from "./pages/citizen";
 import { useSelector } from "react-redux";
-
 
 export const MCollectModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = "UC";
@@ -37,7 +36,7 @@ export const MCollectLinks = ({ matchPath, userType }) => {
     <React.Fragment>
       <Header>{t("M-Collect")}</Header>
       <div className="d-grid">
-        <HomeLink to={`${matchPath}/search`}>{t("MCOLLECT_SEARCH_AND_PAY")}</HomeLink>
+        <HomeLink to={`${matchPath}/search`}>{t("UC_SEARCH_AND_PAY")}</HomeLink>
       </div>
     </React.Fragment>
   );

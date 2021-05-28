@@ -6,7 +6,7 @@ export const config = [
     },
     labels: [
       {
-        label: "MCOLLECT_AMOUNT_DUE_LABEL",
+        label: "UC_AMOUNT_DUE_LABEL",
         key: "total_due",
         noteStyle: {
           fontSize: "24px",
@@ -15,7 +15,7 @@ export const config = [
         notePrefix: "₹ ",
       },
       {
-        label: "MCOLLECT_CHALLAN_NO_LABEL",
+        label: "UC_CHALLAN_NO",
         key: "ChannelNo",
       },
       {
@@ -23,7 +23,7 @@ export const config = [
         key: "ServiceCategory",
       },
       {
-        label: "MCOLLECT_OWNER_NAME_LABEL",
+        label: "UC_OWNER_NAME_LABEL",
         key: "OwnerName",
       },
       {
