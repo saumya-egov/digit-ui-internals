@@ -1,7 +1,7 @@
 import React, { Fragment, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime, subYears } from "date-fns";
-import { UpwardArrow, TextInput, Loader, Table, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import { UpwardArrow, TextInput, Loader, Table, RemoveableTag, Rating, DownwardArrow } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
 const CustomTable = ({ data, onSearch }) => {
@@ -21,6 +21,7 @@ const CustomTable = ({ data, onSearch }) => {
     type: "metric",
     tenantId,
     requestDate: lastYearDate,
+    filters: value?.filters,
   });
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
@@ -59,18 +60,23 @@ const CustomTable = ({ data, onSearch }) => {
               <span>
                 {rowValue}
                 {` `}
-                <UpwardArrow />
+                {insight >= 0 ? <UpwardArrow /> : <DownwardArrow /> }
                 {` `}
-                {`${insight}%`}
+                {`${Math.abs(insight)}%`}
               </span>
             );
           }
           if (response?.responseData?.filter?.[0]?.column === column.Header) {
             return (
               <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value)}>
-                {value}
+                {t(value)}
               </span>
             );
+          }
+          if (column.Header.toLowerCase() === "citizen average rating") {
+            return (
+              <Rating currentRating={Math.round(value)} styles={{ width: "unset", justifyContent: "center" }} starStyles={{ width: "25px" }} />
+            )
           }
           return String(value);
         },
@@ -85,7 +91,7 @@ const CustomTable = ({ data, onSearch }) => {
       return rows?.plots?.reduce((acc, row, currentIndex) => {
         let value = row?.value !== null ? row?.value : row?.label || "";
         let insight = null;
-        if (row.symbol === "number" && lyData !== undefined) {
+        if (row.symbol === "number" && row.name !== "Citizen Average Rating" && lyData !== undefined) {
           let prevData = lyData.plots[currentIndex].value;
           if (prevData === value) insight = 0;
           else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
