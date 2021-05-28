@@ -27,7 +27,7 @@ export const config = [
         key: "OwnerName",
       },
       {
-        label: "MCOLLECT_DUE_DATE_LABEL",
+        label: "UC_DUE_DATE",
         key: "bil_due__date",
       },
     ],

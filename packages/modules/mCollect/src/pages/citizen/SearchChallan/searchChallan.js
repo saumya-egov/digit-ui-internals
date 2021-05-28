@@ -114,7 +114,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
             title: t("wrong Challan No."),
           })} */
         />
-        <CardLabel>{`${t("ABG_SERVICE_CATEGORY_LABEL")}`}</CardLabel>
+        <CardLabel>{`${t("UC_SERVICE_CATEGORY_LABEL")}`}</CardLabel>
         {Menu && (
           <RadioOrSelect
             t={t}
