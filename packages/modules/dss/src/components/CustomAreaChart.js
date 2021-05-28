@@ -60,7 +60,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       >
         <p>{`${label !== undefined ? format(new Date(label), "MMM, yy") : ""} :${id === "fsmTotalCumulativeCollection" ? " ₹" : ""}${
           payload?.[0]?.value
-        } ${id === "fsmTotalCumulativeCollection" && value?.denomination !== "Unit" ? value?.denomination : ""}`}</p>
+        } ${id === "fsmTotalCumulativeCollection" ? (value?.denomination !== "Unit" ? value?.denomination : "") : "%"}`}</p>
       </div>
     );
   };
