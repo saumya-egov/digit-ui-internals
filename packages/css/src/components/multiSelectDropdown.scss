@@ -14,10 +14,14 @@
                 @apply h-6 w-6;
             }
         }
+
+        &:hover{
+            @apply border-2 border-solid border-primary-main;
+        }
     }
 
     .master-active{
-        @apply border-2 border-primary-light;
+        @apply border-2 border-primary-main;
         input[type=text]{
             @apply opacity-100;
         }

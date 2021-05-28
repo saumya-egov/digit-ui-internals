@@ -22,12 +22,12 @@ const DateRange = ({ values, onFilterChange, t }) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setIsModalOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [wrapperRef])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
 
   const getDuration = (startDate, endDate) => {
     let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
@@ -79,7 +79,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
             <DateRangePicker
               focusedRange={focusedRange}
               ranges={[values]}
-              rangeColors={["#f47738"]}
+              rangeColors={["#9E9E9E"]}
               onChange={handleSelect}
               onRangeFocusChange={handleFocusChange}
               showSelectionPreview={true}

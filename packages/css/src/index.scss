@@ -60,6 +60,7 @@
 @import "./components/info-banner.scss";
 @import "./components/multiSelectDropdown.scss";
 @import "./components/EllipsisMenu.scss";
+@import "./components/CitizenHomeCard.scss";
 
 @import "./pages/employee/index.scss";
 @import "./pages/employee/popupmodule.scss";
@@ -334,6 +335,11 @@ input[type="number"] {
 
 .text-input {
   @apply relative w-full;
+  input{
+    &:hover{
+      @apply border-2 border-solid border-primary-main; 
+    }
+  }
 }
 
 .custom-time-picker {
