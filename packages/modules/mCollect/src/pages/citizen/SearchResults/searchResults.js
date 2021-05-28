@@ -60,7 +60,14 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
       businesService: bill.businessService,
       total_due: bill.totalAmount,
       OwnerName: bill.payerName || "NA",
-      bil_due__date: bill.billDetails[0].expiryDate || 0,
+      //bil_due__date: bill.billDetails[0].expiryDate || 0,
+      bil_due__date: `${
+        new Date(bill.billDetails[0].expiryDate).getDate().toString() +
+        "/" +
+        (new Date(bill.billDetails[0].expiryDate).getMonth() + 1).toString() +
+        "/" +
+        new Date(bill.billDetails[0].expiryDate).getFullYear().toString()
+      }`,
       ChannelNo: bill?.consumerCode || "NA",
       ServiceCategory: bill.businessService ? bill.businessService.split(".")[bill.businessService.split(".").length - 1] : "NA",
     };
