@@ -26,7 +26,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
     } else {
       history.push(
         `/digit-ui/citizen/mcollect/search-results?mobileNumber=${mobileNumber}&challanNo=${challanNo}&Servicecategory=${
-          Servicecateogry.code.split("_")[Servicecateogry.code.split("_").length - 1]
+          Servicecateogry ? Servicecateogry.code.split("_")[Servicecateogry.code.split("_").length - 1] : ""
         }`
       );
     }
@@ -91,7 +91,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
             value={mobileNumber}
             onChange={setMobileNo}
             {...(validation = {
-              isRequired: true,
+              isRequired: false,
               pattern: "[6-9]{1}[0-9]{9}",
               type: "tel",
               title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
