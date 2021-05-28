@@ -54,6 +54,13 @@ const CustomHorizontalBarChart = ({
     history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`);
   };
 
+  const tooltipFormatter = (value, name) => {
+    if (id === "fsmMonthlyWasteCal") {
+      return [`${value} ${t("DSS_KL")}`, name];
+    }
+    return [value, name];
+  };
+
   const chartData = useMemo(() => constructChartData(response?.responseData?.data), [response]);
 
   const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{value}</span>;
@@ -89,7 +96,7 @@ const CustomHorizontalBarChart = ({
             <Bar key={id} dataKey={bar} fill={barColors[id]} stackId={id > 1 ? 1 : id} />
           ))}
           <Legend formatter={renderLegend} iconType="circle" />
-          <Tooltip cursor={false} />
+          <Tooltip cursor={false} formatter={tooltipFormatter} />
         </BarChart>
       </ResponsiveContainer>
       {showDrillDown && (
