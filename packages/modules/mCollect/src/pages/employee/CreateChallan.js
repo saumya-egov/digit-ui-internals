@@ -128,7 +128,7 @@ const CreateChallen = ({ ChallanData }) => {
         });
       localities && setSelectedLocality(setlocalit[0]);
       let setcategory = categoires.filter((el) => {
-        return el["code"] == ChallanData[0].businessService.split(".")[0];
+        return el["code"] == `BILLINGSERVICE_BUSINESSSERVICE_${ChallanData[0].businessService.split(".")[0]}`;
       });
       setSelectedcategories(setcategory[0]);
       let setcategorytype = categoiresType.filter((el) => {
@@ -184,10 +184,11 @@ const CreateChallen = ({ ChallanData }) => {
   useEffect(() => {
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
+      let  temp = selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_","")
         return (
           selectedCategoryType &&
-          selectedCategoryType.code.split(selectedCategory.code + "_")[1] &&
-          ele.service == selectedCategory.code + "." + humanize(selectedCategoryType.code.split(selectedCategory.code + "_")[1].toLowerCase())
+          selectedCategoryType.code.split(temp + "_")[1] &&
+          ele.service == temp + "." + humanize(selectedCategoryType.code.split(temp + "_")[1].toLowerCase())
         );
       })
     );
@@ -199,7 +200,10 @@ const CreateChallen = ({ ChallanData }) => {
 
   useEffect(() => {
     Digit.MDMSService.getPaymentRules(tenantId, "[?(@.type=='Adhoc')]").then((value) => {
-      setAPIcategories(func.setServiceCategory(value.MdmsRes.BillingService.BusinessService));
+
+      setAPIcategories((func.setServiceCategory(value.MdmsRes.BillingService.BusinessService).map(ele=>{ele.code="BILLINGSERVICE_BUSINESSSERVICE_"+((ele.code).toUpperCase())
+      return ele
+    })));
       setAPITaxHeadMaster(value.MdmsRes.BillingService.TaxHeadMaster);
     });
   }, [tenantId]);
@@ -235,13 +239,14 @@ const CreateChallen = ({ ChallanData }) => {
     });
     let Challan = {};
     if (!isEdit) {
+      let temp=selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_", "")
       Challan = {
         citizen: {
           name: data.name,
           mobileNumber: data.mobileNumber,
         },
-        businessService: selectedCategoryType ? selectedCategory.code + "." + humanized(selectedCategoryType.code, selectedCategory.code) : "",
-        consumerType: selectedCategory.code,
+        businessService: selectedCategoryType ? temp + "." + humanized(selectedCategoryType.code,temp) : "",
+        consumerType: temp,
         description: data.comments,
         taxPeriodFrom: Date.parse(fromDate),
         taxPeriodTo: Date.parse(toDate),
@@ -268,7 +273,7 @@ const CreateChallen = ({ ChallanData }) => {
         id: ChallanData[0].id,
         businessService: ChallanData[0].businessService,
         challanNo: ChallanData[0].challanNo,
-        consumerType: selectedCategory.code,
+        consumerType: selectedCategory?.code,
         description: data.comments,
         taxPeriodFrom: Date.parse(fromDate),
         taxPeriodTo: Date.parse(toDate),
@@ -399,7 +404,7 @@ const CreateChallen = ({ ChallanData }) => {
                 isMandatory
                 selected={selectedLocality}
                 disable={isEdit}
-                optionKey="i18nkey"
+                optionKey="code"
                 id="locality"
                 option={localities}
                 select={selectLocality}
