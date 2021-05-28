@@ -1,4 +1,4 @@
-import { Header, HomeLink } from "@egovernments/digit-ui-react-components";
+import { Header, CitizenHomeCard, RupeeIcon } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -117,16 +117,22 @@ export const PTLinks = ({ matchPath, userType }) => {
     clearParams();
   }, []);
 
-  return (
-    <React.Fragment>
-      <Header>{t("ACTION_TEST_PROPERTY_TAX")}</Header>
-      <div className="d-grid">
-        <HomeLink to={`${matchPath}/property/new-application`}>{t("PT_CREATE_PROPERTY")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-properties`}>{t("PT_MY_PROPERTIES")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-applications`}>{t("PT_MY_APPLICATION")}</HomeLink>
-      </div>
-    </React.Fragment>
-  );
+  const links = [
+    {
+      link: `${matchPath}/property/new-application`,
+      i18nKey: t("PT_CREATE_PROPERTY"),
+    },
+    {
+      link: `${matchPath}/property/my-properties`,
+      i18nKey: t("PT_MY_PROPERTIES"),
+    },
+    {
+      link: `${matchPath}/property/my-applications`,
+      i18nKey: t("PT_MY_APPLICATION"),
+    },
+  ];
+
+  return <CitizenHomeCard header={t("ACTION_TEST_PROPERTY_TAX")} links={links} Icon={RupeeIcon} />;
 };
 
 export const PTComponents = {
