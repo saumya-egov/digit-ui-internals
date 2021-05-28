@@ -2,7 +2,7 @@ export const config = [
   {
     texts: {
       header: "MCOLLECT_SEARCH_CHALLAN_HEADER",
-      submitBarLabel: "ABG_SEARCH_BUTTON",
+      submitBarLabel: "UC_SEARCH_LABEL",
       cardText: "CS_MCOLLECT_HOME_SEARCH_RESULTS_DESC",
     },
     inputs: [
@@ -20,7 +20,7 @@ export const config = [
         error: "MCOLLECT_WRONG_CHALLAN_NO",
       },
       {
-        label: "ABG_SERVICE_CATEGORY_LABEL",
+        label: "UC_SERVICE_CATEGORY_LABEL",
         type: "any",
         name: "ServiceCategory",
         error: "MCOLLECT_INVALID_SERVICE_CATEGORY",
