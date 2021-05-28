@@ -192,7 +192,7 @@ const Inbox = ({
     } else {
       return (
         <div>
-          {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
+          {isInbox && <Header>{t("UC_SEARCH_MCOLLECT_HEADER")}</Header>}
           <DesktopInbox
             businessService={businessService}
             data={formedData}
