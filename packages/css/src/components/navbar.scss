@@ -94,9 +94,8 @@
 }
 
 .digit-footer{
-  @apply flex pb-sm;
+  @apply flex h-4 mb-sm;
   img{
-    width: 100px;
     @apply mr-sm;
   }
 }

@@ -155,15 +155,16 @@ const Inbox = ({
   const getSearchFields = () => {
       return [
         {
-          label: t("UC_CHALLAN_NO_LABEL"),
+          label: t("UC_CHALLAN_NUMBER"),
           name: "challanNo",
         },
         {
-          label: t("ES_SEARCH_APPLICATION_MOBILE_NO"),
+          label: t("UC_MOBILE_NUMBER_LABEL"),
           name: "mobileNumber",
           maxlength: 10,
           pattern: "[6-9][0-9]{9}",
           title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+          componentInFront: "+91"
         }
       ];
   };
@@ -191,7 +192,7 @@ const Inbox = ({
     } else {
       return (
         <div>
-          {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
+          {isInbox && <Header>{t("UC_SEARCH_MCOLLECT_HEADER")}</Header>}
           <DesktopInbox
             businessService={businessService}
             data={formedData}

@@ -33,7 +33,7 @@ const refObj = (tenantId, filters) => {
     mcollect: {
       searchFn: () => advtApplications(tenantId, filters),
       key: "consumerCode",
-      label: "MCOLLECT_CHALLAN_NO_LABEL",
+      label: "UC_CHALLAN_NO",
     },
   };
 };

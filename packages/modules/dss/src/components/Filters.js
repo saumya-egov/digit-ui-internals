@@ -4,7 +4,7 @@ import Switch from "./Switch";
 import DateRange from "./DateRange";
 import FilterContext from "./FilterContext";
 
-const Filters = ({ t, ulbTenants, isOpen, closeFilters }) => {
+const Filters = ({ t, ulbTenants, isOpen, closeFilters, showDateRange = true, showDDR = true, showUlb = true, showDenomination = true }) => {
   const { value, setValue } = useContext(FilterContext);
 
   const [selected, setSelected] = useState(() =>
@@ -52,10 +52,11 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters }) => {
           </span>
         </div>
       )}
-      <div className="filters-input">
+      {showDateRange && <div className="filters-input">
         <DateRange onFilterChange={handleFilterChange} values={value?.range} t={t} />
       </div>
-      <div className="filters-input">
+      }
+      {showDDR && <div className="filters-input">
         <div>{t("ES_DSS_DDR")}</div>
         <MultiSelectDropdown
           options={ulbTenants}
@@ -66,7 +67,8 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters }) => {
           defaultUnit={t("ES_DSS_DDR_SELECTED")}
         />
       </div>
-      <div className="filters-input">
+      }
+      {showUlb && <div className="filters-input">
         <div>{t("ES_DSS_ULB")}</div>
         <MultiSelectDropdown
           options={ulbTenants}
@@ -77,12 +79,11 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters }) => {
           defaultUnit={t("ES_DSS_ULB_SELECTED")}
         />
       </div>
-      <div className="filters-input" style={{ flexBasis: "16%" }}>
+      }
+      {showDenomination && <div className="filters-input" style={{ flexBasis: "16%" }}>
         <Switch onSelect={handleFilterChange} t={t} />
-        {/* <p className="clearText" onClick={handleClear}>
-          {t(`DSS_FILTER_CLEAR`)}
-        </p> */}
       </div>
+      }
     </div>
   );
 };

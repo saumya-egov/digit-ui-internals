@@ -15,6 +15,14 @@
   @apply border-border my-lg;
 }
 
+.employee-home-footer{
+  width: calc( 100% - 72px);
+  @apply flex fixed bottom-0 h-10 bg-grey-bg pb-md pt-sm justify-center;
+  img{
+    @apply ml-sm
+  }
+}
+
 @screen dt {
   .ground-container {
     margin-bottom: 56px;
@@ -26,5 +34,7 @@
   .break-line {
     margin-top: 40px;
     margin-bottom: 40px;
+  }
+  .employee-home-footer{
   }
 }

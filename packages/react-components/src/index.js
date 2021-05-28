@@ -75,9 +75,13 @@ import {
   ShippingTruck,
   CloseSvg,
   UpwardArrow,
+  DownwardArrow,
   PropertyHouse,
   ShareIcon,
   Calender,
+  DropIcon,
+  RupeeIcon,
+  ComplaintIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -90,6 +94,7 @@ import { SearchIconSvg } from "./atoms/svgindex";
 import MobileNumber from "./atoms/MobileNumber";
 import MultiSelectDropdown from "./atoms/MultiSelectDropdown";
 import EllipsisMenu from "./atoms/EllipsisMenu";
+import CitizenHomeCard from "./atoms/CitizenHomeCard";
 
 import RemoveableTag from "./molecules/RemoveableTag";
 import TypeSelectCard from "./molecules/TypeSelectCard";
@@ -183,6 +188,7 @@ export {
   InfoBanner,
   MobileNumber,
   EllipsisMenu,
+  CitizenHomeCard,
   // Icons
   GetApp,
   ArrowLeft,
@@ -219,13 +225,18 @@ export {
   PitDimension,
   Modal,
   UpwardArrow,
+  DownwardArrow,
   DownloadIcon,
   Ellipsis,
   RefreshIcon,
   Poll,
   Details,
+  // Icons
   FilterIcon,
   PrintIcon,
   ShareIcon,
   Calender,
+  DropIcon,
+  RupeeIcon,
+  ComplaintIcon,
 };

@@ -1,4 +1,4 @@
-import { Header, HomeLink } from "@egovernments/digit-ui-react-components";
+import { Header, HomeLink, Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
@@ -6,14 +6,17 @@ import EmployeeApp from "./pages/employee";
 import MCollectCard from "./components/MCollectCard";
 import InboxFilter from "./components/inbox/NewInboxFilter";
 import CitizenApp from "./pages/citizen";
+import { useSelector } from "react-redux";
 
-export const MCollectModule = ({ userType, tenants }) => {
-  const moduleCode = "mCollect";
-  // addComponentsToRegistry();
-  console.log(moduleCode, "module integrated");
-
+export const MCollectModule = ({ stateCode, userType, tenants }) => {
+  const moduleCode = "UC";
+  const state = useSelector((state) => state);
+  const language = state?.common?.selectedLanguage;
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
   Digit.SessionStorage.set("MCollect_TENANTS", tenants);
-
+  if (isLoading) {
+    return <Loader />;
+  }
   const { path, url } = useRouteMatch();
 
   if (userType === "employee") {
@@ -33,7 +36,7 @@ export const MCollectLinks = ({ matchPath, userType }) => {
     <React.Fragment>
       <Header>{t("M-Collect")}</Header>
       <div className="d-grid">
-        <HomeLink to={`${matchPath}/search`}>{t("MCOLLECT_SEARCH_AND_PAY")}</HomeLink>
+        <HomeLink to={`${matchPath}/search`}>{t("UC_SEARCH_AND_PAY")}</HomeLink>
       </div>
     </React.Fragment>
   );

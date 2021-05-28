@@ -77,23 +77,28 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         //onSkip={onSkip}
         t={t}
       >
-        <CardLabel>{`${t("MCOLLECT_MOBILE_NO_LABEL")}`}</CardLabel>
-        <TextInput
-          type={"mobileNumber"}
-          t={t}
-          isMandatory={false}
-          optionKey="i18nKey"
-          name="mobileNumber"
-          value={mobileNumber}
-          onChange={setMobileNo}
-          {...(validation = {
-            isRequired: true,
-            pattern: "[6-9]{1}[0-9]{9}",
-            type: "tel",
-            title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
-          })}
-        />
-        <CardLabel>{`${t("MCOLLECT_CHALLAN_NO_LABEL")}`}</CardLabel>
+        <CardLabel>{`${t("UC_SEARCH_MOBILE_NO_LABEL")}`}</CardLabel>
+        <div className="field-container">
+          <span className="citizen-card-input citizen-card-input--front" style={{ flex: "none" }}>
+            +91
+          </span>
+          <TextInput
+            type={"mobileNumber"}
+            t={t}
+            isMandatory={false}
+            optionKey="i18nKey"
+            name="mobileNumber"
+            value={mobileNumber}
+            onChange={setMobileNo}
+            {...(validation = {
+              isRequired: true,
+              pattern: "[6-9]{1}[0-9]{9}",
+              type: "tel",
+              title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
+            })}
+          />
+        </div>
+        <CardLabel>{`${t("UC_CHALLAN_NO")}`}</CardLabel>
         <TextInput
           t={t}
           type={"any"}
@@ -109,7 +114,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
             title: t("wrong Challan No."),
           })} */
         />
-        <CardLabel>{`${t("ABG_SERVICE_CATEGORY_LABEL")}`}</CardLabel>
+        <CardLabel>{`${t("UC_SERVICE_CATEGORY_LABEL")}`}</CardLabel>
         {Menu && (
           <RadioOrSelect
             t={t}

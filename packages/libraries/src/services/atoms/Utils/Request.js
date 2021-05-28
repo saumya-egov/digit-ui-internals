@@ -42,7 +42,7 @@ export const Request = async ({
   reciept = false,
   authHeader = false,
   setTimeParam = true,
-  userDownload = false
+  userDownload = false,
 }) => {
   // console.log("params:", params);
   // console.log("in request", method);
@@ -58,19 +58,18 @@ export const Request = async ({
       data.RequestInfo = { ...data.RequestInfo, ...userServiceData() };
     }
     if (reciept) {
-      data.RequestInfo = { ...data.RequestInfo, msgId: "string|en_IN" };
+      data.RequestInfo = { ...data.RequestInfo, msgId: `string|${Digit.SessionStorage.get("locale") || `en_IN`}` };
     }
   }
 
-  const headers1 =  {
+  const headers1 = {
     "Content-Type": "application/json",
-    "Accept": "application/pdf"
-  }
+    Accept: "application/pdf",
+  };
 
   if (authHeader) headers = { ...headers, ...authHeaders() };
-  
-  if (userDownload) headers = { ... headers, ...headers1 };
-    
+
+  if (userDownload) headers = { ...headers, ...headers1 };
 
   let key = "";
   if (useCache) {
@@ -85,8 +84,10 @@ export const Request = async ({
     params._ = Date.now();
   }
 
-  const res = userDownload ? await Axios({ method, url, data, params, headers, responseType: "arraybuffer", }) : await Axios({ method, url, data, params, headers });
-  
+  const res = userDownload
+    ? await Axios({ method, url, data, params, headers, responseType: "arraybuffer" })
+    : await Axios({ method, url, data, params, headers });
+
   if (userDownload) return res;
 
   const returnData = res?.data || res?.response?.data || {};

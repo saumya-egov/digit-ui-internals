@@ -5,7 +5,7 @@ import { ResponsiveContainer, Cell, Legend, Pie, PieChart, Tooltip } from "recha
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
 
-const COLORS = ["#FBC02D", "#048BD0", "#8E29BF", "#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#FBC02D", "#048BD0", "#8E29BF", "#EA8A3B", "#0BABDE", "#FFBB28", "#FF8042"];
 
 const CustomPieChart = ({ dataKey = "value", data }) => {
   const { id } = data;
@@ -16,7 +16,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     key: id,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
@@ -29,7 +29,18 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
       return null;
     }
     return (
-      <text x={x} cx={cx} y={y} cy={cy} percent={percent} name={name} fill="#505A5F" alignmentBaseline="middle" className="recharts-pie-label-text" fontSize="14px">
+      <text
+        x={x}
+        cx={cx}
+        y={y}
+        cy={cy}
+        percent={percent}
+        name={name}
+        fill="#505A5F"
+        alignmentBaseline="middle"
+        className="recharts-pie-label-text"
+        fontSize="14px"
+      >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
     );
@@ -57,7 +68,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
           ))}
         </Pie>
         <Tooltip formatter={(value, name) => [value, t(name)]} />
-        <Legend layout="vertical" align="bottom" iconType="circle" formatter={renderLegend} />
+        <Legend layout="horizontal" align="bottom" iconType="circle" formatter={renderLegend} />
       </PieChart>
     </ResponsiveContainer>
   );

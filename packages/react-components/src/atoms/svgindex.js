@@ -276,6 +276,30 @@ const UpwardArrow = () => (
   </svg>
 );
 
+const DownwardArrow = () => (
+  <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" style={{ display: "inline-block", verticalAlign: "baseline" }}>
+    <title>Arrow Downward</title>
+    <desc>Created with Sketch.</desc>
+    <g id="All-Screens-(Iteration-5)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="01-Landing" transform="translate(-401.000000, -510.000000)">
+        <g id="Metrix:-Total-Collections,-Etc" transform="translate(256.000000, 228.000000)">
+          <g id="Icon_Arrow-Downward" transform="translate(141.000000, 278.000000)">
+            <g id="Arrow-Downward" transform="translate(12.000000, 12.000000) rotate(-180.000000) translate(-12.000000, -12.000000) ">
+              <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
+              <polygon
+                id="Path"
+                fill="#E54D42"
+                fill-rule="nonzero"
+                points="4 12 5.41 13.41 11 7.83 11 20 13 20 13 7.83 18.58 13.42 20 12 12 4"
+              ></polygon>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </svg>
+);
+
 const DownloadIcon = ({ styles, className, onClick }) => (
   <svg
     style={{ ...styles }}
@@ -392,6 +416,30 @@ const ShareIcon = ({ styles, className }) => (
   </svg>
 );
 
+const RupeeIcon = ({ className }) => (
+  <svg width="48" className={className} height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" rx="6" fill="#F47738" />
+  </svg>
+);
+
+const ComplaintIcon = ({ className }) => (
+  <svg width="48" height="48" className={className} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M42.6667 0.666748H5.33335C2.76669 0.666748 0.69002 2.76675 0.69002 5.33342L0.666687 47.3334L10 38.0001H42.6667C45.2334 38.0001 47.3334 35.9001 47.3334 33.3334V5.33342C47.3334 2.76675 45.2334 0.666748 42.6667 0.666748ZM26.3334 21.6667H21.6667V7.66675H26.3334V21.6667ZM26.3334 31.0001H21.6667V26.3334H26.3334V31.0001Z"
+      fill="#F47738"
+    />
+  </svg>
+);
+
+const DropIcon = ({ className }) => (
+  <svg width="28" height="34" viewBox="0 0 28 34" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M23.4333 10.3332L14 0.916504L4.56663 10.3332C1.96663 12.9332 0.666626 16.3998 0.666626 19.7332C0.666626 23.0665 1.96663 26.5832 4.56663 29.1832C7.16663 31.7832 10.5833 33.0998 14 33.0998C17.4166 33.0998 20.8333 31.7832 23.4333 29.1832C26.0333 26.5832 27.3333 23.0665 27.3333 19.7332C27.3333 16.3998 26.0333 12.9332 23.4333 10.3332ZM3.99996 20.3332C4.01663 16.9998 5.03329 14.8832 6.93329 12.9998L14 5.78317L21.0666 13.0832C22.9666 14.9498 23.9833 16.9998 24 20.3332H3.99996Z"
+      fill="#F47738"
+    />
+  </svg>
+);
+
 export {
   ArrowLeft,
   ArrowDown,
@@ -422,6 +470,7 @@ export {
   CloseSvg,
   CalendarIcon,
   UpwardArrow,
+  DownwardArrow,
   Poll,
   FilterIcon,
   RefreshIcon,
@@ -431,4 +480,7 @@ export {
   PrimaryDownlaodIcon,
   InfoBannerIcon,
   ShareIcon,
+  RupeeIcon,
+  ComplaintIcon,
+  DropIcon,
 };

@@ -1,4 +1,4 @@
-import { Card, CardSubHeader, Header, Row, StatusTable, SubmitBar, ActionBar, Menu } from "@egovernments/digit-ui-react-components";
+import { Card, CardSubHeader, Header, Row, StatusTable, SubmitBar, ActionBar, Menu, Toast } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
@@ -19,6 +19,7 @@ const EmployeeChallan = (props) => {
   const history = useHistory();
   const { url } = useRouteMatch();
   const [isDisplayDownloadMenu, setIsDisplayDownloadMenu] = useState(false);
+  const [showToast, setShowToast] = useState(null);
 
   useEffect(() => {
     switch (selectedAction) {
@@ -33,7 +34,6 @@ const EmployeeChallan = (props) => {
   }, [selectedAction]);
 
   function onActionSelect(action) {
-    debugger;
     setSelectedAction(action);
     setDisplayMenu(false);
   }
@@ -44,7 +44,6 @@ const EmployeeChallan = (props) => {
   };
 
   const submitAction = (data) => {
-    debugger;
     Digit.MCollectService.update({ Challan: data?.Challan }, tenantId).then((result) => {
       if (result.challans && result.challans.length > 0) {
         const challan = result.challans[0];
@@ -52,14 +51,9 @@ const EmployeeChallan = (props) => {
           `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${challan?.tenantId}&serviceCategory=${challan.businessService}&challanNumber=${challan.challanNo}&applicationStatus=${challan.applicationStatus}`,
           { from: url }
         );
-        // const challan = result.challans[0];
-        // Digit.MCollectService.generateBill(challan.challanNo, tenantId, challan.businessService, "challan").then((response) => {
-        //   if (response.Bill && response.Bill.length > 0) {
-
-        //   }
-        // });
       }
-    });
+    })
+    .catch((e) => setShowToast({ key: true, label: e?.response?.data?.Errors[0].message }));
     closeModal();
   };
 
@@ -129,40 +123,38 @@ const EmployeeChallan = (props) => {
 
       <div>
         <Card>
-          <CardSubHeader>
-            {t("UC_CHALLAN_NO")} : {challanno}{" "}
-          </CardSubHeader>
-          <hr style={{ width: "34%", border: "1px solid #D6D5D4" }} />
           <StatusTable style={{ padding: "10px 0px" }}>
+            <Row label={`${t("UC_CHALLAN_NO")}:`} text={challanno} />
+            <hr style={{ width: "35%", border: "1px solid #D6D5D4" }} />
             {challanBillDetails?.map((data) => {
-              return <Row label={t(stringReplaceAll(data?.taxHeadCode, ".", "_"))} text={`₹${data?.amount}`} textStyle={{ whiteSpace: "pre" }} />;
+              return <Row label={t(stringReplaceAll(data?.taxHeadCode, ".", "_"))} text={`₹${data?.amount}` || 0} textStyle={{ whiteSpace: "pre" }} />;
             })}
-            <hr style={{ width: "34%", border: "1px solid #D6D5D4" }} />
+            <hr style={{ width: "35%", border: "1px solid #D6D5D4" }} />
             <Row label={<b style={{ padding: "10px 0px" }}>{t("UC_TOTAL_DUE_AMOUT_LABEL")}</b>} text={`₹${totalDueAmount}`} />
           </StatusTable>
-          <CardSubHeader>{t("UC_SERVICE_DETAILS_LABEL")}</CardSubHeader>
+          <div style={{ fontSize: "24px", padding: "10px 0px", fontWeight: "700" }}>{t("UC_SERVICE_DETAILS_LABEL")}</div>
           <StatusTable>
             <Row
               label={`${t("UC_SERVICE_CATEGORY_LABEL")}:`}
-              text={`${t(`BILLINGSERVICE_BUSINESSSERVICE_${stringReplaceAll(challanDetails?.businessService?.toUpperCase(), ".", "_")}`)}`}
+              text={`${t(`BILLINGSERVICE_BUSINESSSERVICE_${stringReplaceAll(challanDetails?.businessService?.toUpperCase(), ".", "_")}` || "NA")}`}
               textStyle={{ whiteSpace: "pre" }}
             />
-            <Row label={`${t("UC_FROM_DATE_LABEL")}:`} text={convertEpochToDate(challanDetails?.taxPeriodFrom)} />
-            <Row label={`${t("UC_TO_DATE_LABEL")}:`} text={convertEpochToDate(challanDetails?.taxPeriodTo)} />
-            <Row label={`${t("UC_COMMENT_LABEL")}:`} text={`${challanDetails?.description}` || "NA"} />
-            <Row label={`${t("CS_INBOX_STATUS_FILTER")}:`} text={t(`UC_${challanDetails?.applicationStatus}`)} />
+            <Row label={`${t("UC_FROM_DATE_LABEL")}:`} text={convertEpochToDate(challanDetails?.taxPeriodFrom) || "NA"} />
+            <Row label={`${t("UC_TO_DATE_LABEL")}:`} text={convertEpochToDate(challanDetails?.taxPeriodTo) || "NA"} />
+            <Row label={`${t("UC_COMMENT_LABEL")}:`} text={`${challanDetails?.description || "NA"}`} />
+            <Row label={`${t("CS_INBOX_STATUS_FILTER")}:`} text={t(`UC_${challanDetails?.applicationStatus || "NA"}`)} />
           </StatusTable>
-          <CardSubHeader>{t("UC_CONSUMER_DETAILS_LABEL")}</CardSubHeader>
+          <div style={{ fontSize: "24px", padding: "10px 0px", fontWeight: "700" }}>{t("UC_CONSUMER_DETAILS_LABEL")}</div>
           <StatusTable>
-            <Row label={`${t("UC_CONS_NAME_LABEL")}:`} text={challanDetails?.citizen.name} />
-            <Row label={`${t("UC_MOBILE_NUMBER")}:`} text={challanDetails?.citizen.mobileNumber} />
-            <Row label={`${t("UC_DOOR_NO_LABEL")}:`} text={challanDetails?.address.doorNo} />
-            <Row label={`${t("UC_BUILDING_NAME_LABEL")}:`} text={challanDetails?.address.buildingName} />
-            <Row label={`${t("UC_STREET_NAME_LABEL")}:`} text={challanDetails?.address.street} />
+            <Row label={`${t("UC_CONS_NAME_LABEL")}:`} text={challanDetails?.citizen.name || "NA"} />
+            <Row label={`${t("UC_MOBILE_NUMBER")}:`} text={challanDetails?.citizen.mobileNumber || "NA"} />
+            <Row label={`${t("UC_DOOR_NO_LABEL")}:`} text={challanDetails?.address.doorNo || "NA"} />
+            <Row label={`${t("UC_BUILDING_NAME_LABEL")}:`} text={challanDetails?.address.buildingName || "NA"} />
+            <Row label={`${t("UC_STREET_NAME_LABEL")}:`} text={challanDetails?.address.street || "NA"} />
             <Row
               label={`${t("UC_MOHALLA_LABEL")}:`}
               text={`${t(
-                `${stringReplaceAll(challanDetails?.address?.tenantId?.toUpperCase(), ".", "_")}_REVENUE_${challanDetails?.address?.locality?.code}`
+                `${stringReplaceAll(challanDetails?.address?.tenantId?.toUpperCase(), ".", "_")}_REVENUE_${challanDetails?.address?.locality?.code}` || "NA"
               )}`}
             />
           </StatusTable>
@@ -183,6 +175,7 @@ const EmployeeChallan = (props) => {
           // businessService={businessService}
         />
       ) : null}
+      {showToast && <Toast error={showToast.key} label={t(showToast.label)} onClose={() => setShowToast(null)} />}
       {challanDetails?.applicationStatus == "ACTIVE" && (
         <ActionBar>
           {displayMenu && workflowActions ? <Menu localeKeyPrefix="UC" options={workflowActions} t={t} onSelect={onActionSelect} /> : null}

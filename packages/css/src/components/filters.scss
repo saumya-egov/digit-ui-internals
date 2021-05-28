@@ -26,7 +26,10 @@
       border: 1px solid;
       padding: 6px 10px;
       display: block;
-      border-color: rgba(70, 70, 70, var(--border-opacity));
+      @apply border border-solid border-input-border;
+      &:hover{
+        @apply border-2 border-solid border-primary-main;
+      }
     }
   }
 }
