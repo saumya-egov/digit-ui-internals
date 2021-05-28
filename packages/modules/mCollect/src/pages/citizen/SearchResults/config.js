@@ -19,7 +19,7 @@ export const config = [
         key: "ChannelNo",
       },
       {
-        label: "ABG_SERVICE_CATEGORY_LABEL",
+        label: "UC_SERVICE_CATEGORY_LABEL",
         key: "ServiceCategory",
       },
       {
