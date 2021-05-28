@@ -14,7 +14,7 @@ const MCollectCard = () => {
   // TODO: should be fetch
   const total = 1;
 
-  if (!Digit.Utils.ptAccess()) {
+  if (!Digit.Utils.mCollectAccess()) {
     return null;
   }
 
