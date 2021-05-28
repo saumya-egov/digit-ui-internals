@@ -77,7 +77,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         //onSkip={onSkip}
         t={t}
       >
-        <CardLabel>{`${t("MCOLLECT_MOBILE_NO_LABEL")}`}</CardLabel>
+        <CardLabel>{`${t("UC_SEARCH_MOBILE_NO_LABEL")}`}</CardLabel>
         <div className="field-container">
           <span className="citizen-card-input citizen-card-input--front" style={{ flex: "none" }}>
             +91
@@ -98,7 +98,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
             })}
           />
         </div>
-        <CardLabel>{`${t("MCOLLECT_CHALLAN_NO_LABEL")}`}</CardLabel>
+        <CardLabel>{`${t("UC_CHALLAN_NO")}`}</CardLabel>
         <TextInput
           t={t}
           type={"any"}
