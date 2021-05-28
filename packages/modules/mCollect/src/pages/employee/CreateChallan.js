@@ -399,7 +399,7 @@ const CreateChallen = ({ ChallanData }) => {
                 isMandatory
                 selected={selectedLocality}
                 disable={isEdit}
-                optionKey="i18nkey"
+                optionKey="code"
                 id="locality"
                 option={localities}
                 select={selectLocality}
