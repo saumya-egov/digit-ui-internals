@@ -12,38 +12,8 @@ const NewApplication = () => {
   const history = useHistory();
 
   const onFormValueChange = (setValue, formData, formState) => {
-    console.log(formData, formState.errors.documents, "in new application");
+    console.log(formData, formState.errors, "in new application");
     setSubmitValve(!Object.keys(formState.errors).length);
-    // if (
-    //   formData?.address?.city?.code &&
-    //   formData?.address?.locality?.code &&
-    //   formData?.PropertyType?.code &&
-    //   formData?.ownershipCategory?.code &&
-    //   formData?.owners?.name &&
-    //   formData?.owners?.mobileNumber &&
-    //   formData?.usageCategoryMajor?.code &&
-    //   formData?.usageCategoryMinor?.subuagecode &&
-    //   formData?.owners?.ownerType?.code &&
-    //   formData?.documents?.documents?.length === formData?.documents?.propertyTaxDocumentsLength &&
-    //   formData?.landarea
-    // ) {
-    //   if (formData?.ownershipCategory?.code !== "INDIVIDUAL.SINGLEOWNER" && formData?.owners?.altContactNumber) {
-    //     const filteredUnitsArray = formData?.units?.filter(
-    //       (unit) => unit?.constructionDetail?.builtUpArea && unit?.floorNo && unit?.occupancyType && unit?.usageCategory
-    //     );
-    //     if (formData?.PropertyType?.code === "VACANT") {
-    //       setSubmitValve(true);
-    //     } else if (formData?.PropertyType?.code !== "VACANT" && filteredUnitsArray?.length >= formData?.noOfFloors?.code) {
-    //       setSubmitValve(true);
-    //     } else {
-    //       setSubmitValve(false);
-    //     }
-    //   } else {
-    //     setSubmitValve(false);
-    //   }
-    // } else {
-    //   setSubmitValve(false);
-    // }
   };
 
   const onSubmit = (data) => {
@@ -59,20 +29,27 @@ const NewApplication = () => {
       usageCategoryMinor: data?.usageCategoryMajor?.code.split(".")[1] || null,
       landArea: data?.landarea,
       propertyType: data?.PropertyType?.code,
-      noOfFloors: Number(data?.noOfFloors?.code),
+      noOfFloors: Number(data?.noOfFloors),
       ownershipCategory: data?.ownershipCategory?.code,
-      owners: [
-        {
-          ...data?.owners,
-          ownerType: data?.owners?.ownerType.code,
-          gender: data?.owners?.gender.code,
-          relationship: data?.owners?.relationship.code,
-        },
-      ],
+      owners: data?.owners.map((owner) => {
+        const _owner = {
+          ...owner,
+          gender: owner?.gender.code,
+          relationship: owner?.relationship.code,
+          ownerType: owner?.ownerType?.code,
+          permanentAddress: data?.address?.locality?.name,
+        };
+        if (_owner.ownerType !== "NONE") {
+          const { documentType, documentUid } = owner?.documents;
+          _owner.documents = [{ documentUid: documentUid, documentType: documentType.code, fileStoreId: documentUid }];
+        } else delete _owner.documents;
+        return _owner;
+      }),
+
       channel: "CFC_COUNTER", // required
       creationReason: "CREATE", // required
       source: "MUNICIPAL_RECORDS", // required
-      superBuiltUpArea: null,
+      superBuiltUpArea: data?.landarea,
       units: data?.units[0]?.usageCategory ? data?.units : [],
       documents: data?.documents?.documents,
       applicationStatus: "CREATE",

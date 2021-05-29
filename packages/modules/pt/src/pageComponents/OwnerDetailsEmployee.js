@@ -1,28 +1,30 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { CardLabel, LabelFieldPair, Dropdown, TextInput, LinkButton, CardLabelError, MobileNumber } from "@egovernments/digit-ui-react-components";
-import { stringReplaceAll } from "../utils";
 import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
+import { useLocation } from "react-router-dom";
 
-class OwnerDetails {
-  constructor() {
-    this.key = Date.now();
-  }
-  name = "";
-  mobileNumber = "";
-  fatherOrHusbandName = "";
-  emailId = "";
-  permanentAddress = "";
-  relationship = "";
-  ownerType = "";
-  gender = "";
-  isCorrespondenceAddress = false;
-}
+const createOwnerDetails = () => ({
+  name: "",
+  mobileNumber: "",
+  fatherOrHusbandName: "",
+  emailId: "",
+  permanentAddress: "",
+  relationship: "",
+  ownerType: "",
+  gender: "",
+  isCorrespondenceAddress: false,
+  key: Date.now(),
+});
 
 const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setError, formState, clearErrors }) => {
   const { t } = useTranslation();
-  const [owners, setOwners] = useState(formData?.owners || [new OwnerDetails()]);
+
+  const { pathname } = useLocation();
+  const isEditScreen = pathname.includes("/modify-application/");
+
+  const [owners, setOwners] = useState(formData?.owners || [createOwnerDetails()]);
   const [focusIndex, setFocusIndex] = useState({ index: -1, type: "" });
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -39,7 +41,11 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
   ]);
 
   const addNewOwner = () => {
-    setOwners((prev) => [...prev, new OwnerDetails()]);
+    const newOwner = createOwnerDetails();
+    setOwners((prev) => {
+      console.log(prev, newOwner, "new owner made");
+      return [...prev, newOwner];
+    });
   };
 
   const removeOwner = (owner) => {
@@ -47,16 +53,18 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
   };
 
   useEffect(() => {
+    console.log(
+      owners.map((e) => e.key),
+      "..... owners changed"
+    );
     const data = owners.map((e) => {
-      delete e.key;
       return e;
     });
-
     onSelect(config?.key, data);
   }, [owners]);
 
   useEffect(() => {
-    setOwners([new OwnerDetails()]);
+    setOwners([createOwnerDetails()]);
   }, [formData?.ownershipCategory?.code]);
 
   const commonProps = {
@@ -74,19 +82,16 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
     config,
   };
 
-  // const formComps = {
-  //   INDIVIDUAL: (props) => <IndividualForm {...props} />,
-  //   INSTITUTIONALPRIVATE: (props) => <PrivateForm {...props} />,
-  //   GovtForm: (props) => <GovtForm {...props} />,
-  // };
-
-  // const ownerShipCategory = formData?.ownershipCategory?.code?.split?.(".")[0] || "INDIVIDUAL";
+  if (isEditScreen) {
+    return <React.Fragment />;
+  }
 
   return formData?.ownershipCategory?.code ? (
     <React.Fragment>
-      {owners.map((owner, index) => (
-        <OwnerForm key={owner.key} index={index} owner={owner} {...commonProps} />
-      ))}
+      {owners.map((owner, index) => {
+        console.log(owner, owner.key, "find key here");
+        return <OwnerForm key={owner.key} index={index} owner={owner} {...commonProps} />;
+      })}
       {formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" ? (
         <LinkButton label="Add Owner" onClick={addNewOwner} style={{ color: "orange" }} />
       ) : null}
@@ -132,23 +137,40 @@ const OwnerForm = (_props) => {
     [mdmsData]
   );
 
+  const isIndividualTypeOwner = useMemo(() => formData?.ownershipCategory?.code.includes("INDIVIDUAL"), [formData?.ownershipCategory?.code]);
+
+  const institutionTypeMenu = useMemo(() => {
+    if (mdmsData) console.log(mdmsData, formData?.ownershipCategory, "property tax mdms");
+    const code = formData?.ownershipCategory?.code;
+    const arr = mdmsData?.PropertyTax?.OwnerShipCategory?.filter((e) => e.code != code && e.code?.includes(code));
+    return arr?.map((e) => ({ ...e, i18nKey: `PT_OWNERSHIP_${e.code}` }));
+  }, [mdmsData, formData?.ownershipCategory]);
+
   useEffect(() => {
     trigger();
+    return () => console.log("unmounting...");
   }, []);
 
   useEffect(() => {
+    console.log(formValue, errors.mobileNumber, "in formvalue chnage");
     const keys = Object.keys(formValue);
     const part = {};
     keys.forEach((key) => (part[key] = owner[key]));
 
+    let _ownerType = isIndividualTypeOwner ? {} : { ownerType: { code: "NONE" } };
+
     if (!_.isEqual(formValue, part)) {
-      setOwners((prev) => prev.map((o) => (o.key === owner.key ? { ...o, ...formValue } : o)));
-      trigger();
+      setOwners((prev) =>
+        prev.map((o) => {
+          return o.key && o.key === owner.key ? { ...o, ...formValue, ..._ownerType } : { ...o };
+        })
+      );
+      // trigger();
     }
   }, [formValue]);
 
   useEffect(() => {
-    console.log(formValue, errors.mobileNumber, "in formvalue chnage");
+    console.log(formValue, errors.mobileNumber, "in formerror chnage");
     if (Object.keys(errors).length && !_.isEqual(formState.errors[config.key]?.type || {}, errors)) setError(config.key, { type: errors });
     else if (!Object.keys(errors).length && formState.errors[config.key]) clearErrors(config.key);
   }, [errors]);
@@ -159,7 +181,7 @@ const OwnerForm = (_props) => {
       <div style={{ marginBottom: "16px" }}>
         <div className="label-field-pair">
           <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-            Owner {index + 1}
+            {isIndividualTypeOwner ? `Owner ${index + 1}` : "Authorised Person Details"}
           </h2>
         </div>
         <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
@@ -167,6 +189,62 @@ const OwnerForm = (_props) => {
             <div onClick={() => removeOwner(owner)} style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}>
               X
             </div>
+          ) : null}
+
+          {!isIndividualTypeOwner ? (
+            <React.Fragment>
+              <LabelFieldPair>
+                <CardLabel className="card-label-smaller">Institition Name</CardLabel>
+                <div className="field">
+                  <Controller
+                    control={control}
+                    name={"institution.name"}
+                    defaultValue={owner?.name}
+                    rules={{ required: "institution name required" }}
+                    render={(props) => (
+                      <TextInput
+                        value={props.value}
+                        autoFocus={focusIndex.index === owner?.key && focusIndex.type === "name"}
+                        onChange={(e) => {
+                          props.onChange(e.target.value);
+                          setFocusIndex({ index: owner.key, type: "name" });
+                        }}
+                        onBlur={(e) => {
+                          setFocusIndex({ index: -1 });
+                          props.onBlur(e);
+                        }}
+                      />
+                    )}
+                  />
+                </div>
+              </LabelFieldPair>
+              <CardLabelError style={errorStyle}>
+                {localFormState.touched?.institution?.name ? errors?.institution?.name?.message : ""}
+              </CardLabelError>
+              <LabelFieldPair>
+                <CardLabel className="card-label-smaller">Institution Type</CardLabel>
+                <Controller
+                  control={control}
+                  name={"institution.type"}
+                  defaultValue={owner?.relationship}
+                  rules={{ required: "RelationShip Required" }}
+                  render={(props) => (
+                    <Dropdown
+                      className="form-field"
+                      selected={props.value}
+                      select={props.onChange}
+                      onBlur={props.onBlur}
+                      option={institutionTypeMenu}
+                      optionKey="i18nKey"
+                      t={t}
+                    />
+                  )}
+                />
+              </LabelFieldPair>
+              <CardLabelError style={errorStyle}>
+                {localFormState.touched?.institution?.type ? errors?.institution?.type?.message : ""}
+              </CardLabelError>
+            </React.Fragment>
           ) : null}
 
           <LabelFieldPair>
@@ -185,7 +263,10 @@ const OwnerForm = (_props) => {
                       props.onChange(e.target.value);
                       setFocusIndex({ index: owner.key, type: "name" });
                     }}
-                    onBlur={props.onBlur}
+                    onBlur={(e) => {
+                      setFocusIndex({ index: -1 });
+                      props.onBlur(e);
+                    }}
                   />
                 )}
               />
@@ -193,7 +274,7 @@ const OwnerForm = (_props) => {
           </LabelFieldPair>
           <CardLabelError style={errorStyle}>{localFormState.touched.name ? errors?.name?.message : ""}</CardLabelError>
 
-          {formData?.ownershipCategory?.code.includes("INDIVIDUAL") ? (
+          {isIndividualTypeOwner ? (
             <React.Fragment>
               <LabelFieldPair>
                 <CardLabel className="card-label-smaller">Gender</CardLabel>
@@ -255,7 +336,7 @@ const OwnerForm = (_props) => {
               <Controller
                 control={control}
                 name={"mobileNumber"}
-                defaultValue={owner?.name}
+                defaultValue={owner?.mobileNumber}
                 rules={{ required: "Required", validate: (v) => (/^[6789]\d{9}$/.test(v) ? true : "invalid Phone") }}
                 render={(props) => (
                   <MobileNumber
@@ -273,7 +354,7 @@ const OwnerForm = (_props) => {
             </div>
           </LabelFieldPair>
           <CardLabelError style={errorStyle}>{localFormState.touched.mobileNumber ? errors?.mobileNumber?.message : ""}</CardLabelError>
-          {formData?.ownershipCategory?.code.includes("INDIVIDUAL") ? (
+          {isIndividualTypeOwner ? (
             <React.Fragment>
               <LabelFieldPair>
                 <CardLabel className="card-label-smaller">Guardian's Name</CardLabel>
