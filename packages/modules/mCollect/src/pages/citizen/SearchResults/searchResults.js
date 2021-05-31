@@ -11,7 +11,7 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   const { mobileNumber, challanNo, Servicecategory } = Digit.Hooks.useQueryParams();
   const filters = {};
   if (mobileNumber) filters.mobileNumber = mobileNumber;
-  if (challanNo) filters.challanNo = challanNo;
+  if (challanNo) filters.consumerCode = challanNo;
   if (Servicecategory) filters.businesService = Servicecategory;
   //filters.url = "egov-searcher/bill-genie/mcollectbills/_get"
 
