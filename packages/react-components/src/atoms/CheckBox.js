@@ -4,8 +4,13 @@ import PropTypes from "prop-types";
 
 const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, style, ...props }) => {
   const userType = Digit.SessionStorage.get("userType");
+  let isMcollect = props.props;
+  let stylemcollect = {};
+  if (isMcollect === "mcollect") {
+    stylemcollect = { marginBottom: "10px" };
+  }
   return (
-    <div className="checkbox-wrap">
+    <div className="checkbox-wrap" style={stylemcollect}>
       <div>
         <input
           type="checkbox"
