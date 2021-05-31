@@ -42,10 +42,7 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
 
   const addNewOwner = () => {
     const newOwner = createOwnerDetails();
-    setOwners((prev) => {
-      console.log(prev, newOwner, "new owner made");
-      return [...prev, newOwner];
-    });
+    setOwners((prev) => [...prev, newOwner]);
   };
 
   const removeOwner = (owner) => {
@@ -53,10 +50,6 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
   };
 
   useEffect(() => {
-    console.log(
-      owners.map((e) => e.key),
-      "..... owners changed"
-    );
     const data = owners.map((e) => {
       return e;
     });
@@ -88,10 +81,9 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
 
   return formData?.ownershipCategory?.code ? (
     <React.Fragment>
-      {owners.map((owner, index) => {
-        console.log(owner, owner.key, "find key here");
-        return <OwnerForm key={owner.key} index={index} owner={owner} {...commonProps} />;
-      })}
+      {owners.map((owner, index) => (
+        <OwnerForm key={owner.key} index={index} owner={owner} {...commonProps} />
+      ))}
       {formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" ? (
         <LinkButton label="Add Owner" onClick={addNewOwner} style={{ color: "orange" }} />
       ) : null}
@@ -148,11 +140,10 @@ const OwnerForm = (_props) => {
 
   useEffect(() => {
     trigger();
-    return () => console.log("unmounting...");
   }, []);
 
   useEffect(() => {
-    console.log(formValue, errors.mobileNumber, "in formvalue chnage");
+    console.log(formValue, "in formvalue chnage");
     const keys = Object.keys(formValue);
     const part = {};
     keys.forEach((key) => (part[key] = owner[key]));
@@ -160,17 +151,12 @@ const OwnerForm = (_props) => {
     let _ownerType = isIndividualTypeOwner ? {} : { ownerType: { code: "NONE" } };
 
     if (!_.isEqual(formValue, part)) {
-      setOwners((prev) =>
-        prev.map((o) => {
-          return o.key && o.key === owner.key ? { ...o, ...formValue, ..._ownerType } : { ...o };
-        })
-      );
-      // trigger();
+      setOwners((prev) => prev.map((o) => (o.key && o.key === owner.key ? { ...o, ...formValue, ..._ownerType } : { ...o })));
+      trigger();
     }
   }, [formValue]);
 
   useEffect(() => {
-    console.log(formValue, errors.mobileNumber, "in formerror chnage");
     if (Object.keys(errors).length && !_.isEqual(formState.errors[config.key]?.type || {}, errors)) setError(config.key, { type: errors });
     else if (!Object.keys(errors).length && formState.errors[config.key]) clearErrors(config.key);
   }, [errors]);
@@ -311,7 +297,7 @@ const OwnerForm = (_props) => {
                     control={control}
                     name={"altContactNumber"}
                     defaultValue={owner?.altContactNumber}
-                    // rules={}
+                    rules={isIndividualTypeOwner ? {} : { required: "altContact Required" }}
                     render={(props) => (
                       <MobileNumber
                         value={props.value}
@@ -540,7 +526,7 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"correspondenceAddress"}
                 defaultValue={owner?.correspondenceAddress}
-                // rules={}
+                rules={isIndividualTypeOwner ? {} : { required: "REQUIRED" }}
                 render={(props) => (
                   <TextInput
                     value={props.value}

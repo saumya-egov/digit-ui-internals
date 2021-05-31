@@ -32,12 +32,36 @@ const NewApplication = () => {
       noOfFloors: Number(data?.noOfFloors),
       ownershipCategory: data?.ownershipCategory?.code,
       owners: data?.owners.map((owner) => {
+        let {
+          name,
+          mobileNumber,
+          designation,
+          altContactNumber,
+          emailId,
+          correspondenceAddress,
+          isCorrespondenceAddress,
+          ownerType,
+          fatherOrHusbandName,
+        } = owner;
+        let __owner;
+
+        if (!data?.ownershipCategory?.code.includes("INDIVIDUAL")) {
+          __owner = { name, mobileNumber, designation, altContactNumber, emailId, correspondenceAddress, isCorrespondenceAddress, ownerType };
+        } else {
+          __owner = {
+            name,
+            mobileNumber,
+            correspondenceAddress,
+            permanentAddress: data?.address?.locality?.name,
+            relationship: owner?.relationship.code,
+            fatherOrHusbandName,
+            gender: owner?.gender.code,
+            emailId,
+          };
+        }
         const _owner = {
-          ...owner,
-          gender: owner?.gender.code,
-          relationship: owner?.relationship.code,
+          ...__owner,
           ownerType: owner?.ownerType?.code,
-          permanentAddress: data?.address?.locality?.name,
         };
         if (_owner.ownerType !== "NONE") {
           const { documentType, documentUid } = owner?.documents;
@@ -49,11 +73,23 @@ const NewApplication = () => {
       channel: "CFC_COUNTER", // required
       creationReason: "CREATE", // required
       source: "MUNICIPAL_RECORDS", // required
-      superBuiltUpArea: data?.landarea,
+      superBuiltUpArea: null,
       units: data?.units[0]?.usageCategory ? data?.units : [],
       documents: data?.documents?.documents,
       applicationStatus: "CREATE",
     };
+
+    if (!data?.ownershipCategory?.code.includes("INDIVIDUAL")) {
+      formData.institution = {
+        name: data.owners?.[0].institution.name,
+        type: data.owners?.[0].institution.type?.code?.split(".")[1],
+        designation: data.owners?.[0].designation,
+        nameOfAuthorizedPerson: data.owners?.[0].name,
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+      };
+    }
+
+    // console.log(formData, "new application created");
 
     history.push("/digit-ui/employee/pt/response", { Property: formData });
   };

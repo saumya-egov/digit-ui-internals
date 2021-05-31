@@ -60,7 +60,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
   useEffect(() => {
     if (!isLoading && presentInModifyApplication && Menu) {
       // usage subUsage unit Occupancy
-      let defaultUnits = formData?.originalData.units.map((unit, index) => {
+      let defaultUnits = formData?.originalData?.units?.map((unit, index) => {
         let { occupancyType, usageCategory: uc, constructionDetail, floorNo, arv } = unit;
         occupancyType = occupencyOptions.filter((e) => e?.code === occupancyType)[0];
         let usageCategory = usageCategoryMajorMenu(usagecat).filter((e) => e?.code === uc)[0];
@@ -152,7 +152,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
       tenantId: unit?.tenantId,
       usageCategory: unit?.usageCategory?.code,
     }));
-    unitsData = unitsData.map((unit, index) => {
+    unitsData = unitsData?.map((unit, index) => {
       if (unit.occupancyType === "RENTED") return { ...unit, arv: units[index].arv };
       return unit;
     });

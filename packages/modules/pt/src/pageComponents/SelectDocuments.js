@@ -212,13 +212,12 @@ function SelectDocument({
         return acc?.[key];
       }, formData);
 
-      if (doc.code === "OWNER.SPECIALCATEGORYPROOF") console.log(filterValue, jsonPath, arrayAttribute, doc.code);
-
       // console.log(value, onArray, "find value here");
       if (value) {
         if (onArray) {
           const valueArr = value?.map((e) => formArrayAttrPath.reduce((acc, f) => acc?.[f], e) || e);
-          hideInput = valueArr?.some((e) => filterValue.includes(e));
+          hideInput = valueArr?.every((e) => filterValue.includes(e));
+          // if (doc.code === "OWNER.SPECIALCATEGORYPROOF") console.log(filterValue, formDataPath, formArrayAttrPath, value, valueArr, doc.code);
         } else {
           hideInput = filterValue?.includes(value);
         }
