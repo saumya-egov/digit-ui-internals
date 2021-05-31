@@ -4,13 +4,9 @@ import PropTypes from "prop-types";
 
 const CheckBox = ({ onChange, label, value, disable, ref, checked, inputRef, style, ...props }) => {
   const userType = Digit.SessionStorage.get("userType");
-  let isMcollect = props.props ? props.props.workflowStyle : "";
-  let stylemcollect = {};
-  if (isMcollect === "mcollect-workflow-style") {
-    stylemcollect = { marginBottom: "10px" };
-  }
+  let wrkflwStyle = props.styles;
   return (
-    <div className="checkbox-wrap" style={stylemcollect}>
+    <div className="checkbox-wrap" style={wrkflwStyle ? wrkflwStyle : {}}>
       <div>
         <input
           type="checkbox"
