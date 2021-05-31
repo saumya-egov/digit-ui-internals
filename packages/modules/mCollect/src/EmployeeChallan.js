@@ -27,6 +27,8 @@ const EmployeeChallan = (props) => {
         return setShowModal(true);
       case "UPDATE_CHALLAN":
         return history.push(`/digit-ui/employee/mcollect/modify-challan/${challanno}`);
+      case "BUTTON_PAY":
+        return history.push(`/digit-ui/employee/payment/collect/${challanDetails?.businessService}/${challanno}/tenantId=${tenantId}`);
       default:
         console.log("default case");
         break;
@@ -44,16 +46,17 @@ const EmployeeChallan = (props) => {
   };
 
   const submitAction = (data) => {
-    Digit.MCollectService.update({ Challan: data?.Challan }, tenantId).then((result) => {
-      if (result.challans && result.challans.length > 0) {
-        const challan = result.challans[0];
-        history.push(
-          `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${challan?.tenantId}&serviceCategory=${challan.businessService}&challanNumber=${challan.challanNo}&applicationStatus=${challan.applicationStatus}`,
-          { from: url }
-        );
-      }
-    })
-    .catch((e) => setShowToast({ key: true, label: e?.response?.data?.Errors[0].message }));
+    Digit.MCollectService.update({ Challan: data?.Challan }, tenantId)
+      .then((result) => {
+        if (result.challans && result.challans.length > 0) {
+          const challan = result.challans[0];
+          history.push(
+            `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${challan?.tenantId}&serviceCategory=${challan.businessService}&challanNumber=${challan.challanNo}&applicationStatus=${challan.applicationStatus}`,
+            { from: url }
+          );
+        }
+      })
+      .catch((e) => setShowToast({ key: true, label: e?.response?.data?.Errors[0].message }));
     closeModal();
   };
 
@@ -81,7 +84,7 @@ const EmployeeChallan = (props) => {
     }
   }, [data]);
 
-  const workflowActions = ["CANCEL_CHALLAN", "UPDATE_CHALLAN"];
+  const workflowActions = ["CANCEL_CHALLAN", "UPDATE_CHALLAN", "BUTTON_PAY"];
 
   function onDownloadActionSelect(action) {
     action == "CHALLAN" ? downloadAndPrintChallan(challanno) : downloadAndPrintReciept(challanDetails?.businessService, challanno);
@@ -127,7 +130,9 @@ const EmployeeChallan = (props) => {
             <Row label={`${t("UC_CHALLAN_NO")}:`} text={challanno} />
             <hr style={{ width: "35%", border: "1px solid #D6D5D4" }} />
             {challanBillDetails?.map((data) => {
-              return <Row label={t(stringReplaceAll(data?.taxHeadCode, ".", "_"))} text={`₹${data?.amount}` || 0} textStyle={{ whiteSpace: "pre" }} />;
+              return (
+                <Row label={t(stringReplaceAll(data?.taxHeadCode, ".", "_"))} text={`₹${data?.amount}` || 0} textStyle={{ whiteSpace: "pre" }} />
+              );
             })}
             <hr style={{ width: "35%", border: "1px solid #D6D5D4" }} />
             <Row label={<b style={{ padding: "10px 0px" }}>{t("UC_TOTAL_DUE_AMOUT_LABEL")}</b>} text={`₹${totalDueAmount}`} />
@@ -154,7 +159,9 @@ const EmployeeChallan = (props) => {
             <Row
               label={`${t("UC_MOHALLA_LABEL")}:`}
               text={`${t(
-                `${stringReplaceAll(challanDetails?.address?.tenantId?.toUpperCase(), ".", "_")}_REVENUE_${challanDetails?.address?.locality?.code}` || "NA"
+                `${stringReplaceAll(challanDetails?.address?.tenantId?.toUpperCase(), ".", "_")}_REVENUE_${
+                  challanDetails?.address?.locality?.code
+                }` || "NA"
               )}`}
             />
           </StatusTable>
