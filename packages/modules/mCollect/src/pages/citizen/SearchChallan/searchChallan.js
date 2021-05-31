@@ -80,6 +80,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         headingStyle={{ fontSize: "32px", marginBottom: "16px" }}
         onSelect={onChallanSearch}
         componentInFront={<div className="employee-card-input employee-card-input--front">+91</div>}
+        isDisabled={!Servicecateogry}
         //onSkip={onSkip}
         t={t}
       >
