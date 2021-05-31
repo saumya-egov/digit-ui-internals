@@ -3,10 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { cardBodyStyle } from "../utils";
 import _ from "lodash";
+import { useLocation } from "react-router-dom";
 
-const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
+const PTSelectAddress = ({ t, config, onSelect, userType, formData, setError, clearErrors, formState }) => {
   const allCities = Digit.Hooks.pt.useTenants();
   let tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const { pathname } = useLocation();
+  const presentInModifyApplication = pathname.includes("modify");
+
   let isEditProperty = formData?.isEditProperty || false;
   if (formData?.isUpdateProperty) isEditProperty = true;
   const { pincode, city } = formData?.address || "";
@@ -17,7 +22,10 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
       ? allCities.filter((city) => city?.pincode?.some((pin) => pin == pincode))
       : allCities;
 
-  const [selectedCity, setSelectedCity] = useState(() => formData?.address?.city || null);
+  const [selectedCity, setSelectedCity] = useState(() => {
+    // if (userType === "employee" && presentInModifyApplication) return formData?.originalData?.address;
+    return formData?.address?.city || null;
+  });
 
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
     selectedCity?.code,
@@ -31,6 +39,14 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   const [localities, setLocalities] = useState();
 
   const [selectedLocality, setSelectedLocality] = useState();
+
+  useEffect(() => {
+    if (userType === "employee" && presentInModifyApplication && localities?.length) {
+      const code = formData?.originalData?.address?.locality?.code;
+      const _locality = localities?.filter((e) => e.code === code)[0];
+      setValue("locality", _locality);
+    }
+  }, [localities]);
 
   useEffect(() => {
     if (cities) {
@@ -57,6 +73,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
       // if (userType === "employee") {
       //   onSelect(config.key, { ...formData[config.key], city: selectedCity });
       // }
+
       setLocalities(() => (filteredLocalityList.length > 0 ? filteredLocalityList : __localityList));
 
       if (filteredLocalityList.length === 1) {
@@ -108,6 +125,12 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData }) => {
       }
     }
   }, [formValue]);
+
+  useEffect(() => {
+    const errorsPresent = !!Object.keys(localFormState.errors).lengtha;
+    if (errorsPresent && !formState.errors?.[config.key]) setError(config.key, { type: "required" });
+    else if (!errorsPresent && formState.errors?.[config.key]) clearErrors(config.key);
+  }, [localFormState]);
 
   if (userType === "employee") {
     return (

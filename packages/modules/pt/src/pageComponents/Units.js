@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Dropdown, TextInput, LinkButton, CardLabelError } from "@egovernments/digit-ui-react-components";
+import { CardLabel, LabelFieldPair, Dropdown, TextInput, LinkButton, CardLabelError, Loader } from "@egovernments/digit-ui-react-components";
 import { stringReplaceAll } from "../utils";
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
+import { useLocation } from "react-router-dom";
 
 const Units = ({ t, config, onSelect, userType, formData, setError, formState, clearErrors }) => {
+  const { pathname } = useLocation();
+  const presentInModifyApplication = pathname.includes("modify");
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [units, setUnits] = useState(
     formData?.units || [
@@ -21,8 +25,9 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
   );
   const stateId = tenantId.split(".")[0];
   const [focusIndex, setFocusIndex] = useState({ index: -1 });
+  const [loader, setLoader] = useState(true);
 
-  const { data: Menu } =
+  const { data: Menu, isLoading } =
     Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", [
       "UsageCategory",
       "OccupancyType",
@@ -33,18 +38,51 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
       "SubOwnerShipCategory",
       "OwnerShipCategory",
     ]) || {};
+
+  let usagecat = [];
+  usagecat = Menu?.PropertyTax?.UsageCategory?.filter((e) => e?.code !== "MIXED") || [];
+
   let floorlist = [];
   floorlist = Menu?.PropertyTax?.Floor;
+
   let subusageoption = [];
   subusageoption = Menu?.PropertyTax?.UsageCategory || [];
+
   let occupencyOptions = [];
-  occupencyOptions = Menu?.PropertyTax?.OccupancyType.map((e) => ({ i18nKey: `PT_${e.code}`, ...e })) || [];
+  occupencyOptions = Menu?.PropertyTax?.OccupancyType.map((e) => ({ i18nKey: `PT_${e?.code}`, ...e })) || [];
 
   let floorListData = [];
   function getfloorlistdata(floorlist) {
-    floorListData = floorlist?.map((floor) => ({ i18nKey: "PROPERTYTAX_FLOOR_" + stringReplaceAll(floor.code, "-", "_"), code: floor.code })) || [];
+    floorListData = floorlist?.map((floor) => ({ i18nKey: "PROPERTYTAX_FLOOR_" + stringReplaceAll(floor?.code, "-", "_"), code: floor?.code })) || [];
     return floorListData;
   }
+
+  useEffect(() => {
+    if (!isLoading && presentInModifyApplication && Menu) {
+      // usage subUsage unit Occupancy
+      let defaultUnits = formData?.originalData?.units?.map((unit, index) => {
+        let { occupancyType, usageCategory: uc, constructionDetail, floorNo, arv } = unit;
+        occupancyType = occupencyOptions.filter((e) => e?.code === occupancyType)[0];
+        let usageCategory = usageCategoryMajorMenu(usagecat).filter((e) => e?.code === uc)[0];
+        floorNo = getfloorlistdata(floorlist).filter((e) => e?.code == floorNo)[0];
+        let key = Date.now() + index;
+        let order = index + 1;
+        let builtUpArea = constructionDetail.builtUpArea;
+        return {
+          floorNo,
+          occupancyType,
+          usageCategory,
+          key,
+          order,
+          builtUpArea,
+          existingUsageCategory: uc,
+          arv,
+        };
+      });
+      setUnits(defaultUnits);
+      setLoader(false);
+    }
+  }, [isLoading]);
 
   const calculateNumberOfFloors = () => {
     // if (!floorlist?.length || formState.errors[config.key]) return;
@@ -52,32 +90,57 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
       if (formState.errors[config.key]?.type === "units_missing") clearErrors(config.key);
       return;
     }
+
     if (!floorlist?.length) return;
     let minFloor = units.reduce((min, unit) => Math.min(min, Number(unit.floorNo?.code) || Number(0)), Number(0));
     let maxFloor = units.reduce((max, unit) => Math.max(max, Number(unit.floorNo?.code) || Number(0)), Number(0));
 
     const continuousFloorsArr = floorListData.filter((e) => {
-      let num = Number(e.code);
+      let num = Number(e?.code);
       return (num < maxFloor && num > minFloor) || num === maxFloor || num === minFloor;
     });
 
     let unitsMissing = [...continuousFloorsArr];
 
     continuousFloorsArr.forEach((floor) => {
-      if (units.some((unit) => unit.floorNo?.code === floor.code)) {
-        unitsMissing = unitsMissing.filter((e) => e.code !== floor.code);
-      } else if (!unitsMissing.some((e) => e.code === floor.code)) {
+      if (units.some((unit) => unit.floorNo?.code === floor?.code)) {
+        unitsMissing = unitsMissing.filter((e) => e?.code !== floor?.code);
+      } else if (!unitsMissing.some((e) => e?.code === floor?.code)) {
         unitsMissing.push(floor);
       }
     });
 
     if (unitsMissing.length) {
-      setError(config.key, { type: "units_missing", message: `PT_FLOORS_MISSING_UNITS.${unitsMissing.map((e) => e.code).join()}` });
+      setError(config.key, { type: "units_missing", message: `PT_FLOORS_MISSING_UNITS.${unitsMissing.map((e) => e?.code).join()}` });
     } else {
       clearErrors(config.key);
     }
-    onSelect("noOfFloors", maxFloor);
+    console.log(maxFloor + 1, "noOfFloors in form");
+    onSelect("noOfFloors", maxFloor + 1);
   };
+
+  const usageCategoryMajorMenu = (usagecat) => {
+    const catMenu = usagecat
+      ?.filter((e) => e?.code.split(".").length <= 2 && e?.code !== "NONRESIDENTIAL")
+      ?.map((item) => {
+        const arr = item?.code.split(".");
+        if (arr.length == 2) return { i18nKey: "PROPERTYTAX_BILLING_SLAB_" + arr[1], code: item?.code };
+        else return { i18nKey: "PROPERTYTAX_BILLING_SLAB_" + item?.code, code: item?.code };
+      });
+    return catMenu;
+  };
+
+  const subUsageCategoryMenu = (category) => {
+    const menu = usagecat
+      .filter((cat) => cat?.code.includes(category?.code) && cat?.code.split(".").length === 4)
+      .map((item) => {
+        const codeArr = item?.code.split(".");
+        return { i18nKey: `COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_${codeArr[1]}_${codeArr[3]}`, code: item?.code };
+      });
+    return menu;
+  };
+
+  console.log(usageCategoryMajorMenu(usagecat), subUsageCategoryMenu(usagecat), getfloorlistdata(floorlist), "options inside units");
 
   function goNext() {
     let unitsData = units?.map((unit) => ({
@@ -89,7 +152,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
       tenantId: unit?.tenantId,
       usageCategory: unit?.usageCategory?.code,
     }));
-    unitsData = unitsData.map((unit, index) => {
+    unitsData = unitsData?.map((unit, index) => {
       if (unit.occupancyType === "RENTED") return { ...unit, arv: units[index].arv };
       return unit;
     });
@@ -125,9 +188,17 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
   };
 
   useEffect(() => {
+    if (formData?.PropertyType?.code === "VACANT" && formState.errors[config.key]) {
+      clearErrors(config.key);
+    }
+  }, [formData?.PropertyType]);
+
+  useEffect(() => {
     goNext();
     calculateNumberOfFloors();
   }, [units, formData.PropertyType]);
+
+  if (loader && presentInModifyApplication) return <Loader />;
 
   return formData?.PropertyType?.code === "VACANT" || !formData?.PropertyType?.code ? null : (
     <div>
@@ -147,7 +218,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
           occupencyOptions={occupencyOptions}
           formData={formData}
           handleRemoveUnit={handleRemoveUnit}
-          {...{ formState, setError, clearErrors }}
+          {...{ formState, setError, clearErrors, usageCategoryMajorMenu, subUsageCategoryMenu }}
         />
       ))}
       <LinkButton label="Add Unit" onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
@@ -172,18 +243,36 @@ function Unit({
   formState,
   setError,
   clearErrors,
+  usageCategoryMajorMenu,
+  subUsageCategoryMenu,
 }) {
-  const { data: usageMenu = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", [
+  const { data: usageMenu = {}, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", [
     "UsageCategory",
     "OccupancyType",
     "Floor",
     "OwnerType",
     "OwnerShipCategory",
+    "Documents",
+    "SubOwnerShipCategory",
+    "OwnerShipCategory",
   ]);
   let usagecat = [];
-  usagecat = usageMenu?.PropertyTax?.UsageCategory?.filter((e) => e.code !== "MIXED") || [];
+  usagecat = usageMenu?.PropertyTax?.UsageCategory?.filter((e) => e?.code !== "MIXED") || [];
 
-  const [usageType, setUsageType] = useState(formData?.usageCategoryMajor?.code !== "MIXED" ? formData?.usageCategoryMajor : null);
+  const [usageType, setUsageType] = useState(() => {
+    const { existingUsageCategory } = unit;
+    if ([existingUsageCategory, formData?.usageCategoryMajor?.code].includes("RESIDENTIAL")) {
+      return usageCategoryMajorMenu(usagecat).filter((e) => e?.code === "RESIDENTIAL")[0];
+    }
+
+    if (formData?.usageCategoryMajor?.code !== "MIXED") {
+    } else if (existingUsageCategory) {
+      const codeArr = existingUsageCategory?.split(".");
+      const val = usageCategoryMajorMenu(usagecat).filter((e) => e?.code === codeArr[0] + "." + codeArr[1])[0];
+      console.log(subUsageCategoryMenu(val), "inside usestate");
+      return val;
+    }
+  });
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue } = useForm();
 
@@ -201,34 +290,12 @@ function Unit({
       console.log("set value for usageCategory called");
       setValue("usageCategory", usageType);
     } else {
-      console.log("set value for usageCategory revoked");
-      setValue("usageCategory", null);
+      console.log(formValue.usageCategory, index, usageType?.code, "set value for usageCategory revoked");
+      if (formValue.usageCategory?.code === "RESIDENTIAL") setValue("usageCategory", null);
     }
   }, [usageType]);
 
-  const usageCategoryMajorMenu = (usagecat) => {
-    const catMenu = usagecat
-      ?.filter((e) => e?.code.split(".").length <= 2 && e.code !== "NONRESIDENTIAL")
-      ?.map((item) => {
-        const arr = item?.code.split(".");
-        if (arr.length == 2) return { i18nKey: "PROPERTYTAX_BILLING_SLAB_" + arr[1], code: item?.code };
-        else return { i18nKey: "PROPERTYTAX_BILLING_SLAB_" + item?.code, code: item?.code };
-      });
-    return catMenu;
-  };
-
-  const subUsageCategoryMenu = (category) => {
-    const menu = usagecat
-      .filter((cat) => cat?.code.includes(category?.code) && cat?.code.split(".").length === 4)
-      .map((item) => {
-        const codeArr = item?.code.split(".");
-        return { i18nKey: `COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_${codeArr[1]}_${codeArr[3]}` };
-      });
-    return menu;
-  };
-
   useEffect(() => {
-    // console.log(localFormState.touched, "dirty fields " + unit.order);
     let keys = Object.keys(formValue);
     const part = {};
     keys.forEach((key) => (part[key] = unit[key]));
@@ -242,6 +309,8 @@ function Unit({
         clearLocalErrors([key]);
       }
     }
+
+    console.log(formValue, "on units fromvalue change");
 
     if (Object.keys(localFormState.errors).length && !formState?.errors?.units) {
       setError("units", { type: `${unit.key}`, message: Object.keys(localFormState.errors).join() });
@@ -304,7 +373,7 @@ function Unit({
           <CardLabel className="card-label-smaller">Unit Sub Usage:</CardLabel>
           <Controller
             name="usageCategory"
-            defaultValue={unit?.usageCategory}
+            defaultValue={subUsageCategoryMenu(usageType)?.filter((e) => e?.code === unit.existingUsageCategory)[0]}
             control={control}
             render={(props) => (
               <Dropdown
@@ -353,6 +422,7 @@ function Unit({
               <div className="field">
                 <Controller
                   name="arv"
+                  defaultValue={unit.arv}
                   control={control}
                   render={(props) => (
                     <TextInput

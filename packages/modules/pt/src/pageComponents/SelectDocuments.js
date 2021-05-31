@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { CardLabel, LabelFieldPair, Dropdown, UploadFile, Toast, Loader } from "@egovernments/digit-ui-react-components";
+import { useLocation } from "react-router-dom";
 
 const SelectDocuments = ({ t, config, onSelect, userType, formData, setError: setFormError, clearErrors: clearFormErrors, formState }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -7,7 +8,12 @@ const SelectDocuments = ({ t, config, onSelect, userType, formData, setError: se
   const [documents, setDocuments] = useState(formData?.documents?.documents || []);
   const [error, setError] = useState(null);
 
-  const { action = "create" } = Digit.Hooks.useQueryParams();
+  let action = "create";
+
+  const { pathname } = useLocation();
+  const isEditScreen = pathname.includes("/modify-application/");
+
+  if (isEditScreen) action = "update";
 
   const { isLoading, data } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", [
     "UsageCategory",
@@ -20,7 +26,7 @@ const SelectDocuments = ({ t, config, onSelect, userType, formData, setError: se
     "OwnerShipCategory",
   ]);
 
-  console.log(data);
+  // console.log(data);
 
   const propertyTaxDocuments = data?.PropertyTax?.Documents;
 
@@ -80,6 +86,7 @@ function SelectDocument({
   clearFormErrors,
   config,
   formState,
+  fromRawData,
 }) {
   const filteredDocument = documents?.filter((item) => item?.documentType?.includes(doc?.code))[0];
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -159,12 +166,26 @@ function SelectDocument({
   }, [uploadedFile, selectedDocument, isHidden]);
 
   useEffect(() => {
+    if (action === "update") {
+      const originalDoc = formData?.originalData?.documents?.filter((e) => e.documentType.includes(doc?.code))[0];
+      const docType = dropDownData.filter((e) => e.code === originalDoc?.documentType)[0];
+      // console.log(dropDownData, docType, doc?.code, "inside update docs");
+      if (!docType) setHidden(true);
+      else {
+        setSelectedDocument(docType);
+        setUploadedFile(originalDoc?.fileStoreId);
+      }
+    } else if (action === "create") {
+    }
+  }, []);
+
+  useEffect(() => {
     (async () => {
       setError(null);
       if (file) {
         if (file.size >= 5242880) {
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
-          if (!formState.errors[config.key]) setFormError(config.key, { type: doc?.code });
+          // if (!formState.errors[config.key]) setFormError(config.key, { type: doc?.code });
         } else {
           try {
             setUploadedFile(null);
@@ -195,11 +216,24 @@ function SelectDocument({
       if (value) {
         if (onArray) {
           const valueArr = value?.map((e) => formArrayAttrPath.reduce((acc, f) => acc?.[f], e) || e);
-          hideInput = valueArr?.some((e) => filterValue.includes(e));
+          hideInput = valueArr?.every((e) => filterValue.includes(e));
+          // if (doc.code === "OWNER.SPECIALCATEGORYPROOF") console.log(filterValue, formDataPath, formArrayAttrPath, value, valueArr, doc.code);
         } else {
-          // console.log(value, "find value here");
           hideInput = filterValue?.includes(value);
         }
+        if (hideInput !== isHidden) setHidden(hideInput);
+        if (hideInput) return null;
+      }
+    }
+
+    if (action === "update") {
+      const a = fromRawData ? jsonPath : jsonPath?.split("Properties[0].propertyDetails[0].")[1];
+      const keyArr = a?.split(".")?.map((e) => (e.includes("[") ? e.split("[")[1]?.split("]")[0] : e));
+      const value = keyArr.reduce((acc, curr) => acc[curr], formData?.originalData);
+      if (value) {
+        if (onArray) {
+          hideInput = value?.some((e) => filterValue?.includes(e[arrayAttribute]));
+        } else hideInput = filterValue?.includes(value);
         if (hideInput !== isHidden) setHidden(hideInput);
         if (hideInput) return null;
       }
@@ -207,12 +241,12 @@ function SelectDocument({
   }
 
   if (dropdownFilter) {
-    const { formDataPath, formArrayAttrPath, onArray } = dropdownFilter;
-    if (action === "create") {
+    const { formDataPath, formArrayAttrPath, onArray, parentJsonpath, arrayAttribute } = dropdownFilter;
+    // console.log(dropdownFilter, doc?.code);
+    if (["create", "update"].includes(action)) {
       const arr = formDataPath;
       const value = arr.reduce((acc, key) => acc?.[key], formData);
       const attrForFormArray = formArrayAttrPath;
-
       if (value) {
         if (!onArray) dropDownData = dropdownData.filter((e) => e.parentValue.includes(value));
         else {
@@ -222,6 +256,7 @@ function SelectDocument({
       }
     }
   }
+  if (dropDownData?.length === 0) return null;
 
   return (
     <div style={{ marginBottom: "24px" }}>

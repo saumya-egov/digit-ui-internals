@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, Dropdown, CardLabel, CardLabelError } from "@egovernments/digit-ui-react-components";
+import {
+  FormStep,
+  RadioOrSelect,
+  RadioButtons,
+  LabelFieldPair,
+  Dropdown,
+  CardLabel,
+  CardLabelError,
+  Loader,
+} from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
@@ -9,8 +18,9 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
   const isUpdateProperty = formData?.isUpdateProperty || false;
   let isEditProperty = formData?.isEditProperty || false;
   const [ownershipCategory, setOwnershipCategory] = useState(formData?.ownershipCategory);
+  const [loader, setLoader] = useState(true);
   const { data: SubOwnerShipCategoryOb, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "SubOwnerShipCategory");
-  const { data: OwnerShipCategoryOb } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "OwnerShipCategory");
+  const { data: OwnerShipCategoryOb, isLoading: ownerShipCatLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "OwnerShipCategory");
   const ownerShipdropDown = [];
   let subCategoriesInOwnersType = ["INDIVIDUAL"];
   let OwnerShipCategory = {};
@@ -26,6 +36,20 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
       setOwnershipCategory(preFilledPropertyType);
     }
   }, [formData?.ownershipCategory, SubOwnerShipCategoryOb]);
+
+  useEffect(() => {
+    console.log(
+      editScreen && !isLoading && !ownerShipCatLoading && SubOwnerShipCategoryOb && OwnerShipCategoryOb,
+      { editScreen, isLoading, ownerShipCatLoading, SubOwnerShipCategoryOb, OwnerShipCategoryOb },
+      "inside useEffect"
+    );
+    if (userType === "employee" && editScreen && !isLoading && !ownerShipCatLoading && OwnerShipCategoryOb) {
+      const arr = getDropdwonForProperty(ownerShipdropDown);
+      const defaultValue = arr.filter((e) => e.code === formData?.originalData?.ownershipCategory)[0];
+      selectedValue(defaultValue);
+      setLoader(false);
+    }
+  }, [isLoading, ownerShipCatLoading, OwnerShipCategoryOb]);
 
   OwnerShipCategoryOb &&
     OwnerShipCategoryOb.length > 0 &&
@@ -109,42 +133,35 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
     }
   }, [ownershipCategory]);
 
-  const inputs = [
-    {
-      label: "PT_PROVIDE_OWNERSHIP_DETAILS",
-      type: "text",
-      name: "typeOfOwnership",
-      validation: {},
-    },
-  ];
+  if (userType === "employee" && editScreen && loader) {
+    return <Loader />;
+  }
 
   if (userType === "employee") {
-    return inputs?.map((input, index) => {
-      return (
-        <React.Fragment>
-          <LabelFieldPair key={index}>
-            <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
-              {t(input.label)}
-            </CardLabel>
-            <Dropdown
-              className="form-field"
-              selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
-              disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
-              option={getDropdwonForProperty(ownerShipdropDown)}
-              select={selectedValue}
-              optionKey="i18nKey"
-              onBlur={onBlur}
-              t={t}
-            />
-          </LabelFieldPair>
-          {formState.touched?.[config.key] ? (
-            <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
-              {formState.errors[config.key]?.message}
-            </CardLabelError>
-          ) : null}
-        </React.Fragment>
-      );
-    });
+    return (
+      <React.Fragment>
+        <LabelFieldPair>
+          <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
+            {t("PT_PROVIDE_OWNERSHIP_DETAILS")}
+          </CardLabel>
+          <Dropdown
+            className="form-field"
+            selected={getDropdwonForProperty(ownerShipdropDown)?.length === 1 ? getDropdwonForProperty(ownerShipdropDown)[0] : ownershipCategory}
+            disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
+            option={getDropdwonForProperty(ownerShipdropDown)}
+            select={selectedValue}
+            optionKey="i18nKey"
+            onBlur={onBlur}
+            t={t}
+          />
+        </LabelFieldPair>
+        {formState.touched?.[config.key] ? (
+          <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
+            {formState.errors[config.key]?.message}
+          </CardLabelError>
+        ) : null}
+      </React.Fragment>
+    );
   }
 
   return (

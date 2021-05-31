@@ -1,5 +1,6 @@
 import { CardLabel, FormStep, LabelFieldPair, TextInput, CardLabelError } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const Area = ({ t, config, onSelect, value, userType, formData, setError: setFormError, clearErrors: clearFormErrors, formState, onBlur }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
@@ -16,6 +17,9 @@ const Area = ({ t, config, onSelect, value, userType, formData, setError: setFor
   const [error, setError] = useState(null);
   const [unitareaerror, setunitareaerror] = useState(null);
   const [areanotzeroerror, setareanotzeroerror] = useState(null);
+
+  const { pathname } = useLocation();
+  const presentInModifyApplication = pathname.includes("modify");
 
   function setPropertyfloorarea(e) {
     setfloorarea(e.target.value);
@@ -82,6 +86,13 @@ const Area = ({ t, config, onSelect, value, userType, formData, setError: setFor
     }
   }, [floorarea]);
 
+  useEffect(() => {
+    if (presentInModifyApplication && userType === "employee") {
+      // console.log(formData?.originalData?.superBuiltUpArea, "inside landArea");
+      setfloorarea(formData?.originalData?.landArea);
+    }
+  }, []);
+
   const inputs = [
     {
       label: "PT_PLOT_SIZE_SQUARE_FEET_LABEL",
@@ -90,9 +101,6 @@ const Area = ({ t, config, onSelect, value, userType, formData, setError: setFor
       validation: {},
     },
   ];
-
-  // const { pathname } = useLocation();
-  // const presentInModifyApplication = pathname.includes("modify");
 
   if (userType === "employee") {
     return inputs?.map((input, index) => {

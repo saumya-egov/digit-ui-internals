@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, RadioButtons, CardLabel, LabelFieldPair, Dropdown, Loader, CardLabelError } from "@egovernments/digit-ui-react-components";
 import { stringReplaceAll } from "../utils";
+import { useLocation } from "react-router-dom";
 
 const PropertyType = ({ t, config, onSelect, userType, formData, setError, clearErrors, formState, onBlur }) => {
   const [BuildingType, setBuildingType] = useState(formData?.PropertyType);
@@ -29,6 +30,9 @@ const PropertyType = ({ t, config, onSelect, userType, formData, setError, clear
     }
   }
 
+  const { pathname } = useLocation();
+  const presentInModifyApplication = pathname.includes("modify");
+
   const onSkip = () => onSelect();
 
   // const propertyOwnerShipCategory = Digit.Hooks.pt.useMDMS("pb", "PropertyTax", "OwnerShipCategory", {});
@@ -40,6 +44,14 @@ const PropertyType = ({ t, config, onSelect, userType, formData, setError, clear
     sessionStorage.setItem("PropertyType", BuildingType?.i18nKey);
     onSelect(config.key, BuildingType);
   }
+
+  useEffect(() => {
+    if (presentInModifyApplication && userType === "employee" && Menu) {
+      const original = formData?.originalData?.propertyType;
+      const defaultVal = getPropertyTypeMenu(proptype)?.filter((e) => e.code === original)[0];
+      setBuildingType(defaultVal);
+    }
+  }, [isLoading]);
 
   useEffect(() => {
     if (userType === "employee") {
