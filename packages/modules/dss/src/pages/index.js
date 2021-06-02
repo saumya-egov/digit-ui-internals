@@ -31,13 +31,6 @@ const DashBoard = ({ stateCode }) => {
       tenantId: data?.filters?.tenantId || [],
     },
   }));
-  const provided = useMemo(
-    () => ({
-      value: filters,
-      setValue: setFilters,
-    }),
-    [filters]
-  );
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const { moduleCode } = useParams();
 
@@ -48,7 +41,14 @@ const DashBoard = ({ stateCode }) => {
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
   const fullPageRef = useRef();
-
+  const provided = useMemo(
+    () => ({
+      value: filters,
+      setValue: setFilters,
+      ulbTenants,
+    }),
+    [filters, isUlbLoading]
+  );
   const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
 
   const removeULB = (id) => {
