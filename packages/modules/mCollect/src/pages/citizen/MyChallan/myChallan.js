@@ -5,22 +5,22 @@ import Axios from "axios";
 import { useHistory, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
+const MyChallanResult = ({ template, header, actionButtonLabel }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { mobileNumber, challanNo, Servicecategory } = Digit.Hooks.useQueryParams();
   const filters = {};
-  if (mobileNumber) filters.mobileNumber = mobileNumber;
-  if (challanNo) filters.consumerCode = challanNo;
-  if (Servicecategory) filters.businesService = Servicecategory;
+  const userInfo = Digit.UserService.getUser();
+  const tenantId = userInfo?.info?.permanentCity;
+
+  filters.mobileNumber = userInfo?.info?.mobileNumber;
+
   //filters.url = "egov-searcher/bill-genie/mcollectbills/_get"
 
   //const tenantId = Digit.ULBService.getCurrentTenantId();
-  const userInfo = Digit.UserService.getUser();
-  const tenantId = userInfo?.info?.permanentCity;
+
   const result = Digit.Hooks.mcollect.useMcollectSearchBill({ tenantId, filters });
   //const result = await Axios.post(`https://qa.digit.org/egov-searcher/bill-genie/mcollectbills/_get?`, {"searchCriteria":{"tenantId":"pb.amritsar","mobileNumber":"7878787878","businesService":"ADVT.Hoardings"},"RequestInfo":{"apiId":"Rainmaker","authToken":"1fff79b7-694d-4b18-8a6f-2dbdac1531aa"}})
-  let bills = result?.data?.Bills;
+  //let bills = result?.data?.Bills;
   //const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
 
   /* const paymentDetails = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
@@ -38,13 +38,20 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   } */
 
   const onSubmit = (data) => {
-    //debugger;
     //history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
     //history.push(`/digit-ui/citizen/mcollect/bill-details/${data.businesService}/${data?.ChannelNo}`, { tenantId });
     history.push(`/digit-ui/citizen/payment/my-bills/${data?.businesService}/${data?.ChannelNo}?workflow=mcollect`);
   };
 
   const payment = {};
+  function getBillingPeriod(fromPeriod, toPeriod) {
+    console.log(fromPeriod);
+    if (fromPeriod && toPeriod) {
+      let from = new Date(fromPeriod).getFullYear().toString();
+      let to = new Date(toPeriod).getFullYear().toString();
+      return "FY " + from + "-" + to;
+    } else return "N/A";
+  }
 
   /* paymentDetails?.data?.Bill?.forEach((element) => {
     if (element?.consumerCode) {
@@ -60,6 +67,7 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
       businesService: bill.businessService,
       total_due: bill.totalAmount,
       OwnerName: bill.payerName || "NA",
+      BillingPeriod: getBillingPeriod(bill.billDetails[0].fromPeriod, bill.billDetails[0].toPeriod),
       //bil_due__date: bill.billDetails[0].expiryDate || 0,
       bil_due__date: `${
         new Date(bill.billDetails[0].expiryDate).getDate().toString() +
@@ -84,26 +92,26 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
         <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
       </div>
 
-      {/* <div style={{ marginLeft: "16px", marginTop: "16px" }}>
-        <p>{t("PT_TEXT_WANT_TO_ADD_A_NEW_PROPERTY")} </p>
+      <div style={{ marginLeft: "16px", marginTop: "16px" }}>
+        <p>{t("UC_NOT_ABLE_TO_FIND_BILL_MSG")} </p>
         <p className="link">
-          <Link to="/digit-ui/citizen/pt/property/new-application/info">{t("PT_COMMON_CLICK_HERE_TO_REGISTER_NEW_PROPERTY")}</Link>
+          <Link to="/digit-ui/citizen/mcollect/search">{t("UC_CLICK_HERE_TO_SEARCH_LINK")}</Link>
         </p>
-      </div> */}
+      </div>
     </div>
   );
 };
 
-ChallanSearchResults.propTypes = {
+MyChallanResult.propTypes = {
   template: PropTypes.any,
   header: PropTypes.string,
   actionButtonLabel: PropTypes.string,
 };
 
-ChallanSearchResults.defaultProps = {
+MyChallanResult.defaultProps = {
   template: [],
   header: null,
   actionButtonLabel: null,
 };
 
-export default ChallanSearchResults;
+export default MyChallanResult;

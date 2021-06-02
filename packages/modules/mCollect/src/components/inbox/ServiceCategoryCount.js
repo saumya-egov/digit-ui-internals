@@ -12,6 +12,7 @@ const ServiceCategoryCount = ({ status, searchParams, onAssignmentChange, busine
         return searchParams?.applicationStatus.some((e) => e.code === status.code);
       })()}
       label={`${t(status.name)}`}
+      styles={{ marginBottom: "10px" }}
     />
   );
 };

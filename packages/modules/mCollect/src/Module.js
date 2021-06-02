@@ -1,4 +1,4 @@
-import { Header, HomeLink, Loader } from "@egovernments/digit-ui-react-components";
+import { Header, HomeLink, Loader, CitizenHomeCard, RupeeIcon } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
@@ -32,14 +32,18 @@ export const MCollectLinks = ({ matchPath, userType }) => {
     clearParams();
   }, []);
 
-  return (
-    <React.Fragment>
-      <Header>{t("M-Collect")}</Header>
-      <div className="d-grid">
-        <HomeLink to={`${matchPath}/search`}>{t("UC_SEARCH_AND_PAY")}</HomeLink>
-      </div>
-    </React.Fragment>
-  );
+  const links = [
+    {
+      link: `${matchPath}/search`,
+      i18nKey: t("UC_SEARCH_AND_PAY"),
+    },
+    {
+      link: `${matchPath}/My-Challans`,
+      i18nKey: t("UC_MY_CHALLANS"),
+    },
+  ];
+
+  return <CitizenHomeCard header={t("ACTION_TEST_MCOLLECT")} links={links} Icon={RupeeIcon} />;
 };
 
 const componentsToRegister = {

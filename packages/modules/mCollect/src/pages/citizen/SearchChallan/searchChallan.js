@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useMCollectMDMS from "../../../../../../libraries/src/hooks/mcollect/useMCollectMDMS";
+import ServiceCategory from "../../../components/inbox/ServiceCategory";
 
 const SearchChallan = ({ config: propsConfig, formData }) => {
   const { t } = useTranslation();
@@ -19,10 +20,15 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
   // moduleCode, type, config = {}, payload = []
 
   const { data: Menu, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(tenantId, "BillingService", "BusinessService");
+  if (isLoading) {
+    return <Loader />;
+  }
   const onChallanSearch = async (data) => {
     //history.push(`/digit-ui/citizen/mcollect/search-results`);
     if (!mobileNumber && !challanNo && !Servicecateogry) {
       return alert("Provide at least one parameter");
+    } else if (!Servicecateogry) {
+      return alert("Please Provide Service Category");
     } else {
       history.push(
         `/digit-ui/citizen/mcollect/search-results?mobileNumber=${mobileNumber}&challanNo=${challanNo}&Servicecategory=${
@@ -74,9 +80,27 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         headingStyle={{ fontSize: "32px", marginBottom: "16px" }}
         onSelect={onChallanSearch}
         componentInFront={<div className="employee-card-input employee-card-input--front">+91</div>}
+        isDisabled={!Servicecateogry}
         //onSkip={onSkip}
         t={t}
       >
+        <CardLabel>{`${t("UC_SERVICE_CATEGORY_LABEL")}*`}</CardLabel>
+        {Menu && (
+          <RadioOrSelect
+            t={t}
+            optionKey="i18nKey"
+            name="Servicecategory"
+            options={SCMenu}
+            value={Servicecateogry}
+            selectedOption={Servicecateogry}
+            onSelect={setServicecateogryvalue}
+            //labelKey="PT_RELATION"
+            {...(validation = {
+              isRequired: true,
+              title: t("please enter service category"),
+            })}
+          />
+        )}
         <CardLabel>{`${t("UC_SEARCH_MOBILE_NO_LABEL")}`}</CardLabel>
         <div className="field-container">
           <span className="citizen-card-input citizen-card-input--front" style={{ flex: "none" }}>
@@ -114,19 +138,6 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
             title: t("wrong Challan No."),
           })} */
         />
-        <CardLabel>{`${t("UC_SERVICE_CATEGORY_LABEL")}`}</CardLabel>
-        {Menu && (
-          <RadioOrSelect
-            t={t}
-            optionKey="i18nKey"
-            name="Servicecategory"
-            options={SCMenu}
-            value={Servicecateogry}
-            selectedOption={Servicecateogry}
-            onSelect={setServicecateogryvalue}
-            //labelKey="PT_RELATION"
-          />
-        )}
       </FormStep>
     </div>
   );
