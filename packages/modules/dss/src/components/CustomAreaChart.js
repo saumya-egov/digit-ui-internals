@@ -60,7 +60,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       >
         <p>{`${label !== undefined ? format(new Date(label), "MMM, yy") : ""} :${id === "fsmTotalCumulativeCollection" ? " ₹" : ""}${
           payload?.[0]?.value
-        } ${id === "fsmTotalCumulativeCollection" ? (value?.denomination !== "Unit" ? value?.denomination : "") : "%"}`}</p>
+        } ${id === "fsmTotalCumulativeCollection" ? (value?.denomination !== "Unit" ? value?.denomination : "") : `${t('DSS_KL')}`}`}</p>
       </div>
     );
   };
@@ -83,7 +83,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
           <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} tickFormatter={tickFormatter} />
           <YAxis
             label={{
-              value: `${response?.responseData?.data?.[0]?.headerName} ${renderUnits(t, value.denomination)}`,
+              value: `${response?.responseData?.data?.[0]?.headerName} ${id === "fsmTotalCumulativeCollection" ? renderUnits(t, value.denomination) : `(${t('DSS_KL')})`}`,
               angle: -90,
               position: "insideLeft",
               dy: 40,
@@ -91,7 +91,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
               fontSize: "14px",
               fill: "#505A5F",
             }}
-            unit={id === "fsmCapacityUtilization" ? "%" : ""}
+            // unit={id === "fsmCapacityUtilization" ? "%" : ""}
             tick={{ fontSize: "14px", fill: "#505A5F" }}
           />
           <Area type="monotone" dataKey={renderPlot} stroke="#048BD0" fill="url(#colorUv)" dot={true} />
