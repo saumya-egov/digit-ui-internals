@@ -12,7 +12,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
   const { t } = useTranslation();
   let validation = {};
   const history = useHistory();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getCurrentUlb();
 
   const [mobileNumber, setMobileNumber] = useState(formData?.mobileNumber || "");
   const [challanNo, setchallanNumber] = useState(formData?.challanNo || "");
