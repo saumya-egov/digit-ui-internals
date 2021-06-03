@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 const InboxLinks = ({ parentRoute, businessService, allLinks, headerText }) => {
   const { t } = useTranslation();
 
-
   const [links, setLinks] = useState([]);
 
   const { roles: userRoles } = Digit.UserService.getUser().info;

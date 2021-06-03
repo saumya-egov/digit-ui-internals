@@ -1,6 +1,7 @@
-import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Header } from "@egovernments/digit-ui-react-components";
+
 import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
@@ -74,7 +75,7 @@ const Inbox = ({
 
       for (var key in businessServiceMap) {
         let consumerCodes = businessServiceMap[key].toString();
-        res = await Digit.PaymentService.searchBill(tenantId, { consumerCode: consumerCodes, service: key });
+        res = await Digit.PaymentService.fetchBill(tenantId, { consumerCode: consumerCodes, businessService: key });
         processInstanceArray = processInstanceArray.concat(res.Bill);
         businessIdToOwnerMapping = {};
         processInstanceArray
@@ -96,12 +97,13 @@ const Inbox = ({
 
   data?.challans?.map((data) => {
     formedData.push({
-      challanNo: data.challanNo,
-      name: data.citizen.name,
-      applicationStatus: data.applicationStatus,
-      businessService: data.businessService,
-      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount,
-      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate,
+      challanNo: data?.challanNo,
+      name: data?.citizen?.name,
+      applicationStatus: data?.applicationStatus,
+      businessService: data?.businessService,
+      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount || 0,
+      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate || "NA",
+      tenantId: data?.tenantId,
     });
   });
 
@@ -124,8 +126,21 @@ const Inbox = ({
   const handleFilterChange = (filterParam) => {
     let keys_to_delete = filterParam.delete;
     console.log(keys_to_delete);
-    let _new = { ...searchParams, ...filterParam };
+    let _new = {};
+    if (isMobile) {
+      _new = { ...filterParam };
+      // setSearchParams({
+      //   businessService: [],
+      //   status: []
+      // })
+    } else {
+      _new = { ...searchParams, ...filterParam };
+    }
+    // let _new = { ...searchParams, ...filterParam };
+    // if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
+    // delete filterParam.delete;
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
+    delete _new.delete;
     delete filterParam.delete;
     setSearchParams({ ..._new });
   };
@@ -142,15 +157,16 @@ const Inbox = ({
   const getSearchFields = () => {
     return [
       {
-        label: t("UC_CHALLAN_NO_LABEL"),
-        name: "Challan No.",
+        label: t("UC_CHALLAN_NUMBER"),
+        name: "challanNo",
       },
       {
-        label: t("ES_SEARCH_APPLICATION_MOBILE_NO"),
+        label: t("UC_MOBILE_NUMBER_LABEL"),
         name: "mobileNumber",
         maxlength: 10,
         pattern: "[6-9][0-9]{9}",
         title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        componentInFront: "+91",
       },
     ];
   };
@@ -159,7 +175,7 @@ const Inbox = ({
     if (isMobile) {
       return (
         <MobileInbox
-          data={data}
+          data={formedData}
           isLoading={hookLoading}
           isSearch={!isInbox}
           searchFields={getSearchFields()}
@@ -178,10 +194,10 @@ const Inbox = ({
     } else {
       return (
         <div>
-          {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
+          {isInbox && <Header>{t("UC_SEARCH_MCOLLECT_HEADER")}</Header>}
           <DesktopInbox
             businessService={businessService}
-            data={data}
+            data={formedData}
             tableConfig={rest?.tableConfig}
             isLoading={hookLoading}
             defaultSearchParams={initialStates.searchParams}

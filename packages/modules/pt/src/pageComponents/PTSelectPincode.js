@@ -4,14 +4,20 @@ import { useLocation } from "react-router-dom";
 
 const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, register, errors, props }) => {
   const tenants = Digit.Hooks.pt.useTenants();
-  const [pincode, setPincode] = useState(() => formData?.address?.pincode || "");
+
   const { pathname } = useLocation();
   const presentInModifyApplication = pathname.includes("modify");
+
+  const [pincode, setPincode] = useState(() => {
+    if (presentInModifyApplication && userType === "employee") return formData?.originalData?.address?.pincode || "";
+    return formData?.address?.pincode || "";
+  });
+
   let isEditProperty = formData?.isEditProperty || false;
   if (formData?.isUpdateProperty) isEditProperty = true;
   const inputs = [
     {
-      label: "CORE_COMMON_PINCODE",
+      label: "PT_PROPERTY_ADDRESS_PINCODE",
       type: "text",
       name: "pincode",
       disable: isEditProperty,
@@ -20,7 +26,7 @@ const PTSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
         maxlength: 7,
         pattern: "[0-9]+",
         max: "9999999",
-        title: t("CORE_COMMON_PINCODE_INVALID"),
+        title: t("PT_PROPERTY_ADDRESS_PINCODE_INVALID"),
       },
     },
   ];

@@ -1,22 +1,35 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { Loader, ResponseComposer } from "@egovernments/digit-ui-react-components";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import FilterContext from "./FilterContext";
+import { useHistory } from "react-router-dom";
 
-const barColors = ["#048BD0", "#FBC02D", "#ECC478"];
+const barColors = ["#048BD0", "#FBC02D", "#8E29BF"];
 
-const CustomHorizontalBarChart = ({ data }) => {
+const CustomHorizontalBarChart = ({
+  data,
+  xAxisType = "category",
+  yAxisType = "number",
+  xDataKey = "name",
+  yDataKey = "",
+  xAxisLabel = "",
+  yAxisLabel = "",
+  layout = "horizontal",
+  title,
+  showDrillDown = false,
+}) => {
   const { id } = data;
   const { t } = useTranslation();
+  const history = useHistory();
   const { value } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate,
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: value?.filters,
   });
 
@@ -37,6 +50,17 @@ const CustomHorizontalBarChart = ({ data }) => {
     });
   };
 
+  const goToDrillDownCharts = () => {
+    history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`);
+  };
+
+  const tooltipFormatter = (value, name) => {
+    if (id === "fsmMonthlyWasteCal") {
+      return [`${value} ${t("DSS_KL")}`, name];
+    }
+    return [value, name];
+  };
+
   const chartData = useMemo(() => constructChartData(response?.responseData?.data), [response]);
 
   const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{value}</span>;
@@ -48,25 +72,39 @@ const CustomHorizontalBarChart = ({ data }) => {
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
 
   return (
-    <ResponsiveContainer width="99%" height={300}>
-      <BarChart
-        width="100%"
-        height="100%"
-        // layout="vertical"
-        data={chartData}
-        barGap={14}
-        barSize={15}
-      >
-        <CartesianGrid />
-        <YAxis tick={{ fontSize: "14px", fill: "#505A5F" }} />
-        <XAxis dataKey="name" type="category" tick={{ fontSize: "14px", fill: "#505A5F" }} />
-        {bars.map((bar, id) => (
-          <Bar key={id} dataKey={bar} fill={barColors[id]} />
-        ))}
-        <Legend formatter={renderLegend} iconType="circle" />
-        <Tooltip />
-      </BarChart>
-    </ResponsiveContainer>
+    <Fragment>
+      <ResponsiveContainer width="99%" height={300}>
+        <BarChart width="100%" height="100%" layout={layout} data={chartData} barGap={14} barSize={15}>
+          <CartesianGrid />
+          <YAxis
+            dataKey={yDataKey}
+            type={yAxisType}
+            tick={{ fontSize: "14px", fill: "#505A5F" }}
+            label={{
+              value: yAxisLabel,
+              angle: -90,
+              position: "insideLeft",
+              dy: 50,
+              fontSize: "14px",
+              fill: "#505A5F",
+            }}
+            unit={id === "fsmCapacityUtilization" ? "%" : ""}
+            tick={{ fontSize: "14px", fill: "#505A5F" }}
+          />
+          <XAxis dataKey={xDataKey} type={xAxisType} tick={{ fontSize: "14px", fill: "#505A5F" }} />
+          {bars.map((bar, id) => (
+            <Bar key={id} dataKey={bar} fill={barColors[id]} stackId={id > 1 ? 1 : id} />
+          ))}
+          <Legend formatter={renderLegend} iconType="circle" />
+          <Tooltip cursor={false} formatter={tooltipFormatter} />
+        </BarChart>
+      </ResponsiveContainer>
+      {showDrillDown && (
+        <p style={{ textAlign: "right", color: "#F47738" }} onClick={goToDrillDownCharts}>
+          {t("DSS_SHOW_MORE")}
+        </p>
+      )}
+    </Fragment>
   );
 };
 

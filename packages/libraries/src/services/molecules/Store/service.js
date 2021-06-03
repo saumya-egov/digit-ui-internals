@@ -71,7 +71,7 @@ export const StoreService = {
       localizationModules: stateInfo.localizationModules,
       modules: MdmsRes?.tenant?.citymodule.filter((module) => module.active).filter((module) => enabledModules.includes(module.code)),
     };
-    initData.selectedLanguage = initData.languages[0].value;
+    initData.selectedLanguage = Digit.SessionStorage.get("locale") || initData.languages[0].value;
 
     ApiCacheService.saveSetting(MdmsRes["DIGIT-UI"]?.ApiCachingSettings);
 
@@ -109,8 +109,8 @@ export const StoreService = {
 
     await LocalizationService.getLocale({
       modules: [
+        `rainmaker-common`,
         `rainmaker-${stateCode.toLowerCase()}`,
-        ...initData.localizationModules.map((module) => module.value),
         ...initData.tenants.map((tenant) => `rainmaker-${tenant.code.toLowerCase()}`),
       ],
       locale: initData.selectedLanguage,

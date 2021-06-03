@@ -1,6 +1,7 @@
-import { Header, HomeLink } from "@egovernments/digit-ui-react-components";
+import { Header, CitizenHomeCard, RupeeIcon } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
 import Area from "./pageComponents/Area";
 import GroundFloorDetails from "./pageComponents/GroundFloorDetails";
@@ -31,6 +32,7 @@ import Units from "./pageComponents/Units";
 import SelectAltContactNumber from "./pageComponents/SelectAltContactNumber";
 import SelectDocuments from "./pageComponents/SelectDocuments";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
+import PTEmployeeOwnershipDetails from "./pageComponents/OwnerDetailsEmployee";
 import CitizenApp from "./pages/citizen";
 
 import PropertyInformation from "./pages/citizen/MyProperties/propertyInformation";
@@ -43,6 +45,7 @@ import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
 import EmployeeApp from "./pages/employee";
 import PTCard from "./components/PTCard";
 import InboxFilter from "./components/inbox/NewInboxFilter";
+import EmptyResultInbox from "./components/empty-result";
 
 const componentsToRegister = {
   PropertyTax,
@@ -80,6 +83,7 @@ const componentsToRegister = {
   Units,
   SelectAltContactNumber,
   SelectDocuments,
+  PTEmployeeOwnershipDetails,
 };
 
 const addComponentsToRegistry = () => {
@@ -88,8 +92,13 @@ const addComponentsToRegistry = () => {
   });
 };
 
-export const PTModule = ({ userType, tenants }) => {
+export const PTModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
+
+  const moduleCode = "PT";
+  const state = useSelector((state) => state);
+  const language = state?.common?.selectedLanguage;
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
 
   addComponentsToRegistry();
 
@@ -108,16 +117,22 @@ export const PTLinks = ({ matchPath, userType }) => {
     clearParams();
   }, []);
 
-  return (
-    <React.Fragment>
-      <Header>{t("ACTION_TEST_PROPERTY_TAX")}</Header>
-      <div className="d-grid">
-        <HomeLink to={`${matchPath}/property/new-application`}>{t("PT_CREATE_PROPERTY")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-properties`}>{t("PT_MY_PROPERTIES")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-applications`}>{t("PT_MY_APPLICATION")}</HomeLink>
-      </div>
-    </React.Fragment>
-  );
+  const links = [
+    {
+      link: `${matchPath}/property/new-application`,
+      i18nKey: t("PT_CREATE_PROPERTY"),
+    },
+    {
+      link: `${matchPath}/property/my-properties`,
+      i18nKey: t("PT_MY_PROPERTIES"),
+    },
+    {
+      link: `${matchPath}/property/my-applications`,
+      i18nKey: t("PT_MY_APPLICATION"),
+    },
+  ];
+
+  return <CitizenHomeCard header={t("ACTION_TEST_PROPERTY_TAX")} links={links} Icon={RupeeIcon} />;
 };
 
 export const PTComponents = {
@@ -125,4 +140,5 @@ export const PTComponents = {
   PTModule,
   PTLinks,
   PT_INBOX_FILTER: (props) => <InboxFilter {...props} />,
+  EmptyResultInbox,
 };

@@ -11,6 +11,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
     formData.owners && formData.owners[index] && formData.owners[index].isCorrespondenceAddress
   );
   const isUpdateProperty = formData?.isUpdateProperty || false;
+  let isEditProperty = formData?.isEditProperty || false;
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
 
@@ -78,7 +79,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
         name="address"
         onChange={setOwnerPermanentAddress}
         value={permanentAddress}
-        disable={isUpdateProperty}
+        disable={isUpdateProperty || isEditProperty}
       />
       {/* <CardLabel>{t("PT_OWNER_S_ADDRESS")}</CardLabel> */}
       <CheckBox
@@ -87,7 +88,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
         value={isCorrespondenceAddress}
         checked={isCorrespondenceAddress || false}
         style={{ paddingTop: "10px" }}
-        disable={isUpdateProperty}
+        disable={isUpdateProperty || isEditProperty}
       />
     </FormStep>
   );

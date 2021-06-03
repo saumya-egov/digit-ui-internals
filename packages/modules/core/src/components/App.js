@@ -1,13 +1,11 @@
+import { Dropdown, LogoutIcon, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Redirect, Route, Switch, useHistory } from "react-router-dom";
-import { TopBar as TopBarComponent, Dropdown, LogoutIcon, HomeIcon, Hamburger } from "@egovernments/digit-ui-react-components";
-import ChangeLanguage from "./ChangeLanguage";
 import { useSelector } from "react-redux";
-
+import { Link, Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { AppModules } from "./AppModules";
+import ChangeLanguage from "./ChangeLanguage";
 import { CitizenSidebar } from "./Sidebar";
-import { useLocation } from "react-router-dom";
 
 const TextToImg = (props) => (
   <span className="user-img-txt" onClick={props.toggleMenu} title={props.name}>
@@ -42,7 +40,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
   const mobileView = innerWidth <= 640;
 
   const sideBarOpenStyles = { width: "100%", position: "fixed" };
-
+  let sourceUrl = `${window.location.origin}/citizen`;
   return (
     <Switch>
       <Route path="/digit-ui/employee">
@@ -58,7 +56,18 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
             logoUrl={logoUrl}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
+            <div style={{ overflowY: "auto" }}>
+              <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
+            </div>
+            <div className="employee-home-footer">
+              <img
+                src={`${sourceUrl}/digit-footer.png`}
+                style={{ height: "1.1em", cursor: "pointer" }}
+                onClick={() => {
+                  window.open("https://www.digit.org/", "_blank").focus();
+                }}
+              />
+            </div>
           </div>
         </div>
       </Route>
@@ -74,8 +83,17 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
             handleUserDropdownSelection={handleUserDropdownSelection}
             logoUrl={logoUrl}
           />
-          <div className={`main center-container`}>
+          <div className={`main center-container mb-50`}>
             <AppModules stateCode={stateCode} userType="citizen" modules={modules} appTenants={appTenants} />
+            <div className="citizen-home-footer">
+              <img
+                src={`${sourceUrl}/digit-footer.png`}
+                style={{ height: "1.2em", cursor: "pointer" }}
+                onClick={() => {
+                  window.open("https://www.digit.org/", "_blank").focus();
+                }}
+              />
+            </div>
           </div>
         </div>
       </Route>
@@ -166,16 +184,14 @@ function TopBar(props) {
   return (
     <div className="topbar">
       <img className="city" src={cityDetails?.logoId} />
-      <span className="ulb" style={mobileView ? { fontSize: "14px" } : {}}>
+      <p className="ulb" style={mobileView ? { fontSize: "14px", width: "50%", display: "inline-block", marginTop: "15px" } : {}}>
         {t(cityDetails?.i18nKey).toUpperCase()}{" "}
         {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
-      </span>
+      </p>
       <div className={mobileView ? "right" : "flex-right right w-80 column-gap-15"}>
-        {!mobileView && (
-          <div className="left">
-            <ChangeLanguage dropdown={true} />
-          </div>
-        )}
+        <div className="left">
+          <ChangeLanguage dropdown={true} />
+        </div>
         {userDetails?.access_token && (
           <div className="left">
             <Dropdown

@@ -9,9 +9,9 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
     {
         label: t("HRMS_MOBILE_NO_LABEL"),
         isMandatory: true,
-        pattern: /^[6-9]\d{9}$/,
-        type: "tel",
+        type: "text",
         name:"mobileNumber",
+        populators: {
           validation: {
             required: true,
             pattern: /^[6-9]\d{9}$/,
@@ -19,6 +19,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
           componentInFront: <div className="employee-card-input employee-card-input--front">+91</div>,
           error: t("CORE_COMMON_MOBILE_ERROR"),
       },
+    }
   ];
 
   function setValue(value, input) {

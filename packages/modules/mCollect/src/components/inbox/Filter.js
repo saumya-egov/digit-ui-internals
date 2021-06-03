@@ -9,13 +9,12 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   const { t } = useTranslation();
 
   const onStatusChange = (e, type) => {
-    debugger;
-    if (e.target.checked) onFilterChange({ applicationStatus: [...searchParams?.applicationStatus, type] });
-    else onFilterChange({ applicationStatus: searchParams?.applicationStatus.filter((option) => type.name !== option.name) });
+    if (e.target.checked) onFilterChange({ status: [...searchParams?.status, type] });
+    else onFilterChange({ status: searchParams?.status.filter((option) => type.name !== option.name) });
   };
 
   const clearAll = () => {
-    onFilterChange({ applicationStatus: [] });
+    onFilterChange({ status: [] });
     props?.onClose?.();
   };
 
@@ -24,7 +23,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
       <div className="filter">
         <div className="filter-card">
           <div className="heading">
-            <div className="filter-label">{t("ES_COMMON_FILTER_BY")}:</div>
+            <div className="filter-label">{t("UC_FILTERS_LABEL")}:</div>
             <div className="clearAll" onClick={clearAll}>
               {t("ES_COMMON_CLEAR_ALL")}
             </div>

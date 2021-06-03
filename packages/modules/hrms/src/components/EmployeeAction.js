@@ -136,12 +136,12 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
           documentName: File.name
         }
         applicationData.Employees[0]["documents"].push(documents)
-        Employees[0]["reactivationDetails"].push(data)
-        Employees[0].isActive = true
       }
 
+      Employees[0]["reactivationDetails"].push(data)
+      Employees[0].isActive = true
 
-      history.push("/digit-ui/employee/hrms/response", { Employees, key: "update" });
+      history.push("/digit-ui/employee/hrms/response", { Employees, key: "update", action:action });
 
     }
   }

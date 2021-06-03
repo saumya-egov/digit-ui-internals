@@ -80,6 +80,17 @@ export const getGeneralCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+export const getMultipleTypes = (tenantId, moduleCode, types) => ({
+  details: {
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: types.map((type) => ({ name: type })),
+      },
+    ],
+  },
+});
+
 const getReceiptKey = (tenantId, moduleCode) => ({
   details: {
     tenantId,
@@ -449,12 +460,12 @@ const getReasonCriteria = (tenantId, moduleCode, type, payload) => ({
   },
 });
 
-const getBillingServiceForBusinessServiceCriteria = () => ({
+const getBillingServiceForBusinessServiceCriteria = (filter) => ({
   moduleDetails: [
     {
       moduleName: "BillingService",
       masterDetails: [
-        { name: "BusinessService" },
+        { name: "BusinessService", filter },
         {
           name: "TaxHeadMaster",
         },
@@ -545,8 +556,9 @@ const getHrmsEmployeeRolesandDesignations = () => ({
   moduleDetails: [
     {
       moduleName: "common-masters",
-      masterDetails: [{ name: "Department", filter: "[?(@.active == true)]" },
-      { name: "Designation", filter: "[?(@.active == true)]" }
+      masterDetails: [
+        { name: "Department", filter: "[?(@.active == true)]" },
+        { name: "Designation", filter: "[?(@.active == true)]" },
       ],
     },
     {
@@ -609,24 +621,24 @@ const GetSlumLocalityMapping = (MdmsRes, tenantId) =>
     // console.log("find prev",prev, curr)
     return prev[curr.locality]
       ? {
-        ...prev,
-        [curr.locality]: [
-          ...prev[curr.locality],
-          {
-            ...curr,
-            i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
-          },
-        ],
-      }
+          ...prev,
+          [curr.locality]: [
+            ...prev[curr.locality],
+            {
+              ...curr,
+              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
+            },
+          ],
+        }
       : {
-        ...prev,
-        [curr.locality]: [
-          {
-            ...curr,
-            i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
-          },
-        ],
-      };
+          ...prev,
+          [curr.locality]: [
+            {
+              ...curr,
+              i18nKey: `${tenantId.toUpperCase().replace(".", "_")}_${curr.locality}_${curr.code}`,
+            },
+          ],
+        };
   }, {});
 
 const GetPropertyOwnerShipCategory = (MdmsRes) =>
@@ -938,8 +950,8 @@ export const MdmsService = {
   getChecklist: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getChecklistCriteria(tenantId, moduleCode), moduleCode);
   },
-  getPaymentRules: (tenantId) => {
-    return MdmsService.call(tenantId, getBillingServiceForBusinessServiceCriteria());
+  getPaymentRules: (tenantId, filter) => {
+    return MdmsService.call(tenantId, getBillingServiceForBusinessServiceCriteria(filter));
   },
 
   getCustomizationConfig: (tenantId, moduleCode) => {
@@ -1016,5 +1028,8 @@ export const MdmsService = {
   },
   getHrmsEmployeeReason:(tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getMultipleTypes: (tenantId, moduleCode, types) => {
+    return MdmsService.getDataByCriteria(tenantId, getMultipleTypes(tenantId, moduleCode, types), moduleCode);
   },
 };

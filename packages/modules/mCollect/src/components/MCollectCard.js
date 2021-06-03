@@ -14,7 +14,7 @@ const MCollectCard = () => {
   // TODO: should be fetch
   const total = 1;
 
-  if (!Digit.Utils.ptAccess()) {
+  if (!Digit.Utils.mCollectAccess()) {
     return null;
   }
 
@@ -25,16 +25,16 @@ const MCollectCard = () => {
           <span className="logo">
             <PropertyHouse />
           </span>
-          <span className="text">{t("mcollect/new-application")}</span>
+          <span className="text">{t("UC_COMMON_HEADER_SEARCH")}</span>
         </div>
         <div className="body">
           <span className="link">
-            <Link to={`/digit-ui/employee/mcollect/inbox`}>{t("ES_TITLE_INBOX")}</Link>
-            <span className="inbox-total">{" " + total || "-"}</span>
-            {<ArrowRight to={`/digit-ui/employee/mcollect/inbox`} />}
+            <Link to={`/digit-ui/employee/mcollect/inbox`}>{t("UC_SEARCH_CHALLAN_LABEL")}</Link>
+            {/* <span className="inbox-total">{" " + total || "-"}</span> */}
+            {/* {<ArrowRight to={`/digit-ui/employee/mcollect/inbox`} />} */}
           </span>
           <span className="link">
-            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("UC_ECHALLAN")}</Link>
+            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("UC_GENERATE_NEW_CHALLAN")}</Link>
           </span>
         </div>
       </div>

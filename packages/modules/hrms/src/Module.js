@@ -5,6 +5,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import Inbox from "./pages/Inbox";
 import HRMSCard from "./components/hrmscard";
 import CreateEmployee from "./pages/createEmployee";
+// import Jurisdictions from "../src/components/jurisdiction";
 import InboxFilter from "./components/InboxFilter";
 import Jurisdictions from "./components/pageComponents/jurisdiction";
 import Assignments from "./components/pageComponents/assignment";
@@ -30,49 +31,46 @@ export const HRMSModule = ({ userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const inboxInitialState = {
     searchParams: {
-      tenantId: tenantId.code,
-      isActive: { code: true }
-    }
+      tenantId: tenantId,
+    },
   };
   const moduleCode = "HRMSmodule";
-  console.log(moduleCode, "module integrated");
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
 
   const { path, url } = useRouteMatch();
 
   if (userType === "employee") {
-    return (<Switch>
-      <React.Fragment>
-        <div className="ground-container">
-          <p className="breadcrumb" style={{ marginLeft: mobileView ? "2vw" : "revert" }}>
-            <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
-              {t("HRMS")}
-            </Link>{" "}
-            / <span>{location.pathname === "/digit-ui/employee/hrms/inbox" ? t("HR_COMMON_HEADER") : "HRMS"}</span>
-          </p>
-          <PrivateRoute exact path={`${path}/`} component={() => <MCollectLinks matchPath={path} userType={userType} />} />
-          <PrivateRoute
-            path={`${path}/inbox`}
-            component={() => (
-              <h5>hello</h5>
-              // <Inbox
-              //   parentRoute={path}
-              //   businessService="hrms"
-              //   filterComponent="HRMS_INBOX_FILTER"
-              //   initialStates={inboxInitialState}
-              //   isInbox={true}
-              // />
-            )}
-          />
-          <PrivateRoute path={`${path}/response`} component={(props)=><Response {...props} parentRoute={path} />}/>
-          <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
+    return (
+      <Switch>
+        <React.Fragment>
+          <div className="ground-container">
+            <p className="breadcrumb" style={{ marginLeft: mobileView ? "2vw" : "revert" }}>
+              <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
+                {t("HRMS")}
+              </Link>{" "}
+              / <span>{location.pathname === "/digit-ui/employee/hrms/inbox" ? t("HR_COMMON_HEADER") : "HRMS"}</span>
+            </p>
+            <PrivateRoute
+              path={`${path}/inbox`}
+              component={() => (
+                <Inbox
+                  parentRoute={path}
+                  businessService="hrms"
+                  filterComponent="HRMS_INBOX_FILTER"
+                  initialStates={inboxInitialState}
+                  isInbox={true}
+                />
+              )}
+            />
+            <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
+            <PrivateRoute path={`${path}/response`} component={(props)=><Response {...props} parentRoute={path} />}/>
           <PrivateRoute path={`${path}/details/:id`} component={() => <Details />} />
-        </div>
-      </React.Fragment>
-    </Switch>);
+          </div>
+        </React.Fragment>
+      </Switch>
+    );
   } else return <div></div>;
 };
-
 
 const componentsToRegister = {
   HRMSCard,

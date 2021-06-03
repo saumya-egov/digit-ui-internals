@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { ActionBar, CloseSvg, RadioButtons, Dropdown } from "@egovernments/digit-ui-react-components";
+import { ActionBar, CloseSvg, RadioButtons, Dropdown, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { ApplyFilterBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 
 const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props }) => {
   // const tenantId = );
+
+  const [_searchParams, setSearchParams] = useState(() => searchParams);
   const { t } = useTranslation();
   const tenantIds = Digit.SessionStorage.get("HRMS_TENANTS");
 
   const [tenantId, settenantId] = useState(() => {
-    console.log(searchParams?.tenantId != undefined ? { code: searchParams?.tenantId } : { code: Digit.ULBService.getCurrentTenantId() })
-    return searchParams?.tenantId != undefined ? { code: searchParams?.tenantId } : { code: Digit.ULBService.getCurrentTenantId() };
+    console.log(searchParams?.tenantId != undefined ? { code: searchParams?.tenantId } : { code: Digit.ULBService.getCurrentTenantId() });
+    return tenantIds.filter(
+      (ele) =>
+        ele.code == (searchParams?.tenantId != undefined ? { code: searchParams?.tenantId } : { code: Digit.ULBService.getCurrentTenantId() })?.code
+    )[0];
   });
+  const { isLoading, isError, errors, data: data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(tenantId ? tenantId.code : searchParams?.tenantId, "egov-hrms", "HRMSRolesandDesignation");
   const [departments, setDepartments] = useState(() => {
     return { departments: null };
   });
@@ -20,44 +26,41 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
     return { roles: null };
   });
   const [isActive, setIsactive] = useState(() => {
-    return { isActive: true }
-  })
+    return { isActive: true };
+  });
 
-  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(
-    tenantId.code,
-    "HRMS",
-    "HRMSRolesandDesignation"
-  );
+
 
   useEffect(() => {
     if (tenantId.code) {
-      onFilterChange({ tenantId: tenantId.code })
+      setSearchParams({ tenantId: tenantId.code });
     }
   }, [tenantId]);
 
   useEffect(() => {
     if (departments) {
-      onFilterChange({ designations: departments.code })
+      setSearchParams({ designations: departments.code });
     }
-  }, [departments])
+  }, [departments]);
 
   useEffect(() => {
     if (roles) {
-      onFilterChange({ roles: roles.code })
+      setSearchParams({ roles: roles.code });
     }
-  }, [roles])
+  }, [roles]);
 
   useEffect(() => {
     if (isActive) {
-      onFilterChange({ isActive: isActive.code })
+      setSearchParams({ isActive: isActive.code });
     }
-
-  }, [isActive])
+  }, [isActive]);
   const clearAll = () => {
+    console.log(tenantId);
     onFilterChange({ delete: Object.keys(searchParams) });
-    settenantId({ code: Digit.ULBService.getCurrentTenantId() });
+    settenantId(tenantIds.filter((ele) => ele.code == Digit.ULBService.getCurrentTenantId())[0]);
     setDepartments(null);
     setRoles(null);
+    setIsactive(null);
     props?.onClose?.();
   };
   return (
@@ -100,11 +103,17 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
                 selectedOption={isActive}
                 optionsKey="name"
                 options={[
-                  { code: true, name: t("HR_ACTIVATE_EMPLOYEE_LABEL") },
-                  { code: false, name: t("HR_DEACTIVATE_EMPLOYEE_LABEL") },
+                  { code: true, name: t("HR_ACTIVATE_LABEL") },
+                  { code: false, name: t("HR_DEACTIVATE_LABEL") },
                 ]}
               />
-              <div></div>
+              <div>
+                <SubmitBar
+                  // disabled={_.isEqual(_searchParams, searchParams)}
+                  onSubmit={() => onFilterChange(_searchParams)}
+                  label={t("ES_COMMON_APPLY")}
+                />
+              </div>
             </div>
           </div>
         </div>

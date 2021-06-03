@@ -1,50 +1,39 @@
 import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import DesktopInbox from "../components/DesktopInbox";
-import MobileInbox from "../../../mCollect/src/components/MobileInbox";
+import DesktopInbox from "../components/inbox/DesktopInbox";
+import MobileInbox from "../components/inbox/MobileInbox";
 
-const Inbox = ({
-  parentRoute,
-  businessService = "HRMS",
-  initialStates = {},
-  filterComponent,
-  isInbox,
-}) => {
+const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filterComponent, isInbox }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
-
+  const [totalRecords, setTotalReacords] = useState(0);
   const [searchParams, setSearchParams] = useState(() => {
     return initialStates.searchParams || {};
   });
 
-  let isMobile = window.Digit.Utils.browser.isMobile();
+  let isMobile = false;
   let paginationParams = isMobile
-    ? { limit: 100, offset: 0, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
-    : { limit: pageSize, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
-  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch(
-    searchParams,
-    tenantId,
-    paginationParams
-  );
+    ? { limit: 100, offset: pageOffset, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
+    : { limit: pageSize, offset: pageOffset, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
+  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch(searchParams, tenantId, paginationParams);
 
   useEffect(() => {
-    //     console.log(Digit)
-    // Digit.HRMSService.count(tenantId).then(ele=>{
-    //   console.log(ele)
-    // })
+    console.log("Digit", tenantId);
+    Digit.HRMSService.count(tenantId).then((ele) => {
+      console.log(ele);
+      setTotalReacords(ele?.EmployeCount?.totalEmployee);
+    });
   }, []);
 
+  useEffect(() => {}, [hookLoading, rest]);
 
   useEffect(() => {
-    console.log("data from the hook", hookLoading, rest, data);
-  }, [hookLoading, rest]);
-
-  useEffect(() => {
+    console.log("functioncallaed");
     setPageOffset(0);
   }, [searchParams]);
 
@@ -61,7 +50,7 @@ const Inbox = ({
     let _new = { ...searchParams, ...filterParam };
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     filterParam.delete;
-    delete _new.delete
+    delete _new.delete;
     setSearchParams({ ..._new });
   };
 
@@ -98,18 +87,25 @@ const Inbox = ({
     if (isMobile) {
       return (
         <MobileInbox
+          businessService={businessService}
           data={data}
           isLoading={hookLoading}
+          defaultSearchParams={initialStates.searchParams}
           isSearch={!isInbox}
-          searchFields={getSearchFields()}
           onFilterChange={handleFilterChange}
+          searchFields={getSearchFields()}
           onSearch={handleFilterChange}
           onSort={handleSort}
+          onNextPage={fetchNextPage}
+          onPrevPage={fetchPrevPage}
+          currentPage={Math.floor(pageOffset / pageSize)}
+          pageSizeLimit={pageSize}
+          disableSort={false}
+          onPageSizeChange={handlePageSizeChange}
           parentRoute={parentRoute}
           searchParams={searchParams}
           sortParams={sortParams}
-          linkPrefix={`${parentRoute}/application-details/`}
-          tableConfig={rest?.tableConfig}
+          totalRecords={totalRecords}
           filterComponent={filterComponent}
         />
         // <div></div>
@@ -137,7 +133,7 @@ const Inbox = ({
             parentRoute={parentRoute}
             searchParams={searchParams}
             sortParams={sortParams}
-            totalRecords={Number(data?.[0]?.totalCount)}
+            totalRecords={totalRecords}
             filterComponent={filterComponent}
           />
         </div>

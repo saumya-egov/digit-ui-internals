@@ -1,11 +1,11 @@
-import React, { Fragment, useMemo, useState, useRef } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useReactToPrint } from "react-to-print";
-import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon } from "@egovernments/digit-ui-react-components";
-import { startOfYear, endOfYear, getTime, format, addMonths } from "date-fns";
+import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import { startOfYear, endOfYear, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
+import { useParams } from "react-router-dom";
 
 const getInitialRange = () => {
   const startDate = addMonths(startOfYear(new Date()), 3);
@@ -15,7 +15,7 @@ const getInitialRange = () => {
   return { startDate, endDate, title, duration };
 };
 
-const DashBoard = () => {
+const DashBoard = ({ stateCode }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [filters, setFilters] = useState((data) => ({
@@ -31,48 +31,66 @@ const DashBoard = () => {
       tenantId: data?.filters?.tenantId || [],
     },
   }));
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const { moduleCode } = useParams();
+
+  const language = Digit.SessionStorage.get("locale") || "en_IN";
+
+  const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
+  const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
+  const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
+  const fullPageRef = useRef();
   const provided = useMemo(
     () => ({
       value: filters,
       setValue: setFilters,
+      ulbTenants,
     }),
-    [filters]
+    [filters, isUlbLoading]
   );
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const stateCode = tenantId.split(".")[0];
-  const moduleCode = "fsm";
-  // const moduleCode = "propertytax";
-  const mdmsType = "dss-dashboard";
-  // const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
-  const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
-  const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
-  const { data: ulbTenants } = Digit.Hooks.useModuleTenants("FSM");
-  const fullPageRef = useRef();
+  const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
 
-  const handlePrint = useReactToPrint({
-    content: () => fullPageRef.current,
-  });
+  const removeULB = (id) => {
+    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } });
+  };
 
-  if (isLoading) {
+  const handleClear = () => {
+    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
+  };
+
+  if (isLoading || isUlbLoading || localizationLoading) {
     return <Loader />;
   }
 
   const dashboardConfig = response?.responseData;
   return (
     <FilterContext.Provider value={provided}>
-      <div className="chart-wrapper" ref={fullPageRef}>
+      <div ref={fullPageRef}>
         <div className="options">
-          <div className="mrlg">
-            <ShareIcon className="mrsm" />
-            {t(`ES_DSS_SHARE`)}
-          </div>
-          <div className="mrsm" onClick={handlePrint}>
-            <DownloadIcon className="mrsm" />
-            {t(`ES_DSS_DOWNLOAD`)}
+          <Header styles={{ marginBottom: "0px" }}>{t(dashboardConfig?.[0]?.name)}</Header>
+          <div>
+            <div className="mrlg">
+              <ShareIcon className="mrsm" />
+              {t(`ES_DSS_SHARE`)}
+            </div>
+            <div className="mrsm" onClick={handlePrint}>
+              <DownloadIcon className="mrsm" />
+              {t(`ES_DSS_DOWNLOAD`)}
+            </div>
           </div>
         </div>
-        <Header>{t(dashboardConfig?.[0]?.name)}</Header>
         <Filters t={t} ulbTenants={ulbTenants} isOpen={isFilterModalOpen} closeFilters={() => setIsFilterModalOpen(false)} />
+        {filters?.filters?.tenantId.length > 0 && (
+          <div className="tag-container">
+            {filters?.filters?.tenantId?.map((filter, id) => (
+              <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+            ))}
+            <p className="clearText" onClick={handleClear}>
+              {t(`DSS_FILTER_CLEAR`)}
+            </p>
+          </div>
+        )}
         <div className="options-m">
           <div>
             <FilterIcon onClick={() => setIsFilterModalOpen(!isFilterModalOpen)} style />
@@ -87,7 +105,6 @@ const DashBoard = () => {
           </div>
         </div>
         {dashboardConfig?.[0]?.visualizations.map((row, key) => {
-          if (row.row === 4) return null;
           return <Layout rowData={row} key={key} />;
         })}
       </div>

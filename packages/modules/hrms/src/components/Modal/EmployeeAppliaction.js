@@ -39,7 +39,7 @@ export const configEmployeeApplication = ({ t, action, selectFile, uploadedFile,
                     {
                         label: t("HR_APPROVAL_UPLOAD_HEAD"),
                         populators: (
-                            <div>
+                            <div style={{marginBottom:'2rem'}}>
                         <span>{t("TL_APPROVAL_UPLOAD_SUBHEAD")}</span>
                             <UploadFile
                                 accept="image/*, .pdf, .png, .jpeg"

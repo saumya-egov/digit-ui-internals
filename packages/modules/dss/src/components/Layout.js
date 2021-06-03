@@ -1,9 +1,11 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import CustomAreaChart from "./CustomAreaChart";
 import CustomBarChart from "./CustomBarChart";
 import CustomHorizontalBarChart from "./CustomHorizontalBarChart";
 import CustomPieChart from "./CustomPieChart";
 import CustomTable from "./CustomTable";
+import FilterContext from "./FilterContext";
 import GenericChart from "./GenericChart";
 import MetricChart from "./MetricChart";
 import Summary from "./Summary";
@@ -11,20 +13,33 @@ import Summary from "./Summary";
 let index = 1;
 
 const Layout = ({ rowData }) => {
+  const { t } = useTranslation();
+  const { value } = useContext(FilterContext);
   const [searchQuery, onSearch] = useState();
 
-  const renderChart = (chart, key) => {
+  const renderChart = (chart, title) => {
     switch (chart.chartType) {
       case "table":
-        return <CustomTable data={chart} key={key} onSearch={searchQuery} />;
+        return <CustomTable data={chart} onSearch={searchQuery} title={title} />;
       case "donut":
-        return <CustomPieChart data={chart} key={key} />;
+        return <CustomPieChart data={chart} title={title} />;
       case "line":
-        return <CustomAreaChart data={chart} />;
+        return <CustomAreaChart data={chart} title={title} />;
       case "horizontalBar":
-        return <CustomHorizontalBarChart data={chart} />;
+        return (
+          <CustomHorizontalBarChart
+            data={chart}
+            xAxisType="number"
+            yAxisType="category"
+            layout="vertical"
+            yDataKey="name"
+            xDataKey=""
+            showDrillDown={true}
+            title={title}
+          />
+        );
       case "bar":
-        return <CustomHorizontalBarChart data={chart} />;
+        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={`${t("DSS_WASTE_RECIEVED")} ${t(`DSS_WASTE_UNIT`)}`} />;
     }
   };
 
@@ -32,13 +47,19 @@ const Layout = ({ rowData }) => {
     switch (visualizer.vizType) {
       case "metric-collection":
         return (
-          <GenericChart header={visualizer.name} className="metricsTable">
+          <GenericChart header={visualizer.name} className="metricsTable" key={key}>
             <MetricChart data={visualizer} />
           </GenericChart>
         );
       case "chart":
+        if (
+          value?.filters?.tenantId?.length === 0 &&
+          (visualizer?.charts?.[0].id === "fsmTopDsoByPerformance" || visualizer?.charts?.[0].id === "fsmBottomDsoByPerformance")
+        )
+          return null;
         return (
           <GenericChart
+            key={key}
             header={visualizer.name}
             showDownload={visualizer?.charts?.[0].chartType === "table"}
             showSearch={visualizer?.charts?.[0].chartType === "table"}
@@ -46,18 +67,23 @@ const Layout = ({ rowData }) => {
             onChange={(e) => onSearch(e.target.value)}
           >
             {/* {visualizer.charts.map((chart, key) => renderChart(chart, key))} */}
-            {renderChart(visualizer?.charts?.[0])}
+            {renderChart(visualizer?.charts?.[0], visualizer.name)}
           </GenericChart>
         );
       case "performing-metric":
         return (
-          <GenericChart header={visualizer.name}>
-            <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} />
+          <GenericChart header={visualizer.name} key={key}>
+            <CustomBarChart
+              data={visualizer?.charts?.[0]}
+              fillColor={index++ % 2 ? "#00703C" : "#D4351C"}
+              title={visualizer.name}
+              showDrillDown={true}
+            />
           </GenericChart>
         );
       case "collection":
       case "module":
-        return <Summary key={key} ttile={visualizer.name} data={visualizer} />;
+        return <Summary key={key} ttile={visualizer.name} data={visualizer} key={key} />;
     }
   };
   return <div className="chart-row">{rowData.vizArray.map((chart, key) => renderVisualizer(chart, key))}</div>;

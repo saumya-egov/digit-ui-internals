@@ -76,10 +76,12 @@ import useGetChart from "./dss/useGetChart";
 
 import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
+import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
 import usemcollectTenants from "./mcollect/useTenants";
 
 // HRMS
 import useHRMSSearch from "./hrms/useHRMSsearch";
+import useHRMSCount from "./hrms/useHRMSCount";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
 import useHRMSCreate from "./hrms/useHRMScreate";
 import useHRMSUpdate from "./hrms/useHRMSUpdate";
@@ -149,6 +151,7 @@ const dss = {
 const mcollect = {
   useMCollectMDMS,
   useMCollectSearch,
+  useMcollectSearchBill,
   usemcollectTenants,
 };
 
@@ -156,7 +159,8 @@ const hrms = {
   useHRMSSearch,
   useHrmsMDMS,
   useHRMSCreate,
-  useHRMSUpdate
+  useHRMSUpdate,
+  useHRMSCount,
 };
 
 const Hooks = {

@@ -31,7 +31,7 @@ const HrmsService = {
             userService: true,
             params: { tenantId },
         }),
-    count: ({ tenantId }) =>
+    count: ( tenantId ) =>
         Request({
             url: Urls.hrms.count,
             useCache: false,

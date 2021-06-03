@@ -3,9 +3,14 @@ import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 import Routes from "./routes";
 // import { myBillMap } from "./myBillsKeysMap";
 
-export const MyBills = ({ ...props }) => {
+export const MyBills = ({ stateCode }) => {
   const { businessService } = useParams();
 
+  const { isLoading: storeLoading, data: store } = Digit.Services.useStore({
+    stateCode,
+    moduleCode: businessService,
+    language: Digit.SessionStorage.get("locale") || "en_IN",
+  });
   const history = useHistory();
   const { url } = useRouteMatch();
 

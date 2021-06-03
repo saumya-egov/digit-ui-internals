@@ -46,7 +46,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
     const mobileViewStyles = mobileView ? { margin: 0 } : {};
     return (
       <LinkLabel style={{ display: "inline", ...mobileViewStyles }} onClick={clearSearch}>
-        {t("ES_COMMON_CLEAR_SEARCH")}
+        {t("UC_CLEAR_SEARCH_LABEL")}
       </LinkLabel>
     );
   };
@@ -71,7 +71,14 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                   <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
                     <Label>{input.label}</Label>
                     {input.type !== "date" ? (
-                      <TextInput {...input} inputRef={register} watch={watch} shouldUpdate={true} />
+                      <div className="field-container">
+                        {input?.componentInFront ? (
+                          <span className="citizen-card-input citizen-card-input--front" style={{ flex: "none" }}>
+                            {input?.componentInFront}
+                          </span>
+                        ) : null}
+                        <TextInput {...input} inputRef={register} watch={watch} shouldUpdate={true} />
+                      </div>
                     ) : (
                       <Controller
                         render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
@@ -82,9 +89,13 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                     )}{" "}
                   </span>
                 ))}
-              {type === "desktop" && !mobileView && <SubmitBar className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />}
+              {type === "desktop" && !mobileView && <SubmitBar className="submit-bar-search" label={t("UC_SEARCH_LABEL")} submit />}
             </div>
-            {type === "desktop" && !mobileView && <span className="clear-search">{clearAll()}</span>}
+            {type === "desktop" && !mobileView && (
+              <span style={{ display: "flex", justifyContent: "flex-end" }} className="clear-search">
+                {clearAll()}
+              </span>
+            )}
           </div>
         </div>
         {(type === "mobile" || mobileView) && (
@@ -92,7 +103,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
             <button className="clear-search" style={{ flex: 1 }}>
               {clearAll(mobileView)}
             </button>
-            <SubmitBar label={t("ES_COMMON_SEARCH")} style={{ flex: 1 }} submit={true} />
+            <SubmitBar label={t("UC_SEARCH_LABEL")} style={{ flex: 1 }} submit={true} />
           </ActionBar>
         )}
       </React.Fragment>

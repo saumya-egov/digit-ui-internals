@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import PropertyDocuments from "./PropertyDocuments";
 import PropertyFloors from "./PropertyFloors";
 import PropertyEstimates from "./PropertyEstimates";
+import PropertyOwners from "./PropertyOwners";
 
 function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService }) {
   const { t } = useTranslation();
@@ -72,6 +73,10 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
     }
   };
 
+  console.log(
+    applicationDetails?.applicationDetails?.filter((detail) => detail.title === "PT_OWNERSHIP_INFO_SUB_HEADER"),
+    "inside details"
+  );
   return (
     <Card style={{ position: "relative" }}>
       {applicationDetails?.applicationDetails?.map((detail, index) => (
@@ -99,6 +104,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
             })}
           </StatusTable>
           {detail?.additionalDetails?.floors && <PropertyFloors floors={detail?.additionalDetails?.floors} />}
+          {detail?.additionalDetails?.owners && <PropertyOwners owners={detail?.additionalDetails?.owners} />}
           {detail?.additionalDetails?.documents && <PropertyDocuments documents={detail?.additionalDetails?.documents} />}
           {detail?.additionalDetails?.taxHeadEstimatesCalculation && (
             <PropertyEstimates taxHeadEstimatesCalculation={detail?.additionalDetails?.taxHeadEstimatesCalculation} />

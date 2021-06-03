@@ -16,82 +16,88 @@ export const PTSearch = {
 
     const employeeResponse = [
       {
-        title: "ES_APPLICATION_DETAILS_PROPERTY_ADDRESS",
+        title: "PT_PROPERTY_ADDRESS_SUB_HEADER",
         values: [
           { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: response?.address?.pincode },
-          { title: "ES_APPLICATION_DETAILS_LOCATION_CITY", value: response?.address?.city },
+          { title: "PT_PROPERTY_ADDRESS_CITY", value: response?.address?.city },
           {
-            title: "ES_APPLICATION_DETAILS_LOCATION_LOCALITY",
+            title: "PT_PROPERTY_ADDRESS_MOHALLA",
             value: `${response?.tenantId?.toUpperCase()?.split(".")?.join("_")}_REVENUE_${response?.address?.locality?.code}`,
           },
-          { title: "ES_APPLICATION_DETAILS_LOCATION_STREET_NAME", value: response?.address?.street },
-          { title: "ES_APPLICATION_DETAILS_LOCATION_BUILDING_NUMBER", value: response?.address?.buildingName },
+          { title: "PT_PROPERTY_ADDRESS_STREET_NAME", value: response?.address?.street },
+          { title: "PT_PROPERTY_ADDRESS_HOUSE_NO", value: response?.address?.buildingName },
         ],
       },
       {
-        title: "ES_APPLICATION_DETAILS_PROPERTY_ASSESSMENT_DETAILS",
+        title: "PT_ASSESMENT_INFO_SUB_HEADER",
         values: [
-          { title: "ES_APPLICATION_DETAILS_PROPERTY_USAGE_TYPE", value: getPropertyTypeLocale(response?.propertyType) },
-          { title: "ES_APPLICATION_DETAILS_PROPERTY_TYPE", value: getPropertySubtypeLocale(response?.usageCategory) },
-          { title: "ES_APPLICATION_DETAILS_PROPERTY_PLOT_SIZE", value: response?.superBuiltUpArea },
-          { title: "ES_APPLICATION_DETAILS_PROPERTY_NO_OF_FLOORS", value: response?.noOfFloors },
+          { title: "PT_ASSESMENT_INFO_TYPE_OF_BUILDING", value: getPropertyTypeLocale(response?.propertyType) },
+          { title: "PT_ASSESMENT_INFO_USAGE_TYPE", value: getPropertySubtypeLocale(response?.usageCategory) },
+          { title: "PT_ASSESMENT_INFO_PLOT_SIZE", value: response?.superBuiltUpArea },
+          { title: "PT_ASSESMENT_INFO_NO_OF_FLOOR", value: response?.noOfFloors },
         ],
         additionalDetails: {
-          floors: response?.units?.map((unit, index) => {
-            let floorName = "ES_APPLICATION_DETAILS_GROUND_FLOOR";
-            if (unit?.floorNo === 1) floorName = "ES_APPLICATION_DETAILS_FIRST_FLOOR";
-            if (unit?.floorNo === 2) floorName = "ES_APPLICATION_DETAILS_SECOND_FLOOR";
-            if (unit?.floorNo === 3) floorName = "ES_APPLICATION_DETAILS_THIRD_FLOOR";
-
-            const values = [
-              {
-                title: "ES_APPLICATION_DETAILS_UNIT_USAGE_TYPE",
-                value: unit?.usageCategory,
-              },
-              {
-                title: "ES_APPLICATION_DETAILS_UNIT_OCCUPANCY_TYPE",
-                value: unit?.occupancyType,
-              },
-              {
-                title: "ES_APPLICATION_DETAILS_UNIT_BUILD_UP_AREA",
-                value: unit?.constructionDetail?.builtUpArea,
-              },
-            ];
-
-            return {
-              title: floorName,
-              values: [
+          floors: response?.units
+            ?.sort?.((a, b) => a.floorNo - b.floorNo)
+            ?.map((unit, index) => {
+              let floorName = `PROPERTYTAX_FLOOR_${unit.floorNo}`;
+              const values = [
                 {
-                  title: `${t("ES_APPLICATION_DETAILS_UNIT")} ${index}`,
-                  values,
+                  title: "PT_ASSESSMENT_UNIT_USAGE_TYPE",
+                  value: unit?.usageCategory,
                 },
-              ],
-            };
-          }),
+                {
+                  title: "PT_ASSESMENT_INFO_OCCUPLANCY",
+                  value: unit?.occupancyType,
+                },
+                {
+                  title: "PT_FORM2_BUILT_AREA",
+                  value: unit?.constructionDetail?.builtUpArea,
+                },
+              ];
+
+              return {
+                title: floorName,
+                values: [
+                  {
+                    title: `${t("ES_APPLICATION_DETAILS_UNIT")} ${index + 1}`,
+                    values,
+                  },
+                ],
+              };
+            }),
         },
       },
       {
-        title: "ES_APPLICATION_DETAILS_PROPERTY_OWNERSHIP_DETAILS",
-        values: [
-          { title: "ES_APPLICATION_DETAILS_OWNER_NAME", value: response?.owners[0]?.name },
-          { title: "ES_APPLICATION_DETAILS_GENDER", value: response?.owners[0]?.gender },
-          { title: "ES_APPLICATION_DETAILS_MOBILE_NUMBER", value: response?.owners[0]?.mobileNumber },
-          { title: "ES_APPLICATION_DETAILS_SPECIAL_CATEGORY", value: response?.specialCategory || "NA" },
-          { title: "ES_APPLICATION_DETAILS_GUARDIAN_NAME", value: response?.owners[0]?.name },
-          { title: "ES_APPLICATION_DETAILS_OWNERSHIP_TYPE", value: response?.ownershipCategory },
-          { title: "ES_APPLICATION_DETAILS_EMAIL", value: response?.owners[0]?.emailId },
-          { title: "ES_APPLICATION_DETAILS_CORRESPONDENCE_ADDRESS", value: response?.owners[0]?.permanentAddress },
-        ],
+        title: "PT_OWNERSHIP_INFO_SUB_HEADER",
         additionalDetails: {
+          owners: response?.owners?.map((owner, index) => {
+            console.log(owner, "in details");
+            return {
+              title: "ES_OWNER_" + (index + 1),
+              values: [
+                { title: "PT_OWNERSHIP_INFO_NAME", value: owner?.name },
+                { title: "PT_OWNERSHIP_INFO_GENDER", value: owner?.gender },
+                { title: "PT_OWNERSHIP_INFO_MOBILE_NO", value: owner?.mobileNumber },
+                { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: response?.specialCategory || "NA" },
+                { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.name },
+                { title: "PT_FORM3_OWNERSHIP_TYPE", value: response?.ownershipCategory },
+                { title: "PT_OWNERSHIP_INFO_EMAIL_ID", value: owner?.emailId },
+                { title: "PT_OWNERSHIP_INFO_CORR_ADDR", value: owner?.permanentAddress },
+              ],
+            };
+          }),
           documents: [
             {
-              title: "ES_APPLICATION_DETAILS_DOCUMENTS",
-              values: response?.documents?.map((document) => ({
-                title: "ES_APPLICATION_DETAILS_ADDRESS_PROOF",
-                documentType: document?.documentType,
-                documentUid: document?.documentUid,
-                fileStoreId: document?.fileStoreId,
-              })),
+              title: "PT_COMMON_DOCS",
+              values: response?.documents?.map((document) => {
+                return {
+                  title: `PT_${document?.documentType.replace(".", "_")}`,
+                  documentType: document?.documentType,
+                  documentUid: document?.documentUid,
+                  fileStoreId: document?.fileStoreId,
+                };
+              }),
             },
           ],
         },

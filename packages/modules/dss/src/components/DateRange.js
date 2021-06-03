@@ -7,7 +7,7 @@ function isEndDateFocused(focusNumber) {
   return focusNumber === 1;
 }
 
-const DateRange = ({ values, onFilterChange }) => {
+const DateRange = ({ values, onFilterChange, t }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [focusedRange, setFocusedRange] = useState([0, 0]);
   const [selectionRange, setSelectionRange] = useState({
@@ -22,12 +22,12 @@ const DateRange = ({ values, onFilterChange }) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
         setIsModalOpen(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [wrapperRef])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [wrapperRef]);
 
   const getDuration = (startDate, endDate) => {
     let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
@@ -61,17 +61,17 @@ const DateRange = ({ values, onFilterChange }) => {
     const endDate = selectionRange?.endDate;
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
-    onFilterChange({ range: { startDate, endDate, duration, title } });
+    onFilterChange({ range: { startDate, endDate, duration, title }, requestDate: { startDate, endDate, duration, title } });
     if (isEndDateFocused(focusedRange[1])) {
       setIsModalOpen(false);
     }
   };
   return (
     <>
-      <div>Date Range</div>
+      <div>{t(`ES_DSS_DATE_RANGE`)}</div>
       <div className="employee-select-wrap" ref={wrapperRef}>
         <div className="select">
-          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} />
+          <input className="employee-select-wrap--elipses" type="text" value={values?.title ? `${values?.title}` : ""} readOnly />
           <Calender onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
         {isModalOpen && (
@@ -79,7 +79,7 @@ const DateRange = ({ values, onFilterChange }) => {
             <DateRangePicker
               focusedRange={focusedRange}
               ranges={[values]}
-              rangeColors={["#f47738"]}
+              rangeColors={["#9E9E9E"]}
               onChange={handleSelect}
               onRangeFocusChange={handleFocusChange}
               showSelectionPreview={true}

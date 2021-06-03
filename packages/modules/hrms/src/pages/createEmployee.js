@@ -12,8 +12,6 @@ const CreateEmployee = () => {
 
 
   const onFormValueChange = (setValue, formData) => {
-    console.log(formData?.Assignments)
-
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&

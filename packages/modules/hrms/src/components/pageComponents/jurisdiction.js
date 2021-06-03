@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Dropdown, TextInput, LinkButton } from "@egovernments/digit-ui-react-components";
+import { CardLabel, LabelFieldPair, Dropdown, MultiSelectDropdown, TextInput, LinkButton } from "@egovernments/digit-ui-react-components";
 
 const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [selected, setSelected] = useState([]);
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
   const [jurisdictions, setjurisdictions] = useState(
     formData?.jurisdictions || [
@@ -11,20 +12,19 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         hierarchy: null,
         boundaryType: null,
         boundary: null,
-        roles: null,
+        roles: [],
       },
     ]
   );
 
-
   useEffect(() => {
-    console.log(jurisdictions)
+    console.log(jurisdictions);
     const jurisdictionsData = jurisdictions?.map((jurisdiction) => ({
       hierarchy: jurisdiction?.hierarchy?.code,
       boundaryType: jurisdiction?.boundaryType?.label,
       boundary: jurisdiction?.boundary?.code,
       roles: jurisdiction?.roles,
-      tenantId: jurisdiction?.boundary?.code
+      tenantId: jurisdiction?.boundary?.code,
     }));
     onSelect(config.key, jurisdictionsData);
   }, [jurisdictions]);
@@ -37,7 +37,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         hierarchy: null,
         boundaryType: null,
         boundary: null,
-        roles: null,
+        roles: [],
       },
     ]);
   };
@@ -46,13 +46,12 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const [focusIndex, setFocusIndex] = useState(-1);
 
   function gethierarchylistdata() {
-    return data?.MdmsRes?.["egov-location"]["TenantBoundary"].map(ele => ele.hierarchyType)
+    return data?.MdmsRes?.["egov-location"]["TenantBoundary"].map((ele) => ele.hierarchyType);
   }
 
   function getboundarydata() {
     return [];
   }
-
 
   function getroledata() {
     return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles;
@@ -79,48 +78,51 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
       ))}
       <LinkButton label="Add Jurisdiction" onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
     </div>
-  )
-}
-function Jurisdiction({
-  t,
-  data,
-  jurisdiction,
-  setjurisdictions,
-  gethierarchylistdata,
-  hierarchylist,
-  getroledata,
-  roleoption,
-}) {
-  const [BoundaryType, selectBoundaryType] = useState([])
-  const [Boundary, selectboundary] = useState([])
+  );
+};
+function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylistdata, hierarchylist, getroledata, roleoption }) {
+  const [BoundaryType, selectBoundaryType] = useState([]);
+  const [Boundary, selectboundary] = useState([]);
   useEffect(() => {
-    selectBoundaryType(data?.MdmsRes?.["egov-location"]["TenantBoundary"].filter(ele => ele.hierarchyType == jurisdiction?.hierarchy).map(item => item.boundary))
-  }, [jurisdiction?.hierarchy])
+    selectBoundaryType(
+      data?.MdmsRes?.["egov-location"]["TenantBoundary"].filter((ele) => ele.hierarchyType == jurisdiction?.hierarchy).map((item) => item.boundary)
+    );
+  }, [jurisdiction?.hierarchy]);
 
   useEffect(() => {
-    console.log(data?.MdmsRes?.tenant?.tenants)
-    selectboundary(data?.MdmsRes?.tenant?.tenants)
-
-  }, [jurisdiction?.boundaryType])
+    console.log(data?.MdmsRes?.tenant?.tenants);
+    selectboundary(data?.MdmsRes?.tenant?.tenants);
+  }, [jurisdiction?.boundaryType]);
 
   const selectHierarchy = (value) => {
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, hierarchy: value } : item)));
   };
 
   const selectboundaryType = (value) => {
-    console.log(value)
+    console.log(value);
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundaryType: value } : item)));
   };
 
   const selectedboundary = (value) => {
-    console.log(value)
+    console.log(value);
     console.log("%c 🐑: selectSubUsageType -> value ", "font-size:16px;background-color:#928c29;color:white;", value);
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundary: value } : item)));
   };
-  const selectrole = (value) => {
-    console.log(value)
-    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: value } : item)));
-  }
+  const selectrole = (e, data) => {
+    const index = jurisdiction?.roles.indexOf(data)
+    let res = null;
+    if (index != -1) {
+      console.log(data);
+      jurisdiction?.roles.splice(index, 1)
+      res = jurisdiction.roles;
+    } else {
+      res = [...data, ...jurisdiction?.roles]
+      console.log(data);
+    }
+
+    // if (checked) selectULB(data.code);
+    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
+  };
 
   return (
     <div style={{ marginBottom: "16px" }}>
@@ -169,16 +171,16 @@ function Jurisdiction({
 
         <LabelFieldPair>
           <CardLabel className="card-label-smaller">Roles:</CardLabel>
-
-          <Dropdown
-            className="form-field"
-            selected={jurisdiction?.roles}
-            disable={getroledata(roleoption)?.length === 0}
-            option={getroledata(roleoption)}
-            select={selectrole}
-            optionKey="name"
-            t={t}
-          />
+          <div className="form-field">
+            <MultiSelectDropdown
+              className="form-field"
+              selected={jurisdiction?.roles}
+              options={getroledata(roleoption)}
+              onSelect={selectrole}
+              optionsKey="name"
+              t={t}
+            />
+          </div>
         </LabelFieldPair>
       </div>
     </div>

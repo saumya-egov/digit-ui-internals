@@ -10,8 +10,11 @@ const ArrowRight = ({ to }) => (
 );
 
 const HRMSCard = () => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  console.log(tenantId)
   const { t } = useTranslation();
   // TODO: should be fetch
+  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
   const total = 1;
 
   return (
@@ -27,18 +30,18 @@ const HRMSCard = () => {
           <div className="flex-fit">
             <div>
               <div>
-                <span className="inbox-total">{" " + total || "-"}</span>
+                <span className="inbox-total">{" " + data?.EmployeCount?.totalEmployee || "-"}</span>
               </div>
               <div>
-                <Link>{t("TOTAL_EMPLOYEES")}</Link>
+                <Link to={`/digit-ui/employee/hrms/inbox`}>{t("TOTAL_EMPLOYEES")}</Link>
               </div>
             </div>
             <div>
               <div>
-                <span className="inbox-total">{" " + total || "-"}</span>
+                <span className="inbox-total">{" " + data?.EmployeCount?.activeEmployee || "-"}</span>
               </div>
               <div>
-              <Link >{t("ACTIVE_EMPLOYEES")}</Link>
+                <Link to={`/digit-ui/employee/hrms/inbox`} >{t("ACTIVE_EMPLOYEES")}</Link>
               </div>
             </div>
           </div>
