@@ -49,7 +49,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
   subusageoption = Menu?.PropertyTax?.UsageCategory || [];
 
   let occupencyOptions = [];
-  occupencyOptions = Menu?.PropertyTax?.OccupancyType.map((e) => ({ i18nKey: `PT_${e?.code}`, ...e })) || [];
+  occupencyOptions = Menu?.PropertyTax?.OccupancyType.map((e) => ({ i18nKey: `PROPERTYTAX_OCCUPANCYTYPE_${e?.code}`, ...e })) || [];
 
   let floorListData = [];
   function getfloorlistdata(floorlist) {
@@ -310,7 +310,7 @@ function Unit({
       }
     }
 
-    console.log(formValue, "on units fromvalue change");
+    // console.log(formValue, "on units fromvalue change");
 
     if (Object.keys(localFormState.errors).length && !formState?.errors?.units) {
       setError("units", { type: `${unit.key}`, message: Object.keys(localFormState.errors).join() });
@@ -336,7 +336,7 @@ function Unit({
           </div>
         ) : null}
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">Floor Number:</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_SELECT_FLOOR")}</CardLabel>
           <Controller
             name="floorNo"
             defaultValue={unit.floorNo}
@@ -370,7 +370,7 @@ function Unit({
         </LabelFieldPair>
 
         <LabelFieldPair style={["RESIDENTIAL"].includes(usageType?.code) ? { display: "none" } : {}}>
-          <CardLabel className="card-label-smaller">Unit Sub Usage:</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_USAGE_TYPE")}</CardLabel>
           <Controller
             name="usageCategory"
             defaultValue={subUsageCategoryMenu(usageType)?.filter((e) => e?.code === unit.existingUsageCategory)[0]}
@@ -394,7 +394,7 @@ function Unit({
         ) : null}
 
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">Unit Occupancy Type:</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_OCCUPANCY")}</CardLabel>
           <Controller
             name="occupancyType"
             defaultValue={unit?.occupancyType}
@@ -418,7 +418,7 @@ function Unit({
         {formValue.occupancyType?.code === "RENTED" ? (
           <React.Fragment>
             <LabelFieldPair>
-              <CardLabel className="card-label-smaller">Annual Rent:</CardLabel>
+              <CardLabel className="card-label-smaller">{t("PT_FORM2_TOTAL_ANNUAL_RENT")}</CardLabel>
               <div className="field">
                 <Controller
                   name="arv"
@@ -444,7 +444,7 @@ function Unit({
           </React.Fragment>
         ) : null}
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">Unit Build Up Area</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_BUILT_AREA")}</CardLabel>
           <div className="field">
             <Controller
               name="builtUpArea"
