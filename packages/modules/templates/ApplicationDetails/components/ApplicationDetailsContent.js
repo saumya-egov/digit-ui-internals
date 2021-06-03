@@ -73,10 +73,6 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
     }
   };
 
-  console.log(
-    applicationDetails?.applicationDetails?.filter((detail) => detail.title === "PT_OWNERSHIP_INFO_SUB_HEADER"),
-    "inside details"
-  );
   return (
     <Card style={{ position: "relative" }}>
       {applicationDetails?.applicationDetails?.map((detail, index) => (
