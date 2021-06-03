@@ -16,7 +16,7 @@ function ApplicationDetailsActionBar({ workflowDetails, displayMenu, onActionSel
               onSelect={onActionSelect}
             />
           ) : null}
-          <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+          <SubmitBar label={t(businessService === "PT" ? "WF_TAKE_ACTION" : "ES_FSM")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>
       )}
     </React.Fragment>
