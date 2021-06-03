@@ -3,6 +3,7 @@ import { Card, Banner, CardText, SubmitBar, Loader, LinkButton, Toast, ActionBar
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
+import getPTAcknowledgementData from "../getPTAcknowledgementData";
 
 const GetMessage = (type, action, isSuccess, isEmployee, t) => {
   return t(`${isEmployee ? "E" : "C"}S_PT_RESPONSE_${action ? action : "CREATE"}_${type}${isSuccess ? "" : "_ERROR"}`);
@@ -46,6 +47,8 @@ const Response = (props) => {
 
   const mutation = state.key === "UPDATE" ? Digit.Hooks.pt.usePropertyAPI(tenantId, false) : Digit.Hooks.pt.usePropertyAPI(tenantId);
 
+  const coreData = Digit.Hooks.useCoreData();
+
   useEffect(() => {
     const onSuccess = () => {
       queryClient.clear();
@@ -66,6 +69,14 @@ const Response = (props) => {
     );
   }, []);
 
+  const handleDownloadPdf = async () => {
+    const { Properties = [] } = mutation.data;
+    const Property = (Properties && Properties[0]) || {};
+    const tenantInfo = coreData.tenants.find((tenant) => tenant.code === Property.tenantId);
+    const data = await getPTAcknowledgementData({ ...Property }, tenantInfo, t);
+    Digit.Utils.pdf.generate(data);
+  };
+
   if (mutation.isLoading || mutation.isIdle) {
     return <Loader />;
   }
@@ -83,6 +94,7 @@ const Response = (props) => {
         />
         <CardText>{DisplayText(state.action, mutation.isSuccess, props.parentRoute.includes("employee"), t)}</CardText>
       </Card>
+      {mutation.isSuccess && <SubmitBar label={t("PT_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
       {showToast && <Toast error={showToast.key === "error" ? true : false} label={error} onClose={closeToast} />}
       <ActionBar>
         <Link to={`${props.parentRoute.includes("employee") ? "/digit-ui/employee" : "/digit-ui/citizen"}`}>
