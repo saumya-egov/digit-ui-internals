@@ -9,10 +9,9 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
     {
       label: "HR_APPOINTMENT_DATE_LABEL",
       type: "date",
-      name: "dateofemployment",
+      name: "dateOfAppointment",
       validation: {
         isRequired: true,
-        pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$",
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
       isMandatory: true,
@@ -20,6 +19,7 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
   ];
 
   function setValue(value, input) {
+    console.log(config.key, { ...formData[config.key], [input]: value })
     onSelect(config.key, { ...formData[config.key], [input]: value });
     console.log("find value here", value, input, formData);
   }
@@ -37,8 +37,8 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
             <div className="field">
               <DatePicker
                 key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : null}
-                onChange={(e) => setValue(e.target, input.name)}
+                date={formData && formData[config.key] ? formData[config.key][input.name] : null}
+                onChange={(e) => setValue(e, input.name)}
                 disable={false}
                 {...input.validation}
               />

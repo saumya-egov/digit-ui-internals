@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import ApplicationTable from "../../../pgr/src/components/inbox/ComplaintTable";
+import ApplicationTable from "../inbox/ApplicationTable";
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
-
+import InboxLinks from "../inbox/ApplicationLinks"
+import { SearchApplication } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 
 const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
@@ -113,7 +114,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
             allLinks={[
               {
                 text: "HR_COMMON_CREATE_EMPLOYEE_HEADER",
-                link: "/digit-ui/employee/pt/new-application",
+                link: "/digit-ui/employee/hrms/create",
                 businessService: "hrms",
                 roles: ["HRMS_ADMIN"],
               },

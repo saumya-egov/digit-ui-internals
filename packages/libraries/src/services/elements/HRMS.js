@@ -11,6 +11,26 @@ const HrmsService = {
             userService: true,
             params: { tenantId, ...filters, ...searchParams },
         }),
+    create: (data, tenantId) =>
+        Request({
+            data: data,
+            url: Urls.hrms.create,
+            useCache: false,
+            method: "POST",
+            auth: true,
+            userService: true,
+            params: { tenantId },
+        }),
+    update: (data, tenantId) =>
+        Request({
+            data: data,
+            url: Urls.hrms.update,
+            useCache: false,
+            method: "POST",
+            auth: true,
+            userService: true,
+            params: { tenantId },
+        }),
     count: ({ tenantId }) =>
         Request({
             url: Urls.hrms.count,

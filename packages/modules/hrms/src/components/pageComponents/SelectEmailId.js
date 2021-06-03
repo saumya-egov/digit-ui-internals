@@ -8,11 +8,10 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
   const inputs = [
     {
       label: "HR_EMAIL_LABEL",
-      type: "text",
-      name: "employeeId",
+      type: "email",
+      name: "emailId",
       validation: {
         isRequired: true,
-        pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$",
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
       isMandatory: true,

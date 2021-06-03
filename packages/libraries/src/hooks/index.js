@@ -78,8 +78,11 @@ import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
 import usemcollectTenants from "./mcollect/useTenants";
 
+// HRMS
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
+import useHRMSCreate from "./hrms/useHRMScreate";
+import useHRMSUpdate from "./hrms/useHRMSUpdate";
 
 const pgr = {
   useComplaintDetails,
@@ -152,6 +155,8 @@ const mcollect = {
 const hrms = {
   useHRMSSearch,
   useHrmsMDMS,
+  useHRMSCreate,
+  useHRMSUpdate
 };
 
 const Hooks = {

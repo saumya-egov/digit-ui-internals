@@ -1,15 +1,15 @@
 import React from "react";
-import { LabelFieldPair, CardLabel, TextInput, CardLabelError } from "@egovernments/digit-ui-react-components";
+import { LabelFieldPair, CardLabel, TextInput, CardLabelError, DatePicker } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 
-const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
+const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
   // console.log("find errors here", errors)
   const inputs = [
     {
-      label: "HR_EMP_ID_LABEL",
-      type: "text",
-      name: "code",
+      label: "HR_BIRTH_DATE_LABEL",
+      type: "date",
+      name: "dob",
       validation: {
         isRequired: true,
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
@@ -19,6 +19,7 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
   ];
 
   function setValue(value, input) {
+    console.log(config.key, { ...formData[config.key], [input]: value })
     onSelect(config.key, { ...formData[config.key], [input]: value });
     console.log("find value here", value, input, formData);
   }
@@ -34,10 +35,10 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
               {input.isMandatory ? " * " : null}
             </CardLabel>
             <div className="field">
-              <TextInput
+              <DatePicker
                 key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : null}
-                onChange={(e) => setValue(e.target.value, input.name)}
+                date={formData && formData[config.key] ? formData[config.key][input.name] : null}
+                onChange={(e) => setValue(e, input.name)}
                 disable={false}
                 {...input.validation}
               />
@@ -49,4 +50,4 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
   );
 };
 
-export default SelectEmployeeId;
+export default SelectDateofBirthEmployment;

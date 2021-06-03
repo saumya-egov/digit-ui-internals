@@ -12,7 +12,6 @@ const SelectEmployeeCorrespondenceAddress = ({ t, config, onSelect, formData = {
       name: "correspondenceAddress",
       validation: {
         isRequired: true,
-        pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$",
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
       isMandatory: true,

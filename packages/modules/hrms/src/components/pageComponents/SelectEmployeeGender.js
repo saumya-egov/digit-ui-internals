@@ -12,7 +12,6 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
             name: "gender",
             validation: {
                 isRequired: true,
-                pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$",
                 title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
             },
             isMandatory: true,
@@ -36,6 +35,8 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
                         </CardLabel>
                         <div className="field">
                             <RadioButtons
+                            style={{    display: "flex",
+                                justifyContent: "space-around"}}
                                 options={[
                                     {
                                         code: "MALE",

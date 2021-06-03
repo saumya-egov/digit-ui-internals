@@ -12,7 +12,6 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
       name: "employeeName",
       validation: {
         isRequired: true,
-        pattern: "^[a-zA-Z]+( [a-zA-Z]+)*$",
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
       isMandatory: true,

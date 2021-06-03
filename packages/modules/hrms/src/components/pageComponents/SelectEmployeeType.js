@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { Dropdown, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
@@ -8,14 +8,19 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
 
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
-  const { data: EmployeeTypes = {}, isLoading } = Digit.Hooks.pt.usePropertyMDMS(tenantId, "PropertyTax", "PTPropertyType") || {};
+  const { data: EmployeeTypes = [], isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "EmployeeType") || {};
   const [employeeType, setemployeeType] = useState(formData?.employeeType);
 
+  console.log(EmployeeTypes)
   function SelectEmployeeType(value) {
-    //   console.log(value)
+      console.log(value)
     setemployeeType(value);
-    onSelect(config.key, value);
+
   }
+
+  useEffect(()=>{
+    onSelect(config.key, employeeType);
+  },[employeeType])
   const inputs = [
     {
       label: "HR_EMPLOYMENT_TYPE_LABEL",
@@ -36,9 +41,9 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
           <Dropdown
             className="form-field"
             selected={employeeType}
-            option={EmployeeTypes}
+            option={EmployeeTypes?.["egov-hrms"]?.EmployeeType}
             select={SelectEmployeeType}
-            optionKey="i18nKey"
+            optionKey="code"
             t={t}
           />
         </LabelFieldPair>

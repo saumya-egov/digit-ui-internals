@@ -7,10 +7,11 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
   // console.log("find errors here", errors)
   const inputs = [
     {
-        label: t("UC_MOBILE_NO_LABEL"),
+        label: t("HRMS_MOBILE_NO_LABEL"),
         isMandatory: true,
-        type: "text",
-          name: "mobileNumber",
+        pattern: /^[6-9]\d{9}$/,
+        type: "tel",
+        name:"mobileNumber",
           validation: {
             required: true,
             pattern: /^[6-9]\d{9}$/,

@@ -24,7 +24,9 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   })
 
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(
-    tenantId.code
+    tenantId.code,
+    "HRMS",
+    "HRMSRolesandDesignation"
   );
 
   useEffect(() => {

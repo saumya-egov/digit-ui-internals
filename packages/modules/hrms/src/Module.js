@@ -16,6 +16,12 @@ import SelectEmployeeName from "./components/pageComponents/SelectEmployeeName";
 import SelectEmployeeEmailId from "./components/pageComponents/SelectEmailId";
 import SelectEmployeeCorrespondenceAddress from "./components/pageComponents/SelectEmployeeCorrespondenceAddress";
 import SelectEmployeeGender from "./components/pageComponents/SelectEmployeeGender";
+import SelectDateofBirthEmployment from "./components/pageComponents/EmployeeDOB"
+import Response from "./pages/Response";
+import { InfoBanner } from "@egovernments/digit-ui-react-components";
+import Banner from "./components/pageComponents/Banner";
+import Details from "./pages/EmployeeDetails";
+import ActionModal from "./components/Modal";
 
 export const HRMSModule = ({ userType, tenants }) => {
   const mobileView = innerWidth <= 640;
@@ -48,16 +54,19 @@ export const HRMSModule = ({ userType, tenants }) => {
           <PrivateRoute
             path={`${path}/inbox`}
             component={() => (
-              <Inbox
-                parentRoute={path}
-                businessService="hrms"
-                filterComponent="HRMS_INBOX_FILTER"
-                initialStates={inboxInitialState}
-                isInbox={true}
-              />
+              <h5>hello</h5>
+              // <Inbox
+              //   parentRoute={path}
+              //   businessService="hrms"
+              //   filterComponent="HRMS_INBOX_FILTER"
+              //   initialStates={inboxInitialState}
+              //   isInbox={true}
+              // />
             )}
           />
+          <PrivateRoute path={`${path}/response`} component={(props)=><Response {...props} parentRoute={path} />}/>
           <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
+          <PrivateRoute path={`${path}/details/:id`} component={() => <Details />} />
         </div>
       </React.Fragment>
     </Switch>);
@@ -67,16 +76,21 @@ export const HRMSModule = ({ userType, tenants }) => {
 
 const componentsToRegister = {
   HRMSCard,
+  Details,
   SelectEmployeeEmailId,
   SelectEmployeeName,
   SelectEmployeeId,
   Jurisdictions,
   Assignments,
+  InfoBanner,
+  ActionModal,
+  Banner,
   SelectEmployeePhoneNumber,
   SelectDateofEmployment,
   SelectEmployeeType,
   SelectEmployeeCorrespondenceAddress,
   SelectEmployeeGender,
+  SelectDateofBirthEmployment,
   HRMSModule,
   HRMS_INBOX_FILTER: (props) => <InboxFilter {...props} />,
 };

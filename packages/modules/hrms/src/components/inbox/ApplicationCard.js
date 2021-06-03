@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { Card, DetailsCard, Loader, PopUp, SearchAction } from "@egovernments/digit-ui-react-components";
 import { FilterAction } from "@egovernments/digit-ui-react-components";
+import Filter from "../InboxFilter";
 import SearchApplication from "./search";
-// import SortBy from "./SortBy";
 
 export const ApplicationCard = ({
   t,
@@ -20,16 +20,23 @@ export const ApplicationCard = ({
   sortParams,
   linkPrefix,
   removeParam,
-  filterComponent,
-  label
 }) => {
   const [type, setType] = useState(isSearch ? "SEARCH" : "");
   const [popup, setPopup] = useState(isSearch ? true : false);
+  const [params, setParams] = useState(searchParams);
   const [_sortparams, setSortParams] = useState(sortParams);
-  const [FilterComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
 
-  const onSearchFilter = (params) => {
-    onFilterChange(params);
+  const selectParams = (param) => {
+    setParams((o) => ({ ...o, ...param }));
+  };
+
+  const clearParam = () => {
+    setParams({});
+  };
+
+  const onSearchPara = (param) => {
+    onFilterChange({ ...params, ...param });
+    setType("");
     setPopup(false);
   };
 
@@ -37,10 +44,20 @@ export const ApplicationCard = ({
     if (type) setPopup(true);
   }, [type]);
 
+  const DSO = Digit.UserService.hasAccess(["FSM_DSO"]) || false;
+
   const handlePopupClose = () => {
     setPopup(false);
     setType("");
+    setParams(searchParams);
     setSortParams(sortParams);
+  };
+
+  const onSearchSortParams = (d) => {
+    setSortParams(d);
+    setPopup(false);
+    setType("");
+    onSort(d);
   };
 
   if (isLoading) {
@@ -51,7 +68,7 @@ export const ApplicationCard = ({
   if (!data || data?.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
-        {t(label)
+        {t("CS_MYAPPLICATIONS_NO_APPLICATION")
           .split("\\n")
           .map((text, index) => (
             <p key={index} style={{ textAlign: "center" }}>
@@ -61,7 +78,13 @@ export const ApplicationCard = ({
       </Card>
     );
   } else if (data && data?.length > 0) {
-    result = <DetailsCard data={data} serviceRequestIdKey={serviceRequestIdKey} linkPrefix={linkPrefix} />;
+    result = (
+      <DetailsCard
+        data={data}
+        serviceRequestIdKey={serviceRequestIdKey}
+        linkPrefix={linkPrefix ? linkPrefix : DSO ? "/digit-ui/employee/fsm/application-details/" : "/digit-ui/employee/fsm/"}
+      />
+    );
   }
 
   return (
@@ -98,14 +121,18 @@ export const ApplicationCard = ({
         <PopUp>
           {type === "FILTER" && (
             <div className="popup-module">
-              {<FilterComp onFilterChange={onSearchFilter} Close={handlePopupClose} type="mobile" searchParams={searchParams} />}
+              {
+                <Filter
+                  onFilterChange={selectParams}
+                  onClose={handlePopupClose}
+                  onSearch={onSearchPara}
+                  type="mobile"
+                  searchParams={params}
+                  removeParam={removeParam}
+                />
+              }
             </div>
           )}
-          {/* {type === "SORT" && (
-            <div className="popup-module">
-              {<SortBy type="mobile" sortParams={sortParams} onClose={handlePopupClose} type="mobile" onSort={onSort} />}
-            </div>
-          )} */}
           {type === "SEARCH" && (
             <div className="popup-module">
               <SearchApplication
