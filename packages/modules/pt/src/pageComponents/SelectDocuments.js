@@ -258,18 +258,20 @@ function SelectDocument({
   }
   if (dropDownData?.length === 0) return null;
 
+  console.log(dropDownData, t("OWNER.REGISTRATIONPROOF.GIFTDEED"), "dropdown data");
+
   return (
     <div style={{ marginBottom: "24px" }}>
       {doc?.hasDropdown ? (
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t(doc?.code)}</CardLabel>
+          <CardLabel className="card-label-smaller">{t(doc?.code.replaceAll(".", "_"))}</CardLabel>
           <Dropdown
             className="form-field"
             selected={selectedDocument}
             disable={dropDownData?.length === 0 || enabledActions?.[action].disableDropdown}
-            option={dropDownData}
+            option={dropDownData.map((e) => ({ ...e, i18nKey: e.code?.replaceAll(".", "_") }))}
             select={handleSelectDocument}
-            optionKey="code"
+            optionKey="i18nKey"
             t={t}
           />
         </LabelFieldPair>

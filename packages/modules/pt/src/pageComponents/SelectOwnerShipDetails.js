@@ -122,7 +122,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
   function goNext() {
     let index = window.location.href.charAt(window.location.href.length - 1);
     sessionStorage.setItem("ownershipCategory", ownershipCategory?.value);
-    onSelect(config.key, ownershipCategory, "", index);
+    onSelect(config.key, ownershipCategory, "", index, null, null, { routeKey: ownershipCategory?.value });
   }
 
   useEffect(() => {

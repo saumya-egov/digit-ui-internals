@@ -58,11 +58,11 @@ const ApplicationDetails = () => {
     };
   }
 
-  if (!(applicationDetails?.applicationDetails[0]?.title === "CS_FILE_DESLUDGING_APPLICATION_NO")) {
+  if (!(applicationDetails?.applicationDetails[0]?.title === "PT_PROPERTY_APPLICATION_NO")) {
     applicationDetails?.applicationDetails?.shift();
     applicationDetails?.applicationDetails?.unshift({
       values: [
-        { title: "CS_FILE_DESLUDGING_APPLICATION_NO", value: applicationDetails?.applicationData?.acknowldgementNumber },
+        { title: "PT_PROPERTY_APPLICATION_NO", value: applicationDetails?.applicationData?.acknowldgementNumber },
         { title: "ES_APPLICATION_CHANNEL", value: `ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_${applicationDetails?.applicationData?.channel}` },
       ],
     });
