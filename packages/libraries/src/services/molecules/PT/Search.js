@@ -13,7 +13,7 @@ export const PTSearch = {
   applicationDetails: async (t, tenantId, propertyIds, userType) => {
     const filter = { propertyIds };
     const response = await PTSearch.application(tenantId, filter);
-
+    // console.log(response, "from hook");
     const employeeResponse = [
       {
         title: "PT_PROPERTY_ADDRESS_SUB_HEADER",
@@ -79,7 +79,7 @@ export const PTSearch = {
                 { title: "PT_OWNERSHIP_INFO_NAME", value: owner?.name },
                 { title: "PT_OWNERSHIP_INFO_GENDER", value: owner?.gender },
                 { title: "PT_OWNERSHIP_INFO_MOBILE_NO", value: owner?.mobileNumber },
-                { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: response?.specialCategory || "NA" },
+                { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: `COMMON_MASTERS_OWNERTYPE_${owner?.ownerType}` || "NA" },
                 { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.name },
                 { title: "PT_FORM3_OWNERSHIP_TYPE", value: response?.ownershipCategory },
                 { title: "PT_OWNERSHIP_INFO_EMAIL_ID", value: owner?.emailId },
