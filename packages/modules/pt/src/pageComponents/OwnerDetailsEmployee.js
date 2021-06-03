@@ -244,7 +244,7 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"name"}
                 defaultValue={owner?.name}
-                rules={{ required: "NAME_REQUIRED" }}
+                rules={{ required: "NAME_REQUIRED", validate: { pattern: (val) => (/^[A-Za-z]{1,}$/.test(val) ? true : t("INVALID_NAME")) } }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
@@ -353,7 +353,7 @@ const OwnerForm = (_props) => {
                     control={control}
                     name={"fatherOrHusbandName"}
                     defaultValue={owner?.fatherOrHusbandName}
-                    rules={{ required: "required" }}
+                    rules={{ required: "required", validate: { pattern: (val) => (/^[A-Za-z]{1,}$/.test(val) ? true : t("INVALID_NAME")) } }}
                     render={(props) => (
                       <TextInput
                         value={props.value}
@@ -448,7 +448,7 @@ const OwnerForm = (_props) => {
           {formValue.ownerType?.code && formValue.ownerType?.code !== "NONE" ? (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Document</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_OWNERSHIP_DOCUMENT_TYPE")}</CardLabel>
                 <Controller
                   control={control}
                   name={"documents.documentType"}
@@ -471,7 +471,7 @@ const OwnerForm = (_props) => {
                 {localFormState.touched.documents?.documentType ? errors?.documents?.documentType?.message : ""}
               </CardLabelError>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Document ID</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_OWNERSHIP_DOCUMENT_ID")}</CardLabel>
                 <div className="field">
                   <Controller
                     control={control}
