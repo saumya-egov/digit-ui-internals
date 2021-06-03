@@ -87,16 +87,12 @@ export const PTSearch = {
               ],
             };
           }),
-        },
-
-        additionalDetails: {
           documents: [
             {
               title: "PT_COMMON_DOCS",
               values: response?.documents?.map((document) => {
-                console.log(document, "Application Details");
                 return {
-                  title: "ES_APPLICATION_DETAILS_ADDRESS_PROOF",
+                  title: `PT_${document?.documentType.replace(".", "_")}`,
                   documentType: document?.documentType,
                   documentUid: document?.documentUid,
                   fileStoreId: document?.fileStoreId,
