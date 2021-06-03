@@ -10,14 +10,13 @@ const ServiceCategory = ({ onAssignmentChange, searchParams, businessServices })
   const [moreStatus, showMoreStatus] = useState(false);
   const { data: Menu, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(stateId, "BillingService", "BusinessService", "[?(@.type=='Adhoc')]");
 
-const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
-  if (searcher == "") return str;
-  while (str.includes(searcher)) {
-    str = str.replace(searcher, replaceWith);
-  }
-  return str;
-};
-
+  const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
+    if (searcher == "") return str;
+    while (str.includes(searcher)) {
+      str = str.replace(searcher, replaceWith);
+    }
+    return str;
+  };
 
   const translateState = (option) => {
     let code = stringReplaceAll(option.code, ".", "_");
@@ -29,14 +28,14 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
   let menuFirst = [];
   let meuSecond = [];
   Menu?.map((option, index) => {
-    if(index < 5) menuFirst.push(option);
+    if (index < 5) menuFirst.push(option);
     else meuSecond.push(option);
-  })
+  });
 
   if (isLoading) {
     return <Loader />;
   }
-// translateState(option)
+  // translateState(option)
   return (
     <div className="status-container">
       <div className="filter-label" style={{ fontWeight: "normal" }}>
@@ -66,7 +65,7 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
         })}
       <div className="filter-button" onClick={() => showMoreStatus(!moreStatus)}>
         {" "}
-        {moreStatus ? t("ES_COMMON_LESS") : t("ES_COMMON_MORE")}{" "}
+        {moreStatus ? t("UC_LESS_LABEL") : t("UC_MORE_LABEL")}{" "}
       </div>
     </div>
   );

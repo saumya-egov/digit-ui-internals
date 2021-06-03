@@ -27,10 +27,10 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
     if (userType === "employee") {
       return subusageoption
         ?.map((item) => {
-          if (item?.code.split(".")[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] && item?.code.split(".").length == 4) {
+          const codeArr = item?.code.split(".");
+          if (codeArr[1] == formData?.usageCategoryMajor?.i18nKey.split("_")[3] && codeArr.length == 4) {
             return {
-              i18nKey:
-                "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" + item?.code.split(".")[1] + "_" + item?.code.split(".")[item?.code.split(".").length - 1],
+              i18nKey: "COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_" + codeArr[1] + "_" + codeArr[codeArr.length - 1],
             };
           }
           return { filter: true };
@@ -133,14 +133,23 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
     }
   }
 
-  const inputs = [
-    {
-      label: "PT_ASSESSMENT_FLOW_SUBUSAGE_HEADER",
-      type: "dropdown",
-      name: "subusagetype",
-      validation: {},
-    },
-  ];
+  const [inputs, setInputs] = useState([]);
+
+  useEffect(() => {
+    if (userType === "employee") {
+      const arr = ["RESIDENTIAL", "NONRESIDENTIAL.OTHERS", "MIXED"];
+      if (!arr.includes(formData?.usageCategoryMajor?.code))
+        setInputs([
+          {
+            label: "PT_ASSESSMENT_FLOW_SUBUSAGE_HEADER",
+            type: "dropdown",
+            name: "subusagetype",
+            validation: {},
+          },
+        ]);
+      else setInputs([]);
+    }
+  }, [formData?.usageCategoryMajor?.code]);
 
   useEffect(() => {
     if (userType === "employee") {
@@ -149,6 +158,7 @@ const ProvideSubUsageType = ({ t, config, onSelect, userType, formData }) => {
   }, [SubUsageType]);
 
   if (userType === "employee") {
+    return null;
     return inputs?.map((input, index) => {
       return (
         <LabelFieldPair key={index}>

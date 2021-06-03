@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FormStep, RadioButtons, CardLabel, LabelFieldPair, Dropdown, Loader } from "@egovernments/digit-ui-react-components";
+import { FormStep, RadioButtons, CardLabel, LabelFieldPair, Dropdown, Loader, CardLabelError } from "@egovernments/digit-ui-react-components";
 import { stringReplaceAll } from "../utils";
+import { useLocation } from "react-router-dom";
 
-const PropertyType = ({ t, config, onSelect, userType, formData }) => {
+const PropertyType = ({ t, config, onSelect, userType, formData, setError, clearErrors, formState, onBlur }) => {
   const [BuildingType, setBuildingType] = useState(formData?.PropertyType);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
@@ -14,6 +15,7 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   function getPropertyTypeMenu(proptype) {
     if (userType === "employee") {
       return proptype
+        ?.filter((e) => e.code === "VACANT" || e.code.split(".").length > 1)
         ?.map((item) => ({ i18nKey: "COMMON_PROPTYPE_" + stringReplaceAll(item?.code, ".", "_"), code: item?.code }))
         ?.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
     } else {
@@ -29,6 +31,9 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
     }
   }
 
+  const { pathname } = useLocation();
+  const presentInModifyApplication = pathname.includes("modify");
+
   const onSkip = () => onSelect();
 
   // const propertyOwnerShipCategory = Digit.Hooks.pt.useMDMS("pb", "PropertyTax", "OwnerShipCategory", {});
@@ -42,14 +47,24 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   }
 
   useEffect(() => {
+    if (presentInModifyApplication && userType === "employee" && Menu) {
+      const original = formData?.originalData?.propertyType;
+      const defaultVal = getPropertyTypeMenu(proptype)?.filter((e) => e.code === original)[0];
+      setBuildingType(defaultVal);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
     if (userType === "employee") {
       goNext();
+      if (!BuildingType) setError(config.key, { type: "required", message: `${config.key.toUpperCase()}_REQUIRED` });
+      else clearErrors(config.key);
     }
   }, [BuildingType]);
 
   const inputs = [
     {
-      label: "ES_NEW_APPLICATION_PROPERTY_TYPE",
+      label: "PT_ASSESMENT_INFO_TYPE_OF_BUILDING",
       type: "text",
       name: "propertyType",
       validation: {},
@@ -61,18 +76,26 @@ const PropertyType = ({ t, config, onSelect, userType, formData }) => {
   if (userType === "employee") {
     return inputs?.map((input, index) => {
       return (
-        <LabelFieldPair key={index}>
-          <CardLabel className="card-label-smaller">{t(input.label)}</CardLabel>
-          <Dropdown
-            className="form-field"
-            selected={getPropertyTypeMenu(proptype)?.length === 1 ? getPropertyTypeMenu(proptype)[0] : BuildingType}
-            disable={getPropertyTypeMenu(proptype)?.length === 1}
-            option={getPropertyTypeMenu(proptype)}
-            select={selectBuildingType}
-            optionKey="i18nKey"
-            t={t}
-          />
-        </LabelFieldPair>
+        <React.Fragment key={index}>
+          <LabelFieldPair>
+            <CardLabel className="card-label-smaller">{t(input.label)}</CardLabel>
+            <Dropdown
+              className="form-field"
+              selected={getPropertyTypeMenu(proptype)?.length === 1 ? getPropertyTypeMenu(proptype)[0] : BuildingType}
+              disable={getPropertyTypeMenu(proptype)?.length === 1}
+              option={getPropertyTypeMenu(proptype)}
+              select={selectBuildingType}
+              optionKey="i18nKey"
+              onBlur={onBlur}
+              t={t}
+            />
+          </LabelFieldPair>
+          {formState.touched[config.key] ? (
+            <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
+              {formState.errors?.[config.key]?.message}
+            </CardLabelError>
+          ) : null}
+        </React.Fragment>
       );
     });
   }

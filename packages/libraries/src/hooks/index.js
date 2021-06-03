@@ -80,6 +80,7 @@ import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
 import usemcollectTenants from "./mcollect/useTenants";
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
+import useHRMSCount from "./hrms/useHRMSCount";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
 
 const pgr = {
@@ -154,6 +155,7 @@ const mcollect = {
 const hrms = {
   useHRMSSearch,
   useHrmsMDMS,
+  useHRMSCount,
 };
 
 const Hooks = {

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import EmployeeChallan from "../../EmployeeChallan";
 import CreateChallen from "../employee/CreateChallan";
 import MCollectAcknowledgement from "../employee/EmployeeChallanAcknowledgement";
+import EditChallan from "../employee/EditChallan/index";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -50,12 +51,12 @@ const EmployeeApp = ({ path, url, userType }) => {
   return (
     <Switch>
       <React.Fragment>
-        <div className="ground-container">
+        <div className="ground-container" style={{ padding: "10px 0px 0px 30px" }}>
           <p className="breadcrumb" style={{ marginLeft: mobileView ? "2vw" : "revert" }}>
             <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
               {t("ES_COMMON_HOME")}
             </Link>{" "}
-            / <span>{location.pathname === "/digit-ui/employee/mcollect/inbox" ? t("ES_TITLE_INBOX") : "mCollect"}</span>
+            / <span>{location.pathname === "/digit-ui/employee/mcollect/inbox" ? t("UC_SEARCH_HEADER") : "mCollect"}</span>
           </p>
           <PrivateRoute exact path={`${path}/`} component={() => <MCollectLinks matchPath={path} userType={userType} />} />
           <PrivateRoute
@@ -79,6 +80,7 @@ const EmployeeApp = ({ path, url, userType }) => {
           />
           <PrivateRoute path={`${path}/acknowledgement`} component={() => <MCollectAcknowledgement />} />
           <PrivateRoute path={`${path}/challansearch/:challanno`} component={() => <EmployeeChallan />} />
+          <PrivateRoute path={`${path}/modify-challan/:challanNo`} component={() => <EditChallan />} />{" "}
         </div>
       </React.Fragment>
     </Switch>

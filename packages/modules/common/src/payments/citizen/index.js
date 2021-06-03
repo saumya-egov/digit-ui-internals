@@ -13,7 +13,7 @@ const CitizenPayment = ({ stateCode, cityCode, moduleCode }) => {
     <React.Fragment>
       <Switch>
         <Route path={`${currentPath}/my-bills/:businessService`}>
-          <MyBills />
+          <MyBills stateCode={stateCode} />
         </Route>
         <Route path={`${currentPath}/collect/:businessService/:consumerCode`}>
           <SelectPaymentType {...commonProps} basePath={currentPath} />

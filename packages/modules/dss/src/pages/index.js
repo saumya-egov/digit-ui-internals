@@ -5,6 +5,7 @@ import { startOfYear, endOfYear, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
+import { useParams } from "react-router-dom";
 
 const getInitialRange = () => {
   const startDate = addMonths(startOfYear(new Date()), 3);
@@ -14,7 +15,7 @@ const getInitialRange = () => {
   return { startDate, endDate, title, duration };
 };
 
-const DashBoard = () => {
+const DashBoard = ({ stateCode }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [filters, setFilters] = useState((data) => ({
@@ -30,24 +31,24 @@ const DashBoard = () => {
       tenantId: data?.filters?.tenantId || [],
     },
   }));
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const { moduleCode } = useParams();
+
+  const language = Digit.SessionStorage.get("locale") || "en_IN";
+
+  const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
+  const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
+  const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
+  const fullPageRef = useRef();
   const provided = useMemo(
     () => ({
       value: filters,
       setValue: setFilters,
+      ulbTenants,
     }),
-    [filters]
+    [filters, isUlbLoading]
   );
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const stateCode = tenantId.split(".")[0];
-  const moduleCode = "fsm";
-  // const moduleCode = "propertytax";
-  const mdmsType = "dss-dashboard";
-  // const { data: dashData } = Digit.Hooks.dss.useDSSDashboard(stateCode, mdmsType, moduleCode);
-  const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
-  const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
-  const { data: ulbTenants } = Digit.Hooks.useModuleTenants("FSM");
-  const fullPageRef = useRef();
-
   const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
 
   const removeULB = (id) => {
@@ -58,7 +59,7 @@ const DashBoard = () => {
     setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
   };
 
-  if (isLoading) {
+  if (isLoading || isUlbLoading || localizationLoading) {
     return <Loader />;
   }
 

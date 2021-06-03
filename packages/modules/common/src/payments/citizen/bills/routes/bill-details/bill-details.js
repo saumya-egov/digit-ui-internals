@@ -65,7 +65,14 @@ const BillDetails = ({ paymentRules, businessService }) => {
 
   const onSubmit = () => {
     let paymentAmount = paymentType === t("CS_PAYMENT_FULL_AMOUNT") ? getTotal() : amount;
-    history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}`, { paymentAmount, tenantId: billDetails.tenantId });
+    if (window.location.href.includes("mcollect")) {
+      history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}?workflow=mcollect`, {
+        paymentAmount,
+        tenantId: billDetails.tenantId,
+      });
+    } else {
+      history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}`, { paymentAmount, tenantId: billDetails.tenantId });
+    }
   };
 
   const onChangeAmount = (value) => {
@@ -110,7 +117,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
             {paymentType !== t("CS_PAYMENT_FULL_AMOUNT") ? (
               <TextInput className="text-indent-xl" onChange={(e) => onChangeAmount(e.target.value)} value={amount} disable={getTotal() === 0} />
             ) : (
-              <TextInput className="text-indent-xl" value={getTotal()} onChange={() => { }} disable={true} />
+              <TextInput className="text-indent-xl" value={getTotal()} onChange={() => {}} disable={true} />
             )}
             {formError === "CS_CANT_PAY_BELOW_MIN_AMOUNT" ? (
               <span className="card-label-error">

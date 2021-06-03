@@ -123,8 +123,8 @@ export const Search = {
           },
           { title: "ES_APPLICATION_DETAILS_LOCATION_CITY", value: response?.address?.city },
           { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: response?.address?.pincode },
-          { title: "CS_FILE_APPLICATION_PROPERTY_LOCATION_STREET_NAME_LABEL", value: response?.address?.street },
-          { title: "CS_FILE_APPLICATION_PROPERTY_LOCATION_DOOR_NO_LABEL", value: response?.address?.doorNo },
+          { title: "PT_PROPERTY_ADDRESS_STREET_NAME", value: response?.address?.street },
+          { title: "PT_PROPERTY_ADDRESS_HOUSE_NO", value: response?.address?.doorNo },
           { title: "CS_FILE_APPLICATION_PROPERTY_LOCATION_LANDMARK_LABEL", value: response?.address?.landmark },
           { title: "CS_FILE_APPLICATION_PROPERTY_LOCATION_SLUM_LABEL", value: slumName },
           {

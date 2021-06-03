@@ -30,7 +30,7 @@ function PropertyDocuments({ documents }) {
             {document?.values?.map((value, index) => (
               <a target="_" href={pdfFiles[value.fileStoreId]?.split(",")[0]} style={{ minWidth: "160px" }} key={index}>
                 <PDFSvg width={140} height={140} style={{ background: "#f6f6f6", padding: "8px" }} />
-                <p style={{ marginTop: "8px" }}>{value?.title}</p>
+                <p style={{ marginTop: "8px", fontWeight: "bold", textAlign: "center" }}>{t(value?.title)}</p>
               </a>
             ))}
           </div>

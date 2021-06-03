@@ -65,9 +65,14 @@ const UploadFile = (props) => {
   useEffect(() => handleChange(), [props.message]);
 
   return (
-    <div className="upload-file">
+    <div className={`upload-file ${props.disabled ? " disabled" : ""}`}>
       <div>
-        <ButtonSelector theme="border" label="Choose File" style={extraStyles ? extraStyles?.buttonStyles : null} textStyles={props?.textStyles} />
+        <ButtonSelector
+          theme="border"
+          label="Choose File"
+          style={{ ...(extraStyles ? extraStyles?.buttonStyles : {}), ...(props.disabled ? { display: "none" } : {}) }}
+          textStyles={props?.textStyles}
+        />
         {!hasFile ? (
           <h2 className="file-upload-status">{props.message}</h2>
         ) : (
@@ -90,11 +95,13 @@ const UploadFile = (props) => {
         )}
       </div>
       <input
+        className={props.disabled ? "disabled" : ""}
         style={extraStyles ? extraStyles?.inputStyles : null}
         ref={inpRef}
         type="file"
         name="file"
         accept={props.accept}
+        disabled={props.disabled}
         onChange={(e) => props.onUpload(e)}
       />
     </div>

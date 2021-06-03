@@ -7,6 +7,7 @@ import DashBoard from "./pages";
 import { Route, Switch, useRouteMatch, useLocation } from "react-router-dom";
 import Overview from "./pages/Overview";
 import DSSCard from "./components/DSSCard";
+import DrillDown from "./pages/DrillDown";
 
 const DssBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -17,22 +18,28 @@ const DssBreadCrumb = ({ location }) => {
       show: true,
     },
     {
-      path: "/digit-ui/employee/dss/dashboard",
+      path: "/digit-ui/employee/dss/dashboard/fsm",
       content: t("ES_COMMON_DSS"),
       show: true,
     },
+    {
+      path: "/digit-ui/employee/dss/drilldown",
+      content: t("ES_COMMON_DSS_DRILL"),
+      show: location.pathname.includes("drilldown") ? true : false,
+    },
   ];
 
-  return <BreadCrumb crumbs={crumbs} />
-}
+  return <BreadCrumb crumbs={crumbs} />;
+};
 
-const Routes = ({ path }) => {
+const Routes = ({ path, stateCode }) => {
   const location = useLocation();
   return (
     <div className="chart-wrapper">
       <DssBreadCrumb location={location} />
       <Switch>
-        <PrivateRoute path={`${path}/dashboard`} component={DashBoard} />
+        <PrivateRoute path={`${path}/dashboard/:moduleCode`} component={() => <DashBoard stateCode={stateCode} />} />
+        <PrivateRoute path={`${path}/drilldown`} component={() => <DrillDown />} />
       </Switch>
     </div>
   );
@@ -53,7 +60,7 @@ const DSSModule = ({ stateCode, userType, tenants }) => {
   Digit.SessionStorage.set("DSS_TENANTS", tenants);
 
   if (userType !== "citizen") {
-    return <Routes path={path} />;
+    return <Routes path={path} stateCode={stateCode} />;
   }
 };
 

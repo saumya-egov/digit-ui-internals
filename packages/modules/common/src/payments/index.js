@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { BrowserRouter as Router, Switch, useRouteMatch, Route } from "react-router-dom";
-import { Body, Header, HomeLink, Loader } from "@egovernments/digit-ui-react-components";
+import { Body, Header, Loader, CitizenHomeCard, RupeeIcon } from "@egovernments/digit-ui-react-components";
 import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
 
@@ -29,19 +29,14 @@ export const PaymentModule = ({ deltaConfig = {}, stateCode, cityCode, moduleCod
 export const PaymentLinks = ({ matchPath }) => {
   const { t } = useTranslation();
 
-  return (
-    <React.Fragment>
-      {/* TODO: change */}
-      <div>
-        <Header>{t("CS_HOME_QUICK_PAY")}</Header>
-        <div className="d-grid">
-          <HomeLink to={`/digit-ui/citizen/payment/my-bills/PT`}>{t("CS_HOME_PT")}</HomeLink>
-          {/* <HomeLink to={`${matchPath}/tl-renewal`}>{t("CS_HOME_TRADE_LICENCE_RENEWAL")}</HomeLink>
-          <HomeLink to={`${matchPath}/water-bill`}>{t("CS_HOME_WATER_BILL")}</HomeLink> */}
-        </div>
-      </div>
-    </React.Fragment>
-  );
+  const links = [
+    {
+      link: `/digit-ui/citizen/payment/my-bills/PT`,
+      i18nKey: t("CS_HOME_PT"),
+    },
+  ];
+
+  return <CitizenHomeCard header={t("CS_HOME_QUICK_PAY")} links={links} Icon={RupeeIcon} />;
 };
 
 export const paymentConfigs = {

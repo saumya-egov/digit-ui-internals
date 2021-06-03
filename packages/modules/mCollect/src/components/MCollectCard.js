@@ -14,7 +14,7 @@ const MCollectCard = () => {
   // TODO: should be fetch
   const total = 1;
 
-  if (!Digit.Utils.ptAccess()) {
+  if (!Digit.Utils.mCollectAccess()) {
     return null;
   }
 
@@ -29,12 +29,12 @@ const MCollectCard = () => {
         </div>
         <div className="body">
           <span className="link">
-            <Link to={`/digit-ui/employee/mcollect/inbox`}>{t("ES_TITLE_INBOX")}</Link>
-            <span className="inbox-total">{" " + total || "-"}</span>
-            {<ArrowRight to={`/digit-ui/employee/mcollect/inbox`} />}
+            <Link to={`/digit-ui/employee/mcollect/inbox`}>{t("UC_SEARCH_CHALLAN_LABEL")}</Link>
+            {/* <span className="inbox-total">{" " + total || "-"}</span> */}
+            {/* {<ArrowRight to={`/digit-ui/employee/mcollect/inbox`} />} */}
           </span>
           <span className="link">
-            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("ES_TITLE_NEW_REGISTRATION")}</Link>
+            <Link to={`/digit-ui/employee/mcollect/new-application`}>{t("UC_GENERATE_NEW_CHALLAN")}</Link>
           </span>
         </div>
       </div>

@@ -13,7 +13,6 @@ import {
 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { BillDetailsKeyNoteConfig } from "./billDetailsConfig";
-import ArrearSummary from "../../../citizen/bills/routes/bill-details/arrear-summary";
 
 export const BillDetailsFormConfig = (props, t) => ({
   PT: [
@@ -70,6 +69,11 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
   const [paymentAllowed, setPaymentAllowed] = useState(true);
   const [formError, setError] = useState("");
 
+  const changeAmount = (value) => {
+    setAmount(value);
+    onChange(value);
+  };
+
   useEffect(() => {
     const allowPayment = minAmountPayable && amount >= minAmountPayable && !isAdvanceAllowed && amount <= getTotal() && !formError;
     if (paymentType != t("CS_PAYMENT_FULL_AMOUNT")) setPaymentAllowed(allowPayment);
@@ -85,9 +89,13 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
 
   useEffect(() => {
     if (paymentType !== t("CS_PAYMENT_FULL_AMOUNT")) onChangeAmount(amount.toString());
-    else setError("");
-  }, [paymentType]);
+    else {
+      setError("");
+      changeAmount(getTotal());
+    }
+  }, [paymentType, bill]);
 
+  // for setting error
   const onChangeAmount = (value) => {
     setError("");
     if (isNaN(value) || value.includes(".")) {
@@ -97,8 +105,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
     } else if (value < minAmountPayable) {
       setError("CS_CANT_PAY_BELOW_MIN_AMOUNT");
     }
-    setAmount(value);
-    onChange(value);
+    changeAmount(value);
   };
 
   if (isLoading || mdmsLoading) return <Loader />;
@@ -142,7 +149,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
               text={"₹ " + amountDetails.amount?.toFixed(2)}
             />
           ))}
-        <ArrearSummary bill={bill} />
+
         <hr style={{ width: "40%" }} className="underline" />
         <Row label={t("CS_PAYMENT_TOTAL_AMOUNT")} textStyle={{ fontWeight: "bold" }} text={"₹ " + bill?.totalAmount} />
       </StatusTable>
@@ -154,7 +161,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
                 <table>
                   <thead>
                     <tr>
-                      <th style={thStyle}>{t("FINANCIAL YEAR")}</th>
+                      <th style={thStyle}>{t("FINANCIAL_YEAR")}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -199,7 +206,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
                 <table>
                   <thead>
                     <tr>
-                      <th style={thStyle}>{t("TOTAL TAX")}</th>
+                      <th style={thStyle}>{t("TOTAL_TAX")}</th>
                     </tr>
                   </thead>
                   <tbody>

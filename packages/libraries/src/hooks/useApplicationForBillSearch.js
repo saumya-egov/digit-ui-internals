@@ -30,17 +30,20 @@ const refObj = (tenantId, filters) => {
       key: "applicationNo",
       label: "FSM_APPLICATION_NO",
     },
-    advt: {
+    mcollect: {
       searchFn: () => advtApplications(tenantId, filters),
       key: "consumerCode",
-      label: "MCOLLECT_CHALLAN_NO_LABEL",
+      label: "UC_CHALLAN_NO",
     },
   };
 };
 
 export const useApplicationsForBusinessServiceSearch = ({ tenantId, businessService, filters }, config = {}) => {
-  const _key = businessService?.toLowerCase().split(".")[0];
-
+  let _key = businessService?.toLowerCase().split(".")[0];
+  //debugger;
+  if (window.location.href.includes("mcollect")) {
+    _key = "mcollect";
+  }
   /* key from application ie being used as consumer code in bill */
   const { searchFn, key, label } = refObj(tenantId, filters)[_key];
   const applications = useQuery(["applicationsForBillDetails", { tenantId, businessService, filters, searchFn }], searchFn, {

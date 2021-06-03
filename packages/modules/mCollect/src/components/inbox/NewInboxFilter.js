@@ -39,7 +39,7 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props })
                   />
                 </svg>
               </span>
-              <span style={{ marginLeft: "8px", fontWeight: "normal" }}>{t("ES_COMMON_FILTER_BY")}:</span>
+              <span style={{ marginLeft: "8px", fontWeight: "normal" }}>{t("UC_FILTERS_LABEL")}:</span>
             </div>
             <div className="clearAll" onClick={clearAll}>
               {t("ES_COMMON_CLEAR_ALL")}
@@ -82,7 +82,7 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props })
                 }}
               />
             </div>
-            
+
             <div>
               <SubmitBar
                 disabled={_.isEqual(_searchParams, searchParams)}

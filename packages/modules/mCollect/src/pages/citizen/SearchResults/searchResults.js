@@ -11,7 +11,7 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   const { mobileNumber, challanNo, Servicecategory } = Digit.Hooks.useQueryParams();
   const filters = {};
   if (mobileNumber) filters.mobileNumber = mobileNumber;
-  if (challanNo) filters.challanNo = challanNo;
+  if (challanNo) filters.consumerCode = challanNo;
   if (Servicecategory) filters.businesService = Servicecategory;
   //filters.url = "egov-searcher/bill-genie/mcollectbills/_get"
 
@@ -41,7 +41,7 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
     //debugger;
     //history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
     //history.push(`/digit-ui/citizen/mcollect/bill-details/${data.businesService}/${data?.ChannelNo}`, { tenantId });
-    history.push(`/digit-ui/citizen/payment/my-bills/${data?.businesService}/${data?.ChannelNo}`);
+    history.push(`/digit-ui/citizen/payment/my-bills/${data?.businesService}/${data?.ChannelNo}?workflow=mcollect`);
   };
 
   const payment = {};
@@ -60,7 +60,14 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
       businesService: bill.businessService,
       total_due: bill.totalAmount,
       OwnerName: bill.payerName || "NA",
-      bil_due__date: bill.billDetails[0].expiryDate || 0,
+      //bil_due__date: bill.billDetails[0].expiryDate || 0,
+      bil_due__date: `${
+        new Date(bill.billDetails[0].expiryDate).getDate().toString() +
+        "/" +
+        (new Date(bill.billDetails[0].expiryDate).getMonth() + 1).toString() +
+        "/" +
+        new Date(bill.billDetails[0].expiryDate).getFullYear().toString()
+      }`,
       ChannelNo: bill?.consumerCode || "NA",
       ServiceCategory: bill.businessService ? bill.businessService.split(".")[bill.businessService.split(".").length - 1] : "NA",
     };

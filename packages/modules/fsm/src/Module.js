@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect, useState } from "react";
 import { Route, BrowserRouter as Router, Switch, useRouteMatch, useLocation, Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { BackButton, BreadCrumb, Header, HomeLink, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
+import { BackButton, BreadCrumb, Header, Loader, PrivateRoute, CitizenHomeCard, DropIcon } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 
 import NewApplicationCitizen from "./pages/citizen/NewApplication/index";
@@ -115,9 +115,11 @@ const EmployeeApp = ({ path, url, userType }) => {
 
 const CitizenApp = ({ path }) => {
   const location = useLocation();
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
-      {!location.pathname.includes("/new-application/response") && <BackButton>Back</BackButton>}
+      {!location.pathname.includes("/new-application/response") && <BackButton>{t("CS_COMMON_BACK")}</BackButton>}
       <Switch>
         <PrivateRoute
           path={`${path}/inbox`}
@@ -183,32 +185,32 @@ const FSMLinks = ({ matchPath, userType }) => {
   ];
 
   if (userType === "citizen") {
-    return (
-      <React.Fragment>
-        {/* TODO: change */}
-        <Header>{t("CS_HOME_FSM_SERVICES")}</Header>
-        <div className="d-grid">
-          <HomeLink to={`${matchPath}/new-application`}>{t("CS_HOME_APPLY_FOR_DESLUDGING")}</HomeLink>
-          <HomeLink to={`${matchPath}/my-applications`}>{t("CS_HOME_MY_APPLICATIONS")}</HomeLink>
-          {/* <HomeLink to={{ pathname: `/digit-ui/citizen/login`, state: { role: "FSM_DSO", from: "" } }}>{t("Login as DSO")}</HomeLink> */}
-          {roleBasedLoginRoutes.map(({ role, from, loginLink, dashoardLink }, index) => {
-            if (Digit.UserService.hasAccess(role)) {
-              return (
-                <HomeLink key={index} to={{ pathname: from }}>
-                  {t(dashoardLink)}
-                </HomeLink>
-              );
-            } else {
-              return (
-                <HomeLink key={index} to={{ pathname: `/digit-ui/citizen/login`, state: { role: "FSM_DSO", from } }}>
-                  {t(loginLink)}
-                </HomeLink>
-              );
-            }
-          })}
-        </div>
-      </React.Fragment>
-    );
+    const links = [
+      {
+        link: `${matchPath}/new-application`,
+        i18nKey: t("CS_HOME_APPLY_FOR_DESLUDGING"),
+      },
+      {
+        link: `${matchPath}/my-applications`,
+        i18nKey: t("CS_HOME_MY_APPLICATIONS"),
+      },
+    ];
+
+    roleBasedLoginRoutes.map(({ role, from, loginLink, dashoardLink }) => {
+      if (Digit.UserService.hasAccess(role))
+        links.push({
+          link: from,
+          i18nKey: t(dashoardLink),
+        });
+      else
+        links.push({
+          link: `/digit-ui/citizen/login`,
+          state: { role: "FSM_DSO", from },
+          i18nKey: t(loginLink),
+        });
+    });
+
+    return <CitizenHomeCard header={t("CS_HOME_FSM_SERVICES")} links={links} Icon={DropIcon} />;
   } else {
     return (
       <div className="employee-app-container">

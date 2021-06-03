@@ -57,7 +57,7 @@ const CashDetailsComponent = ({ ...props }) => {
         </div>
       </div>
       <div className="label-field-pair">
-        <h2 className="card-label">{t("NOC_PAYMENT_RECEIPT_ISSUE_DATE_LABEL")} *</h2>
+        <h2 className="card-label">{t("NOC_PAYMENT_RECEIPT_ISSUE_DATE_LABEL")} </h2>
         <div className="field">
           <div className="field-container">
             <DatePicker

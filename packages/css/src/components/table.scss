@@ -41,7 +41,7 @@
 }
 
 .fullWidth {
-  width: 100%;
+  width: 100% !important;
 }
 
 .customTable {
@@ -52,7 +52,7 @@
 
   th,
   td {
-    text-align: center;
+    text-align: left;
     border-bottom: 1px solid #B1B4B6;
     padding: 15px 10px;
   }
