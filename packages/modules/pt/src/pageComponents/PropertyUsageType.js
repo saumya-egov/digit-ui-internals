@@ -97,7 +97,7 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData, formState,
     return (
       <React.Fragment>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("PT_PROPERTY_DETAILS_USAGE_TYPE_HEADER")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_ASSESMENT_INFO_USAGE_TYPE")}</CardLabel>
           <Dropdown
             className="form-field"
             selected={usageCategoryMajor}

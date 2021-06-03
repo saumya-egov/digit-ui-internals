@@ -15,6 +15,7 @@ const PropertyType = ({ t, config, onSelect, userType, formData, setError, clear
   function getPropertyTypeMenu(proptype) {
     if (userType === "employee") {
       return proptype
+        ?.filter((e) => e.code === "VACANT" || e.code.split(".").length > 1)
         ?.map((item) => ({ i18nKey: "COMMON_PROPTYPE_" + stringReplaceAll(item?.code, ".", "_"), code: item?.code }))
         ?.sort((a, b) => a.i18nKey.split("_").pop().localeCompare(b.i18nKey.split("_").pop()));
     } else {
@@ -63,7 +64,7 @@ const PropertyType = ({ t, config, onSelect, userType, formData, setError, clear
 
   const inputs = [
     {
-      label: "ES_NEW_APPLICATION_PROPERTY_TYPE",
+      label: "PT_ASSESMENT_INFO_TYPE_OF_BUILDING",
       type: "text",
       name: "propertyType",
       validation: {},

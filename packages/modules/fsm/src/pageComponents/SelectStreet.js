@@ -14,7 +14,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
 
   const inputs = [
     {
-      label: "CS_FILE_APPLICATION_PROPERTY_LOCATION_STREET_NAME_LABEL",
+      label: "PT_PROPERTY_ADDRESS_STREET_NAME",
       type: "text",
       name: "street",
       validation: {
@@ -24,7 +24,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
       },
     },
     {
-      label: "CS_FILE_APPLICATION_PROPERTY_LOCATION_DOOR_NO_LABEL",
+      label: "PT_PROPERTY_ADDRESS_HOUSE_NO",
       type: "text",
       name: "doorNo",
       validation: {

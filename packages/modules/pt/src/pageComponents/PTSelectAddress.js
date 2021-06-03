@@ -111,25 +111,29 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData, setError, cl
   const errorStyle = { width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" };
 
   useEffect(() => {
-    let keys = Object.keys(formValue);
-    const part = {};
-    keys.forEach((key) => (part[key] = formData[config.key]?.[key]));
+    if (userType === "employee") {
+      let keys = Object.keys(formValue);
+      const part = {};
+      keys.forEach((key) => (part[key] = formData[config.key]?.[key]));
 
-    if (!_.isEqual(formValue, part)) onSelect(config.key, { ...formData[config.key], ...formValue });
+      if (!_.isEqual(formValue, part)) onSelect(config.key, { ...formData[config.key], ...formValue });
 
-    for (let key in formValue) {
-      if (!formValue[key] && !localFormState.errors[key]) {
-        setLocalError(key, { type: `${key.toUpperCase()}_REQUIRED`, message: `${key.toUpperCase()}_REQUIRED` });
-      } else if (formValue[key] && localFormState.errors[key]) {
-        clearLocalErrors([key]);
+      for (let key in formValue) {
+        if (!formValue[key] && !localFormState?.errors[key]) {
+          setLocalError(key, { type: `${key.toUpperCase()}_REQUIRED`, message: `${key.toUpperCase()}_REQUIRED` });
+        } else if (formValue[key] && localFormState.errors[key]) {
+          clearLocalErrors([key]);
+        }
       }
     }
   }, [formValue]);
 
   useEffect(() => {
-    const errorsPresent = !!Object.keys(localFormState.errors).lengtha;
-    if (errorsPresent && !formState.errors?.[config.key]) setError(config.key, { type: "required" });
-    else if (!errorsPresent && formState.errors?.[config.key]) clearErrors(config.key);
+    if (userType === "employee") {
+      const errorsPresent = !!Object.keys(localFormState.errors).lengtha;
+      if (errorsPresent && !formState.errors?.[config.key]) setError(config.key, { type: "required" });
+      else if (!errorsPresent && formState.errors?.[config.key]) clearErrors(config.key);
+    }
   }, [localFormState]);
 
   if (userType === "employee") {
