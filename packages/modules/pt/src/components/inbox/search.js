@@ -31,17 +31,17 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
       const error = formState.errors[name];
       if (pattern) {
         if (!new RegExp(pattern).test(value) && !error)
-          setError(name, { type: "pattern", message: errorMessages?.pattern || `PATTERN_${name.toUpperCase()}_FAILED` });
+          setError(name, { type: "pattern", message: t(errorMessages?.pattern) || t(`PATTERN_${name.toUpperCase()}_FAILED`) });
         else if (new RegExp(pattern).test(value) && error?.type === "pattern") clearErrors([name]);
       }
       if (minLength) {
         if (value?.length < minLength && !error)
-          setError(name, { type: "minLength", message: errorMessages?.minLength || `MINLENGTH_${name.toUpperCase()}_FAILED` });
+          setError(name, { type: "minLength", message: t(errorMessages?.minLength || `MINLENGTH_${name.toUpperCase()}_FAILED`) });
         else if (value?.length >= minLength && error?.type === "minLength") clearErrors([name]);
       }
       if (maxLength) {
         if (value?.length > maxLength && !error)
-          setError(name, { type: "maxLength", message: errorMessages?.maxLength || `MAXLENGTH_${name.toUpperCase()}_FAILED` });
+          setError(name, { type: "maxLength", message: t(errorMessages?.maxLength || `MAXLENGTH_${name.toUpperCase()}_FAILED`) });
         else if (value?.length <= maxLength && error?.type === "maxLength") clearErrors([name]);
       }
     });
@@ -106,7 +106,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 ?.map((input, index) => (
                   <div key={input.name} style={{ display: "flex", flexDirection: "column" }}>
                     <span className={index === 0 ? "complaint-input" : "mobile-input"}>
-                      <Label>{input.label}</Label>
+                      <Label>{t(input.label)}</Label>
                       {!input.type ? (
                         <Controller
                           render={(props) => {
