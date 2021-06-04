@@ -110,7 +110,7 @@ const EditForm = ({ applicationData }) => {
       source: "MUNICIPAL_RECORDS", // required
       channel: "CFC_COUNTER", // required
       documents: data?.documents?.documents,
-      units: data?.units?.[0]?.usageCategory ? data?.units : [],
+      units: data?.units?.[0]?.usageCategory ? data?.units : applicationData?.units,
       additionalDetails: applicationData?.additionalDetails || null,
       auditDetails: applicationData?.auditDetails,
       workflow: {
