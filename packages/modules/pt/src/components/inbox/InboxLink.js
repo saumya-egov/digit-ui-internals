@@ -30,7 +30,7 @@ const InboxLinks = ({ parentRoute, businessService }) => {
   useEffect(() => {
     let linksToShow = allLinks
       .filter((e) => e.businessService === businessService)
-      .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
+      .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles?.length);
     setLinks(linksToShow);
   }, []);
 
@@ -48,7 +48,7 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       <div className="complaint-links-container">
         {GetLogo()}
         <div style={{ marginLeft: "unset", paddingLeft: "0px" }} className="body">
-          {links.map(({ link, text, hyperlink = false, accessTo = [] }, index) => {
+          {links.map(({ link, text, hyperlink = false, roles = [] }, index) => {
             return (
               <span className="link" key={index}>
                 {hyperlink ? <a href={link}>{text}</a> : <Link to={link}>{t(text)}</Link>}
