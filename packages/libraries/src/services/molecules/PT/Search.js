@@ -19,7 +19,7 @@ export const PTSearch = {
         title: "PT_PROPERTY_ADDRESS_SUB_HEADER",
         asSectionHeader: true,
         values: [
-          { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: response?.address?.pincode },
+          { title: "PT_PROPERTY_ADDRESS_PINCODE", value: response?.address?.pincode },
           { title: "PT_PROPERTY_ADDRESS_CITY", value: response?.address?.city },
           {
             title: "PT_PROPERTY_ADDRESS_MOHALLA",

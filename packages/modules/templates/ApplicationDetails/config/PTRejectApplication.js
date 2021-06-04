@@ -4,8 +4,8 @@ import { UploadFile } from "@egovernments/digit-ui-react-components";
 export const configPTRejectApplication = ({ t, action, selectFile, uploadedFile, setUploadedFile }) => {
   return {
     label: {
-      heading: `ES_PT_ACTION_TITLE_${action}`,
-      submit: `ES_PT_COMMON_${action}`,
+      heading: `WF_${action}_APPLICATION`,
+      submit: `WF_PT.CREATE_${action}`,
       cancel: "ES_PT_COMMON_CANCEL",
     },
     form: [
