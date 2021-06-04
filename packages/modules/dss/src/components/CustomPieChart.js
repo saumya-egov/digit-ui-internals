@@ -63,6 +63,13 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
   if (isLoading) {
     return <Loader />;
   }
+  if (chartData?.length === 0) {
+    return (
+      <div className="no-data">
+        <p>{t('DSS_NO_DATA')}</p>
+      </div>
+    );
+  }
   return (
     <ResponsiveContainer width="99%" height={340}>
       <PieChart>
