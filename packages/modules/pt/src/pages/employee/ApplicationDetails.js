@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
 
@@ -69,7 +69,7 @@ const ApplicationDetails = () => {
 
   return (
     <div>
-      <Header>{t("ES_TITLE_APPLICATION_DETAILS")}</Header>
+      <Header>{t("PT_APPLICATION_TITLE")}</Header>
       <ApplicationDetailsTemplate
         applicationDetails={applicationDetails}
         isLoading={isLoading}
