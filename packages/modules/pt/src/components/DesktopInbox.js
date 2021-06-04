@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, Loader } from "@egovernments/digit-ui-react-components";
@@ -12,7 +12,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
   const [EmptyInboxComp, setEmptyInboxComp] = useState(() => {
     const com = Digit.ComponentRegistryService?.getComponent(props.EmptyResultInboxComp);
-    console.log("here is the empty component", com, props.EmptyResultInboxComp);
+    // console.log("here is the empty component", com, props.EmptyResultInboxComp);
     return com;
   });
 
@@ -20,15 +20,15 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
 
   const columns = React.useMemo(() => (props.isSearch ? tableConfig.searchColumns(props) : tableConfig.inboxColumns(props) || []), []);
 
-  // useEffect(() => {
-  //   console.log(data, columns, "inside desktop inbox....");
-  // }, [data, columns]);
+  useEffect(() => {
+    console.log(data, columns, "inside desktop inbox....");
+  }, [data, columns]);
 
   let result;
   if (props.isLoading) {
     result = <Loader />;
-  } else if (data?.length === 0) {
-    result = (EmptyInboxComp && <EmptyInboxComp />) || (
+  } else if (!data || data?.length === 0) {
+    result = (EmptyInboxComp && <EmptyInboxComp data={data} />) || (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
 
