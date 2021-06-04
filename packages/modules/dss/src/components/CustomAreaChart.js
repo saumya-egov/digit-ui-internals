@@ -24,6 +24,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { value } = useContext(FilterContext);
   const [totalCapacity, setTotalCapacity] = useState(0);
+  const [totalWaste, setTotalWaste] = useState(0);
   const stateTenant = tenantId.split(".")[0];
   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateTenant, "FSM", "FSTPPlantInfo", { enabled: id === "fsmCapacityUtilization" });
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
@@ -44,6 +45,13 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       setTotalCapacity(totalCapacity);
     }
   }, [mdmsData, value]);
+
+  useEffect(() => {
+    if (response) {
+      const totalWaste = response?.responseData?.data?.[0]?.plots.reduce((acc, plot) => acc + plot?.value, 0);
+      setTotalWaste(totalWaste);
+    }
+  }, [response])
 
   const chartData = useMemo(() => {
     if (id !== "fsmCapacityUtilization") {
@@ -97,6 +105,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "85%" }}>
+      {id === "fsmCapacityUtilization" && <p>{t("DSS_FSM_TOTAL_SLUDGE_TREATED")} - {totalWaste} {t("DSS_KL")}</p>}
       <ResponsiveContainer width="99%" height={id === "fsmTotalCumulativeCollection" ? 400 : 300}>
         {(!chartData || chartData?.length === 0) ? 
           <div className="no-data">

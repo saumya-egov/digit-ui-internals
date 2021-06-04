@@ -57,7 +57,7 @@ const Layout = ({ rowData }) => {
         );
       case "performing-metric":
         return (
-          <GenericChart header={visualizer.name} key={key}>
+          <GenericChart header={visualizer.name} subHeader={`(${t(`DSS_SLA_ACHIEVED`)})`} key={key}>
             <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} title={visualizer.name} showDrillDown={true} />
           </GenericChart>
         );
