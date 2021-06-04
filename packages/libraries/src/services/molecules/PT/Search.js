@@ -13,12 +13,13 @@ export const PTSearch = {
   applicationDetails: async (t, tenantId, propertyIds, userType) => {
     const filter = { propertyIds };
     const response = await PTSearch.application(tenantId, filter);
-
+    // console.log(response, "from hook");
     const employeeResponse = [
       {
         title: "PT_PROPERTY_ADDRESS_SUB_HEADER",
+        asSectionHeader: true,
         values: [
-          { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: response?.address?.pincode },
+          { title: "PT_PROPERTY_ADDRESS_PINCODE", value: response?.address?.pincode },
           { title: "PT_PROPERTY_ADDRESS_CITY", value: response?.address?.city },
           {
             title: "PT_PROPERTY_ADDRESS_MOHALLA",
@@ -74,12 +75,12 @@ export const PTSearch = {
           owners: response?.owners?.map((owner, index) => {
             console.log(owner, "in details");
             return {
-              title: "ES_OWNER_" + (index + 1),
+              title: "ES_OWNER",
               values: [
                 { title: "PT_OWNERSHIP_INFO_NAME", value: owner?.name },
                 { title: "PT_OWNERSHIP_INFO_GENDER", value: owner?.gender },
                 { title: "PT_OWNERSHIP_INFO_MOBILE_NO", value: owner?.mobileNumber },
-                { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: response?.specialCategory || "NA" },
+                { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: `COMMON_MASTERS_OWNERTYPE_${owner?.ownerType}` || "NA" },
                 { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.name },
                 { title: "PT_FORM3_OWNERSHIP_TYPE", value: response?.ownershipCategory },
                 { title: "PT_OWNERSHIP_INFO_EMAIL_ID", value: owner?.emailId },

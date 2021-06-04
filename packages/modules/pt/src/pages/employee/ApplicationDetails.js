@@ -58,8 +58,7 @@ const ApplicationDetails = () => {
     };
   }
 
-  if (!(applicationDetails?.applicationDetails[0]?.title === "PT_PROPERTY_APPLICATION_NO")) {
-    applicationDetails?.applicationDetails?.shift();
+  if (!(applicationDetails?.applicationDetails[0]?.values?.[0].title === "PT_PROPERTY_APPLICATION_NO")) {
     applicationDetails?.applicationDetails?.unshift({
       values: [
         { title: "PT_PROPERTY_APPLICATION_NO", value: applicationDetails?.applicationData?.acknowldgementNumber },
