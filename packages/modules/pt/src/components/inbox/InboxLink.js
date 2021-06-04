@@ -11,12 +11,6 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       text: "ES_TITLE_NEW_REGISTRATION",
       link: "/digit-ui/employee/pt/new-application",
       businessService: "PT",
-      roles: ["PT_DOC_VERIFIER"],
-    },
-    {
-      text: "ES_TITLE_NEW_REGISTRATION",
-      link: "/digit-ui/employee/pt/new-application",
-      businessService: "PT",
       roles: ["PT_CEMP"],
     },
     {
@@ -25,7 +19,7 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       businessService: "PT",
       roles: [],
     },
-    // { text: "PT_REPORTS", hyperLink: true, link: "/employee/integration/dss/propertytax", roles: [], businessService: "PT" },
+    // { text: "PT_REPORTS", hyperLink: true, link: "/digit-ui/employee/integration/dss/propertytax", roles: [], businessService: "PT" },
     { text: "PT_DASHBOARD", link: "/digit-ui/employee/", roles: [], businessService: "PT" },
   ];
 
@@ -36,7 +30,7 @@ const InboxLinks = ({ parentRoute, businessService }) => {
   useEffect(() => {
     let linksToShow = allLinks
       .filter((e) => e.businessService === businessService)
-      .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
+      .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles?.length);
     setLinks(linksToShow);
   }, []);
 
@@ -53,11 +47,11 @@ const InboxLinks = ({ parentRoute, businessService }) => {
     <Card style={{ paddingRight: 0, marginTop: 0 }} className="employeeCard filter">
       <div className="complaint-links-container">
         {GetLogo()}
-        <div className="body">
-          {links.map(({ link, text, hyperlink = false, accessTo = [] }, index) => {
+        <div style={{ marginLeft: "unset", paddingLeft: "0px" }} className="body">
+          {links.map(({ link, text, hyperlink = false, roles = [] }, index) => {
             return (
               <span className="link" key={index}>
-                {hyperlink ? <a href={link}>{text}</a> : <Link to={link}>{text}</Link>}
+                {hyperlink ? <a href={link}>{text}</a> : <Link to={link}>{t(text)}</Link>}
               </span>
             );
           })}

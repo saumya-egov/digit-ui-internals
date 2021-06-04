@@ -1,5 +1,5 @@
 import { PTService } from "../../elements/PT";
-import { getPropertyTypeLocale, getPropertySubtypeLocale } from "../../../utils/fsm";
+import { getPropertyTypeLocale, getPropertySubtypeLocale } from "../../../utils/pt";
 
 export const PTSearch = {
   all: async (tenantId, filters = {}) => {
