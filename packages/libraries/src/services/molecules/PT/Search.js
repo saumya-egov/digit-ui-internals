@@ -17,6 +17,7 @@ export const PTSearch = {
     const employeeResponse = [
       {
         title: "PT_PROPERTY_ADDRESS_SUB_HEADER",
+        asSectionHeader: true,
         values: [
           { title: "ES_APPLICATION_DETAILS_LOCATION_PINCODE", value: response?.address?.pincode },
           { title: "PT_PROPERTY_ADDRESS_CITY", value: response?.address?.city },
@@ -74,7 +75,7 @@ export const PTSearch = {
           owners: response?.owners?.map((owner, index) => {
             console.log(owner, "in details");
             return {
-              title: "ES_OWNER_" + (index + 1),
+              title: "ES_OWNER",
               values: [
                 { title: "PT_OWNERSHIP_INFO_NAME", value: owner?.name },
                 { title: "PT_OWNERSHIP_INFO_GENDER", value: owner?.gender },

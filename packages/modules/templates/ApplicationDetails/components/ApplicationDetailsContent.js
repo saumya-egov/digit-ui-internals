@@ -73,11 +73,13 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
     }
   };
 
+  // console.log(applicationDetails?.applicationDetails, "inside app details content");
+
   return (
     <Card style={{ position: "relative" }}>
       {applicationDetails?.applicationDetails?.map((detail, index) => (
         <React.Fragment key={index}>
-          {index === 0 ? (
+          {index === 0 && !detail.asSectionHeader ? (
             <CardSubHeader style={{ marginBottom: "16px" }}>{t(detail.title)}</CardSubHeader>
           ) : (
             <CardSectionHeader style={{ marginBottom: "16px", marginTop: "32px" }}>{t(detail.title)}</CardSectionHeader>
