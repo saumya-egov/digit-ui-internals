@@ -65,16 +65,18 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
   }, [response, totalCapacity])
 
   const renderPlot = (plot) => {
-    return plot?.value.toFixed(1);
-    // const { denomination } = value;
-    // switch (denomination) {
-    //   case "Unit":
-    //     return plot?.value;
-    //   case "Lac":
-    //     return Number((plot.value / 100000).toFixed(2));
-    //   case "Cr":
-    //     return Number((plot.value / 10000000).toFixed(2));
-    // }
+    if (id === "fsmCapacityUtilization") {
+      return Number(plot?.value.toFixed(1));
+    }
+    const { denomination } = value;
+    switch (denomination) {
+      case "Unit":
+        return plot?.value;
+      case "Lac":
+        return Number((plot.value / 100000).toFixed(2));
+      case "Cr":
+        return Number((plot.value / 10000000).toFixed(2));
+    }
   };
 
   const renderLegend = (value) => <span>{value}</span>;

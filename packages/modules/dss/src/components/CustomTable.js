@@ -95,7 +95,7 @@ const CustomTable = ({ data, onSearch }) => {
           }
           if (column.Header.toLowerCase() === "citizen average rating") {
             return (
-              <Rating currentRating={Math.round(value)} styles={{ width: "unset", justifyContent: "center" }} starStyles={{ width: "25px" }} />
+              <Rating currentRating={Math.round(value)} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
             )
           }
           if (column.symbol === "amount") {
