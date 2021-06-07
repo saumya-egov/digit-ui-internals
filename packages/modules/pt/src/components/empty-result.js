@@ -13,7 +13,7 @@ const EmptyResultInbox = (props) => {
 
   return (
     <React.Fragment>
-      {!props.data ? (
+      {props.data ? (
         <React.Fragment>
           <div style={{ textAlign: "center", marginTop: "50px", marginBottom: "24px" }}>{t("PT_NO_MATCHING_PROPERTY_FOUND")}</div>
           <div style={{ textAlign: "center" }}>

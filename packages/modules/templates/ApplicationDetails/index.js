@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "react-query";
 
 import { Loader } from "@egovernments/digit-ui-react-components";
 
@@ -43,6 +44,8 @@ const ApplicationDetails = (props) => {
     setSelectedAction(action);
     setDisplayMenu(false);
   }
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     switch (selectedAction) {
@@ -103,9 +106,7 @@ const ApplicationDetails = (props) => {
         onSuccess: (data, variables) => {
           setShowToast({ key: "success", action: selectedAction });
           setTimeout(closeToast, 5000);
-          // queryClient.invalidateQueries("FSM_CITIZEN_SEARCH");
-          // const inbox = queryClient.getQueryData("FUNCTION_RESET_INBOX");
-          // inbox?.revalidate();
+          queryClient.refetchQueries("APPLICATION_SEARCH");
         },
       });
     }

@@ -21,7 +21,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const columns = React.useMemo(() => (props.isSearch ? tableConfig.searchColumns(props) : tableConfig.inboxColumns(props) || []), []);
 
   useEffect(() => {
-    console.log(data, columns, "inside desktop inbox....");
+    console.log(data, columns, "inside inbox....");
   }, [data, columns]);
 
   let result;
