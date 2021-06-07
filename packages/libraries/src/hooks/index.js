@@ -79,6 +79,9 @@ import useMCollectSearch from "./mcollect/useMCollectSearch";
 import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
 import usemcollectTenants from "./mcollect/useTenants";
 
+import useTenantsTL from "./tl/useTenants";
+import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
+
 const pgr = {
   useComplaintDetails,
   useComplaintsList,
@@ -148,6 +151,11 @@ const mcollect = {
   usemcollectTenants,
 };
 
+const tl = {
+  useTenants: useTenantsTL,
+  useTradeLicenseMDMS,
+};
+
 const Hooks = {
   useSessionStorage,
   useQueryParams,
@@ -174,6 +182,7 @@ const Hooks = {
   pt,
   dss,
   mcollect,
+  tl,
 };
 
 export default Hooks;
