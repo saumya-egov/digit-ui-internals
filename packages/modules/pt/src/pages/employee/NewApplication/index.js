@@ -27,7 +27,7 @@ const NewApplication = () => {
       usageCategory: data?.usageCategoryMajor.code,
       usageCategoryMajor: data?.usageCategoryMajor?.code.split(".")[0],
       usageCategoryMinor: data?.usageCategoryMajor?.code.split(".")[1] || null,
-      landArea: data?.landarea,
+      landArea: Number(data?.landarea),
       propertyType: data?.PropertyType?.code,
       noOfFloors: Number(data?.noOfFloors),
       ownershipCategory: data?.ownershipCategory?.code,
