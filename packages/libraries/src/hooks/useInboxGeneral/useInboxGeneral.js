@@ -67,7 +67,7 @@ const callMiddlewares = async (data, middlewares) => {
     } else return data;
   };
   let ret = await _next(data);
-  return ret;
+  return ret || [];
 };
 
 const useInboxGeneral = ({
