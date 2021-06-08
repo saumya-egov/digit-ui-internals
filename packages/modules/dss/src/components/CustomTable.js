@@ -22,14 +22,14 @@ const CustomTable = ({ data, onSearch }) => {
     type: "metric",
     tenantId,
     requestDate: lastYearDate,
-    filters: { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
+    filters: id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
   });
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
+    filters: id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
   });
 
   const renderHeader = (plot) => {
@@ -72,7 +72,6 @@ const CustomTable = ({ data, onSearch }) => {
         symbol: plot?.symbol,
         sortType: sortRows,
         Cell: (args) => {
-          console.log(args, 'my args');
           const { value, column } = args;
           if (typeof value === "object") {
             const { insight, value: rowValue } = value;
@@ -96,7 +95,7 @@ const CustomTable = ({ data, onSearch }) => {
           }
           if (column.Header.toLowerCase() === "citizen average rating") {
             return (
-              <Rating currentRating={Math.round(value)} styles={{ width: "unset", justifyContent: "center" }} starStyles={{ width: "25px" }} />
+              <Rating currentRating={Math.round(value)} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
             )
           }
           if (column.symbol === "amount") {
@@ -147,8 +146,15 @@ const CustomTable = ({ data, onSearch }) => {
     setChartKey(nextState[nextState.length - 1]?.id);
   };
 
-  if (isLoading || isRequestLoading || !tableColumns || !tableData) {
+  if (isLoading || isRequestLoading) {
     return <Loader />;
+  }
+  if (!tableColumns || !tableData) {
+    return (
+      <div className="no-data">
+        <p>{t('DSS_NO_DATA')}</p>
+      </div>
+    );
   }
 
   return (
@@ -166,6 +172,7 @@ const CustomTable = ({ data, onSearch }) => {
         t={t}
         disableSort={false}
         autoSort={true}
+        manualPagination={false}
         initSortId="S N "
         onSearch={onSearch}
         data={tableData}

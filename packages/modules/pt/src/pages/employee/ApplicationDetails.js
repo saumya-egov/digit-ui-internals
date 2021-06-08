@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
 
@@ -58,11 +58,10 @@ const ApplicationDetails = () => {
     };
   }
 
-  if (!(applicationDetails?.applicationDetails[0]?.title === "CS_FILE_DESLUDGING_APPLICATION_NO")) {
-    applicationDetails?.applicationDetails?.shift();
+  if (!(applicationDetails?.applicationDetails[0]?.values?.[0].title === "PT_PROPERTY_APPLICATION_NO")) {
     applicationDetails?.applicationDetails?.unshift({
       values: [
-        { title: "CS_FILE_DESLUDGING_APPLICATION_NO", value: applicationDetails?.applicationData?.acknowldgementNumber },
+        { title: "PT_PROPERTY_APPLICATION_NO", value: applicationDetails?.applicationData?.acknowldgementNumber },
         { title: "ES_APPLICATION_CHANNEL", value: `ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_${applicationDetails?.applicationData?.channel}` },
       ],
     });
@@ -70,7 +69,7 @@ const ApplicationDetails = () => {
 
   return (
     <div>
-      <Header>{t("ES_TITLE_APPLICATION_DETAILS")}</Header>
+      <Header>{t("PT_APPLICATION_TITLE")}</Header>
       <ApplicationDetailsTemplate
         applicationDetails={applicationDetails}
         isLoading={isLoading}

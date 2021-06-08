@@ -552,6 +552,19 @@ const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getFSTPPlantCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "FSTPPlantInfo" }],
+      }
+    ]
+  }
+});
+
 const GetEgovLocations = (MdmsRes) => {
   return MdmsRes["egov-location"].TenantBoundary[0].boundary.children.map((obj) => ({
     name: obj.localname,
@@ -736,7 +749,10 @@ const GetPreFields = (MdmsRes) => MdmsRes["FSM"].PreFieldsConfig;
 
 const GetPostFields = (MdmsRes) => MdmsRes["FSM"].PostFieldsConfig;
 
+const GetFSTPPlantInfo = (MdmsRes) => MdmsRes["FSM"].FSTPPlantInfo;
+
 const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
+  console.log(type, "type");
   switch (type) {
     case "citymodule":
       return GetCitiesWithi18nKeys(MdmsRes, moduleCode);
@@ -792,6 +808,8 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return GetMCollectBusinessService(MdmsRes);
     case "applcatonStatus":
       return GetMCollectApplicationStatus(MdmsRes);
+    case "FSTPPlantInfo":
+      return GetFSTPPlantInfo(MdmsRes);
     default:
       return MdmsRes;
   }
@@ -1001,4 +1019,7 @@ export const MdmsService = {
   getMultipleTypes: (tenantId, moduleCode, types) => {
     return MdmsService.getDataByCriteria(tenantId, getMultipleTypes(tenantId, moduleCode, types), moduleCode);
   },
+  getFSTPPlantInfo: (tenantId, moduleCode, types) => {
+    return MdmsService.getDataByCriteria(tenantId, getFSTPPlantCriteria(tenantId, moduleCode, types), moduleCode);
+  }
 };

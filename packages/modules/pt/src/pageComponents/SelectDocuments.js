@@ -108,9 +108,8 @@ function SelectDocument({
   const { dropdownData } = doc;
   const { dropdownFilter, enabledActions, filterCondition } = doc?.additionalDetails;
   var dropDownData = dropdownData;
-  let hideInput = false;
-
-  const [isHidden, setHidden] = useState(hideInput);
+  // let hideInput = false;
+  const [isHidden, setHidden] = useState(false);
 
   const addError = () => {
     let type = formState.errors?.[config.key]?.type;
@@ -168,8 +167,10 @@ function SelectDocument({
   useEffect(() => {
     if (action === "update") {
       const originalDoc = formData?.originalData?.documents?.filter((e) => e.documentType.includes(doc?.code))[0];
-      const docType = dropDownData.filter((e) => e.code === originalDoc?.documentType)[0];
-      // console.log(dropDownData, docType, doc?.code, "inside update docs");
+      const docType = dropDownData
+        .filter((e) => e.code === originalDoc?.documentType)
+        .map((e) => ({ ...e, i18nKey: e?.code?.replaceAll(".", "_") }))[0];
+      console.log(dropDownData, docType, doc?.code, "inside update docs");
       if (!docType) setHidden(true);
       else {
         setSelectedDocument(docType);
@@ -213,6 +214,7 @@ function SelectDocument({
       }, formData);
 
       // console.log(value, onArray, "find value here");
+      let hideInput;
       if (value) {
         if (onArray) {
           const valueArr = value?.map((e) => formArrayAttrPath.reduce((acc, f) => acc?.[f], e) || e);
@@ -230,9 +232,10 @@ function SelectDocument({
       const a = fromRawData ? jsonPath : jsonPath?.split("Properties[0].propertyDetails[0].")[1];
       const keyArr = a?.split(".")?.map((e) => (e.includes("[") ? e.split("[")[1]?.split("]")[0] : e));
       const value = keyArr.reduce((acc, curr) => acc[curr], formData?.originalData);
+      let hideInput;
       if (value) {
         if (onArray) {
-          hideInput = value?.some((e) => filterValue?.includes(e[arrayAttribute]));
+          hideInput = value?.every((e) => filterValue?.includes(e[arrayAttribute]));
         } else hideInput = filterValue?.includes(value);
         if (hideInput !== isHidden) setHidden(hideInput);
         if (hideInput) return null;
@@ -256,20 +259,25 @@ function SelectDocument({
       }
     }
   }
-  if (dropDownData?.length === 0) return null;
+  if (dropDownData?.length === 0) {
+    removeError();
+    return null;
+  }
+
+  console.log(dropDownData, "dropdown data");
 
   return (
     <div style={{ marginBottom: "24px" }}>
       {doc?.hasDropdown ? (
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t(doc?.code)}</CardLabel>
+          <CardLabel className="card-label-smaller">{t(doc?.code.replaceAll(".", "_"))}</CardLabel>
           <Dropdown
             className="form-field"
             selected={selectedDocument}
             disable={dropDownData?.length === 0 || enabledActions?.[action].disableDropdown}
-            option={dropDownData}
+            option={dropDownData.map((e) => ({ ...e, i18nKey: e.code?.replaceAll(".", "_") }))}
             select={handleSelectDocument}
-            optionKey="code"
+            optionKey="i18nKey"
             t={t}
           />
         </LabelFieldPair>

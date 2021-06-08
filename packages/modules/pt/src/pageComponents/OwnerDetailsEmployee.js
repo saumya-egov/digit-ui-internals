@@ -118,14 +118,18 @@ const OwnerForm = (_props) => {
       mdmsData?.PropertyTax?.Documents?.filter((e) => e.code === "OWNER.SPECIALCATEGORYPROOF")?.[0]
         .dropdownData?.filter((e) => e.parentValue.includes(formValue?.ownerType?.code))
         .map?.((e) => ({
-          i18nKey: `PROPERTY_DOCUMENT_${e.code}`,
+          i18nKey: e.code?.replaceAll(".", "_"),
           code: e.code,
         })) || [],
     [mdmsData, formValue]
   );
 
   const ownerTypesMenu = useMemo(
-    () => mdmsData?.PropertyTax?.OwnerType?.map?.((e) => ({ i18nKey: `PROPERTY_OWNERTYPE_${e.code}`, code: e.code })) || [],
+    () =>
+      mdmsData?.PropertyTax?.OwnerType?.map?.((e) => ({
+        i18nKey: `${e.code.replaceAll("PROPERTY", "COMMON_MASTERS").replaceAll(".", "_")}`,
+        code: e.code,
+      })) || [],
     [mdmsData]
   );
 
@@ -180,7 +184,7 @@ const OwnerForm = (_props) => {
           {!isIndividualTypeOwner ? (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Institition Name</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_INSTITUTION_NAME")}</CardLabel>
                 <div className="field">
                   <Controller
                     control={control}
@@ -208,7 +212,7 @@ const OwnerForm = (_props) => {
                 {localFormState.touched?.institution?.name ? errors?.institution?.name?.message : ""}
               </CardLabelError>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Institution Type</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_INSTITUTION_TYPE")}</CardLabel>
                 <Controller
                   control={control}
                   name={"institution.type"}
@@ -234,13 +238,13 @@ const OwnerForm = (_props) => {
           ) : null}
 
           <LabelFieldPair>
-            <CardLabel className="card-label-smaller">Name</CardLabel>
+            <CardLabel className="card-label-smaller">{t("PT_OWNER_NAME")}</CardLabel>
             <div className="field">
               <Controller
                 control={control}
                 name={"name"}
                 defaultValue={owner?.name}
-                rules={{ required: "NAME_REQUIRED" }}
+                rules={{ required: "NAME_REQUIRED", validate: { pattern: (val) => (/^\w+( +\w+)*$/.test(val) ? true : t("INVALID_NAME")) } }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
@@ -263,7 +267,7 @@ const OwnerForm = (_props) => {
           {isIndividualTypeOwner ? (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Gender</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_FORM3_GENDER")}</CardLabel>
                 <Controller
                   control={control}
                   name={"gender"}
@@ -291,7 +295,7 @@ const OwnerForm = (_props) => {
           ) : (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Landline</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_LANDLINE_NUMBER_FLOATING_LABEL")}</CardLabel>
                 <div className="field">
                   <Controller
                     control={control}
@@ -317,7 +321,7 @@ const OwnerForm = (_props) => {
             </React.Fragment>
           )}
           <LabelFieldPair>
-            <CardLabel className="card-label-smaller">Owner Mobile Number</CardLabel>
+            <CardLabel className="card-label-smaller">{t("PT_FORM3_MOBILE_NUMBER")}</CardLabel>
             <div className="field">
               <Controller
                 control={control}
@@ -343,13 +347,13 @@ const OwnerForm = (_props) => {
           {isIndividualTypeOwner ? (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Guardian's Name</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_SEARCHPROPERTY_TABEL_GUARDIANNAME")}</CardLabel>
                 <div className="field">
                   <Controller
                     control={control}
                     name={"fatherOrHusbandName"}
                     defaultValue={owner?.fatherOrHusbandName}
-                    rules={{ required: "required" }}
+                    rules={{ required: "NAME_REQUIRED", validate: { pattern: (val) => (/^\w+( +\w+)*$/.test(val) ? true : t("INVALID_NAME")) } }}
                     render={(props) => (
                       <TextInput
                         value={props.value}
@@ -368,7 +372,7 @@ const OwnerForm = (_props) => {
                 {localFormState.touched.fatherOrHusbandName ? errors?.fatherOrHusbandName?.message : ""}
               </CardLabelError>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Relationship with Guardian</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_FORM3_RELATIONSHIP")}</CardLabel>
                 <Controller
                   control={control}
                   name={"relationship"}
@@ -392,7 +396,7 @@ const OwnerForm = (_props) => {
               </LabelFieldPair>
               <CardLabelError style={errorStyle}>{localFormState.touched.relationship ? errors?.relationship?.message : ""}</CardLabelError>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Owner Type</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_FORM3_SPECIAL_CATEGORY")}</CardLabel>
                 <Controller
                   control={control}
                   name={"ownerType"}
@@ -416,7 +420,7 @@ const OwnerForm = (_props) => {
           ) : (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Designation</CardLabel>
+                <CardLabel className="card-label-smaller">{t("TL_NEW_DESIG_OWNER_LABEL")}</CardLabel>
                 <div className="field">
                   <Controller
                     control={control}
@@ -444,7 +448,7 @@ const OwnerForm = (_props) => {
           {formValue.ownerType?.code && formValue.ownerType?.code !== "NONE" ? (
             <React.Fragment>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Document</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_OWNERSHIP_DOCUMENT_TYPE")}</CardLabel>
                 <Controller
                   control={control}
                   name={"documents.documentType"}
@@ -467,7 +471,7 @@ const OwnerForm = (_props) => {
                 {localFormState.touched.documents?.documentType ? errors?.documents?.documentType?.message : ""}
               </CardLabelError>
               <LabelFieldPair>
-                <CardLabel className="card-label-smaller">Document ID</CardLabel>
+                <CardLabel className="card-label-smaller">{t("PT_OWNERSHIP_DOCUMENT_ID")}</CardLabel>
                 <div className="field">
                   <Controller
                     control={control}

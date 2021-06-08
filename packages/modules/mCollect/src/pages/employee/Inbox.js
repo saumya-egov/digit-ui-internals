@@ -21,6 +21,7 @@ const Inbox = ({
 }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
+  let isMcollectCancelled = Digit.SessionStorage.get("isMcollectCancelled");
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
@@ -49,8 +50,12 @@ const Inbox = ({
   //   middlewaresWf,
   //   middlewareSearch,
   // });
-  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({tenantId, filters: { ...searchParams, ...paginationParams } });
 
+  const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({
+    tenantId,
+    filters: { ...searchParams, ...paginationParams },
+    isMcollectCancelled,
+  });
 
   let formedData = [];
   let res;
@@ -62,8 +67,8 @@ const Inbox = ({
       let businessServiceMap = {};
       let challanNumbers = [];
       let challanNums = [];
-  
-      data?.challans?.forEach(item => {
+
+      data?.challans?.forEach((item) => {
         challanNums = businessServiceMap[item.businessService] || [];
         challanNumbers = challanNums;
         challanNums.push(item.challanNo);
@@ -74,17 +79,17 @@ const Inbox = ({
       for (var key in businessServiceMap) {
         let consumerCodes = businessServiceMap[key].toString();
         res = await Digit.PaymentService.fetchBill(tenantId, { consumerCode: consumerCodes, businessService: key });
-        processInstanceArray = processInstanceArray.concat(res.Bill)
+        processInstanceArray = processInstanceArray.concat(res.Bill);
         businessIdToOwnerMapping = {};
-        processInstanceArray.filter(
-          record => record.businessService
-        ).forEach(item => {
-          businessIdToOwnerMapping[item.consumerCode] = {
-            businessService: item.businessService,
-            totalAmount: item.totalAmount || 0,
-            dueDate: item?.billDetails[0]?.expiryDate
-          };
-        });
+        processInstanceArray
+          .filter((record) => record.businessService)
+          .forEach((item) => {
+            businessIdToOwnerMapping[item.consumerCode] = {
+              businessService: item.businessService,
+              totalAmount: item.totalAmount || 0,
+              dueDate: item?.billDetails[0]?.expiryDate,
+            };
+          });
       }
       setBusinessIdToOwnerMappings(businessIdToOwnerMapping);
     }
@@ -92,8 +97,8 @@ const Inbox = ({
       fetchMyAPI();
     }
   }, [data]);
-  
-  data?.challans?.map(data => {
+
+  data?.challans?.map((data) => {
     formedData.push({
       challanNo: data?.challanNo,
       name: data?.citizen?.name,
@@ -101,8 +106,8 @@ const Inbox = ({
       businessService: data?.businessService,
       totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount || 0,
       dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate || "NA",
-      tenantId: data?.tenantId
-    })
+      tenantId: data?.tenantId,
+    });
   });
 
   useEffect(() => {
@@ -125,7 +130,7 @@ const Inbox = ({
     let keys_to_delete = filterParam.delete;
     console.log(keys_to_delete);
     let _new = {};
-    if(isMobile) {
+    if (isMobile) {
       _new = { ...filterParam };
       // setSearchParams({
       //   businessService: [],
@@ -153,20 +158,20 @@ const Inbox = ({
   };
 
   const getSearchFields = () => {
-      return [
-        {
-          label: t("UC_CHALLAN_NUMBER"),
-          name: "challanNo",
-        },
-        {
-          label: t("UC_MOBILE_NUMBER_LABEL"),
-          name: "mobileNumber",
-          maxlength: 10,
-          pattern: "[6-9][0-9]{9}",
-          title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
-          componentInFront: "+91"
-        }
-      ];
+    return [
+      {
+        label: t("UC_CHALLAN_NUMBER"),
+        name: "challanNo",
+      },
+      {
+        label: t("UC_MOBILE_NUMBER_LABEL"),
+        name: "mobileNumber",
+        maxlength: 10,
+        pattern: "[6-9][0-9]{9}",
+        title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        componentInFront: "+91",
+      },
+    ];
   };
 
   if (rest?.data?.length !== null) {

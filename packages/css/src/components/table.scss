@@ -46,6 +46,7 @@
 
 .customTable {
   width: 100%;
+  table-layout: fixed;
   th {
     font-weight: bold;
   }
@@ -55,5 +56,9 @@
     text-align: left;
     border-bottom: 1px solid #B1B4B6;
     padding: 15px 10px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #EEEEEE;
   }
 }

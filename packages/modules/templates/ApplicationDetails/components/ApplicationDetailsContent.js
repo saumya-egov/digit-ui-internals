@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import PropertyDocuments from "./PropertyDocuments";
 import PropertyFloors from "./PropertyFloors";
 import PropertyEstimates from "./PropertyEstimates";
+import PropertyOwners from "./PropertyOwners";
 
 function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService }) {
   const { t } = useTranslation();
@@ -72,11 +73,13 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
     }
   };
 
+  // console.log(applicationDetails?.applicationDetails, "inside app details content");
+
   return (
     <Card style={{ position: "relative" }}>
       {applicationDetails?.applicationDetails?.map((detail, index) => (
         <React.Fragment key={index}>
-          {index === 0 ? (
+          {index === 0 && !detail.asSectionHeader ? (
             <CardSubHeader style={{ marginBottom: "16px" }}>{t(detail.title)}</CardSubHeader>
           ) : (
             <CardSectionHeader style={{ marginBottom: "16px", marginTop: "32px" }}>{t(detail.title)}</CardSectionHeader>
@@ -99,6 +102,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
             })}
           </StatusTable>
           {detail?.additionalDetails?.floors && <PropertyFloors floors={detail?.additionalDetails?.floors} />}
+          {detail?.additionalDetails?.owners && <PropertyOwners owners={detail?.additionalDetails?.owners} />}
           {detail?.additionalDetails?.documents && <PropertyDocuments documents={detail?.additionalDetails?.documents} />}
           {detail?.additionalDetails?.taxHeadEstimatesCalculation && (
             <PropertyEstimates taxHeadEstimatesCalculation={detail?.additionalDetails?.taxHeadEstimatesCalculation} />
