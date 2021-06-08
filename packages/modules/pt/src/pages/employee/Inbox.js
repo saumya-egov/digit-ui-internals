@@ -27,6 +27,10 @@ const Inbox = ({
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
 
+  const [allowSearch, setAllowSearch] = useState(() => {
+    return isInbox ? {} : { enabled: false };
+  });
+
   const [searchParams, setSearchParams] = useState(() => {
     return initialStates.searchParams || {};
   });
@@ -45,13 +49,13 @@ const Inbox = ({
     rawSearchHandler,
     combineResponse,
     wfConfig,
-    searchConfig,
+    searchConfig: { ...allowSearch, ...searchConfig },
     middlewaresWf,
     middlewareSearch,
   });
 
   useEffect(() => {
-    console.log("data from the hook", hookLoading, rest, data);
+    console.log(data, "data from the hook...");
   }, [hookLoading, rest]);
 
   useEffect(() => {
@@ -73,6 +77,7 @@ const Inbox = ({
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     delete filterParam.delete;
     setSearchParams({ ..._new });
+    setAllowSearch({ enabled: true });
   };
 
   const handleSort = useCallback((args) => {

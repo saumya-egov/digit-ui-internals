@@ -34,6 +34,8 @@ import SelectDocuments from "./pageComponents/SelectDocuments";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
 import PTEmployeeOwnershipDetails from "./pageComponents/OwnerDetailsEmployee";
 import CitizenApp from "./pages/citizen";
+import SearchPropertyCitizen from "./pages/citizen/SearchProperty/searchProperty";
+import SearchResultCitizen from "./pages/citizen/SearchResults";
 
 import PropertyInformation from "./pages/citizen/MyProperties/propertyInformation";
 import PTWFCaption from "./pageComponents/PTWFCaption";
@@ -41,6 +43,8 @@ import PTWFReason from "./pageComponents/PTWFReason";
 import ProvideFloorNo from "./pageComponents/ProvideFloorNo";
 import propertyOwnerHistory from "./pages/citizen/MyProperties/propertyOwnerHistory";
 import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
+import TransfererDetails from "./pageComponents/Mutate/TransfererDetails";
+import OwnerMutate from "./pageComponents/Mutate/Owner";
 
 import EmployeeApp from "./pages/employee";
 import PTCard from "./components/PTCard";
@@ -84,6 +88,10 @@ const componentsToRegister = {
   SelectAltContactNumber,
   SelectDocuments,
   PTEmployeeOwnershipDetails,
+  SearchPropertyCitizen,
+  SearchResultCitizen,
+  TransfererDetails,
+  OwnerMutate,
 };
 
 const addComponentsToRegistry = () => {

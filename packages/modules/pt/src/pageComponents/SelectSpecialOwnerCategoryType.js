@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, CardLabel, Dropdown } from "@egovernments/digit-ui-react-components";
+import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, CardLabel, Dropdown, Loader } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
@@ -16,6 +16,7 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
   Menu ? Menu.sort((a, b) => a.name.localeCompare(b.name)) : "";
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
+  const isMutation = url.includes("property-mutation");
 
   const onSkip = () => onSelect();
 
@@ -43,6 +44,8 @@ const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formDat
       validation: {},
     },
   ];
+
+  if (isLoading) return <Loader />;
 
   if (userType === "employee") {
     return inputs?.map((input, index) => {

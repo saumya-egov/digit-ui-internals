@@ -22,6 +22,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let isEditProperty = formData?.isEditProperty || false;
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
+  const mutationScreen = url.includes("/property-mutation/");
 
   function setOwnerName(e) {
     setName(e.target.value);
@@ -49,6 +50,11 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship, emailId: email };
       onSelect(config.key, { ...formData[config.key], ...ownerStep }, false, index);
     } else {
+      if (mutationScreen) {
+        ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };
+        onSelect(config.key, ownerStep, false, "", "", { index });
+        return;
+      }
       ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };
       onSelect(config.key, ownerStep, false, index);
     }

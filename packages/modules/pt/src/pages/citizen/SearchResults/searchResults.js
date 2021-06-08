@@ -1,10 +1,10 @@
 import React from "react";
 import { Header, ResponseComposer, Loader } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
+const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation, onSelect, config }) => {
   const { t } = useTranslation();
   const { mobileNumber, propertyIds, oldPropertyIds } = Digit.Hooks.useQueryParams();
   const filters = {};
@@ -34,7 +34,10 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   }
 
   const onSubmit = (data) => {
-    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
+    if (isMutation) {
+      let property = result?.data?.Properties?.filter?.((e) => e.propertyId === data.property_id)[0];
+      onSelect(config.key, { data, property });
+    } else history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
   };
 
   const payment = {};
@@ -48,7 +51,9 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
     }
   });
 
-  const searchResults = result?.data?.Properties?.map((property) => {
+  const arr = isMutation ? result?.data?.Properties?.filter((e) => e.status === "ACTIVE") : result?.data?.Properties;
+
+  const searchResults = arr?.map((property) => {
     let addr = property?.address || {};
 
     return {
