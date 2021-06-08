@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Dropdown, DatePicker, Toast } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
+import { sortDropdownNames } from "./Utils/Sortbyname";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const CreateChallen = ({ ChallanData }) => {
   const childRef = useRef();
@@ -448,7 +449,7 @@ const CreateChallen = ({ ChallanData }) => {
                 optionKey="code"
                 disable={isEdit}
                 id="businessService"
-                option={categoires}
+                option={sortDropdownNames(categoires, "code", t)}
                 select={setcategories}
                 t={t}
               />
@@ -467,7 +468,7 @@ const CreateChallen = ({ ChallanData }) => {
                 disable={isEdit}
                 optionKey="code"
                 id="businessService"
-                option={categoiresType}
+                option={sortDropdownNames(categoiresType, "code", t)}
                 select={setcategoriesType}
                 t={t}
               />
@@ -514,6 +515,7 @@ const CreateChallen = ({ ChallanData }) => {
             name: ele.name.split(".").join("_"),
             validation: { required: ele.isRequired, pattern: /^(0|[1-9][0-9]*)$/ },
             error: t("UC_COMMON_FIELD_ERROR"),
+            componentInFront: <div className="employee-card-input employee-card-input--front">₹</div>,
           },
         }));
         if (temp.length > 0) {
@@ -530,7 +532,7 @@ const CreateChallen = ({ ChallanData }) => {
     <div>
       <FormComposer
         ref={childRef}
-        heading={t("UC_COMMON_HEADER")}
+        heading={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_COMMON_HEADER")}
         config={setconfig()}
         onSubmit={onSubmit}
         setFormData={defaultval}
@@ -542,3 +544,4 @@ const CreateChallen = ({ ChallanData }) => {
   );
 };
 export default CreateChallen;
+
