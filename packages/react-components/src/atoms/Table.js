@@ -31,6 +31,7 @@ const Table = ({
   autoSort = false,
   initSortId = "",
   onSearch = false,
+  manualPagination = true,
   totalRecords,
   onNextPage,
   onPrevPage,
@@ -61,7 +62,7 @@ const Table = ({
       data,
       initialState: { pageIndex: currentPage, pageSize: pageSizeLimit, sortBy: autoSort ? [{ id: initSortId, desc: false }] : sortParams },
       pageCount: totalRecords > 0 ? Math.ceil(totalRecords / pageSizeLimit) : -1,
-      manualPagination: true,
+      manualPagination: manualPagination,
       disableMultiSort: false,
       disableSortBy: disableSort,
       manualSortBy: autoSort ? false : true,
@@ -72,7 +73,7 @@ const Table = ({
       useControlledState: (state) => {
         return React.useMemo(() => ({
           ...state,
-          pageIndex: currentPage,
+          pageIndex: manualPagination ? currentPage : state.pageIndex,
         }));
       },
     },
@@ -179,8 +180,8 @@ const Table = ({
 
           </span>
         </button> */}
-          {canPreviousPage && <ArrowBack onClick={() => onPrevPage()} className={"cp"} />}
-          {canNextPage && <ArrowForward onClick={() => onNextPage()} className={"cp"} />}
+          {canPreviousPage && <ArrowBack onClick={() => manualPagination ? onPrevPage() : previousPage()} className={"cp"} />}
+          {canNextPage && <ArrowForward onClick={() => manualPagination ? onNextPage() : nextPage()} className={"cp"} />}
         </div>
       }
     </React.Fragment>

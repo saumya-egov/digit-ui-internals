@@ -50,6 +50,7 @@ const EmployeeChallan = (props) => {
       .then((result) => {
         if (result.challans && result.challans.length > 0) {
           const challan = result.challans[0];
+          let challanId = Digit.SessionStorage.set("isMcollectCancelled", challan.challanNo);
           history.push(
             `/digit-ui/employee/mcollect/acknowledgement?purpose=challan&status=success&tenantId=${challan?.tenantId}&serviceCategory=${challan.businessService}&challanNumber=${challan.challanNo}&applicationStatus=${challan.applicationStatus}`,
             { from: url }
@@ -60,7 +61,13 @@ const EmployeeChallan = (props) => {
     closeModal();
   };
 
-  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({ tenantId, filters: { challanNo: challanno } });
+  let isMcollectCancelled = Digit.SessionStorage.get("isMcollectCancelled");
+
+  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.mcollect.useMCollectSearch({
+    tenantId,
+    filters: { challanNo: challanno },
+    isMcollectCancelled,
+  });
   var challanDetails = data?.challans?.filter(function (item) {
     return item.challanNo === challanno;
   })[0];
@@ -128,14 +135,16 @@ const EmployeeChallan = (props) => {
         <Card>
           <StatusTable style={{ padding: "10px 0px" }}>
             <Row label={`${t("UC_CHALLAN_NO")}:`} text={challanno} />
-            <hr style={{ width: "35%", border: "1px solid #D6D5D4" }} />
+            <hr style={{ width: "35%", border: "1px solid #D6D5D4", marginTop:'1rem', marginBottom:'1rem' }} />
             {challanBillDetails?.map((data) => {
               return (
                 <Row label={t(stringReplaceAll(data?.taxHeadCode, ".", "_"))} text={`₹${data?.amount}` || 0} textStyle={{ whiteSpace: "pre" }} />
               );
             })}
-            <hr style={{ width: "35%", border: "1px solid #D6D5D4" }} />
-            <Row label={<b style={{ padding: "10px 0px" }}>{t("UC_TOTAL_DUE_AMOUT_LABEL")}</b>} text={`₹${totalDueAmount}`} />
+            <hr style={{ width: "35%", border: "1px solid #D6D5D4", marginTop:'1rem', marginBottom:'1rem' }} />
+            <Row label={<b style={{ padding: "10px 0px" }}>{t("UC_TOTAL_DUE_AMOUT_LABEL")}</b>} text={`₹${totalDueAmount}`} textStyle={{    fontSize: "24px",
+    padding: "10px 0px",
+    fontWeight: "700" }} />
           </StatusTable>
           <div style={{ fontSize: "24px", padding: "10px 0px", fontWeight: "700" }}>{t("UC_SERVICE_DETAILS_LABEL")}</div>
           <StatusTable>

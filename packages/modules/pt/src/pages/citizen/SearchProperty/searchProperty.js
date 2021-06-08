@@ -1,15 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { FormComposer, CardLabelDesc, Loader } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const SearchProperty = ({ config: propsConfig }) => {
+const SearchProperty = ({ config: propsConfig, onSelect }) => {
   const { t } = useTranslation();
 
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setCanSubmit] = useState(false);
+
+  console.log(propsConfig, "inside searchProperty");
+
+  useLayoutEffect(() => {
+    const getActionBar = () => {
+      let el = document.querySelector("div.action-bar-wrap");
+      if (el) el.style.bottom = "40px";
+      else {
+        setTimeout(() => {
+          getActionBar();
+        }, 100);
+      }
+    };
+    getActionBar();
+    //
+  }, []);
 
   // moduleCode, type, config = {}, payload = []
   const { data: propertyIdFormat, isLoading } = Digit.Hooks.pt.useMDMS(tenantId, "DIGIT-UI", "HelpText", {
@@ -21,6 +37,8 @@ const SearchProperty = ({ config: propsConfig }) => {
   const onPropertySearch = async (data) => {
     if (!data.mobileNumber && !data.propertyId && !data.oldPropertyId) {
       return alert("Provide at least one parameter");
+    } else if (propsConfig.action === "MUTATION") {
+      onSelect(config.key, data, null, null, null, { ...data, propertyIds: data.propertyId, oldPropertyIds: data.oldPropertyId });
     } else {
       history.push(
         `/digit-ui/citizen/pt/property/search-results?mobileNumber=${data?.mobileNumber ? data?.mobileNumber : ``}&propertyIds=${

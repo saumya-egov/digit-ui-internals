@@ -172,6 +172,7 @@ const CustomTable = ({ data, onSearch }) => {
         t={t}
         disableSort={false}
         autoSort={true}
+        manualPagination={false}
         initSortId="S N "
         onSearch={onSearch}
         data={tableData}
