@@ -37,7 +37,7 @@ const FstpOperatorDetails = () => {
   const [showToast, setShowToast] = useState(null);
   const [wasteCollected, setWasteCollected] = useState(null);
   const [errors, setErrors] = useState({});
-  // const [tripTime, setTripTime] = useState(null);
+  const [tripStartTime, setTripStartTime] = useState(null);
   const [tripTime, setTripTime] = useState(() => {
     const today = new Date();
     const hour = (today.getHours() < 10 ? "0" : "") + today.getHours();
@@ -67,8 +67,17 @@ const FstpOperatorDetails = () => {
       setErrors({ wasteRecieved: "ES_FSTP_INVALID_WASTE_AMOUNT" });
       return;
     }
+    if (tripStartTime === null) {
+      setErrors({ tripStartTime: "ES_FSTP_INVALID_START_TIME" });
+      return;
+    }
 
     if (tripTime === null) {
+      setErrors({ tripTime: "ES_FSTP_INVALID_TRIP_TIME" });
+      return;
+    }
+
+    if (tripStartTime === tripTime || tripStartTime > tripTime) {
       setErrors({ tripTime: "ES_FSTP_INVALID_TRIP_TIME" });
       return;
     }
@@ -77,7 +86,11 @@ const FstpOperatorDetails = () => {
 
     const d = new Date();
     const timeStamp = Date.parse(new Date(d.toString().split(":")[0].slice(0, -2) + tripTime)) / 1000;
+    const tripStartTimestamp = Date.parse(new Date(d.toString().split(":")[0].slice(0, -2) + tripStartTime)) / 1000;
+    vehicle.tripStartTime = tripStartTimestamp
+    vehicle.fstpEntryTime = tripStartTimestamp;
     vehicle.tripEndTime = timeStamp;
+    vehicle.fstpExitTime = timeStamp;
     vehicle.volumeCarried = wasteCollected;
     const details = {
       vehicleTrip: vehicle,
@@ -129,7 +142,7 @@ const FstpOperatorDetails = () => {
     },
     {
       title: t("ES_INBOX_VEHICLE_NO"),
-      value: vehicle.vehicle.registrationNumber,
+      value: vehicle.vehicle?.registrationNumber,
     },
     {
       title: `${t("ES_VEHICLE CAPACITY")}`,
@@ -144,6 +157,17 @@ const FstpOperatorDetails = () => {
           {vehicleData.map((row, index) => (
             <Row key={row.title} label={row.title} text={row.value || "N/A"} last={false} />
           ))}
+          <CardLabelError>{t(errors.tripStartTime)}</CardLabelError>
+          <Row
+            key={t("ES_VEHICLE_IN_TIME")}
+            label={`${t("ES_VEHICLE_IN_TIME")} * `}
+            rowContainerStyle={{ marginBottom: "32px" }}
+            text={
+              <div>
+                <CustomTimePicker name="tripStartTime" onChange={setTripStartTime} value={tripStartTime} />
+              </div>
+            }
+          />
           <CardLabelError>{t(errors.wasteRecieved)}</CardLabelError>
           <Row
             key={t("ES_VEHICLE_WASTE_RECIEVED")}
@@ -156,8 +180,8 @@ const FstpOperatorDetails = () => {
           />
           <CardLabelError>{t(errors.tripTime)}</CardLabelError>
           <Row
-            key={t("ES_COMMON_TIME")}
-            label={`${t("ES_COMMON_TIME")} * `}
+            key={t("ES_VEHICLE_OUT_TIME")}
+            label={`${t("ES_VEHICLE_OUT_TIME")} * `}
             text={
               <div>
                 <CustomTimePicker name="tripTime" onChange={setTripTime} value={tripTime} />
