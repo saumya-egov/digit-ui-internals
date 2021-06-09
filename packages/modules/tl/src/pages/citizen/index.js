@@ -30,6 +30,7 @@ const App = () => {
         <AppContainer>
           {/*           {!shouldHideBackButton(hideBackButtonConfig) ? <BackButton style={{ position: "fixed", top: "55px" }}>Back</BackButton> : ""}
            */}{" "}
+          <BackButton style={{ position: "fixed", top: "55px" }}>Back</BackButton>
           <PrivateRoute path={`${path}/tradelicence/new-application`} component={CreateTradeLicence} />
           <PrivateRoute path={`${path}/tradelicence/tl-info`} component={TradeLicense} />
           {/*<PrivateRoute path={`${path}/property/edit-application`} component={EditProperty} />
