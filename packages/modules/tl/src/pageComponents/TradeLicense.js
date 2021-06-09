@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardSubHeader, CardText, Loader, SubmitBar, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { cardBodyStyle, stringReplaceAll } from "../utils";
+import { stringReplaceAll } from "../utils";
 //import { map } from "lodash-es";
 
 const TradeLicense = ({ t, config, onSelect, userType, formData }) => {

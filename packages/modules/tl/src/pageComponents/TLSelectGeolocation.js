@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { LocationSearchCard } from "@egovernments/digit-ui-react-components";
-import { cardBodyStyle } from "../utils";
 
 const TLSelectGeolocation = ({ t, config, onSelect, formData = {} }) => {
   const [pincode, setPincode] = useState(formData?.address?.pincode || "");
@@ -40,7 +39,6 @@ const TLSelectGeolocation = ({ t, config, onSelect, formData = {} }) => {
       onChange={(code, location) => onChange(code, location)}
       disabled={pincode === "" || isEditProperty}
       forcedError={t(pincodeServicability)}
-      cardBodyStyle={cardBodyStyle}
       isPTDefault={true}
       PTdefaultcoord={defaultcoord1}
     />

@@ -4,7 +4,6 @@ import { stringReplaceAll } from "../utils";
 
 const Proof = ({ t, config, onSelect, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
-  let index = window.location.href.split("/").pop();
   const [uploadedFile, setUploadedFile] = useState(formData?.address?.documents?.OwnerPhotoProof?.fileStoreId || null);
   const [file, setFile] = useState(formData?.address?.documents?.OwnerPhotoProof);
   const [error, setError] = useState(null);
@@ -40,7 +39,7 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
       address["documents"] = [];
       address.documents["OwnerPhotoProof"] = fileDetails;
     }
-    onSelect(config.key, address, "", index);
+    onSelect(config.key, address);
     // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
   };
   const onSkip = () => onSelect();

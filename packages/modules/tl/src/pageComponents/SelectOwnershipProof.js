@@ -3,8 +3,6 @@ import { FormStep, UploadFile, CardLabelDesc, Dropdown, CardLabel } from "@egove
 import { stringReplaceAll } from "../utils";
 
 const SelectOwnershipProof = ({ t, config, onSelect, userType, formData }) => {
-  //let index = window.location.href.charAt(window.location.href.length - 1);
-  let index = window.location.href.split("/").pop();
   const [uploadedFile, setUploadedFile] = useState(formData?.owners?.documents?.ProofOfOwnership?.fileStoreId || null);
   const [file, setFile] = useState(formData?.owners?.documents?.ProofOfOwnership);
   const [error, setError] = useState(null);
@@ -40,8 +38,7 @@ const SelectOwnershipProof = ({ t, config, onSelect, userType, formData }) => {
       owners["documents"] = [];
       owners.documents["ProofOfOwnership"] = fileDetails;
     }
-    onSelect(config.key, owners, "", index);
-    // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
+    onSelect(config.key, owners);
   };
   const onSkip = () => onSelect();
 

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, RadioOrSelect } from "@egovernments/digit-ui-react-components";
-import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
 const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
   const [Accessory, setAccessory] = useState(formData?.TadeDetails?.accessories?.Accessory || "");
   const [AccessoryCount, setAccessoryCount] = useState(formData?.TadeDetails?.accessories?.AccessoryCount || "");
@@ -16,7 +14,19 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
   let isEditProperty = formData?.isEditProperty || false;
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
 
+  const { isLoading, data: Data = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "TradeLicense", "AccessoryCategory");
+
+  function getAccessoryCategoryDropDown() {
+    let AccessoryCategoryMenu = [];
+    Data &&
+      Data?.TradeLicense?.AccessoriesCategory.map((ob) => {
+        AccessoryCategoryMenu.push({ i18nKey: `TRADELICENSE_ACCESSORIESCATEGORY_${ob.code.replaceAll("-", "_")}`, code: `${ob.code}` });
+      });
+    return AccessoryCategoryMenu;
+  }
   function handleAdd() {
     const values = [...fields];
     values.push({ accessory: "", accessorycount: "", unit: null, uom: null });
@@ -55,21 +65,9 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
     formdata = { ...data, accessories: fields };
     // debugger;
     onSelect(config.key, formdata);
-    // unitsdata = { Accessory, AccessoryCount, UnitOfMeasure, UomValue };
-    // console.log(unitsdata);
-    // debugger;
-    // onSelect(config.key, unitsdata);
   };
 
   const onSkip = () => onSelect();
-  // As Ticket RAIN-2619 other option in gender and gaurdian will be enhance , dont uncomment it
-  const options = [
-    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_1", code: "ACC.1" },
-    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_2", code: "ACC.2" },
-    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_3", code: "ACC.3" },
-    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_4", code: "ACC.4" },
-    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_5", code: "ACC.5" },
-  ];
 
   return (
     <FormStep
@@ -89,7 +87,7 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
               optionKey="i18nKey"
               isMandatory={config.isMandatory}
               //options={[{ i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }]}
-              options={options}
+              options={getAccessoryCategoryDropDown()}
               selectedOption={field.accessory}
               onSelect={(e) => selectAccessory(index, e)}
             />

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, RadioOrSelect } from "@egovernments/digit-ui-react-components";
-import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
 const SelectTradeUnits = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
   const [TradeCategory, setTradeCategory] = useState("");
   const [TradeType, setTradeType] = useState(formData?.TadeDetails?.Units?.TradeType || "");

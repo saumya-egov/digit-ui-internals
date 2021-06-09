@@ -458,6 +458,19 @@ const getTLStructureTypeList = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getTLAccessoriesTypeList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "AccessoriesCategory" }],
+      },
+    ],
+  },
+});
+
 const getPTFloorList = (tenantId, moduleCode, type) => ({
   type,
   details: {
@@ -758,6 +771,14 @@ const getTLStructureType = (MdmsRes) =>
     };
   });
 
+const getTLAccessoriesType = (MdmsRes) =>
+  MdmsRes["TradeLicense"].AccessoriesCategory.filter((AccessoriesCategory) => AccessoriesCategory.active).map((TLAccessoryTypeList) => {
+    return {
+      ...TLAccessoryTypeList,
+      i18nKey: `TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(TLAccessoryTypeList.code, ".", "_")}`,
+    };
+  });
+
 const getFloorList = (MdmsRes) =>
   MdmsRes["PropertyTax"].Floor.filter((PTFloor) => PTFloor.active).map((PTFloorlist) => {
     return {
@@ -858,6 +879,8 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return getPTPropertyType(MdmsRes);
     case "StructureType":
       return getTLStructureType(MdmsRes);
+    case "AccessoryCategory":
+      return getTLAccessoriesType(MdmsRes);
     case "Floor":
       return getFloorList(MdmsRes);
     case "Reason":
@@ -1075,6 +1098,9 @@ export const MdmsService = {
   },
   getTLStructureType: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getTLStructureTypeList(tenantId, moduleCode), moduleCode);
+  },
+  getTLAccessoriesType: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getTLAccessoriesTypeList(tenantId, moduleCode), moduleCode);
   },
   getFloorList: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getPTFloorList(tenantId, moduleCode, type), moduleCode);

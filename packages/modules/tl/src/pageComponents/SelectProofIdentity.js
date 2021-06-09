@@ -3,8 +3,6 @@ import { FormStep, UploadFile, CardLabelDesc, Dropdown, CardLabel } from "@egove
 import { stringReplaceAll } from "../utils";
 
 const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
-  //let index = window.location.href.charAt(window.location.href.length - 1);
-  let index = window.location.href.split("/").pop();
   const [uploadedFile, setUploadedFile] = useState(formData?.owners?.documents?.ProofOfIdentity?.fileStoreId || null);
   const [file, setFile] = useState(formData?.owners?.documents?.ProofOfIdentity);
   const [error, setError] = useState(null);
@@ -40,8 +38,7 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
       owners["documents"] = [];
       owners.documents["ProofOfIdentity"] = fileDetails;
     }
-    onSelect(config.key, owners, "", index);
-    // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
+    onSelect(config.key, owners);
   };
   const onSkip = () => onSelect();
 

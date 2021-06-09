@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TypeSelectCard } from "@egovernments/digit-ui-react-components";
 import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
-import { cardBodyStyle, stringReplaceAll } from "../utils";
 
 const SelectVehicleType = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();

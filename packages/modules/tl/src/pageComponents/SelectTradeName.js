@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { FormStep, CardLabel, TextInput, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
 
 const SelectTradeName = ({ t, config, onSelect, value, userType, formData }) => {
-  //let index = window.location.href.charAt(window.location.href.length - 1);
-  let index = window.location.href.split("/").pop();
   let validation = {};
   const onSkip = () => onSelect();
   const [TradeName, setTradeName] = useState(formData.TradeDetails?.TradeName);

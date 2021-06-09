@@ -65,26 +65,23 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
 
   const onSkip = () => onSelect();
   function goNext() {
-    let index = window.location.href.charAt(window.location.href.length - 1);
     sessionStorage.setItem("ownershipCategory", ownershipCategory?.value);
-    onSelect(config.key, ownershipCategory, "", index);
+    onSelect(config.key, ownershipCategory);
   }
 
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!ownershipCategory}>
-      <div style={cardBodyStyle}>
-        <RadioButtons
-          isMandatory={config.isMandatory}
-          options={getDropdwonForProperty(ownerShipdropDown) || []}
-          selectedOption={ownershipCategory}
-          optionsKey="i18nKey"
-          onSelect={selectedValue}
-          value={ownershipCategory}
-          labelKey="PT_OWNERSHIP"
-          isDependent={true}
-          disabled={isUpdateProperty || isEditProperty}
-        />
-      </div>
+      <RadioButtons
+        isMandatory={config.isMandatory}
+        options={getDropdwonForProperty(ownerShipdropDown) || []}
+        selectedOption={ownershipCategory}
+        optionsKey="i18nKey"
+        onSelect={selectedValue}
+        value={ownershipCategory}
+        labelKey="PT_OWNERSHIP"
+        isDependent={true}
+        disabled={isUpdateProperty || isEditProperty}
+      />
     </FormStep>
   );
 };

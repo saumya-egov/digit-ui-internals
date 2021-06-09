@@ -20,22 +20,6 @@ const CreateTradeLicence = ({ parentRoute }) => {
       lastchar = currentPath.charAt(currentPath.length - 1),
       isMultiple = false,
       nextPage;
-    if (Number(parseInt(currentPath)) || currentPath == "0" || currentPath == "-1") {
-      if (currentPath == "-1" || currentPath == "-2") {
-        currentPath = pathname.slice(0, -3);
-        currentPath = currentPath.split("/").pop();
-        isMultiple = true;
-      } else {
-        currentPath = pathname.slice(0, -2);
-        currentPath = currentPath.split("/").pop();
-        isMultiple = true;
-      }
-    } else {
-      isMultiple = false;
-    }
-    if (!isNaN(lastchar)) {
-      isMultiple = true;
-    }
     let { nextStep = {} } = config.find((routeObj) => routeObj.route === currentPath);
     if (typeof nextStep == "object" && nextStep != null) {
       if (nextStep[sessionStorage.getItem("isAccessories")]) {
@@ -54,11 +38,8 @@ const CreateTradeLicence = ({ parentRoute }) => {
     if (nextStep === null) {
       return redirectWithHistory(`${match.path}/check`);
     }
-    /* if (!isNaN(nextStep.split("/").pop())) {
-      nextPage = `${match.path}/${nextStep}`;
-    } else { */
-    nextPage = isMultiple ? `${match.path}/${nextStep}/${index}` : `${match.path}/${nextStep}`;
-    //}
+
+    nextPage = `${match.path}/${nextStep}`;
 
     redirectWithHistory(nextPage);
   };

@@ -1,7 +1,6 @@
 import { CardLabel, Dropdown, FormStep, LabelFieldPair, RadioOrSelect, RadioButtons, CardLabelError } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { cardBodyStyle } from "../utils";
 import _ from "lodash";
 
 const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
@@ -159,38 +158,36 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
-      <div style={{ ...cardBodyStyle, maxHeight: "calc(100vh - 27em)" }}>
-        <CardLabel>{`${t("MYCITY_CODE_LABEL")} `}</CardLabel>
+      <CardLabel>{`${t("MYCITY_CODE_LABEL")} `}</CardLabel>
+      <span className={"form-pt-dropdown-only"}>
+        <RadioOrSelect
+          options={cities.sort((a, b) => a.name.localeCompare(b.name))}
+          selectedOption={selectedCity}
+          optionKey="code"
+          onSelect={selectCity}
+          t={t}
+          isDependent={true}
+          labelKey="TENANT_TENANTS"
+          disabled={isEditProperty}
+        />
+      </span>
+      {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
+      {selectedCity && localities && (
         <span className={"form-pt-dropdown-only"}>
           <RadioOrSelect
-            options={cities.sort((a, b) => a.name.localeCompare(b.name))}
-            selectedOption={selectedCity}
-            optionKey="code"
-            onSelect={selectCity}
+            dropdownStyle={{ paddingBottom: "20px" }}
+            isMandatory={config.isMandatory}
+            options={localities.sort((a, b) => a.name.localeCompare(b.name))}
+            selectedOption={selectedLocality}
+            optionKey="i18nkey"
+            onSelect={selectLocality}
             t={t}
             isDependent={true}
-            labelKey="TENANT_TENANTS"
+            labelKey=""
             disabled={isEditProperty}
           />
         </span>
-        {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
-        {selectedCity && localities && (
-          <span className={"form-pt-dropdown-only"}>
-            <RadioOrSelect
-              dropdownStyle={{ paddingBottom: "20px" }}
-              isMandatory={config.isMandatory}
-              options={localities.sort((a, b) => a.name.localeCompare(b.name))}
-              selectedOption={selectedLocality}
-              optionKey="i18nkey"
-              onSelect={selectLocality}
-              t={t}
-              isDependent={true}
-              labelKey=""
-              disabled={isEditProperty}
-            />
-          </span>
-        )}
-      </div>
+      )}
     </FormStep>
   );
 };

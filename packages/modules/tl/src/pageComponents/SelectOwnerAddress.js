@@ -3,7 +3,6 @@ import { FormStep, TextInput, CheckBox, CardLabel, LabelFieldPair, TextArea } fr
 import { useLocation } from "react-router-dom";
 
 const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
   const [permanentAddress, setPermanentAddress] = useState(formData?.owners?.permanentAddress || "");
   const [isCorrespondenceAddress, setIsCorrespondenceAddress] = useState(formData.owners.isCorrespondenceAddress);
   const isUpdateProperty = formData?.isUpdateProperty || false;
@@ -38,12 +37,12 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
 
   const goNext = () => {
     if (userType === "employee") {
-      onSelect(config.key, { ...formData[config.key], permanentAddress, isCorrespondenceAddress }, index);
+      onSelect(config.key, { ...formData[config.key], permanentAddress, isCorrespondenceAddress });
     } else {
       let ownerDetails = formData.owners;
       ownerDetails["permanentAddress"] = permanentAddress;
       ownerDetails["isCorrespondenceAddress"] = isCorrespondenceAddress;
-      onSelect(config.key, ownerDetails, "", index);
+      onSelect(config.key, ownerDetails);
     }
   };
 
@@ -55,7 +54,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
 
   if (userType === "employee") {
     return (
-      <LabelFieldPair key={index}>
+      <LabelFieldPair>
         <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
           {t("PT_OWNERS_ADDRESS")}
         </CardLabel>

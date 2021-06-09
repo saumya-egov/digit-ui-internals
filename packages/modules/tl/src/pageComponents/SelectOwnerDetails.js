@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, CheckBox } from "@egovernments/digit-ui-react-components";
-import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
   const [name, setName] = useState(formData?.owners?.name || "");
-  //const [email, setEmail] = useState((formData.owners && formData.owners[index] && formData.owners[index].email) || formData?.owners?.emailId || "");
   const [isPrimaryOwner, setisPrimaryOwner] = useState(false);
   const [gender, setGender] = useState(formData?.owners?.gender);
   const [mobileNumber, setMobileNumber] = useState(formData?.owners?.mobileNumber || "");
