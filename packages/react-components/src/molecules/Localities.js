@@ -3,7 +3,7 @@ import { Loader } from "../atoms/Loader";
 import Dropdown from "../atoms/Dropdown";
 import { useTranslation } from "react-i18next";
 
-const Localities = ({ selectLocality, tenantId, boundaryType, keepNull, selected }) => {
+const Localities = ({ selectLocality, tenantId, boundaryType, keepNull, selected, optionCardStyles, style }) => {
   // console.log("find localities here", tenantId)
   const { t } = useTranslation();
 
@@ -14,7 +14,15 @@ const Localities = ({ selectLocality, tenantId, boundaryType, keepNull, selected
   }
 
   return (
-    <Dropdown option={tenantlocalties} keepNull={keepNull === false ? false : true} selected={selected} select={selectLocality} optionKey="i18nkey" />
+    <Dropdown
+      option={tenantlocalties}
+      keepNull={keepNull === false ? false : true}
+      selected={selected}
+      select={selectLocality}
+      optionCardStyles={optionCardStyles}
+      optionKey="i18nkey"
+      style={style}
+    />
   );
   //  <h1>ABCD</h1>
 };
