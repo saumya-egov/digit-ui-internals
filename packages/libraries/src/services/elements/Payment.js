@@ -7,8 +7,8 @@ export const PaymentService = {
       url: Urls.payment.fetch_bill,
       useCache: false,
       method: "POST",
-      auth: true,
-      userService: true,
+      auth: false,
+      userService: false,
       params: { tenantId, ...filters },
     })
       .then((d) => {

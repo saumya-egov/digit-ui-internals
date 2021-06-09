@@ -32,15 +32,16 @@ export const useFetchCitizenBillsForBuissnessService = ({ businessService, ...fi
   };
 };
 
-export const useFetchBillsForBuissnessService = ({ businessService, ...filters }, config = {}) => {
+export const useFetchBillsForBuissnessService = ({ tenantId, businessService, ...filters }, config = {}) => {
   const queryClient = useQueryClient();
-  const { tenantId } = Digit.UserService.getUser()?.info || {};
 
   const params = { businessService, ...filters };
 
+  const _tenantId = tenantId || Digit.UserService.getUser()?.info?.tenantId;
+
   const { isLoading, error, isError, data, status } = useQuery(
     ["billsForBuisnessService", businessService, { ...filters }],
-    () => Digit.PaymentService.fetchBill(tenantId, params),
+    () => Digit.PaymentService.fetchBill(_tenantId, params),
     {
       retry: (count, err) => {
         console.log(err, "inside the payment hook");
