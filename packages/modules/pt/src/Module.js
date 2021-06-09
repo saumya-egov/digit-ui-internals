@@ -119,6 +119,10 @@ export const PTLinks = ({ matchPath, userType }) => {
 
   const links = [
     {
+      link: `${matchPath}/property/search`,
+      i18nKey: t("PT_SEARCH_AND_PAY"),
+    },
+    {
       link: `${matchPath}/property/new-application`,
       i18nKey: t("PT_CREATE_PROPERTY"),
     },
