@@ -10,48 +10,68 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
   const [AccessoryCount, setAccessoryCount] = useState(formData?.TadeDetails?.accessories?.AccessoryCount || "");
   const [UnitOfMeasure, setUnitOfMeasure] = useState(formData?.TadeDetails?.accessories?.UnitOfMeasure || "");
   const [UomValue, setUomValue] = useState(formData?.TadeDetails?.accessories?.UomValue || "");
+  const [fields, setFeilds] = useState([{ accessory: "", accessorycount: "", unit: null, uom: null }]);
 
   const isUpdateProperty = formData?.isUpdateProperty || false;
   let isEditProperty = formData?.isEditProperty || false;
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
 
-  function selectAccessory(value) {
+  function handleAdd() {
+    const values = [...fields];
+    values.push({ accessory: "", accessorycount: "", unit: null, uom: null });
+    setFeilds(values);
+  }
+
+  function selectAccessory(i, value) {
+    let acc = [...fields];
+    acc[i].accessory = value;
     setAccessory(value);
+    setFeilds(acc);
   }
-  function selectAccessoryCount(e) {
+  function selectAccessoryCount(i, e) {
+    let acc = [...fields];
+    acc[i].accessorycount = e.target.value;
     setAccessoryCount(e.target.value);
+    setFeilds(acc);
   }
-  function selectUnitOfMeasure(e) {
+  function selectUnitOfMeasure(i, e) {
+    let acc = [...fields];
+    acc[i].unit = e.target.value;
     setUnitOfMeasure(e.target.value);
+    setFeilds(acc);
   }
-  function selectUomValue(e) {
+  function selectUomValue(i, e) {
+    let acc = [...fields];
+    acc[i].uom = e.target.value;
     setUomValue(e.target.value);
+    setFeilds(acc);
   }
 
   const goNext = () => {
-    let units = formData.TradeDetails.Units;
-    let unitsdata;
-
-    unitsdata = { Accessory, AccessoryCount, UnitOfMeasure, UomValue };
-    console.log(unitsdata);
+    console.log(fields);
     debugger;
-    onSelect(config.key, unitsdata);
+    let data = formData.TradeDetails.Units;
+    let formdata;
+
+    formdata = { ...data, accessories: fields };
+    console.log(formdata);
+    // debugger;
+    onSelect(config.key, formdata);
+    // unitsdata = { Accessory, AccessoryCount, UnitOfMeasure, UomValue };
+    // console.log(unitsdata);
+    // debugger;
+    // onSelect(config.key, unitsdata);
   };
 
   const onSkip = () => onSelect();
   // As Ticket RAIN-2619 other option in gender and gaurdian will be enhance , dont uncomment it
   const options = [
-    { name: "Goods", value: "GOODS", code: "GOODS" },
-    { name: "Services", value: "SERVICES", code: "SERVICES" },
-    // { name: "Other", value: "OTHER", code: "OTHER" },
-  ];
-
-  const GuardianOptions = [
-    { name: "HUSBAND", code: "HUSBAND", i18nKey: "PT_RELATION_HUSBAND" },
-    { name: "Father", code: "FATHER", i18nKey: "PT_RELATION_FATHER" },
-    // { name: "Husband/Wife", code: "HUSBANDWIFE", i18nKey: "PT_RELATION_HUSBANDWIFE" },
-    // { name: "Other", code: "OTHER", i18nKey: "PT_RELATION_OTHER" },
+    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_1", code: "ACC.1" },
+    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_2", code: "ACC.2" },
+    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_3", code: "ACC.3" },
+    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_4", code: "ACC.4" },
+    { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_5", code: "ACC.5" },
   ];
 
   /* useEffect(() => {
@@ -175,68 +195,72 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
       t={t}
       //isDisabled={!name || !mobileNumber || !gender }
     >
-      <div style={cardBodyStyle}>
-        <CardLabel>{`${t("TL_ACCESSORY_LABEL")}`}</CardLabel>
-        <RadioOrSelect
-          t={t}
-          optionKey="i18nKey"
-          isMandatory={config.isMandatory}
-          options={[{ i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }]}
-          selectedOption={Accessory}
-          onSelect={selectAccessory}
-        />
-        <CardLabel>{`${t("TL_ACCESSORY_COUNT_LABEL")}`}</CardLabel>
-        <TextInput
-          t={t}
-          type={"text"}
-          isMandatory={false}
-          optionKey="i18nKey"
-          name="AccessoryCount"
-          value={AccessoryCount}
-          onChange={selectAccessoryCount}
-          //disable={isUpdateProperty || isEditProperty}
-          /* {...(validation = {
+      {fields.map((field, index) => {
+        return (
+          <div key={`${field}-${index}`}>
+            <hr color="#d6d5d4" className="break-line"></hr>
+            <CardLabel>{`${t("TL_ACCESSORY_LABEL")}`}</CardLabel>
+            <RadioOrSelect
+              t={t}
+              optionKey="i18nKey"
+              isMandatory={config.isMandatory}
+              //options={[{ i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }]}
+              options={options}
+              selectedOption={field.accessory}
+              onSelect={(e) => selectAccessory(index, e)}
+            />
+            <CardLabel>{`${t("TL_ACCESSORY_COUNT_LABEL")}`}</CardLabel>
+            <TextInput
+              t={t}
+              type={"text"}
+              isMandatory={false}
+              optionKey="i18nKey"
+              name="AccessoryCount"
+              value={field.accessorycount}
+              onChange={(e) => selectAccessoryCount(index, e)}
+              //disable={isUpdateProperty || isEditProperty}
+              /* {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
             type: "text",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })} */
-        />
-        <CardLabel>{`${t("TL_UNIT_OF_MEASURE_LABEL")}`}</CardLabel>
-        <TextInput
-          t={t}
-          type={"text"}
-          isMandatory={false}
-          optionKey="i18nKey"
-          name="UnitOfMeasure"
-          value={UnitOfMeasure}
-          onChange={selectUnitOfMeasure}
-          //disable={isUpdateProperty || isEditProperty}
-          /* {...(validation = {
+            />
+            <CardLabel>{`${t("TL_UNIT_OF_MEASURE_LABEL")}`}</CardLabel>
+            <TextInput
+              t={t}
+              type={"text"}
+              isMandatory={false}
+              optionKey="i18nKey"
+              name="UnitOfMeasure"
+              value={field.unit}
+              onChange={(e) => selectUnitOfMeasure(index, e)}
+              //disable={isUpdateProperty || isEditProperty}
+              /* {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
             type: "text",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })} */
-        />
-        <CardLabel>{`${t("TL_NEW_TRADE_DETAILS_UOM_VALUE_LABEL")}`}</CardLabel>
-        <TextInput
-          t={t}
-          type={"text"}
-          isMandatory={false}
-          optionKey="i18nKey"
-          name="UomValue"
-          value={UomValue}
-          onChange={selectUomValue}
-          //disable={isUpdateProperty || isEditProperty}
-          /* {...(validation = {
+            />
+            <CardLabel>{`${t("TL_NEW_TRADE_DETAILS_UOM_VALUE_LABEL")}`}</CardLabel>
+            <TextInput
+              t={t}
+              type={"text"}
+              isMandatory={false}
+              optionKey="i18nKey"
+              name="UomValue"
+              value={field.uom}
+              onChange={(e) => selectUomValue(index, e)}
+              //disable={isUpdateProperty || isEditProperty}
+              /* {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
             type: "text",
             title: t("PT_NAME_ERROR_MESSAGE"),
           })} */
-        />
-        {/* <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
+            />
+            {/* <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
         <RadioButtons
           t={t}
           options={options}
@@ -266,7 +290,7 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
             title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
           })}
         /> */}
-        {/*   <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}`}</CardLabel>
+            {/*   <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}`}</CardLabel>
         <TextInput
           t={t}
           type={"text"}
@@ -296,6 +320,14 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
           labelKey="PT_RELATION"
           disabled={isUpdateProperty || isEditProperty}
         /> */}
+          </div>
+        );
+      })}
+      <hr color="#d6d5d4" className="break-line"></hr>
+      <div style={{ justifyContent: "center", display: "flex", paddingBottom: "15px", color: "#FF8C00" }}>
+        <button type="button" onClick={() => handleAdd()}>
+          Add More Trade Accessories
+        </button>
       </div>
     </FormStep>
   );

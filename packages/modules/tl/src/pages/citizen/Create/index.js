@@ -39,8 +39,6 @@ const CreateTradeLicence = ({ parentRoute }) => {
       isMultiple = true;
     }
     let { nextStep = {} } = config.find((routeObj) => routeObj.route === currentPath);
-    debugger;
-    console.log(nextStep[sessionStorage.getItem("StructureType")]);
     if (typeof nextStep == "object" && nextStep != null) {
       debugger;
       if (nextStep[sessionStorage.getItem("isAccessories")]) {

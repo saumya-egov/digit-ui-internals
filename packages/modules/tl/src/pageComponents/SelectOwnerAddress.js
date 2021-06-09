@@ -4,6 +4,8 @@ import { useLocation } from "react-router-dom";
 
 const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
   console.log(formData);
+  debugger;
+  console.log(formData);
   let index = window.location.href.charAt(window.location.href.length - 1);
   const [permanentAddress, setPermanentAddress] = useState(formData?.owners?.permanentAddress || "");
   const [isCorrespondenceAddress, setIsCorrespondenceAddress] = useState(formData.owners.isCorrespondenceAddress);
