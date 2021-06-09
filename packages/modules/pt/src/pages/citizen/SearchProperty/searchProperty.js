@@ -78,6 +78,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
                 {...customProps}
                 selected={props.value}
                 select={(d) => {
+                  if (d.code !== cityCode) props.setValue("locality", null);
                   props.onChange(d);
                 }}
               />
@@ -101,6 +102,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
                 tenantId={cityCode}
                 boundaryType="revenue"
                 keepNull={false}
+                // style={{ height: "600px", overflow: "auto", position: "relative", zIndex: "10" }}
                 selected={formValue?.locality}
               />
             ),
@@ -141,7 +143,10 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
 
     let { errors } = formState;
 
-    if (!_.isEqual(data, formValue)) setFormValue(data);
+    if (!_.isEqual(data, formValue)) {
+      // if (data?.city.code !== formValue?.city?.code) setValue("locality", null);
+      setFormValue(data);
+    }
 
     if (!locality || !city) {
       setCanSubmit(false);
