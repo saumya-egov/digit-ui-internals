@@ -24,7 +24,10 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
 
   const paymentDetails = Digit.Hooks.useFetchBillsForBuissnessService(
     { businessService: "PT", ...fetchBillParams },
-    { enabled: consumerCode ? true : false }
+    {
+      enabled: consumerCode ? true : false,
+      retry: false,
+    }
   );
 
   const history = useHistory();
@@ -38,7 +41,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   }
 
   const onSubmit = (data) => {
-    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
+    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: city });
   };
 
   const payment = {};

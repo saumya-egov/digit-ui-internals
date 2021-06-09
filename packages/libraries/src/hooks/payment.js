@@ -13,10 +13,12 @@ export const useFetchCitizenBillsForBuissnessService = ({ businessService, ...fi
     () => Digit.PaymentService.fetchBill(tenantId, { ...params }),
     {
       refetchOnMount: true,
-      retry: (failureCount, error) => {
-        if (error?.response?.data?.Errors?.[0]?.code === "EG_BS_BILL_NO_DEMANDS_FOUND") return false;
-        else return failureCount < 3;
-      },
+      // retry: (failureCount, error) => {
+      //   console.log("retried from hook");
+      //   if (error?.response?.data?.Errors?.[0]?.code === "EG_BS_BILL_NO_DEMANDS_FOUND") return false;
+      //   else return failureCount < 1;
+      // },
+      retry: false,
       ...config,
     }
   );
@@ -39,7 +41,13 @@ export const useFetchBillsForBuissnessService = ({ businessService, ...filters }
   const { isLoading, error, isError, data, status } = useQuery(
     ["billsForBuisnessService", businessService, { ...filters }],
     () => Digit.PaymentService.fetchBill(tenantId, params),
-    config
+    {
+      retry: (count, err) => {
+        console.log(err, "inside the payment hook");
+        return false;
+      },
+      ...config,
+    }
   );
   return {
     isLoading,

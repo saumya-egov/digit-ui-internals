@@ -30,7 +30,7 @@ export const SelectPaymentType = (props) => {
   const stateTenant = tenantId.split(".")[0];
   const { control, handleSubmit } = useForm();
   const { data: menu } = Digit.Hooks.useCommonMDMS(stateTenant, "DIGIT-UI", "PaymentGateway");
-  const { data: paymentdetails } = Digit.Hooks.useFetchPayment({ tenantId: tenantId, consumerCode, businessService });
+  const { data: paymentdetails } = Digit.Hooks.useFetchPayment({ tenantId: tenantId, consumerCode, businessService }, {});
 
   const billDetails = paymentdetails?.Bill ? paymentdetails?.Bill[0] : {};
   console.log({ billDetails, payment: paymentdetails?.Bill });
