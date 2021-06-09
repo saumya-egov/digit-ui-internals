@@ -23,7 +23,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   const fetchBillParams = mobileNumber ? { mobileNumber, consumerCode } : { consumerCode };
 
   const paymentDetails = Digit.Hooks.useFetchBillsForBuissnessService(
-    { businessService: "PT", ...fetchBillParams },
+    { businessService: "PT", ...fetchBillParams, tenantId: city },
     {
       enabled: consumerCode ? true : false,
       retry: false,
