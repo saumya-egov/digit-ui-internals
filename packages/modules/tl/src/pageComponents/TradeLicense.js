@@ -8,7 +8,6 @@ const TradeLicense = ({ t, config, onSelect, userType, formData }) => {
   const stateId = tenantId.split(".")[0];
 
   const { isLoading, data: Documentsob = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "TradeLicense", "TLDocuments");
-  console.log(Documentsob);
   let docs = Documentsob?.TradeLicense?.Documents;
   //docs = docs?.filter((doc) => doc["digit-citizen"]);
   function onSave() {}

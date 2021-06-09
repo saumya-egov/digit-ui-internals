@@ -7,8 +7,6 @@ import { newConfig } from "../../../config/config";
 //import PTAcknowledgement from "./PTAcknowledgement";
 
 const CreateTradeLicence = ({ parentRoute }) => {
-  console.log("inside create");
-  debugger;
   const queryClient = useQueryClient();
   const match = useRouteMatch();
   const { t } = useTranslation();
@@ -40,13 +38,10 @@ const CreateTradeLicence = ({ parentRoute }) => {
     }
     let { nextStep = {} } = config.find((routeObj) => routeObj.route === currentPath);
     if (typeof nextStep == "object" && nextStep != null) {
-      debugger;
       if (nextStep[sessionStorage.getItem("isAccessories")]) {
         nextStep = `${nextStep[sessionStorage.getItem("isAccessories")]}`;
-        debugger;
       } else if (nextStep[sessionStorage.getItem("StructureType")]) {
         nextStep = `${nextStep[sessionStorage.getItem("StructureType")]}`;
-        debugger;
       }
     }
     let redirectWithHistory = history.push;

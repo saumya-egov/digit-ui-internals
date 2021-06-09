@@ -9,31 +9,6 @@ const SelectTradeName = ({ t, config, onSelect, value, userType, formData }) => 
   const [TradeName, setTradeName] = useState(formData.TradeDetails?.TradeName);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
-  //const { data: Menu, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "RentalDetails");
-
-  /* if (Menu) {
-    config.texts.cardText = Menu?.PropertyTax?.RentalDetails[0]?.code
-      ? `PT_ASSESSMENT_FLOW_RENTAL_DETAIL_${Menu?.PropertyTax?.RentalDetails[0]?.code}`
-      : "";
-  } */
-
-  /*  useEffect(() => {
-    if (userType !== "employee" && formData?.IsThisFloorSelfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
-      //selectPropertyPurpose({i18nKey : "RESIDENTAL"})
-      /* let index = window.location.href.charAt(window.location.href.length - 1);
-      let unit = formData.units && formData.units[index];
-      onSelect(config.key, unit, true, index); 
-
-      if (!isNaN(index)) {
-        //let index = window.location.href.charAt(window.location.href.length - 1);
-        let index = window.location.href.split("/").pop();
-        let unit = formData.units && formData.units[index];
-        onSelect(config.key, unit, true, index);
-      } else {
-        onSelect(config.key, {}, true, index);
-      }
-    }
-  }); */
 
   function setSelectTradeName(e) {
     setTradeName(e.target.value);

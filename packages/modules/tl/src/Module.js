@@ -24,21 +24,7 @@ import SelectAccessoriesDetails from "./pageComponents/SelectAccessoriesDetails"
 
 import CitizenApp from "./pages/citizen";
 
-//import EmployeeApp from "./pages/employee";
-
-/* const componentsToRegister = {
-  TradeLicense,
-}; */
-
-/* const addComponentsToRegistry = () => {
-  Object.entries(componentsToRegister).forEach(([key, value]) => {
-    Digit.ComponentRegistryService.setComponent(key, value);
-  });
-}; */
-
 export const TLModule = ({ stateCode, userType, tenants }) => {
-  console.log("inside module");
-  debugger;
   const { path, url } = useRouteMatch();
 
   const moduleCode = "TL";
@@ -55,8 +41,6 @@ export const TLModule = ({ stateCode, userType, tenants }) => {
 };
 
 export const TLLinks = ({ matchPath, userType }) => {
-  console.log("inside links");
-  debugger;
   const { t } = useTranslation();
   const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_TRADE", {});
 
@@ -72,24 +56,8 @@ export const TLLinks = ({ matchPath, userType }) => {
   ];
 
   return <CitizenHomeCard header={t("ACTION_TEST_TRADE_LICENSE")} links={links} Icon={RupeeIcon} />;
-
-  /* return (
-    <React.Fragment>
-      <Header>{t("TL")}</Header>
-      <div className="d-grid">
-      <HomeLink to={`${matchPath}/tradelicence/new-application`}>{t("PT_CREATE_TRADE")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/new-application`}>{t("PT_CREATE_PROPERTY")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-properties`}>{t("PT_MY_PROPERTIES")}</HomeLink>
-        <HomeLink to={`${matchPath}/property/my-applications`}>{t("PT_MY_APPLICATION")}</HomeLink> 
-      </div>
-    </React.Fragment>
-  ); */
 };
 
-/* export const TLComponents = {
-  TLModule,
-  TLLinks,
-}; */
 const componentsToRegister = {
   TLModule,
   TLLinks,
@@ -115,8 +83,6 @@ const componentsToRegister = {
 
 export const initTLComponents = () => {
   Object.entries(componentsToRegister).forEach(([key, value]) => {
-    console.log(key);
-    console.log(value);
     Digit.ComponentRegistryService.setComponent(key, value);
   });
 };

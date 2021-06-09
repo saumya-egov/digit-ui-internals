@@ -4,12 +4,10 @@ import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-re
 import { cardBodyStyle, stringReplaceAll } from "../utils";
 
 const SelectVehicleType = ({ t, config, onSelect, userType, formData }) => {
-  console.log(formData);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const [VehicleType, setVehicleType] = useState(formData?.TradeDetails?.VehicleType);
   const { isLoading, data: Menu = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "common-masters", "StructureType");
-  console.log(Menu);
   let menu = [];
   Menu &&
     Menu["common-masters"] &&

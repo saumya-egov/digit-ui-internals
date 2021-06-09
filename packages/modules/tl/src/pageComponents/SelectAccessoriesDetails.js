@@ -49,13 +49,10 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
   }
 
   const goNext = () => {
-    console.log(fields);
-    debugger;
     let data = formData.TradeDetails.Units;
     let formdata;
 
     formdata = { ...data, accessories: fields };
-    console.log(formdata);
     // debugger;
     onSelect(config.key, formdata);
     // unitsdata = { Accessory, AccessoryCount, UnitOfMeasure, UomValue };
@@ -73,119 +70,6 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
     { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_4", code: "ACC.4" },
     { i18nKey: "TRADELICENSE_ACCESSORIESCATEGORY_ACC_5", code: "ACC.5" },
   ];
-
-  /* useEffect(() => {
-    if (userType === "employee") {
-      goNext();
-    }
-  }, [name, gender, mobileNumber, fatherOrHusbandName, relationship]);
-
-  if (userType === "employee") {
-    return (
-      <div>
-        <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_MOBILE_NUMBER")}`}</CardLabel>
-          <div className="field">
-            <TextInput
-              type={"text"}
-              t={t}
-              isMandatory={false}
-              name="mobileNumber"
-              value={mobileNumber}
-              onChange={setMobileNo}
-              {...(validation = {
-                isRequired: true,
-                pattern: "[6-9]{1}[0-9]{9}",
-                type: "tel",
-                title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
-              })}
-              disable={editScreen}
-            />
-          </div>
-        </LabelFieldPair>
-        <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_OWNER_NAME")}`}</CardLabel>
-          <div className="field">
-            <TextInput
-              t={t}
-              type={"text"}
-              isMandatory={false}
-              name="name"
-              value={name}
-              onChange={setOwnerName}
-              {...(validation = {
-                isRequired: true,
-                pattern: "^[a-zA-Z-.`' ]*$",
-                type: "tel",
-                title: t("PT_NAME_ERROR_MESSAGE"),
-              })}
-              disable={editScreen}
-            />
-          </div>
-        </LabelFieldPair>
-        <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_GUARDIAN_NAME")}`}</CardLabel>
-          <div className="field">
-            <TextInput
-              t={t}
-              type={"text"}
-              isMandatory={false}
-              name="fatherOrHusbandName"
-              value={fatherOrHusbandName}
-              onChange={setGuardiansName}
-              {...(validation = {
-                pattern: "^[a-zA-Z-.`' ]*$",
-                type: "tel",
-                title: t("PT_NAME_ERROR_MESSAGE"),
-              })}
-              disable={editScreen}
-            />
-          </div>
-        </LabelFieldPair>
-        <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_RELATIONSHIP")}`}</CardLabel>
-          <Dropdown
-            className="form-field"
-            selected={relationship?.length === 1 ? relationship[0] : relationship}
-            disable={relationship?.length === 1 || editScreen}
-            option={GuardianOptions}
-            select={setGuardianName}
-            optionKey="i18nKey"
-            t={t}
-            name="relationship"
-          />
-        </LabelFieldPair>
-        <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
-          <Dropdown
-            className="form-field"
-            selected={gender?.length === 1 ? gender[0] : gender}
-            disable={gender?.length === 1 || editScreen}
-            option={options}
-            select={setGenderName}
-            optionKey="code"
-            t={t}
-            name="gender"
-          />
-        </LabelFieldPair>
-        <LabelFieldPair>
-          <CardLabel style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("PT_OWNER_EMAIL")}`}</CardLabel>
-          <div className="field">
-            <TextInput
-              t={t}
-              type={"email"}
-              isMandatory={false}
-              optionKey="i18nKey"
-              name="email"
-              value={email}
-              onChange={setOwnerEmail}
-              disable={editScreen}
-            />
-          </div>
-        </LabelFieldPair>
-      </div>
-    );
-  } */
 
   return (
     <FormStep
@@ -260,66 +144,6 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
             title: t("PT_NAME_ERROR_MESSAGE"),
           })} */
             />
-            {/* <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
-        <RadioButtons
-          t={t}
-          options={options}
-          optionsKey="code"
-          name="gender"
-          value={gender}
-          selectedOption={gender}
-          onSelect={setGenderName}
-          isDependent={true}
-          labelKey="PT_COMMON_GENDER"
-          disabled={isUpdateProperty || isEditProperty}
-        />
-        <CardLabel>{`${t("PT_FORM3_MOBILE_NUMBER")}`}</CardLabel>
-        <TextInput
-          type={"text"}
-          t={t}
-          isMandatory={false}
-          optionKey="i18nKey"
-          name="mobileNumber"
-          value={mobileNumber}
-          onChange={setMobileNo}
-          disable={isUpdateProperty || isEditProperty}
-          {...(validation = {
-            isRequired: true,
-            pattern: "[6-9]{1}[0-9]{9}",
-            type: "tel",
-            title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
-          })}
-        /> */}
-            {/*   <CardLabel>{`${t("PT_FORM3_GUARDIAN_NAME")}`}</CardLabel>
-        <TextInput
-          t={t}
-          type={"text"}
-          isMandatory={false}
-          optionKey="i18nKey"
-          name="fatherOrHusbandName"
-          value={fatherOrHusbandName}
-          onChange={setGuardiansName}
-          disable={isUpdateProperty || isEditProperty}
-          {...(validation = {
-            isRequired: true,
-            pattern: "^[a-zA-Z-.`' ]*$",
-            type: "text",
-            title: t("PT_NAME_ERROR_MESSAGE"),
-          })}
-        />
-        <CardLabel>{`${t("PT_FORM3_RELATIONSHIP")}`}</CardLabel>
-        <RadioButtons
-          t={t}
-          optionsKey="i18nKey"
-          name="relationship"
-          options={GuardianOptions}
-          value={relationship}
-          selectedOption={relationship}
-          onSelect={setGuardianName}
-          isDependent={true}
-          labelKey="PT_RELATION"
-          disabled={isUpdateProperty || isEditProperty}
-        /> */}
           </div>
         );
       })}

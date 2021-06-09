@@ -3,7 +3,6 @@ import { CardLabel, DatePicker, TypeSelectCard } from "@egovernments/digit-ui-re
 import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-react-components";
 
 const SelectCommencementDate = ({ t, config, onSelect, userType, formData }) => {
-  console.log(formData);
   const [CommencementDate, setCommencementDate] = useState(formData?.TradeDetails?.CommencementDate);
   /* const menu = [
     { i18nKey: "MOTOR_DRIVEN", code: "motor" },
@@ -24,14 +23,6 @@ const SelectCommencementDate = ({ t, config, onSelect, userType, formData }) => 
   }
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!CommencementDate}>
-      {/* <RadioButtons
-        t={t}
-        optionsKey="i18nKey"
-        isMandatory={config.isMandatory}
-        options={menu}
-        selectedOption={VehicleType}
-        onSelect={selectVehicleType}
-      /> */}
       <CardLabel>{t("TL_NEW_TRADE_DETAILS_TRADE_COMM_DATE_LABEL")}</CardLabel>
       <DatePicker date={CommencementDate} name="CommencementDate" onChange={selectCommencementDate} />
     </FormStep>

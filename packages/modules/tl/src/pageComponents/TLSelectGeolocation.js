@@ -3,7 +3,6 @@ import { LocationSearchCard } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 
 const TLSelectGeolocation = ({ t, config, onSelect, formData = {} }) => {
-  console.log(formData);
   const [pincode, setPincode] = useState(formData?.address?.pincode || "");
   const [geoLocation, setGeoLocation] = useState(formData?.address?.geoLocation || {});
   const tenants = Digit.Hooks.tl.useTenants();

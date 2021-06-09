@@ -3,12 +3,10 @@ import { TypeSelectCard } from "@egovernments/digit-ui-react-components";
 import { FormStep, RadioOrSelect, RadioButtons, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
 
 const SelectBuildingType = ({ t, config, onSelect, userType, formData }) => {
-  console.log(formData);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const [BuildingType, setBuildingType] = useState(formData?.TradeDetails?.BuildingType);
   const { isLoading, data: Menu = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "common-masters", "StructureType");
-  console.log(Menu);
   let menu = [];
   Menu &&
     Menu["common-masters"] &&
