@@ -102,7 +102,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
                 tenantId={cityCode}
                 boundaryType="revenue"
                 keepNull={false}
-                // style={{ height: "600px", overflow: "auto", position: "relative", zIndex: "10" }}
+                optionCardStyles={{ height: "600px", overflow: "auto", zIndex: "10" }}
                 selected={formValue?.locality}
               />
             ),
