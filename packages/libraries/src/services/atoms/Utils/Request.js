@@ -1,5 +1,4 @@
 import Axios from "axios";
-import { da } from "date-fns/locale";
 
 Axios.interceptors.response.use(
   (res) => res,

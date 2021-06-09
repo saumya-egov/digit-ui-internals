@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { FormComposer, CardLabelDesc, Loader } from "@egovernments/digit-ui-react-components";
+import { FormComposer, CardLabelDesc, Loader, Dropdown, Localities } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import _ from "lodash";
 
 const SearchProperty = ({ config: propsConfig, onSelect }) => {
   const { t } = useTranslation();
@@ -11,12 +12,15 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setCanSubmit] = useState(false);
 
-  console.log(propsConfig, "inside searchProperty");
+  const allCities = Digit.Hooks.pt.useTenants();
+
+  const [cityCode, setCityCode] = useState(() => allCities[0]);
+  const [formValue, setFormValue] = useState();
 
   useLayoutEffect(() => {
     const getActionBar = () => {
       let el = document.querySelector("div.action-bar-wrap");
-      if (el) el.style.bottom = "40px";
+      if (el) el.style.position = "static";
       else {
         setTimeout(() => {
           getActionBar();
@@ -24,7 +28,6 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
       }
     };
     getActionBar();
-    //
   }, []);
 
   // moduleCode, type, config = {}, payload = []
@@ -36,14 +39,14 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
 
   const onPropertySearch = async (data) => {
     if (!data.mobileNumber && !data.propertyId && !data.oldPropertyId) {
-      return alert("Provide at least one parameter");
+      alert(t("PT_ERROR_NEED_ONE_PARAM"));
     } else if (propsConfig.action === "MUTATION") {
       onSelect(config.key, data, null, null, null, { ...data, propertyIds: data.propertyId, oldPropertyIds: data.oldPropertyId });
     } else {
       history.push(
         `/digit-ui/citizen/pt/property/search-results?mobileNumber=${data?.mobileNumber ? data?.mobileNumber : ``}&propertyIds=${
           data?.propertyId ? data.propertyId : ``
-        }&oldPropertyIds=${data?.oldPropertyId ? data?.oldPropertyId : ``}`
+        }&oldPropertyIds=${data?.oldPropertyId ? data?.oldPropertyId : ``}&locality=${formValue.locality?.code}&city=${cityCode}`
       );
     }
   };
@@ -55,12 +58,53 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
       body: [
         {
           label: mobileNumber.label,
-
           type: mobileNumber.type,
           populators: {
             name: mobileNumber.name,
+            validation: { pattern: /^[6-9]{1}[0-9]{9}$ / },
           },
           isMandatory: false,
+        },
+        {
+          label: "PT_SELECT_CITY",
+          type: "custom",
+          populators: {
+            name: "city",
+            defaultValue: allCities[0],
+            rules: { required: true },
+            customProps: { t, isMendatory: true, option: [...allCities], optionKey: "i18nKey" },
+            component: (props, customProps) => (
+              <Dropdown
+                {...customProps}
+                selected={props.value}
+                select={(d) => {
+                  props.onChange(d);
+                }}
+              />
+            ),
+          },
+        },
+        {
+          label: "PT_SELECT_LOCALITY",
+          type: "custom",
+          populators: {
+            name: "locality",
+            defaultValue: formValue?.locality,
+            rules: { required: true },
+            customProps: {},
+            component: (props, customProps) => (
+              <Localities
+                selectLocality={(d) => {
+                  console.log(d, "locality changed");
+                  props.onChange(d);
+                }}
+                tenantId={cityCode}
+                boundaryType="revenue"
+                keepNull={false}
+                selected={formValue?.locality}
+              />
+            ),
+          },
         },
         {
           label: property.label,
@@ -84,10 +128,25 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
     },
   ];
 
-  const onFormValueChange = (setValue, data) => {
+  const onFormValueChange = (setValue, data, formState) => {
     const mobileNumberLength = data?.[mobileNumber.name]?.length;
     const oldPropId = data?.[oldProperty.name];
     const propId = data?.[property.name];
+    const city = data?.city;
+    const locality = data?.locality;
+
+    if (city?.code !== cityCode) {
+      setCityCode(city?.code);
+    }
+
+    let { errors } = formState;
+
+    if (!_.isEqual(data, formValue)) setFormValue(data);
+
+    if (!locality || !city) {
+      setCanSubmit(false);
+      return;
+    }
 
     if (mobileNumberLength > 0 && mobileNumberLength < 10) setCanSubmit(false);
     else if (!propId && !oldPropId && !mobileNumberLength) setCanSubmit(false);

@@ -27,7 +27,7 @@ const App = () => {
           <PrivateRoute path={`${path}/property/new-application`} component={CreateProperty} />
           <PrivateRoute path={`${path}/property/edit-application`} component={EditProperty} />
           <Route path={`${path}/property/search`} component={SearchPropertyComponent} />
-          <PrivateRoute path={`${path}/property/search-results`} component={SearchResultsComponent} />
+          <Route path={`${path}/property/search-results`} component={SearchResultsComponent} />
           <PrivateRoute path={`${path}/property/application/:acknowledgementIds`} component={PTApplicationDetails}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-applications`} component={PTMyApplications}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-properties`} component={MyProperties}></PrivateRoute>
