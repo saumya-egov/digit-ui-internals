@@ -40,6 +40,31 @@ const DashBoard = ({ stateCode }) => {
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
+  const [showOptions, setShowOptions] = useState(false);
+
+  const shareOptions =
+    Digit.Utils.browser.isWebview() || window.Digit.Utils.browser.isMobile()
+      ? [
+          {
+            label: t("ES_DSS_SHARE_PDF"),
+            onClick: sharePDF,
+          },
+          {
+            label: t("ES_DSS_SHARE_IMAGE"),
+            onClick: shareImage,
+          },
+        ]
+      : [
+          {
+            label: t("ES_DSS_SHARE_PDF"),
+            onClick: sharePDF("mail"),
+          },
+          {
+            label: t("ES_DSS_SHARE_IMAGE"),
+            onClick: shareImage("whatsapp"),
+          },
+        ];
+
   const fullPageRef = useRef();
   const provided = useMemo(
     () => ({
@@ -71,8 +96,12 @@ const DashBoard = ({ stateCode }) => {
           <Header styles={{ marginBottom: "0px" }}>{t(dashboardConfig?.[0]?.name)}</Header>
           <div>
             <div className="mrlg">
-              <ShareIcon className="mrsm" />
-              {t(`ES_DSS_SHARE`)}
+              <MultiLink
+                label={t(`ES_DSS_SHARE`)}
+                onHeadClick={() => setShowOptions(!showOptions)}
+                displayOptions={showOptions}
+                options={shareOptions}
+              />
             </div>
             <div className="mrsm" onClick={handlePrint}>
               <DownloadIcon className="mrsm" />
