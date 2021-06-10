@@ -20,7 +20,7 @@ export const MyBills = ({ stateCode }) => {
   const { tenantId } = Digit.UserService.getUser()?.info || location?.state || {};
 
   if (!tenantId && !location?.state?.noAuth) {
-    history.push(`/digit-ui/citizen/login`, { from: url });
+    history.replace(`/digit-ui/citizen/login`, { from: url });
   }
 
   const { isLoading: mdmsLoading, data: mdmsBillingData } = Digit.Hooks.useGetPaymentRulesForBusinessServices(tenantId);
