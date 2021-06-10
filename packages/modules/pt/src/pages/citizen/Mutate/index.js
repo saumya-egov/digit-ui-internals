@@ -38,7 +38,7 @@ const MutationCitizen = (props) => {
           .join("&")}`
       : "";
 
-    // console.log(queryString, "qs in select");
+    console.log(params, "inside mutation form");
 
     if (typeof activeRouteObj.nextStep === "string") history.push(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);
     else if (typeof activeRouteObj.nextStep === "object") {
@@ -55,7 +55,7 @@ const MutationCitizen = (props) => {
     <React.Fragment>
       <Switch>
         {config.map((routeObj, index) => {
-          const { component, texts, inputs, key } = routeObj;
+          const { component } = routeObj;
           const Component = typeof component === "string" ? Digit.ComponentRegistryService.getComponent(component) : component;
           return (
             <Route path={`${match.path}/${routeObj.route}`} key={index}>
