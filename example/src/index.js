@@ -25,6 +25,7 @@ import QAGRO from "./userInfo/qa-gro.json";
 import QACSR from "./userInfo/qa-csr.json";
 import QACT from "./userInfo/qa-citizen.json";
 import QADSO from "./userInfo/qa-dso.json";
+import QAPGRCSR from "./userInfo/QAPGRCSR.json";
 
 import FSM_EDITOR from "./userInfo/fsm-editor.json";
 import FSM_COLLECTOR from "./userInfo/fsm-collector.json";
@@ -93,6 +94,7 @@ const userInfo = {
   QAPTDV,
   QAPTFI,
   QAPTA,
+  QAPGRCSR,
 };
 
 const enabledModules = ["PGR", "FSM", "Payment", "PT", "QuickPayLinks", "DSS", "MCollect", "TL"];
