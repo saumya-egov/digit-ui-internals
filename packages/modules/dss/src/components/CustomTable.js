@@ -40,11 +40,7 @@ const CustomTable = ({ data, onSearch }) => {
       return `${t(code)} (${t("DSS_KL")})`;
     }
     if (plot?.symbol === "amount") {
-<<<<<<< HEAD
-      return `${plot?.name} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`;
-=======
       return `${t(code)} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
     }
     return t(code);
   };
@@ -53,11 +49,7 @@ const CustomTable = ({ data, onSearch }) => {
     if (response?.responseData?.drillDownChartId && response?.responseData?.drillDownChartId !== "none") {
       let currentValue = value;
       if (filterKey === "tenantId") {
-<<<<<<< HEAD
-        currentValue = ulbTenants.find((tenant) => tenant.ulbKey === value || tenant.code === value);
-=======
         currentValue = dssTenants.find(tenant => tenant?.city?.ddrName === value || tenant?.code === value);
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
         if (currentValue === undefined) return;
       }
       setFilterStack([...filterStack, { id: response?.responseData?.drillDownChartId, name: value, filterKey, filterValue: currentValue?.code }]);
@@ -82,10 +74,6 @@ const CustomTable = ({ data, onSearch }) => {
         symbol: plot?.symbol,
         sortType: sortRows,
         Cell: (args) => {
-<<<<<<< HEAD
-          console.log(args, "my args");
-=======
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
           const { value, column } = args;
           if (typeof value === "object") {
             const { insight, value: rowValue } = value;
@@ -99,11 +87,7 @@ const CustomTable = ({ data, onSearch }) => {
               </span>
             );
           }
-<<<<<<< HEAD
-          const filter = response?.responseData?.filter.find((elem) => elem.column === column.Header);
-=======
-          const filter = response?.responseData?.filter.find(elem => elem.column === column.id) 
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
+          const filter = response?.responseData?.filter.find(elem => elem.column === column.id)
           if (filter !== undefined) {
             return (
               <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value, filter?.key)}>
@@ -111,15 +95,10 @@ const CustomTable = ({ data, onSearch }) => {
               </span>
             );
           }
-<<<<<<< HEAD
-          if (column.Header.toLowerCase() === "citizen average rating") {
-            return <Rating currentRating={Math.round(value)} styles={{ width: "unset", justifyContent: "center" }} starStyles={{ width: "25px" }} />;
-=======
           if (column.id === "CitizenAverageRating") {
             return (
               <Rating currentRating={Math.round(value)} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />
             )
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
           }
           if (column.symbol === "amount") {
             return String(convertDenomination(value));

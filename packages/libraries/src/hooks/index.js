@@ -83,6 +83,12 @@ import usemcollectTenants from "./mcollect/useTenants";
 import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
 
+import useHRMSSearch from "./hrms/useHRMSsearch";
+import useHrmsMDMS from "./hrms/useHRMSMDMS";
+import useHRMSCreate from "./hrms/useHRMScreate";
+import useHRMSUpdate from "./hrms/useHRMSUpdate";
+import useHRMSCount from "./hrms/useHRMSCount";
+
 const pgr = {
   useComplaintDetails,
   useComplaintsList,
@@ -191,6 +197,7 @@ const Hooks = {
   pt,
   dss,
   mcollect,
+  hrms,
   tl,
 };
 

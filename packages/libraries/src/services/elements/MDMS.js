@@ -604,7 +604,6 @@ const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
-<<<<<<< HEAD
 const getHrmsEmployeeRolesandDesignations = () => ({
   moduleDetails: [
     {
@@ -624,7 +623,6 @@ const getHrmsEmployeeRolesandDesignations = () => ({
     { moduleName: "egov-location", masterDetails: [{ name: "TenantBoundary" }] }
   ]
 })
-=======
 const getFSTPPlantCriteria = (tenantId, moduleCode, type) => ({
   type,
   details: {
@@ -637,7 +635,6 @@ const getFSTPPlantCriteria = (tenantId, moduleCode, type) => ({
     ],
   },
 });
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
 
 const GetEgovLocations = (MdmsRes) => {
   return MdmsRes["egov-location"].TenantBoundary[0].boundary.children.map((obj) => ({

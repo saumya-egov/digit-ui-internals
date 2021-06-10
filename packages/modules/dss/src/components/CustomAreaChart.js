@@ -96,11 +96,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       >
         <p>{`${(label !== undefined && label !== "auto") ? format(new Date(label), "MMM, yy") : ""} :${id === "fsmTotalCumulativeCollection" ? " ₹" : ""}${
           payload?.[0]?.value
-<<<<<<< HEAD
-        } ${id === "fsmTotalCumulativeCollection" ? (value?.denomination !== "Unit" ? value?.denomination : "") : `${t("DSS_KL")}`}`}</p>
-=======
         }${id === "fsmTotalCumulativeCollection" ? (value?.denomination !== "Unit" ? value?.denomination : "") : `%`}`}</p>
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
       </div>
     );
   };
@@ -113,36 +109,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "85%" }}>
       {id === "fsmCapacityUtilization" && <p>{t("DSS_FSM_TOTAL_SLUDGE_TREATED")} - {totalWaste} {t("DSS_KL")}</p>}
       <ResponsiveContainer width="99%" height={id === "fsmTotalCumulativeCollection" ? 400 : 300}>
-<<<<<<< HEAD
-        <AreaChart width="100%" height="100%" data={response?.responseData?.data?.[0]?.plots} margin={{ left: 30 }}>
-          <defs>
-            <linearGradient id="colorUv" x1=".5" x2=".5" y2="1">
-              <stop stopColor="#048BD0" stopOpacity={0.5} />
-              <stop offset="1" stopColor="#048BD0" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid />
-          <Tooltip content={renderTooltip} />
-          <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} tickFormatter={tickFormatter} />
-          <YAxis
-            label={{
-              value: `${response?.responseData?.data?.[0]?.headerName} ${
-                id === "fsmTotalCumulativeCollection" ? renderUnits(t, value.denomination) : `(${t("DSS_KL")})`
-              }`,
-              angle: -90,
-              position: "insideLeft",
-              dy: 40,
-              offset: -10,
-              fontSize: "14px",
-              fill: "#505A5F",
-            }}
-            // unit={id === "fsmCapacityUtilization" ? "%" : ""}
-            tick={{ fontSize: "14px", fill: "#505A5F" }}
-          />
-          <Area type="monotone" dataKey={renderPlot} stroke="#048BD0" fill="url(#colorUv)" dot={true} />
-        </AreaChart>
-=======
-        {(!chartData || chartData?.length === 0) ? 
+        {(!chartData || chartData?.length === 0) ?
           <div className="no-data">
             <p>{t('DSS_NO_DATA')}</p>
           </div> :
@@ -170,7 +137,6 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
             />
             <Area type="monotone" dataKey={renderPlot} stroke="#048BD0" fill="url(#colorUv)" dot={true} />
           </AreaChart>}
->>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
       </ResponsiveContainer>
     </div>
   );

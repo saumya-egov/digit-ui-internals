@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ArrowRightInbox, PropertyHouse } from "@egovernments/digit-ui-react-components";
+import { ArrowRightInbox, Person } from "@egovernments/digit-ui-react-components";
 
 const ArrowRight = ({ to }) => (
   <Link to={to}>
@@ -21,7 +21,7 @@ const HRMSCard = () => {
       <div className="complaint-links-container">
         <div className="header">
           <span className="logo">
-            <PropertyHouse />
+            <Person />
           </span>
           <span className="text">{t("HRMS")}</span>
         </div>
