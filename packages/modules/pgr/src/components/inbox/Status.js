@@ -7,7 +7,7 @@ const Status = ({ complaints, onAssignmentChange, pgrfilters }) => {
   let hasFilters = pgrfilters?.applicationStatus?.length;
   return (
     <div className="status-container">
-      <div className="filter-label">Status</div>
+      <div className="filter-label">{t("ES_PGR_FILTER_STATUS")}</div>
       {complaintsWithCount.length === 0 && <Loader />}
       {complaintsWithCount.map((option, index) => {
         return (
