@@ -14,8 +14,8 @@ export const configPTVerifyApplication = ({
   console.log("%c 🏌️‍♂️: uploadedFile ", "font-size:16px;background-color:#befb98;color:black;", uploadedFile);
   return {
     label: {
-      heading: `ES_PT_ACTION_TITLE_${action}`,
-      submit: `ES_PT_COMMON_${action}`,
+      heading: `WF_${action}_APPLICATION`,
+      submit: `WF_PT.CREATE_${action}`,
       cancel: "ES_PT_COMMON_CANCEL",
     },
     form: [

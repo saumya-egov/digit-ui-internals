@@ -56,7 +56,8 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
             logoUrl={logoUrl}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <div style={{ overflowY: "auto" }}>
+            {/* <div style={{ overflowY: "auto" }}> */}
+            <div>
               <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
             </div>
             <div className="employee-home-footer">

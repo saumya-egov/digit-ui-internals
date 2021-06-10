@@ -42,7 +42,11 @@ export const CreateComplaint = () => {
     let { nextStep } = config.routes[currentPath];
     let compType = Digit.SessionStorage.get(PGR_CITIZEN_CREATE_COMPLAINT);
     if (nextStep === "sub-type" && compType.complaintType.key === "Others") {
-      setParams({ ...params, complaintType: { key: "Others", name: "Others" }, subType: { key: "Others", name: "Others" } });
+      setParams({
+        ...params,
+        complaintType: { key: "Others", name: t("SERVICEDEFS.OTHERS") },
+        subType: { key: "Others", name: t("SERVICEDEFS.OTHERS") },
+      });
       nextStep = config.routes[nextStep].nextStep;
     }
     setNextStep(nextStep);

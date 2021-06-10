@@ -31,6 +31,7 @@ import useLocalities from "./pgr/useLocalities";
 import useServiceDefs from "./pgr/useServiceDefs";
 import useTenants from "./pgr/useTenants";
 import useComplaintSubType from "./pgr/useComplaintSubType";
+import useComplaintStatusCount from "./pgr/useComplaintStatusWithCount";
 
 import useTenantsFSM from "./fsm/useTenants";
 import useDesludging from "./fsm/useDesludging";
@@ -79,12 +80,8 @@ import useMCollectSearch from "./mcollect/useMCollectSearch";
 import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
 import usemcollectTenants from "./mcollect/useTenants";
 
-// HRMS
-import useHRMSSearch from "./hrms/useHRMSsearch";
-import useHRMSCount from "./hrms/useHRMSCount";
-import useHrmsMDMS from "./hrms/useHRMSMDMS";
-import useHRMSCreate from "./hrms/useHRMScreate";
-import useHRMSUpdate from "./hrms/useHRMSUpdate";
+import useTenantsTL from "./tl/useTenants";
+import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
 
 const pgr = {
   useComplaintDetails,
@@ -100,6 +97,7 @@ const pgr = {
   useTenants,
   useComplaintSubType,
   usePropertyMDMS,
+  useComplaintStatusCount,
 };
 
 const fsm = {
@@ -160,7 +158,11 @@ const hrms = {
   useHrmsMDMS,
   useHRMSCreate,
   useHRMSUpdate,
-  useHRMSCount,
+  useHRMSCount
+}
+const tl = {
+  useTenants: useTenantsTL,
+  useTradeLicenseMDMS,
 };
 
 const Hooks = {
@@ -189,7 +191,7 @@ const Hooks = {
   pt,
   dss,
   mcollect,
-  hrms,
+  tl,
 };
 
 export default Hooks;

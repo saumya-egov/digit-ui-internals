@@ -22,6 +22,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
 
   const chartData = useMemo(() => {
     if (!response) return null;
+<<<<<<< HEAD
     const compareFn = (a, b) => b.value - a.value;
     return response?.responseData?.data?.[0]?.plots.sort(compareFn).reduce((acc, plot, index) => {
       if (index < 4) acc = acc.concat(plot);
@@ -31,6 +32,18 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
       return acc;
     }, []);
   }, [response]);
+=======
+    const compareFn = (a, b) => b.value - a.value;  
+    return response?.responseData?.data?.[0]?.plots
+      .sort(compareFn)
+      .reduce((acc, plot, index) => {
+        if (index < 4) acc = acc.concat(plot);
+        else if (index === 4) acc = acc.concat({ label: null, name: "DSS.OTHERS", value: plot?.value, symbol: "number" });
+        else acc[4].value += plot?.value;
+        return acc;
+      }, [])
+  }, [response])
+>>>>>>> 6e6a3982ae252f6cc2d33a2c40443e1828e28b7c
 
   const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`PROPERTYTYPE_MASTERS_${value}`)}</span>;
 
@@ -60,6 +73,13 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
 
   if (isLoading) {
     return <Loader />;
+  }
+  if (chartData?.length === 0) {
+    return (
+      <div className="no-data">
+        <p>{t('DSS_NO_DATA')}</p>
+      </div>
+    );
   }
   return (
     <ResponsiveContainer width="99%" height={340}>

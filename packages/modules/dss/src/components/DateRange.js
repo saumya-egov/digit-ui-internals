@@ -83,6 +83,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
               onChange={handleSelect}
               onRangeFocusChange={handleFocusChange}
               showSelectionPreview={true}
+              inputRanges={[]}
             />
           </div>
         )}

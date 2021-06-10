@@ -12,7 +12,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
   const { t } = useTranslation();
   let validation = {};
   const history = useHistory();
-  const tenantId = Digit.ULBService.getCurrentUlb();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const [mobileNumber, setMobileNumber] = useState(formData?.mobileNumber || "");
   const [challanNo, setchallanNumber] = useState(formData?.challanNo || "");
@@ -103,7 +103,7 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         )}
         <CardLabel>{`${t("UC_SEARCH_MOBILE_NO_LABEL")}`}</CardLabel>
         <div className="field-container">
-          <span className="citizen-card-input citizen-card-input--front" style={{ flex: "none" }}>
+          <span className="employee-card-input employee-card-input--front" style={{ marginTop: "-1px" }}>
             +91
           </span>
           <TextInput

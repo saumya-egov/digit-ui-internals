@@ -10,13 +10,13 @@ function ApplicationDetailsActionBar({ workflowDetails, displayMenu, onActionSel
         <ActionBar>
           {displayMenu && workflowDetails?.data?.nextActions ? (
             <Menu
-              localeKeyPrefix={businessService === "PT" ? "ES_PT" : "ES_FSM"}
+              localeKeyPrefix={businessService === "PT" ? "WF_EMPLOYEE_PT.CREATE" : "ES_FSM"}
               options={workflowDetails?.data?.nextActions.map((action) => action.action)}
               t={t}
               onSelect={onActionSelect}
             />
           ) : null}
-          <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+          <SubmitBar label={t(businessService === "PT" ? "WF_TAKE_ACTION" : "ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>
       )}
     </React.Fragment>
