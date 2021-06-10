@@ -57,15 +57,6 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
     {
       body: [
         {
-          label: mobileNumber.label,
-          type: mobileNumber.type,
-          populators: {
-            name: mobileNumber.name,
-            validation: { pattern: /^[6-9]{1}[0-9]{9}$ / },
-          },
-          isMandatory: false,
-        },
-        {
           label: "PT_SELECT_CITY",
           type: "custom",
           populators: {
@@ -107,6 +98,15 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
               />
             ),
           },
+        },
+        {
+          label: mobileNumber.label,
+          type: mobileNumber.type,
+          populators: {
+            name: mobileNumber.name,
+            validation: { pattern: /^[6-9]{1}[0-9]{9}$ / },
+          },
+          isMandatory: false,
         },
         {
           label: property.label,
