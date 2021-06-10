@@ -12,7 +12,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setCanSubmit] = useState(false);
 
-  const allCities = Digit.Hooks.pt.useTenants();
+  const allCities = Digit.Hooks.pt.useTenants()?.sort((a, b) => a?.i18nKey?.localeCompare?.(b?.i18nKey));
 
   const [cityCode, setCityCode] = useState(() => allCities[0]);
   const [formValue, setFormValue] = useState();
@@ -57,15 +57,6 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
     {
       body: [
         {
-          label: mobileNumber.label,
-          type: mobileNumber.type,
-          populators: {
-            name: mobileNumber.name,
-            validation: { pattern: /^[6-9]{1}[0-9]{9}$ / },
-          },
-          isMandatory: false,
-        },
-        {
           label: "PT_SELECT_CITY",
           type: "custom",
           populators: {
@@ -107,6 +98,15 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
               />
             ),
           },
+        },
+        {
+          label: mobileNumber.label,
+          type: mobileNumber.type,
+          populators: {
+            name: mobileNumber.name,
+            validation: { pattern: /^[6-9]{1}[0-9]{9}$ / },
+          },
+          isMandatory: false,
         },
         {
           label: property.label,
