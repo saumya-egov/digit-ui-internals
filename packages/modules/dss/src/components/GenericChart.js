@@ -20,7 +20,7 @@ const GenericChart = ({ header, subHeader, className, caption, children, showSea
 
   return (
     <Card className={`chart-item ${className}`} ReactRef={chart}>
-      <div className="chartHeader">
+      <div className={`chartHeader ${showSearch && 'column-direction'}`}>
         <div>
           <CardLabel style={{ fontWeight: "bold" }}>{`${t(header)}`}</CardLabel>
           {subHeader && <p style={{ color: "#505A5F", "fontWeight": 700 }}>{subHeader}</p>}

@@ -29,7 +29,6 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
         if (index < 4) acc = acc.concat(plot);
         else if (index === 4) acc = acc.concat({ label: null, name: "DSS.OTHERS", value: plot?.value, symbol: "number" });
         else acc[4].value += plot?.value;
-        console.log(acc[5]);
         return acc;
       }, [])
   }, [response])
