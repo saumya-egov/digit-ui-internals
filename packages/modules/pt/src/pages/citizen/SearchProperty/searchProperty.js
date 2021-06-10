@@ -20,8 +20,11 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
   useLayoutEffect(() => {
     const getActionBar = () => {
       let el = document.querySelector("div.action-bar-wrap");
-      if (el) el.style.position = "static";
-      else {
+      if (el) {
+        el.style.position = "static";
+        el.style.padding = "8px 0";
+        el.style.boxShadow = "none";
+      } else {
         setTimeout(() => {
           getActionBar();
         }, 100);
@@ -111,7 +114,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
         {
           label: property.label,
           description: t(property.description) + "\n" + propertyIdFormat,
-          descriptionStyles: { whiteSpace: "pre" },
+          descriptionStyles: { whiteSpace: "pre", fontSize: "14px", fontWeight: "400", fontFamily: "Roboto" },
           type: property.type,
           populators: {
             name: property.name,
@@ -173,7 +176,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
         heading={propsConfig.texts.header}
         text={propsConfig.texts.text}
         cardStyle={{ margin: "auto" }}
-        headingStyle={{ fontSize: "32px", marginBottom: "16px" }}
+        headingStyle={{ fontSize: "32px", marginBottom: "16px", fontFamily: "Roboto Condensed,sans-serif" }}
         isDisabled={!canSubmit}
         onFormValueChange={onFormValueChange}
       ></FormComposer>
