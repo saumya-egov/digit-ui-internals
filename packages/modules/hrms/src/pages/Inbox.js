@@ -1,4 +1,4 @@
-import { Header } from "@egovernments/digit-ui-react-components";
+import { Header, Loader } from "@egovernments/digit-ui-react-components";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import DesktopInbox from "../components/inbox/DesktopInbox";
@@ -6,6 +6,7 @@ import MobileInbox from "../components/inbox/MobileInbox";
 
 const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filterComponent, isInbox }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { isLoading: isLoading, Errors, data: res } = Digit.Hooks.hrms.useHRMSCount(tenantId);
 
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
@@ -23,17 +24,12 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch(searchParams, tenantId, paginationParams);
 
   useEffect(() => {
-    console.log("Digit", tenantId);
-    Digit.HRMSService.count(tenantId).then((ele) => {
-      console.log(ele);
-      setTotalReacords(ele?.EmployeCount?.totalEmployee);
-    });
-  }, []);
+    setTotalReacords(res?.EmployeCount?.totalEmployee);
+  }, [res]);
 
   useEffect(() => {}, [hookLoading, rest]);
 
   useEffect(() => {
-    console.log("functioncallaed");
     setPageOffset(0);
   }, [searchParams]);
 
@@ -82,6 +78,12 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
       },
     ];
   };
+
+
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   if (data?.length !== null) {
     if (isMobile) {

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {InfoBanner} from "@egovernments/digit-ui-react-components"
+import { CardLabel, LabelFieldPair}  from "@egovernments/digit-ui-react-components";
 const Banner =( {t, config})=>{
-    return(<InfoBanner text={config?.texts?.header} label={config?.texts?.headerCaption}/>)
+    return(
+        <LabelFieldPair>
+        <CardLabel className="card-label-smaller" style={{color:"white"}}>.</CardLabel>
+    <span className="form-field" style={{color:"gray"}}>{t(config?.texts?.header)}</span>
+    </LabelFieldPair>)
 }
 export default Banner;

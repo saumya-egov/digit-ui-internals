@@ -4,7 +4,6 @@ import { useLocation } from "react-router-dom";
 
 const SelectEmployeeCorrespondenceAddress = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
-  // console.log("find errors here", errors)
   const inputs = [
     {
       label: "HR_CORRESPONDENCE_ADDRESS_LABEL",
@@ -20,7 +19,6 @@ const SelectEmployeeCorrespondenceAddress = ({ t, config, onSelect, formData = {
 
   function setValue(value, input) {
     onSelect(config.key, { ...formData[config.key], [input]: value });
-    console.log("find value here", value, input, formData);
   }
 
   return (
@@ -36,9 +34,10 @@ const SelectEmployeeCorrespondenceAddress = ({ t, config, onSelect, formData = {
             <div className="field">
               <TextInput
                 key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : null}
+                value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e.target.value, input.name)}
                 disable={false}
+                defaultValue={undefined}
                 {...input.validation}
               />
             </div>

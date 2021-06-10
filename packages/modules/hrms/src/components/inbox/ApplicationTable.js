@@ -1,7 +1,7 @@
 import React from "react";
 import { Table } from "@egovernments/digit-ui-react-components";
 
-const ComplaintTable = ({ t, columns, data, getCellProps, onNextPage, onPrevPage, currentPage, totalRecords, pageSizeLimit, onPageSizeChange }) => (
+const ApplicationTable = ({ t, columns, data, getCellProps, onNextPage, onPrevPage, currentPage, totalRecords, pageSizeLimit, onPageSizeChange }) => (
   <Table
     t={t}
     data={data}
@@ -16,4 +16,4 @@ const ComplaintTable = ({ t, columns, data, getCellProps, onNextPage, onPrevPage
   />
 );
 
-export default ComplaintTable;
+export default ApplicationTable;

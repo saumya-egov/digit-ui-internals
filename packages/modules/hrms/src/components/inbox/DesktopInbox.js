@@ -7,12 +7,14 @@ import SearchApplication from "./search";
 import { Link } from "react-router-dom";
 
 const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
-  const GetCell = (value) => <span className="cell-text">{value}</span>;
+  const { t } = useTranslation();
+  const tenantIds = Digit.SessionStorage.get("HRMS_TENANTS");
+  const GetCell = (value) => <span className="cell-text">{t(value)}</span>;
   const GetSlaCell = (value) => {
     return value == "INACTIVE" ? <span className="sla-cell-error">{value || ""}</span> : <span className="sla-cell-success">{value || ""}</span>;
   };
   const data = props?.data?.Employees;
-  const { t } = useTranslation();
+
   const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
 
   const columns = React.useMemo(() => {
@@ -38,7 +40,11 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
       {
         Header: t("HR_ROLE_LABEL"),
         Cell: ({ row }) => {
-          return GetCell(`${row.original?.assignments.length}`);
+          return <div className="tooltip">    {GetCell(`${row.original?.user?.roles.length}`)}
+              <span className="tooltiptext">{(row.original?.user?.roles.map(ele => t(`ACCESSCONTROL_ROLES_ROLES_${ele.code}`) +'\n'))}</span>
+
+               </div>
+
         },
         disableSortBy: true,
       },
@@ -46,7 +52,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         Header: t("HR_DESG_LABEL"),
         disableSortBy: true,
         Cell: ({ row }) => {
-          return GetCell(`${t(row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.designation) || ""}`);
+          return GetCell(`${t("COMMON_MASTERS_DESIGNATION_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.designation) || ""}`);
         },
       },
       {
@@ -116,13 +122,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
                 link: "/digit-ui/employee/hrms/create",
                 businessService: "hrms",
                 roles: ["HRMS_ADMIN"],
-              },
-              {
-                text: "HR_REPORT",
-                link: "/digit-ui/employee/pt/new-application",
-                businessService: "hrms",
-                roles: ["BPA_APPROVER"],
-              },
+              }
             ]}
             headerText={"HRMS"}
             businessService={props.businessService}
@@ -134,6 +134,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
                 onFilterChange={props.onFilterChange}
                 searchParams={props.searchParams}
                 type="desktop"
+                tenantIds={tenantIds}
               />
             }
           </div>
@@ -144,6 +145,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
           defaultSearchParams={props.defaultSearchParams}
           onSearch={props.onSearch}
           type="desktop"
+          tenantIds={tenantIds}
           searchFields={props.searchFields}
           isInboxPage={!props?.isSearch}
           searchParams={props.searchParams}

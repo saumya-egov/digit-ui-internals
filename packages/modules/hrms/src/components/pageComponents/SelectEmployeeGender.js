@@ -56,6 +56,7 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
                                 selectedOption={formData && formData[config.key] ? formData[config.key][input.name] : null}
                                 onSelect={(e) => setValue(e, input.name)}
                                 disable={false}
+                                defaultValue={undefined}
                                 t={t}
                                 {...input.validation}
                             />

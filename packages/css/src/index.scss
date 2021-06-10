@@ -27,6 +27,7 @@
 @import "./components/checkbox.scss";
 @import "./components/inputotp.scss";
 @import "./components/map.scss";
+@import "./pages/employee/tooltip.scss";
 @import "./components/menu.scss";
 @import "./components/submiterrors.scss";
 @import "./components/ratingstar.scss";
@@ -63,6 +64,7 @@
 @import "./components/CitizenHomeCard.scss";
 
 @import "./pages/employee/index.scss";
+@import "./pages/employee/cardfix.scss";
 @import "./pages/employee/popupmodule.scss";
 @import "./pages/employee/container.scss";
 @import "./pages/employee/inbox.scss";
@@ -337,7 +339,7 @@ input[type="number"] {
   @apply relative w-full;
   input{
     &:hover{
-      @apply border-2 border-solid border-primary-main; 
+      @apply border-2 border-solid border-primary-main;
     }
   }
 }

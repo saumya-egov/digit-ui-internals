@@ -5,7 +5,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import Inbox from "./pages/Inbox";
 import HRMSCard from "./components/hrmscard";
 import CreateEmployee from "./pages/createEmployee";
-// import Jurisdictions from "../src/components/jurisdiction";
+import EditEmpolyee from "./pages/EditEmployee/index";
 import InboxFilter from "./components/InboxFilter";
 import Jurisdictions from "./components/pageComponents/jurisdiction";
 import Assignments from "./components/pageComponents/assignment";
@@ -17,14 +17,18 @@ import SelectEmployeeName from "./components/pageComponents/SelectEmployeeName";
 import SelectEmployeeEmailId from "./components/pageComponents/SelectEmailId";
 import SelectEmployeeCorrespondenceAddress from "./components/pageComponents/SelectEmployeeCorrespondenceAddress";
 import SelectEmployeeGender from "./components/pageComponents/SelectEmployeeGender";
-import SelectDateofBirthEmployment from "./components/pageComponents/EmployeeDOB"
+import SelectDateofBirthEmployment from "./components/pageComponents/EmployeeDOB";
 import Response from "./pages/Response";
-import { InfoBanner } from "@egovernments/digit-ui-react-components";
 import Banner from "./components/pageComponents/Banner";
 import Details from "./pages/EmployeeDetails";
 import ActionModal from "./components/Modal";
+import { useSelector } from "react-redux";
 
-export const HRMSModule = ({ userType, tenants }) => {
+export const HRMSModule = ({ stateCode, userType, tenants }) => {
+  const moduleCode = "HR";
+  const state = useSelector((state) => state);
+  const language = state?.common?.selectedLanguage;
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
   const mobileView = innerWidth <= 640;
   const location = useLocation();
   const { t } = useTranslation();
@@ -34,7 +38,6 @@ export const HRMSModule = ({ userType, tenants }) => {
       tenantId: tenantId,
     },
   };
-  const moduleCode = "HRMSmodule";
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
 
   const { path, url } = useRouteMatch();
@@ -46,9 +49,9 @@ export const HRMSModule = ({ userType, tenants }) => {
           <div className="ground-container">
             <p className="breadcrumb" style={{ marginLeft: mobileView ? "2vw" : "revert" }}>
               <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
-                {t("HRMS")}
+                {t("HR_COMMON_BUTTON_HOME")}
               </Link>{" "}
-              / <span>{location.pathname === "/digit-ui/employee/hrms/inbox" ? t("HR_COMMON_HEADER") : "HRMS"}</span>
+              / <span>{location.pathname === "/digit-ui/employee/hrms/inbox" ? t("HR_COMMON_HEADER") : t("HR_COMMON_HEADER")}</span>
             </p>
             <PrivateRoute
               path={`${path}/inbox`}
@@ -63,13 +66,14 @@ export const HRMSModule = ({ userType, tenants }) => {
               )}
             />
             <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
-            <PrivateRoute path={`${path}/response`} component={(props)=><Response {...props} parentRoute={path} />}/>
-          <PrivateRoute path={`${path}/details/:id`} component={() => <Details />} />
+            <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
+            <PrivateRoute path={`${path}/details/:id`} component={() => <Details />} />
+            <PrivateRoute path={`${path}/edit/:id`} component={() => <EditEmpolyee />} />
           </div>
         </React.Fragment>
       </Switch>
     );
-  } else return <div></div>;
+  } else return null;
 };
 
 const componentsToRegister = {
@@ -80,7 +84,6 @@ const componentsToRegister = {
   SelectEmployeeId,
   Jurisdictions,
   Assignments,
-  InfoBanner,
   ActionModal,
   Banner,
   SelectEmployeePhoneNumber,

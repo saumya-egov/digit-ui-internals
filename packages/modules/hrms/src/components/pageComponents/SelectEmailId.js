@@ -11,16 +11,13 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
       type: "email",
       name: "emailId",
       validation: {
-        isRequired: true,
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
-      isMandatory: true,
     }
   ];
 
   function setValue(value, input) {
     onSelect(config.key, { ...formData[config.key], [input]: value });
-    console.log("find value here", value, input, formData);
   }
 
   return (
@@ -36,9 +33,10 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
             <div className="field">
               <TextInput
                 key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : null}
+                value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e.target.value, input.name)}
                 disable={false}
+                defaultValue={undefined}
                 {...input.validation}
               />
             </div>

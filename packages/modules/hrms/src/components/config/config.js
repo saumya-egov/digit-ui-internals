@@ -14,12 +14,6 @@ export const newConfig = [
         key: "SelectEmployeePhoneNumber",
         withoutLabel: true,
       },
-      {
-        type:"component",
-        component:"SelectDateofBirthEmployment",
-        key: "SelectDateofBirthEmployment",
-        withoutLabel: true,
-      },
       ,{
         type:"component",
         component:"Banner",
@@ -30,6 +24,12 @@ export const newConfig = [
           header: "The Mobile  number entered must be unique. Search the mobile number to check if it exist already in the system",
         }
         },
+      {
+        type:"component",
+        component:"SelectDateofBirthEmployment",
+        key: "SelectDateofBirthEmployment",
+        withoutLabel: true,
+      },
       {
         type:"component",
         component:"SelectEmployeeGender",
@@ -85,14 +85,16 @@ export const newConfig = [
     ]
   },
     {
-      head: "ES_NEW_APPLICATION_LOCATION_DETAILS",
+      head: "HR_JURISDICTION_DETAILS_HEADER",
       body: [
         {
             type: "component",
+            isMandatory: true,
             component: "Jurisdictions",
             key: "Jurisdictions",
             withoutLabel: true,
-          }
+          },
+
       ]
     },
 
@@ -106,7 +108,7 @@ export const newConfig = [
             withoutLabel: true,
             texts: {
               headerCaption: "Info",
-              header: "Verify entered details before submission. Assignment details cannot be edited once submitted.",
+              header: "HR_ASSIGN_DET_SUB_HEADER",
             }
             },
           {

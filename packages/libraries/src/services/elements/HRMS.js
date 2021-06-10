@@ -1,3 +1,4 @@
+import { roundToNearestMinutes } from "date-fns/esm";
 import Urls from "../atoms/urls";
 import { Request } from "../atoms/Utils/Request";
 
@@ -5,7 +6,7 @@ const HrmsService = {
     search: (tenantId, filters, searchParams) =>
         Request({
             url: Urls.hrms.search,
-            useCache: false,
+            useCache: true,
             method: "POST",
             auth: true,
             userService: true,

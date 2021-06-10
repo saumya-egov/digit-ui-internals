@@ -2,23 +2,21 @@ import React, { useEffect, useState } from "react";
 import { configEmployeeApplication } from "./Modal/EmployeeAppliaction";
 import { configEmployeeActiveApplication } from "./Modal/EmployeeActivation";
 import { Loader, Modal, FormComposer } from "@egovernments/digit-ui-react-components";
-import { Dropdown, UploadFile } from "@egovernments/digit-ui-react-components";
-import { useParams, useHistory, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applicationData, billData }) => {
   const history = useHistory();
   const [config, setConfig] = useState({});
   const [file, setFile] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [defaultValues, setDefaultValues] = useState({});
   const [error, setError] = useState(null);
-  const [Reasons, setReasons] = useState([])
-  const [selectedReason, selecteReason] = useState('');
+  const [Reasons, setReasons] = useState([]);
+  const [selectedReason, selecteReason] = useState("");
   const { isLoading, isError, errors, data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "DeactivationReason");
 
   useEffect(() => {
     switch (action) {
-      case "DEACTIVATE_EMPLOYEE":
+      case "DEACTIVATE_EMPLOYEE_HEAD":
         return setConfig(
           configEmployeeApplication({
             t,
@@ -28,10 +26,10 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             setUploadedFile,
             selectedReason,
             Reasons,
-            selectReason
+            selectReason,
           })
         );
-      case "ACTIVATE_EMPLOYEE":
+      case "ACTIVATE_EMPLOYEE_HEAD":
         return setConfig(
           configEmployeeActiveApplication({
             t,
@@ -41,11 +39,10 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             setUploadedFile,
             selectedReason,
             Reasons,
-            selectReason
+            selectReason,
           })
         );
       default:
-        console.log("default case");
         break;
     }
   }, [action, uploadedFile, Reasons]);
@@ -55,7 +52,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
   };
 
   function selectReason(e) {
-    selecteReason(e)
+    selecteReason(e);
   }
   const Close = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFFFFF">
@@ -76,9 +73,8 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     setFile(e.target.files[0]);
   }
   useEffect(() => {
-    setReasons(data?.['egov-hrms']?.DeactivationReason)
-  }, [data])
-
+    setReasons(data?.["egov-hrms"]?.DeactivationReason);
+  }, [data]);
 
   useEffect(() => {
     (async () => {
@@ -96,7 +92,6 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
               setError(t("CS_FILE_UPLOAD_ERROR"));
             }
           } catch (err) {
-            console.error("Modal -> err ", err);
             setError(t("CS_FILE_UPLOAD_ERROR"));
           }
         }
@@ -104,45 +99,37 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     })();
   }, [file]);
 
-
-
-
   function submit(data) {
-    console.log(selectedReason)
     // useHRMSUpdate
-    data.effectiveFrom = new Date(data.effectiveFrom).getTime()
+    data.effectiveFrom = new Date(data.effectiveFrom).getTime();
     data.reasonForDeactivation = selectedReason.code;
     let Employees = [...applicationData.Employees];
-    console.log(action)
-    if (action !== "ACTIVATE_EMPLOYEE") {
-
+    if (action !== "ACTIVATE_EMPLOYEE_HEAD") {
       if (file) {
         let documents = {
           referenceType: "DEACTIVATION",
           documentId: uploadedFile,
-          documentName: File.name
-        }
-        applicationData.Employees[0]["documents"].push(documents)
+          documentName: File.name,
+        };
+        applicationData.Employees[0]["documents"].push(documents);
       }
-      Employees[0]["deactivationDetails"].push(data)
-      Employees[0].isActive = false
-      history.push("/digit-ui/employee/hrms/response", { Employees, key: "update" });
-
+      Employees[0]["deactivationDetails"].push(data);
+      Employees[0].isActive = false;
+      history.push("/digit-ui/employee/hrms/response", { Employees, key: "UPDATE", action: "DEACTIVATION" });
     } else {
       if (file) {
         let documents = {
-          referenceType: "DEACTIVATION",
+          referenceType: "ACTIVATION",
           documentId: uploadedFile,
-          documentName: File.name
-        }
-        applicationData.Employees[0]["documents"].push(documents)
+          documentName: File.name,
+        };
+        applicationData.Employees[0]["documents"].push(documents);
       }
 
-      Employees[0]["reactivationDetails"].push(data)
-      Employees[0].isActive = true
+      Employees[0]["reactivationDetails"].push(data);
+      Employees[0].isActive = true;
 
-      history.push("/digit-ui/employee/hrms/response", { Employees, key: "update", action:action });
-
+      history.push("/digit-ui/employee/hrms/response", { Employees, key: "UPDATE", action: "ACTIVATION" });
     }
   }
 
@@ -152,23 +139,14 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       headerBarEnd={<CloseBtn onClick={closeModal} />}
       actionCancelOnSubmit={closeModal}
       actionSaveLabel={t(config?.label?.submit)}
-      actionSaveOnSubmit={() => { }}
+      actionSaveOnSubmit={() => {}}
       formId="modal-action"
       isDisabled={!selectedReason}
     >
-      <FormComposer
-        config={config?.form}
-        noBoxShadow
-        inline
-        disabled={true}
-        childrenAtTheBottom
-        onSubmit={submit}
-        defaultValues={defaultValues}
-        formId="modal-action"
-      />
+      <FormComposer config={config?.form} noBoxShadow inline disabled={true} childrenAtTheBottom onSubmit={submit} formId="modal-action" />
     </Modal>
   ) : (
-      <Loader />
-    );
-}
+    <Loader />
+  );
+};
 export default EmployeeAction;

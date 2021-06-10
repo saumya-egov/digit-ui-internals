@@ -19,9 +19,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
   ];
 
   function setValue(value, input) {
-    console.log(config.key, { ...formData[config.key], [input]: value })
     onSelect(config.key, { ...formData[config.key], [input]: value });
-    console.log("find value here", value, input, formData);
   }
 
   return (
@@ -37,9 +35,10 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
             <div className="field">
               <DatePicker
                 key={input.name}
-                date={formData && formData[config.key] ? formData[config.key][input.name] : null}
+                date={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e, input.name)}
                 disable={false}
+                defaultValue={undefined}
                 {...input.validation}
               />
             </div>

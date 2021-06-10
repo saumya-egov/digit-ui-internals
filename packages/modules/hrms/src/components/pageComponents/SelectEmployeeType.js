@@ -9,11 +9,8 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
   const { data: EmployeeTypes = [], isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "EmployeeType") || {};
-  const [employeeType, setemployeeType] = useState(formData?.employeeType);
-
-  console.log(EmployeeTypes)
+  const [employeeType, setemployeeType] = useState(formData?.SelectEmployeeType);
   function SelectEmployeeType(value) {
-      console.log(value)
     setemployeeType(value);
 
   }
@@ -44,6 +41,7 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
             option={EmployeeTypes?.["egov-hrms"]?.EmployeeType}
             select={SelectEmployeeType}
             optionKey="code"
+            defaultValue={undefined}
             t={t}
           />
         </LabelFieldPair>

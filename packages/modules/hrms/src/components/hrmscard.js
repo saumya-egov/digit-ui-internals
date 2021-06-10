@@ -11,14 +11,13 @@ const ArrowRight = ({ to }) => (
 
 const HRMSCard = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  console.log(tenantId)
   const { t } = useTranslation();
   // TODO: should be fetch
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
   const total = 1;
 
   return (
-    <div className="employeeCard card-home">
+    <div className="employeeCard card-home-hrms">
       <div className="complaint-links-container">
         <div className="header">
           <span className="logo">
@@ -28,9 +27,9 @@ const HRMSCard = () => {
         </div>
         <div className="body">
           <div className="flex-fit">
-            <div>
+            <div className="card-count">
               <div>
-                <span className="inbox-total">{" " + data?.EmployeCount?.totalEmployee || "-"}</span>
+                <span>{" " + data?.EmployeCount?.totalEmployee ? data?.EmployeCount?.totalEmployee : 0 || "-"}</span>
               </div>
               <div>
                 <Link to={`/digit-ui/employee/hrms/inbox`}>{t("TOTAL_EMPLOYEES")}</Link>
@@ -38,10 +37,10 @@ const HRMSCard = () => {
             </div>
             <div>
               <div>
-                <span className="inbox-total">{" " + data?.EmployeCount?.activeEmployee || "-"}</span>
+                <span>{" " + data?.EmployeCount?.activeEmployee ? data?.EmployeCount?.activeEmployee : 0 || "-"}</span>
               </div>
               <div>
-                <Link to={`/digit-ui/employee/hrms/inbox`} >{t("ACTIVE_EMPLOYEES")}</Link>
+                <Link to={`/digit-ui/employee/hrms/inbox`}>{t("ACTIVE_EMPLOYEES")}</Link>
               </div>
             </div>
           </div>
@@ -50,9 +49,6 @@ const HRMSCard = () => {
           </span>
           <span className="link">
             <Link to={`/digit-ui/employee/hrms/create`}>{t("HR_COMMON_CREATE_EMPLOYEE_HEADER")}</Link>
-          </span>
-          <span className="link">
-            <Link to={`/digit-ui/employee/hrms/reports`}>{t("HR_HOME_REPORTS_HEADING")}</Link>
           </span>
         </div>
       </div>
