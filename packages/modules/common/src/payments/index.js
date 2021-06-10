@@ -29,15 +29,15 @@ export const PaymentModule = ({ deltaConfig = {}, stateCode, cityCode, moduleCod
 export const PaymentLinks = ({ matchPath }) => {
   const { t } = useTranslation();
 
-  const links = [
-    {
-      link: `/digit-ui/citizen/payment/my-bills/PT`,
-      i18nKey: t("CS_HOME_PT"),
-    },
-  ];
+  // const links = [
+  //   {
+  //     link: `/digit-ui/citizen/payment/my-bills/PT`,
+  //     i18nKey: t("CS_HOME_PT"),
+  //   },
+  // ];
 
-  return <CitizenHomeCard header={t("CS_HOME_QUICK_PAY")} links={links} Icon={RupeeIcon} />;
-  // return null;
+  // return <CitizenHomeCard header={t("CS_HOME_QUICK_PAY")} links={links} Icon={RupeeIcon} />;
+  return null;
 };
 
 export const paymentConfigs = {
