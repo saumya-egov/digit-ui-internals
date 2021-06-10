@@ -86,6 +86,13 @@ const BillDetails = ({ paymentRules, businessService }) => {
         paymentAmount,
         tenantId: billDetails.tenantId,
       });
+    } else if (businessService === "PT") {
+      history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}`, {
+        paymentAmount,
+        tenantId: billDetails.tenantId,
+        name: bill.payerName,
+        mobileNumber: bill.mobileNumber,
+      });
     } else {
       history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}`, { paymentAmount, tenantId: billDetails.tenantId });
     }

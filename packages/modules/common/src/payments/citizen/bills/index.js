@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams, useHistory, useRouteMatch } from "react-router-dom";
+import { useParams, useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import Routes from "./routes";
 // import { myBillMap } from "./myBillsKeysMap";
 
@@ -13,11 +13,12 @@ export const MyBills = ({ stateCode }) => {
   });
   const history = useHistory();
   const { url } = useRouteMatch();
+  const location = useLocation();
 
-  const { isLoading, data } = Digit.Hooks.useFetchCitizenBillsForBuissnessService({ businessService });
-  const { tenantId } = Digit.UserService.getUser()?.info || {};
+  const { isLoading, data } = Digit.Hooks.useFetchCitizenBillsForBuissnessService({ businessService }, { refetchOnMount: false });
+  const { tenantId } = Digit.UserService.getUser()?.info || location.state;
 
-  if (!tenantId) history.push(`/digit-ui/citizen/login`, { from: url });
+  if (!tenantId && businessService !== "PT") history.push(`/digit-ui/citizen/login`, { from: url });
 
   const { isLoading: mdmsLoading, data: mdmsBillingData } = Digit.Hooks.useGetPaymentRulesForBusinessServices(tenantId);
 
