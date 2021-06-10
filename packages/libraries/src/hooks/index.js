@@ -31,6 +31,7 @@ import useLocalities from "./pgr/useLocalities";
 import useServiceDefs from "./pgr/useServiceDefs";
 import useTenants from "./pgr/useTenants";
 import useComplaintSubType from "./pgr/useComplaintSubType";
+import useComplaintStatusCount from "./pgr/useComplaintStatusWithCount";
 
 import useTenantsFSM from "./fsm/useTenants";
 import useDesludging from "./fsm/useDesludging";
@@ -96,6 +97,7 @@ const pgr = {
   useTenants,
   useComplaintSubType,
   usePropertyMDMS,
+  useComplaintStatusCount,
 };
 
 const fsm = {

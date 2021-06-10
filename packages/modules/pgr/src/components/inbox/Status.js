@@ -1,11 +1,10 @@
 import React from "react";
 import { CheckBox, Loader } from "@egovernments/digit-ui-react-components";
-import useComplaintStatusCount from "../../../../../libraries/src/hooks/pgr/useComplaintStatusWithCount";
 import { useTranslation } from "react-i18next";
 
 const Status = ({ complaints, onAssignmentChange, pgrfilters }) => {
   const { t } = useTranslation();
-  const complaintsWithCount = useComplaintStatusCount(complaints);
+  const complaintsWithCount = Digit.Hooks.pgr.useComplaintStatusCount(complaints);
   let hasFilters = pgrfilters?.applicationStatus?.length;
   return (
     <div className="status-container">
