@@ -73,14 +73,24 @@ export const BillList = ({ billsList, currentPath, businessService }) => {
             ))}
           {!applicationList?.length > 0 && <p style={{ paddingLeft: "16px" }}>{t("CS_BILLS_TEXT_NO_BILLS_FOUND")}</p>}
         </div>
-        {/* {businessService === "PT" && (
-          <p style={{ marginLeft: "16px", marginTop: "16px" , position:"fixed" , }}>
+        {businessService === "PT" && (
+          <p
+            style={{
+              paddingLeft: "16px",
+              paddingTop: "16px",
+              position: "fixed",
+              bottom: "55px",
+              backgroundColor: "#e3e3e3",
+              textAlign: "left",
+              width: "100%",
+            }}
+          >
             {t("PT_TEXT_NOT_ABLE_TO_FIND_THE_PROPERTY")}
             <span className="link">
               <Link to="/digit-ui/citizen/pt/property/search">{t("PT_COMMON_CLICK_HERE")}</Link>
             </span>
           </p>
-        )} */}
+        )}
       </div>
     </React.Fragment>
   );

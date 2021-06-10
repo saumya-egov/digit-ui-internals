@@ -80,7 +80,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
         <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
       </div>
 
-      <div
+      {/* <div
         style={{
           paddingLeft: "16px",
           paddingTop: "16px",
@@ -95,7 +95,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
         <p className="link">
           <Link to="/digit-ui/citizen/pt/property/new-application/info">{t("PT_COMMON_CLICK_HERE_TO_REGISTER_NEW_PROPERTY")}</Link>
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };
