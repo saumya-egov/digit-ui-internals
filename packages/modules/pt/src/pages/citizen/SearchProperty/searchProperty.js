@@ -61,6 +61,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
       body: [
         {
           label: "PT_SELECT_CITY",
+          isMandatory: true,
           type: "custom",
           populators: {
             name: "city",
@@ -82,6 +83,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
         {
           label: "PT_SELECT_LOCALITY",
           type: "custom",
+          isMandatory: true,
           populators: {
             name: "locality",
             defaultValue: formValue?.locality,
