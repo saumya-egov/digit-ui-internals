@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 
 import { MyBills } from "./bills";
 import { SelectPaymentType } from "./payment-type/index";
@@ -12,9 +13,9 @@ const CitizenPayment = ({ stateCode, cityCode, moduleCode }) => {
   return (
     <React.Fragment>
       <Switch>
-        <Route path={`${currentPath}/my-bills/:businessService`}>
+        <PrivateRoute path={`${currentPath}/my-bills/:businessService`}>
           <MyBills stateCode={stateCode} />
-        </Route>
+        </PrivateRoute>
         <Route path={`${currentPath}/collect/:businessService/:consumerCode`}>
           <SelectPaymentType {...commonProps} basePath={currentPath} />
         </Route>
