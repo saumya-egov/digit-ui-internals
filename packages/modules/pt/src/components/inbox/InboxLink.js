@@ -20,7 +20,7 @@ const InboxLinks = ({ parentRoute, businessService }) => {
       roles: [],
     },
     // { text: "PT_REPORTS", hyperLink: true, link: "/digit-ui/employee/integration/dss/propertytax", roles: [], businessService: "PT" },
-    { text: "PT_DASHBOARD", link: "/digit-ui/employee/", roles: [], businessService: "PT" },
+    // { text: "PT_DASHBOARD", link: "/digit-ui/employee/", roles: [], businessService: "PT" },
   ];
 
   const [links, setLinks] = useState([]);

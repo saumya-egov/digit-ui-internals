@@ -41,7 +41,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   }
 
   const onSubmit = (data) => {
-    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: city, noAuth: true });
+    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: city, fromSearchResults: true });
   };
 
   const payment = {};
@@ -85,7 +85,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
           paddingLeft: "16px",
           paddingTop: "16px",
           position: "fixed",
-          bottom: "55px",
+          bottom: "40px",
           backgroundColor: "#e3e3e3",
           textAlign: "left",
           width: "100%",
