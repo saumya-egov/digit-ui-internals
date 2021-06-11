@@ -85,7 +85,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
           paddingLeft: "16px",
           paddingTop: "16px",
           position: "fixed",
-          bottom: "55px",
+          bottom: "40px",
           backgroundColor: "#e3e3e3",
           textAlign: "left",
           width: "100%",
