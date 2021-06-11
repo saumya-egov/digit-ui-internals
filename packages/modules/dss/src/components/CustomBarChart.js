@@ -57,10 +57,17 @@ const CustomBarChart = ({
   }, [response]);
 
   const goToDrillDownCharts = () => {
-    history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`)
-  }
+    history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`);
+  };
   if (isLoading) {
     return <Loader />;
+  }
+  if (chartData?.length === 0) {
+    return (
+      <div className="no-data">
+        <p>{t("DSS_NO_DATA")}</p>
+      </div>
+    );
   }
   return (
     <Fragment>

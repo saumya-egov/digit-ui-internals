@@ -56,13 +56,18 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
             logoUrl={logoUrl}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <div style={{ overflowY: "auto" }}>
+            {/* <div style={{ overflowY: "auto" }}> */}
+            <div>
               <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
             </div>
-            <div class="employee-home-footer">
-              <img src={`${sourceUrl}/digit-footer.png`} style={{ height: '1.1em', cursor: 'pointer' }} onClick={() => {
-                window.open('https://www.digit.org/', '_blank').focus();
-              }} />
+            <div className="employee-home-footer">
+              <img
+                src={`${sourceUrl}/digit-footer.png`}
+                style={{ height: "1.1em", cursor: "pointer" }}
+                onClick={() => {
+                  window.open("https://www.digit.org/", "_blank").focus();
+                }}
+              />
             </div>
           </div>
         </div>
@@ -81,10 +86,14 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
           />
           <div className={`main center-container mb-50`}>
             <AppModules stateCode={stateCode} userType="citizen" modules={modules} appTenants={appTenants} />
-            <div class="citizen-home-footer">
-              <img src={`${sourceUrl}/digit-footer.png`} style={{ height: '1.2em', cursor: 'pointer' }} onClick={() => {
-                window.open('https://www.digit.org/', '_blank').focus();
-              }} />
+            <div className="citizen-home-footer">
+              <img
+                src={`${sourceUrl}/digit-footer.png`}
+                style={{ height: "1.2em", cursor: "pointer" }}
+                onClick={() => {
+                  window.open("https://www.digit.org/", "_blank").focus();
+                }}
+              />
             </div>
           </div>
         </div>

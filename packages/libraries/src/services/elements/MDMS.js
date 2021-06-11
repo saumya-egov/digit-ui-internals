@@ -374,6 +374,19 @@ const getPropertyOwnerShipCategoryCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getTradeOwnerShipCategoryCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "OwnerShipCategory" }],
+      },
+    ],
+  },
+});
+
 const getDocumentRequiredScreenCategory = (tenantId, moduleCode) => ({
   details: {
     tenantId: tenantId,
@@ -427,6 +440,32 @@ const getPTPropertyTypeList = (tenantId, moduleCode, type) => ({
       {
         moduleName: moduleCode,
         masterDetails: [{ name: "PropertyType" }],
+      },
+    ],
+  },
+});
+
+const getTLStructureTypeList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "StructureType" }],
+      },
+    ],
+  },
+});
+
+const getTLAccessoriesTypeList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "AccessoriesCategory" }],
       },
     ],
   },
@@ -539,6 +578,19 @@ const getMCollectBillingServiceCriteria = (tenantId, moduleCode, type, filter) =
   },
 });
 
+const getTradeUnitsDataList = (tenantId, moduleCode, type, filter) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "TradeType", filter: filter }],
+      },
+    ],
+  },
+});
+
 const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
   type,
   details: {
@@ -547,6 +599,19 @@ const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
       {
         moduleName: moduleCode,
         masterDetails: [{ name: "applcationStatus" }],
+      },
+    ],
+  },
+});
+
+const getFSTPPlantCriteria = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "FSTPPlantInfo" }],
       },
     ],
   },
@@ -629,6 +694,14 @@ const GetPropertyOwnerShipCategory = (MdmsRes) =>
     };
   });
 
+const GetTradeOwnerShipCategory = (MdmsRes) =>
+  MdmsRes["common-masters"].OwnerShipCategory.filter((ownerShip) => ownerShip.active).map((ownerShipDetails) => {
+    return {
+      ...ownerShipDetails,
+      i18nKey: `COMMON_MASTER_OWNER_TYPE_${ownerShipDetails.code}`,
+    };
+  });
+
 const GetPropertyOwnerType = (MdmsRes) =>
   MdmsRes["PropertyTax"].OwnerType.filter((owner) => owner.active).map((ownerDetails) => {
     return {
@@ -649,6 +722,15 @@ const getSubPropertyOwnerShipCategory = (MdmsRes) => {
 
 const getDocumentRequiredScreen = (MdmsRes) => {
   MdmsRes["PropertyTax"].Documents.filter((Documents) => Documents.active).map((dropdownData) => {
+    return {
+      ...Documents,
+      i18nKey: `${dropdownData.code}`,
+    };
+  });
+};
+
+const getTLDocumentRequiredScreen = (MdmsRes) => {
+  MdmsRes["TradeLicense"].Documents.filter((Documents) => Documents.active).map((dropdownData) => {
     return {
       ...Documents,
       i18nKey: `${dropdownData.code}`,
@@ -678,6 +760,22 @@ const getPTPropertyType = (MdmsRes) =>
     return {
       ...UsageCategorylist,
       i18nKey: `COMMON_PROPTYPE_${stringReplaceAll(PTPropertyTypelist.code, ".", "_")}`,
+    };
+  });
+
+const getTLStructureType = (MdmsRes) =>
+  MdmsRes["common-masters"].StructureType.filter((StructureType) => StructureType.active).map((TLStructureTypeList) => {
+    return {
+      ...TLStructureTypeList,
+      i18nKey: `COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(TLStructureTypeList.code, ".", "_")}`,
+    };
+  });
+
+const getTLAccessoriesType = (MdmsRes) =>
+  MdmsRes["TradeLicense"].AccessoriesCategory.filter((AccessoriesCategory) => AccessoriesCategory.active).map((TLAccessoryTypeList) => {
+    return {
+      ...TLAccessoryTypeList,
+      i18nKey: `TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(TLAccessoryTypeList.code, ".", "_")}`,
     };
   });
 
@@ -736,7 +834,10 @@ const GetPreFields = (MdmsRes) => MdmsRes["FSM"].PreFieldsConfig;
 
 const GetPostFields = (MdmsRes) => MdmsRes["FSM"].PostFieldsConfig;
 
+const GetFSTPPlantInfo = (MdmsRes) => MdmsRes["FSM"].FSTPPlantInfo;
+
 const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
+  console.log(type, "type");
   switch (type) {
     case "citymodule":
       return GetCitiesWithi18nKeys(MdmsRes, moduleCode);
@@ -760,18 +861,26 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return GetSlumLocalityMapping(MdmsRes, tenantId);
     case "OwnerShipCategory":
       return GetPropertyOwnerShipCategory(MdmsRes);
+    case "TLOwnerShipCategory":
+      return GetTradeOwnerShipCategory(MdmsRes);
     case "OwnerType":
       return GetPropertyOwnerType(MdmsRes);
     case "SubOwnerShipCategory":
       return getSubPropertyOwnerShipCategory(MdmsRes);
     case "Documents":
       return getDocumentRequiredScreen(MdmsRes);
+    case "TLDocuments":
+      return getTLDocumentRequiredScreen(MdmsRes);
     case "MapConfig":
       return getMapConfig(MdmsRes);
     case "UsageCategory":
       return getUsageCategory(MdmsRes);
     case "PTPropertyType":
       return getPTPropertyType(MdmsRes);
+    case "StructureType":
+      return getTLStructureType(MdmsRes);
+    case "AccessoryCategory":
+      return getTLAccessoriesType(MdmsRes);
     case "Floor":
       return getFloorList(MdmsRes);
     case "Reason":
@@ -792,6 +901,8 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return GetMCollectBusinessService(MdmsRes);
     case "applcatonStatus":
       return GetMCollectApplicationStatus(MdmsRes);
+    case "FSTPPlantInfo":
+      return GetFSTPPlantInfo(MdmsRes);
     default:
       return MdmsRes;
   }
@@ -956,6 +1067,11 @@ export const MdmsService = {
   getPropertyOwnerShipCategory: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getPropertyOwnerShipCategoryCriteria(tenantId, moduleCode, type), moduleCode);
   },
+
+  GetTradeOwnerShipCategory: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getTradeOwnerShipCategoryCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+
   getPropertyOwnerType: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getPropertyOwnerTypeCriteria(tenantId, moduleCode, type), moduleCode);
   },
@@ -965,6 +1081,12 @@ export const MdmsService = {
   getDocumentRequiredScreen: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getDocumentRequiredScreenCategory(tenantId, moduleCode), moduleCode);
   },
+  getTLDocumentRequiredScreen: (tenantId, moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getDocumentRequiredScreenCategory(tenantId, moduleCode), moduleCode);
+  },
+  getTradeUnitsData: (tenantId, moduleCode, type, filter) => {
+    return MdmsService.getDataByCriteria(tenantId, getTradeUnitsDataList(tenantId, moduleCode, type, filter), moduleCode);
+  },
   getMapConfig: (tenantId, moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getDefaultMapConfig(tenantId, moduleCode), moduleCode);
   },
@@ -973,6 +1095,12 @@ export const MdmsService = {
   },
   getPTPropertyType: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getPTPropertyTypeList(tenantId, moduleCode), moduleCode);
+  },
+  getTLStructureType: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getTLStructureTypeList(tenantId, moduleCode), moduleCode);
+  },
+  getTLAccessoriesType: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getTLAccessoriesTypeList(tenantId, moduleCode), moduleCode);
   },
   getFloorList: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getPTFloorList(tenantId, moduleCode, type), moduleCode);
@@ -1000,5 +1128,8 @@ export const MdmsService = {
   },
   getMultipleTypes: (tenantId, moduleCode, types) => {
     return MdmsService.getDataByCriteria(tenantId, getMultipleTypes(tenantId, moduleCode, types), moduleCode);
+  },
+  getFSTPPlantInfo: (tenantId, moduleCode, types) => {
+    return MdmsService.getDataByCriteria(tenantId, getFSTPPlantCriteria(tenantId, moduleCode, types), moduleCode);
   },
 };

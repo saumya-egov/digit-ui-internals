@@ -1,11 +1,14 @@
 .filters-wrapper {
   display: none;
-  justify-content: space-between;
   padding: 20px 0px 0px;
   z-index: 1;
 
   .filters-input {
     flex-basis: 22%;
+  }
+
+  .filters-input:not(:first-of-type) {
+    margin-left: 5%;
   }
 
   .switch-wrapper {
@@ -79,8 +82,9 @@
     width: 100%;
     height: 100vh;
     left: 0;
-    top: 77px;
+    top: 130px;
     padding: 16px;
+    background-color: #fff;
   }
 
   .rdrDefinedRangesWrapper {

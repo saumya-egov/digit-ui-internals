@@ -127,6 +127,14 @@ export const PTLinks = ({ matchPath, userType }) => {
 
   const links = [
     {
+      link: `${matchPath}/property/search`,
+      i18nKey: t("PT_SEARCH_AND_PAY"),
+    },
+    {
+      link: `/digit-ui/citizen/payment/my-bills/PT`,
+      i18nKey: t("CS_TITLE_MY_BILLS"),
+    },
+    {
       link: `${matchPath}/property/new-application`,
       i18nKey: t("PT_CREATE_PROPERTY"),
     },

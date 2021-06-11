@@ -1,5 +1,6 @@
 .chartHeader {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
 
   .sideContent {
@@ -22,9 +23,13 @@
   }
 }
 
+.column-direction {
+  flex-direction: column;
+}
+
 .chart-wrapper {
   padding: 0 10px;
-  margin-top: 10px;
+  margin-top: 60px;
 }
 
 .chart-row {
@@ -62,16 +67,24 @@
     @apply flex;
   }
 }
+.no-data {
+  @apply flex justify-center items-center h-full;
+  margin-bottom: 30px;
+}
 
 @screen dt {
   .chart-wrapper {
     padding-left: 15px;
+    margin-top: 10px;
 
     .chart-item {
       margin-right: 25px;
       margin-bottom: 25px;
       width: 31%;
     }
+  }
+  .column-direction {
+    flex-direction: row;
   }
   .options-m {
     display: none;

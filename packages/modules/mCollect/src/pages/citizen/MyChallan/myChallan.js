@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Header, ResponseComposer, Loader } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
 import Axios from "axios";
@@ -45,11 +45,16 @@ const MyChallanResult = ({ template, header, actionButtonLabel }) => {
 
   const payment = {};
   function getBillingPeriod(fromPeriod, toPeriod) {
-    console.log(fromPeriod);
     if (fromPeriod && toPeriod) {
-      let from = new Date(fromPeriod).getFullYear().toString();
-      let to = new Date(toPeriod).getFullYear().toString();
-      return "FY " + from + "-" + to;
+      let from =
+        new Date(fromPeriod).getDate().toString() +
+        " " +
+        Digit.Utils.date.monthNames[new Date(fromPeriod).getMonth() + 1].toString() +
+        " " +
+        new Date(fromPeriod).getFullYear().toString();
+      let to =
+        new Date(toPeriod).getDate() + " " + Digit.Utils.date.monthNames[new Date(toPeriod).getMonth() + 1] + " " + new Date(toPeriod).getFullYear();
+      return from + " - " + to;
     } else return "N/A";
   }
 
@@ -89,7 +94,9 @@ const MyChallanResult = ({ template, header, actionButtonLabel }) => {
             {t(header)} ({searchResults?.length})
           </Header>
         )}
-        <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
+        <div style={{ maxHeight: "calc(100vh - 10em)", overflowY: "auto" }}>
+          <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
+        </div>
       </div>
 
       <div style={{ marginLeft: "16px", marginTop: "16px" }}>

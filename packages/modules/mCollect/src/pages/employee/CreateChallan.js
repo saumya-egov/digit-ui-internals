@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Dropdown, DatePicker, Toast } from "@egovernments/digit-ui-react-components";
 import * as func from "./Utils/Category";
 import { FormComposer } from "../../components/FormComposer";
+import { sortDropdownNames } from "./Utils/Sortbyname";
 import { useParams, useHistory, useRouteMatch } from "react-router-dom";
 const CreateChallen = ({ ChallanData }) => {
   const childRef = useRef();
@@ -150,20 +151,20 @@ const CreateChallen = ({ ChallanData }) => {
   useEffect(() => {
     if (isEdit && ChallanData[0] && fetchBillData && !fromDate && !toDate) {
       let fromdate = ChallanData[0]
-      ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString() +
-      "-" +
-      (new Date(ChallanData[0].taxPeriodFrom).getMonth()+1) +
-      "-" +
-      new Date(ChallanData[0].taxPeriodFrom).getDate()
-      : null;
+        ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString() +
+          "-" +
+          (new Date(ChallanData[0].taxPeriodFrom).getMonth() + 1) +
+          "-" +
+          new Date(ChallanData[0].taxPeriodFrom).getDate()
+        : null;
       ChallanData[0] && setFromDate(fromdate);
       let todate = ChallanData[0]
-      ? new Date(ChallanData[0].taxPeriodTo).getFullYear().toString() +
-      "-" +
-      (new Date(ChallanData[0].taxPeriodTo).getMonth()+1) +
-      "-" +
-      new Date(ChallanData[0].taxPeriodTo).getDate()
-      : null;
+        ? new Date(ChallanData[0].taxPeriodTo).getFullYear().toString() +
+          "-" +
+          (new Date(ChallanData[0].taxPeriodTo).getMonth() + 1) +
+          "-" +
+          new Date(ChallanData[0].taxPeriodTo).getDate()
+        : null;
       ChallanData[0] && setToDate(todate);
     }
   });
@@ -184,7 +185,7 @@ const CreateChallen = ({ ChallanData }) => {
   useEffect(() => {
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
-      let  temp = selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_","")
+        let temp = selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_", "");
         return (
           selectedCategoryType &&
           selectedCategoryType.code.split(temp + "_")[1] &&
@@ -200,10 +201,12 @@ const CreateChallen = ({ ChallanData }) => {
 
   useEffect(() => {
     Digit.MDMSService.getPaymentRules(tenantId, "[?(@.type=='Adhoc')]").then((value) => {
-
-      setAPIcategories((func.setServiceCategory(value.MdmsRes.BillingService.BusinessService).map(ele=>{ele.code="BILLINGSERVICE_BUSINESSSERVICE_"+((ele.code).toUpperCase())
-      return ele
-    })));
+      setAPIcategories(
+        func.setServiceCategory(value.MdmsRes.BillingService.BusinessService).map((ele) => {
+          ele.code = "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.toUpperCase();
+          return ele;
+        })
+      );
       setAPITaxHeadMaster(value.MdmsRes.BillingService.TaxHeadMaster);
     });
   }, [tenantId]);
@@ -239,13 +242,13 @@ const CreateChallen = ({ ChallanData }) => {
     });
     let Challan = {};
     if (!isEdit) {
-      let temp=selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_", "")
+      let temp = selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_", "");
       Challan = {
         citizen: {
           name: data.name,
           mobileNumber: data.mobileNumber,
         },
-        businessService: selectedCategoryType ? temp + "." + humanized(selectedCategoryType.code,temp) : "",
+        businessService: selectedCategoryType ? temp + "." + humanized(selectedCategoryType.code, temp) : "",
         consumerType: temp,
         description: data.comments,
         taxPeriodFrom: Date.parse(fromDate),
@@ -448,7 +451,7 @@ const CreateChallen = ({ ChallanData }) => {
                 optionKey="code"
                 disable={isEdit}
                 id="businessService"
-                option={categoires}
+                option={sortDropdownNames(categoires, "code", t)}
                 select={setcategories}
                 t={t}
               />
@@ -467,7 +470,7 @@ const CreateChallen = ({ ChallanData }) => {
                 disable={isEdit}
                 optionKey="code"
                 id="businessService"
-                option={categoiresType}
+                option={sortDropdownNames(categoiresType, "code", t)}
                 select={setcategoriesType}
                 t={t}
               />
@@ -514,6 +517,7 @@ const CreateChallen = ({ ChallanData }) => {
             name: ele.name.split(".").join("_"),
             validation: { required: ele.isRequired, pattern: /^(0|[1-9][0-9]*)$/ },
             error: t("UC_COMMON_FIELD_ERROR"),
+            componentInFront: <div className="employee-card-input employee-card-input--front">₹</div>,
           },
         }));
         if (temp.length > 0) {
@@ -530,7 +534,7 @@ const CreateChallen = ({ ChallanData }) => {
     <div>
       <FormComposer
         ref={childRef}
-        heading={t("UC_COMMON_HEADER")}
+        heading={isEdit ? t("UC_UPDATE_CHALLAN") : t("UC_COMMON_HEADER")}
         config={setconfig()}
         onSubmit={onSubmit}
         setFormData={defaultval}

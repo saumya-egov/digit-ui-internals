@@ -10,6 +10,7 @@ const BillDetails = ({ paymentRules, businessService }) => {
   const history = useHistory();
   const { state, ...location } = useLocation();
   const { consumerCode } = useParams();
+  const { workflow: wrkflow } = Digit.Hooks.useQueryParams();
   const [bill, setBill] = useState(state?.bill);
   const tenantId = state?.tenantId || Digit.UserService.getUser().info.tenantId;
   const { data, isLoading } = state?.bill ? { isLoading: false } : Digit.Hooks.useFetchPayment({ tenantId, businessService, consumerCode });
@@ -25,10 +26,25 @@ const BillDetails = ({ paymentRules, businessService }) => {
 
   const getBillingPeriod = () => {
     const { fromPeriod, toPeriod } = billDetails;
-
     if (fromPeriod && toPeriod) {
-      let from = new Date(billDetails.fromPeriod).getFullYear().toString();
-      let to = new Date(billDetails.toPeriod).getFullYear().toString();
+      let from, to;
+      if (wrkflow === "mcollect") {
+        from =
+          new Date(fromPeriod).getDate().toString() +
+          " " +
+          Digit.Utils.date.monthNames[new Date(fromPeriod).getMonth() + 1].toString() +
+          " " +
+          new Date(fromPeriod).getFullYear().toString();
+        to =
+          new Date(toPeriod).getDate() +
+          " " +
+          Digit.Utils.date.monthNames[new Date(toPeriod).getMonth() + 1] +
+          " " +
+          new Date(toPeriod).getFullYear();
+        return from + " - " + to;
+      }
+      from = new Date(billDetails.fromPeriod).getFullYear().toString();
+      to = new Date(billDetails.toPeriod).getFullYear().toString();
       return "FY " + from + "-" + to;
     } else return "N/A";
   };
@@ -69,6 +85,13 @@ const BillDetails = ({ paymentRules, businessService }) => {
       history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}?workflow=mcollect`, {
         paymentAmount,
         tenantId: billDetails.tenantId,
+      });
+    } else if (businessService === "PT") {
+      history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}`, {
+        paymentAmount,
+        tenantId: billDetails.tenantId,
+        name: bill.payerName,
+        mobileNumber: bill.mobileNumber,
       });
     } else {
       history.push(`/digit-ui/citizen/payment/collect/${businessService}/${consumerCode}`, { paymentAmount, tenantId: billDetails.tenantId });

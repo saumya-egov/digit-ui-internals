@@ -26,9 +26,20 @@ const Layout = ({ rowData }) => {
       case "line":
         return <CustomAreaChart data={chart} title={title} />;
       case "horizontalBar":
-        return <CustomHorizontalBarChart data={chart} xAxisType="number" yAxisType="category" layout="vertical" yDataKey="name" xDataKey="" showDrillDown={true} title={title} />;
+        return (
+          <CustomHorizontalBarChart
+            data={chart}
+            xAxisType="number"
+            yAxisType="category"
+            layout="vertical"
+            yDataKey="name"
+            xDataKey=""
+            showDrillDown={true}
+            title={title}
+          />
+        );
       case "bar":
-        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={`${t('DSS_WASTE_RECIEVED')} ${t(`DSS_WASTE_UNIT`)}`} />;
+        return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={`${t("DSS_WASTE_RECIEVED")} ${t(`DSS_WASTE_UNIT`)}`} />;
     }
   };
 
@@ -41,7 +52,11 @@ const Layout = ({ rowData }) => {
           </GenericChart>
         );
       case "chart":
-        if (value?.filters?.tenantId?.length === 0 && (visualizer?.charts?.[0].id === "fsmTopDsoByPerformance" || visualizer?.charts?.[0].id === "fsmBottomDsoByPerformance")) return null;
+        if (
+          value?.filters?.tenantId?.length === 0 &&
+          (visualizer?.charts?.[0].id === "fsmTopDsoByPerformance" || visualizer?.charts?.[0].id === "fsmBottomDsoByPerformance")
+        )
+          return null;
         return (
           <GenericChart
             key={key}
@@ -56,9 +71,19 @@ const Layout = ({ rowData }) => {
           </GenericChart>
         );
       case "performing-metric":
+        if (
+          value?.filters?.tenantId?.length > 0 &&
+          (visualizer?.charts?.[0].id === "fsmTopUlbByPerformance" || visualizer?.charts?.[0].id === "fsmBottomUlbByPerformance")
+        )
+          return null;
         return (
-          <GenericChart header={visualizer.name} key={key}>
-            <CustomBarChart data={visualizer?.charts?.[0]} fillColor={index++ % 2 ? "#00703C" : "#D4351C"} title={visualizer.name} showDrillDown={true} />
+          <GenericChart header={visualizer.name} subHeader={`(${t(`DSS_SLA_ACHIEVED`)})`} key={key}>
+            <CustomBarChart
+              data={visualizer?.charts?.[0]}
+              fillColor={index++ % 2 ? "#00703C" : "#D4351C"}
+              title={visualizer.name}
+              showDrillDown={true}
+            />
           </GenericChart>
         );
       case "collection":

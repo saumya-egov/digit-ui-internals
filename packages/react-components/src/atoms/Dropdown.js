@@ -172,7 +172,11 @@ const Dropdown = (props) => {
       {/* {console.log("dropdownStatus::::::::::::::>", dropdownStatus)} */}
       {dropdownStatus ? (
         props.optionKey ? (
-          <div className={`${hasCustomSelector ? "margin-top-10 display: table" : ""} options-card`} style={{ ...props.style }} ref={optionRef}>
+          <div
+            className={`${hasCustomSelector ? "margin-top-10 display: table" : ""} options-card`}
+            style={{ ...props.optionCardStyles }}
+            ref={optionRef}
+          >
             {props.option &&
               props.option
                 .filter((option) => t(option[props.optionKey]).toUpperCase().indexOf(filterVal.toUpperCase()) > -1)

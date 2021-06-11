@@ -47,7 +47,7 @@ export const FormComposer = (props) => {
       case "date":
       case "number":
       case "password":
-        // if (populators.defaultValue) setTimeout(setValue(populators.name, populators.defaultValue));
+        // if (populators.defaultValue) setTimeout(setValue(populators?.name, populators.defaultValue));
         return (
           <div className="field-container">
             {populators.componentInFront ? (
@@ -65,16 +65,16 @@ export const FormComposer = (props) => {
           </div>
         );
       case "textarea":
-        // if (populators.defaultValue) setTimeout(setValue(populators.name, populators.defaultValue));
+        // if (populators.defaultValue) setTimeout(setValue(populators?.name, populators.defaultValue));
         return (
-          <TextArea className="field" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} disable={disable} />
+          <TextArea className="field" name={populators?.name || ""} {...populators} inputRef={register(populators.validation)} disable={disable} />
         );
       case "mobileNumber":
         return (
           <Controller
             render={(props) => <MobileNumber className="field" onChange={props.onChange} value={props.value} disable={disable} />}
             defaultValue={populators.defaultValue}
-            name={populators.name}
+            name={populators?.name}
             control={control}
           />
         );
@@ -83,7 +83,7 @@ export const FormComposer = (props) => {
           <Controller
             render={(props) => populators.component({ ...props, setValue }, populators.customProps)}
             defaultValue={populators.defaultValue}
-            name={populators.name}
+            name={populators?.name}
             control={control}
           />
         );
@@ -114,7 +114,7 @@ export const FormComposer = (props) => {
           />
         );
       default:
-        return populators.dependency !== false ? populators : null;
+        return populators?.dependency !== false ? populators : null;
     }
   };
 
@@ -134,24 +134,25 @@ export const FormComposer = (props) => {
                         {field.isMandatory ? " * " : null}
                       </CardLabel>
                     )}
-                    {field?.description && (
-                      <CardLabel
-                        style={{
-                          marginBottom: props.inline ? "8px" : "revert",
-                          fontSize: "16px",
-                          fontWeight: "bold",
-                          color: "#505A5F",
-                          ...field?.descriptionStyles,
-                        }}
-                      >
-                        {t(field.description)}
-                      </CardLabel>
-                    )}
-                    {errors && errors[field.populators.name] && Object.keys(errors[field.populators.name]).length ? (
+
+                    {errors && errors[field.populators?.name] && Object.keys(errors[field.populators?.name]).length ? (
                       <CardLabelError>{field.populators.error}</CardLabelError>
                     ) : null}
                     <div style={field.withoutLabel ? { width: "100%" } : {}} className="field">
                       {fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field)}
+                      {field?.description && (
+                        <CardLabel
+                          style={{
+                            marginTop: "-24px",
+                            fontSize: "16px",
+                            fontWeight: "bold",
+                            color: "#505A5F",
+                            ...field?.descriptionStyles,
+                          }}
+                        >
+                          {t(field.description)}
+                        </CardLabel>
+                      )}
                     </div>
                   </React.Fragment>
                 );

@@ -1,6 +1,6 @@
 import { AppContainer, BackButton, PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { Redirect, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import CreateProperty from "./Create";
 import { PTMyApplications } from "./PTMyApplications";
 import { MyProperties } from "./MyProperties/index";
@@ -24,12 +24,12 @@ const App = () => {
     <span className={"pt-citizen"}>
       <Switch>
         <AppContainer>
-          {!shouldHideBackButton(hideBackButtonConfig) ? <BackButton style={{ position: "fixed", top: "55px" }}>Back</BackButton> : ""}
+          {!shouldHideBackButton(hideBackButtonConfig) ? <BackButton>Back</BackButton> : ""}
           <PrivateRoute path={`${path}/property/new-application`} component={CreateProperty} />
           <PrivateRoute path={`${path}/property/edit-application`} component={EditProperty} />
           <PrivateRoute path={`${path}/property/property-mutation`} component={MutateProperty} />
-          <PrivateRoute path={`${path}/property/search`} component={SearchPropertyComponent} />
-          <PrivateRoute path={`${path}/property/search-results`} component={SearchResultsComponent} />
+          <Route path={`${path}/property/search`} component={SearchPropertyComponent} />
+          <Route path={`${path}/property/search-results`} component={SearchResultsComponent} />
           <PrivateRoute path={`${path}/property/application/:acknowledgementIds`} component={PTApplicationDetails}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-applications`} component={PTMyApplications}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-properties`} component={MyProperties}></PrivateRoute>

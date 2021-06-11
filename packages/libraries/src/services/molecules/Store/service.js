@@ -97,6 +97,12 @@ export const StoreService = {
     });
 
     initData.modules.push({
+      module: "TL",
+      code: "TL",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
+
+    initData.modules.push({
       module: "DSS",
       code: "DSS",
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
@@ -106,7 +112,7 @@ export const StoreService = {
       modules: [
         `rainmaker-common`,
         `rainmaker-${stateCode.toLowerCase()}`,
-        ...initData.tenants.map((tenant) => `rainmaker-${tenant.code.toLowerCase()}`),
+        // ...initData.tenants.map((tenant) => `rainmaker-${tenant.code.toLowerCase()}`),
       ],
       locale: initData.selectedLanguage,
       tenantId: stateCode,

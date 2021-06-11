@@ -41,6 +41,7 @@ const Download = {
     html2canvas(element, {
       scrollY: -window.scrollY,
       useCORS: true,
+      scale: 2,
     }).then((canvas) => {
       const pdf = getPDF(canvas);
       const pngImage = canvas.toDataURL("image/png", 0.5);
