@@ -22,7 +22,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
 
   const chartData = useMemo(() => {
     if (!response) return null;
-    const compareFn = (a, b) => b.value - a.value;  
+    const compareFn = (a, b) => b.value - a.value;
     return response?.responseData?.data?.[0]?.plots
       .sort(compareFn)
       .reduce((acc, plot, index) => {

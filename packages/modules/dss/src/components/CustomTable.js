@@ -61,10 +61,10 @@ const CustomTable = ({ data, onSearch }) => {
     const firstCell = rowA.values[columnId];
     const secondCell = rowB.values[columnId];
     let value1, value2;
-    value1 = typeof firstCell === 'object' ? firstCell?.value : firstCell;
-    value2 = typeof secondCell === 'object' ? secondCell?.value : secondCell;
-    return typeof value1 === 'number' ? value1 - value2 : value1.localeCompare(value2);
-  }, [])
+    value1 = typeof firstCell === "object" ? firstCell?.value : firstCell;
+    value2 = typeof secondCell === "object" ? secondCell?.value : secondCell;
+    return typeof value1 === "number" ? value1 - value2 : value1.localeCompare(value2);
+  }, []);
 
   const tableColumns = useMemo(
     () =>
@@ -81,13 +81,13 @@ const CustomTable = ({ data, onSearch }) => {
               <span>
                 {rowValue}
                 {` `}
-                {insight >= 0 ? <UpwardArrow /> : <DownwardArrow /> }
+                {insight >= 0 ? <UpwardArrow /> : <DownwardArrow />}
                 {` `}
                 {`${Math.abs(insight)}%`}
               </span>
             );
           }
-          const filter = response?.responseData?.filter.find(elem => elem.column === column.id) 
+          const filter = response?.responseData?.filter.find(elem => elem.column === column.id)
           if (filter !== undefined) {
             return (
               <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value, filter?.key)}>
@@ -119,7 +119,7 @@ const CustomTable = ({ data, onSearch }) => {
       case "Cr":
         return Number((val / 10000000).toFixed(2));
     }
-  }
+  };
 
   const tableData = useMemo(() => {
     if (!response || !lastYearResponse) return;
@@ -164,9 +164,7 @@ const CustomTable = ({ data, onSearch }) => {
       {filterStack.length > 1 && (
         <div className="tag-container">
           <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
-          {filterStack.map((filter, id) => (
-            id > 0 ? <RemoveableTag key={id} text={t(filter?.name)} onClick={() => removeULB(id)} /> : null
-          ))}
+          {filterStack.map((filter, id) => (id > 0 ? <RemoveableTag key={id} text={t(filter?.name)} onClick={() => removeULB(id)} /> : null))}
         </div>
       )}
       <Table
