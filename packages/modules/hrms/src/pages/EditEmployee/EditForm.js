@@ -9,7 +9,7 @@ const EditForm = ({ tenantId, data }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
-
+console.log(convertEpochToDate(data?.dateOfAppointment))
   const defaultValues = {
     tenantId: tenantId,
     employeeStatus: "EMPLOYED",
@@ -19,7 +19,7 @@ const EditForm = ({ tenantId, data }) => {
     SelectEmployeeName: { employeeName: data?.user?.name },
     SelectEmployeeEmailId: { emailId: data?.user?.emailId },
     SelectEmployeeCorrespondenceAddress: { correspondenceAddress: data?.user?.correspondenceAddress },
-    SelectDateofEmployment: { dateOfAppointment: convertEpochToDate(data?.dateOfAppointment) },
+    SelectDateofEmployment: { dateOfAppointment: convertEpochToDate(1578268800000) },
     SelectEmployeeType: { code: data?.employeeType, active: true },
     SelectEmployeeGender: {
       gender: {
@@ -98,20 +98,25 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onSubmit = (input) => {
+    console.log( Date.parse(input?.SelectDateofEmployment?.dateOfAppointment))
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles;
     });
+    let requestdata= Object.assign({},data,)
     roles = [].concat.apply([], roles);
-    data.assignments = input?.Assignments;
-    data.dateOfAppointment = new Date(input?.SelectDateofEmployment?.dateOfAppointment).getTime();
-    data.code = input?.SelectEmployeeId?.code ? input?.SelectEmployeeId?.code : undefined;
-    data.jurisdictions = input?.Jurisdictions;
-    data.user.emailId = input?.SelectEmployeeEmailId?.emailId ? input?.SelectEmployeeEmailId?.emailId : undefined;
-    data.user.gender = input?.SelectEmployeeGender?.gender.code;
-    (data.user.mobileNumber = input?.SelectEmployeePhoneNumber?.mobileNumber), (data["user"]["name"] = input?.SelectEmployeeName?.employeeName);
-    data.user.correspondenceAddres = input?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress;
-    data.user.roles = roles;
-    const Employees = [data];
+
+    requestdata.assignments = input?.Assignments;
+    requestdata.dateOfAppointment =  Date.parse(input?.SelectDateofEmployment?.dateOfAppointment)
+    requestdata.code = input?.SelectEmployeeId?.code ? input?.SelectEmployeeId?.code : undefined;
+    requestdata.jurisdictions = input?.Jurisdictions;
+    requestdata.user.emailId = input?.SelectEmployeeEmailId?.emailId ? input?.SelectEmployeeEmailId?.emailId : undefined;
+    requestdata.user.gender = input?.SelectEmployeeGender?.gender.code;
+    requestdata.user.dob = Date.parse(input?.SelectDateofBirthEmployment?.dob);
+    requestdata.user.mobileNumber = input?.SelectEmployeePhoneNumber?.mobileNumber;
+    requestdata["user"]["name"] = input?.SelectEmployeeName?.employeeName;
+    requestdata.user.correspondenceAddress = input?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress;
+    requestdata.user.roles = roles;
+    const Employees = [requestdata];
     history.push("/digit-ui/employee/hrms/response", { Employees, key: "UPDATE", action: "UPDATE" });
   };
   const configs = newConfig;

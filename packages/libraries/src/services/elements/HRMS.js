@@ -6,7 +6,7 @@ const HrmsService = {
     search: (tenantId, filters, searchParams) =>
         Request({
             url: Urls.hrms.search,
-            useCache: true,
+            useCache: false,
             method: "POST",
             auth: true,
             userService: true,

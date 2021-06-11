@@ -109,7 +109,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
         let documents = {
           referenceType: "DEACTIVATION",
           documentId: uploadedFile,
-          documentName: File.name,
+          documentName: file.name,
         };
         applicationData.Employees[0]["documents"].push(documents);
       }
@@ -121,7 +121,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
         let documents = {
           referenceType: "ACTIVATION",
           documentId: uploadedFile,
-          documentName: File.name,
+          documentName: file.name,
         };
         applicationData.Employees[0]["documents"].push(documents);
       }
@@ -139,14 +139,14 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       headerBarEnd={<CloseBtn onClick={closeModal} />}
       actionCancelOnSubmit={closeModal}
       actionSaveLabel={t(config?.label?.submit)}
-      actionSaveOnSubmit={() => {}}
+      actionSaveOnSubmit={() => { }}
       formId="modal-action"
       isDisabled={!selectedReason}
     >
       <FormComposer config={config?.form} noBoxShadow inline disabled={true} childrenAtTheBottom onSubmit={submit} formId="modal-action" />
     </Modal>
   ) : (
-    <Loader />
-  );
+      <Loader />
+    );
 };
 export default EmployeeAction;

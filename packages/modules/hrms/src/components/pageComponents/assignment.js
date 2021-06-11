@@ -129,10 +129,10 @@ function Assignment({
 
   }
   return (
-    <div key={assignment?.keys} style={{ marginBottom: "16px" }}>
+    <div key={index + 1} style={{ marginBottom: "16px" }}>
       <div className="label-field-pair">
         <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-          Assignment {assignment?.keys}
+          {t("HR_ASSIGNMENT")} {index+ 1}
         </h2>
       </div>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>

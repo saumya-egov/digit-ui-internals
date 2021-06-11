@@ -14,7 +14,7 @@ const GetActionMessage = (action, isSuccess, isEmployee, t) => {
 };
 
 const GetLabel = (action, isSuccess, isEmployee, t) => {
-  if(isSuccess){
+  if(isSuccess && action=="CREATE"){
   return GetMessage("LABEL", action, isSuccess, isEmployee, t);
   }
 };
@@ -64,6 +64,8 @@ const Response = (props) => {
 const DisplayText = (action, isSuccess, isEmployee, t) => {
   if(!isSuccess){
     return mutation?.error?.response?.data?.Errors[0].code
+  }else{
+    Digit.SessionStorage.set("isupdate", Math.floor(100000 + Math.random() * 900000));
   }
 };
 

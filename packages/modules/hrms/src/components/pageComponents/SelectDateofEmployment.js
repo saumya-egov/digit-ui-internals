@@ -39,6 +39,7 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
                 onChange={(e) => setValue(e, input.name)}
                 disable={false}
                 {...input.validation}
+                defaultValue={undefined}
               />
             </div>
           </LabelFieldPair>

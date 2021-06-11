@@ -23,7 +23,10 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
       label: "HR_EMPLOYMENT_TYPE_LABEL",
       type: "text",
       name: "EmployeeType",
-      validation: {},
+      validation: {
+        isRequired: true,
+      },
+      isMandatory: true,
     },
   ];
 
@@ -34,7 +37,8 @@ const SelectEmployeeType = ({ t, config, onSelect, formData = {}, userType }) =>
     return inputs?.map((input, index) => {
       return (
         <LabelFieldPair key={index}>
-          <CardLabel className="card-label-smaller">{t(input.label)}</CardLabel>
+          <CardLabel className="card-label-smaller">{t(input.label)}
+          {input.isMandatory ? " * " : null}</CardLabel>
           <Dropdown
             className="form-field"
             selected={employeeType}
