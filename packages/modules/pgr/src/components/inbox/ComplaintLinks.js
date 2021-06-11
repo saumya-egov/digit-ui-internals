@@ -7,7 +7,7 @@ const ComplaintsLink = ({ isMobile, data }) => {
   const { t } = useTranslation();
 
   const allLinks = [
-    { text: t("ES_PGR_NEW_COMPLAINT"), link: "/digit-ui/employee/pgr/complaint/create", accessTo: ["CSR"] },
+    { text: "ES_PGR_NEW_COMPLAINT", link: "/digit-ui/employee/pgr/complaint/create", accessTo: ["CSR"] },
     // { text: "Reports", link: "/employee" },
     // { text: "Dashboard", link: "/employee" },
   ];
@@ -56,7 +56,7 @@ const ComplaintsLink = ({ isMobile, data }) => {
         <div className="body">
           {links.map(({ link, text }, index) => (
             <span className="link" key={index}>
-              <Link to={link}>{text}</Link>
+              <Link to={link}>{t(text)}</Link>
             </span>
           ))}
         </div>
