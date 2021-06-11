@@ -41,7 +41,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   }
 
   const onSubmit = (data) => {
-    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: city, noAuth: true });
+    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: city, fromSearchResults: true });
   };
 
   const payment = {};

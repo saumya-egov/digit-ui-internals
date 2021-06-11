@@ -14,7 +14,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
 
   const allCities = Digit.Hooks.pt.useTenants()?.sort((a, b) => a?.i18nKey?.localeCompare?.(b?.i18nKey));
 
-  const [cityCode, setCityCode] = useState(() => allCities[0]);
+  const [cityCode, setCityCode] = useState();
   const [formValue, setFormValue] = useState();
 
   useLayoutEffect(() => {
@@ -65,7 +65,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
           type: "custom",
           populators: {
             name: "city",
-            defaultValue: allCities[0],
+            defaultValue: null,
             rules: { required: true },
             customProps: { t, isMendatory: true, option: [...allCities], optionKey: "i18nKey" },
             component: (props, customProps) => (
@@ -100,6 +100,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
                 keepNull={false}
                 optionCardStyles={{ height: "600px", overflow: "auto", zIndex: "10" }}
                 selected={formValue?.locality}
+                disable={!cityCode}
               />
             ),
           },
