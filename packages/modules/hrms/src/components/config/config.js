@@ -21,7 +21,7 @@ export const newConfig = [
         withoutLabel: true,
         texts: {
           headerCaption: "Info",
-          header: "The Mobile  number entered must be unique. Search the mobile number to check if it exist already in the system",
+          header: "HR_MOBILE_NO_CHECK",
         }
         },
       {
@@ -79,7 +79,7 @@ export const newConfig = [
       withoutLabel: true,
       texts: {
         headerCaption: "Info",
-        header: "ID Assigned to Employee by Municipality after hiring. Incase there is no ID assigned, leave  the column blank for system to generate Employee ID",
+        header: "HR_EMP_ID_MESSAGE",
       }
       }
     ]

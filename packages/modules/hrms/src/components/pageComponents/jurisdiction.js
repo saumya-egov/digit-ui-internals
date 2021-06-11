@@ -96,7 +96,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
     </div>
   );
 };
-function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylistdata, hierarchylist, getroledata, roleoption }) {
+function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylistdata, hierarchylist, getroledata, roleoption, index }) {
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
   useEffect(() => {
@@ -132,10 +132,10 @@ function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylis
   };
 
   const selectrole = (e, data) => {
-    const index = jurisdiction?.roles.indexOf(data);
+    const index = jurisdiction?.roles.filter((ele=> ele.code==data.code));
     let res = null;
-    if (index != -1) {
-      jurisdiction?.roles.splice(index, 1);
+    if (index.length) {
+      jurisdiction?.roles.splice(jurisdiction?.roles.indexOf(index[0]), 1);
       res = jurisdiction.roles;
     } else {
       res = [...data, ...jurisdiction?.roles];
@@ -149,7 +149,7 @@ function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylis
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
       <div className="label-field-pair">
         <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-          Jurisdiction {jurisdiction?.keys}
+        {t("HR_JURISDICTION")} {index + 1}
         </h2>
       </div>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>

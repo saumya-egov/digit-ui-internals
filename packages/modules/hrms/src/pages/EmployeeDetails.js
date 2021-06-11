@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
 import ActionModal from "../components/Modal";
-import { convertEpochToDate, pdfDownloadLink, pdfDocumentName } from "../components/Utils";
+import { convertEpochFormateToDate, pdfDownloadLink, pdfDocumentName } from "../components/Utils";
 
 const Details = () => {
   const PDFSvg = ({ width = 20, height = 20, style }) => (
@@ -62,7 +62,7 @@ const Details = () => {
           <Card>
             <StatusTable>
               <Row
-                label={<CardSubHeader>{t("HR_STATUS_LABEL")} </CardSubHeader>}
+                label={<CardSubHeader>{t("HR_EMP_STATUS_LABEL")} </CardSubHeader>}
                 text={
                   data?.Employees?.[0]?.isActive ? <div className="sla-cell-success"> Active </div> : <div className="sla-cell-error">Inactive</div>
                 }
@@ -82,11 +82,20 @@ const Details = () => {
               <Row label={t("HR_EMPLOYMENT_TYPE_LABEL")} text={data?.Employees?.[0]?.employeeType} textStyle={{ whiteSpace: "pre" }} />
               <Row
                 label={t("HR_APPOINTMENT_DATE_LABEL")}
-                text={convertEpochToDate(data?.Employees?.[0]?.dateOfAppointment)}
+                text={convertEpochFormateToDate(data?.Employees?.[0]?.dateOfAppointment)}
                 textStyle={{ whiteSpace: "pre" }}
               />
               <Row label={t("HR_EMPLOYEE_ID_LABEL")} text={data?.Employees?.[0]?.id} />
             </StatusTable>
+            <StatusTable>
+              <Row label={t("HR_EMPLOYMENT_TYPE_LABEL")} text={data?.Employees?.[0]?.employeeType} textStyle={{ whiteSpace: "pre" }} />
+               </StatusTable>
+             {(data?.Employees?.[0]?.isActive) == false  ? <StatusTable>
+              <Row label={t("HR_EFFECTIVE_DATE")} text={convertEpochFormateToDate(data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.effectiveFrom)} />
+                 <Row label={t("HR_DEACTIVATION_REASON")} text={(data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0].reasonForDeactivation)} />
+             <Row label={t("HR_ORDER_NO")} text={(data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.orderNo)} />
+             </StatusTable>: null }
+
 
             <StatusTable>
               <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -108,8 +117,8 @@ const Details = () => {
             {data?.Employees?.[0]?.jurisdictions?.length > 0
               ? data?.Employees?.[0]?.jurisdictions.map((element, index) => {
                   return (
-                    <StatusTable key={index}>
-                      <div style={{ paddingBottom: "2rem" }}> jurisdictions {index + 1}</div>
+                    <StatusTable key={index} style={{maxWidth: "640px", border: "1px solid rgb(214, 213, 212)", inset: "0px", width: "auto", padding:'.2rem', marginBottom: "2rem"}}>
+                      <div style={{ paddingBottom: "2rem" }}> {t("HR_JURISDICTION")} {index + 1}</div>
                       <Row label={t("HR_HIERARCHY_LABEL")} text={element?.hierarchy} textStyle={{ whiteSpace: "pre" }} />
                       <Row label={t("HR_BOUNDARY_TYPE_LABEL")} text={element?.boundaryType} textStyle={{ whiteSpace: "pre" }} />
                       <Row label={t("HR_BOUNDARY_LABEL")} text={element?.boundary} />
@@ -123,12 +132,12 @@ const Details = () => {
               : null}
             {data?.Employees?.[0]?.assignments.length > 0 ? <CardSubHeader>{t("HR_ASSIGN_DET_HEADER")}</CardSubHeader> : null}
             {data?.Employees?.[0]?.assignments.map((element, index) => (
-              <StatusTable key={index}>
-                <div style={{ paddingBottom: "2rem" }}>assignments {index + 1}</div>
-                <Row label={t("HR_ASMT_FROM_DATE_LABEL")} text={convertEpochToDate(element?.fromDate)} textStyle={{ whiteSpace: "pre" }} />
+              <StatusTable key={index} style={{maxWidth: "640px", border: "1px solid rgb(214, 213, 212)", inset: "0px", width: "auto", padding:'.2rem', marginBottom: "2rem"}}>
+                <div style={{ paddingBottom: "2rem" }}>{t("HR_ASSIGNMENT")} {index + 1}</div>
+                <Row label={t("HR_ASMT_FROM_DATE_LABEL")} text={convertEpochFormateToDate(element?.fromDate)} textStyle={{ whiteSpace: "pre" }} />
                 <Row
                   label={t("HR_ASMT_TO_DATE_LABEL")}
-                  text={element?.isCurrentAssignment ? "Currently Working Here" : convertEpochToDate(element?.toDate)}
+                  text={element?.isCurrentAssignment ? "Currently Working Here" : convertEpochFormateToDate(element?.toDate)}
                   textStyle={{ whiteSpace: "pre" }}
                 />
                 <Row label={t("HR_DEPT_LABEL")} text={t("COMMON_MASTERS_DEPARTMENT_" + element?.department)} />
