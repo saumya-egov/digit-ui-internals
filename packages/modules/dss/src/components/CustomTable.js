@@ -128,7 +128,7 @@ const CustomTable = ({ data, onSearch }) => {
       return rows?.plots?.reduce((acc, row, currentIndex) => {
         let value = row?.value !== null ? row?.value : row?.label || "";
         let insight = null;
-        if (row.symbol === "number" && row.name !== "CitizenAverageRating" && lyData !== undefined) {
+        if ((row.symbol === "number" || row.symbol === "percentage") && row.name !== "CitizenAverageRating" && lyData !== undefined) {
           let prevData = lyData.plots[currentIndex].value;
           if (prevData === value) insight = 0;
           else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
