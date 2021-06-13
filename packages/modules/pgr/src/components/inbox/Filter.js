@@ -32,7 +32,8 @@ const Filter = (props) => {
   );
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  let localities = Digit.Hooks.pgr.useLocalities({ city: tenantId });
+  // let localities = Digit.Hooks.pgr.useLocalities({ city: tenantId });
+  const { data: localities } = Digit.Hooks.useBoundaryLocalities(tenantId, "admin", {}, t);
   let serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
 
   const onRadioChange = (value) => {
@@ -131,6 +132,8 @@ const Filter = (props) => {
     let wfRest = { assigned: [{ code: [] }] };
     setPgrFilters(pgrReset);
     setWfFilters(wfRest);
+    pgrQuery = {};
+    wfQuery = {};
     setSelectedAssigned("");
     setSelectedComplaintType(null);
     setSelectedLocality(null);
@@ -198,7 +201,7 @@ const Filter = (props) => {
                 "serviceCode"
               )}
             </div>
-            <div>{GetSelectOptions(t("Locality"), localities, selectedLocality, onSelectLocality, "name", onRemove, "locality")}</div>
+            <div>{GetSelectOptions(t("CS_PGR_LOCALITY"), localities, selectedLocality, onSelectLocality, "i18nkey", onRemove, "locality")}</div>
             {<Status complaints={props.complaints} onAssignmentChange={handleAssignmentChange} pgrfilters={pgrfilters} />}
           </div>
         </div>

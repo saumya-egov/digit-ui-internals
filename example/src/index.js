@@ -5,13 +5,15 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { PGRModule, PGRLinks, PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { PTModule, PTLinks, PTComponents } from "@egovernments/digit-ui-module-pt";
 import { MCollectModule, MCollectLinks } from "@egovernments/digit-ui-module-mcollect";
-import { TLModule, TLLinks } from "@egovernments/digit-ui-module-tl";
+// import { TLModule, TLLinks } from "@egovernments/digit-ui-module-tl";
 import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initMCollectComponents } from "@egovernments/digit-ui-module-mcollect";
-import { initTLComponents } from "@egovernments/digit-ui-module-tl";
+// import { initTLComponents } from "@egovernments/digit-ui-module-tl";
 import { PaymentModule, PaymentLinks, paymentConfigs } from "@egovernments/digit-ui-module-common";
+import { HRMSModule } from "@egovernments/digit-ui-module-hrms";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { PGRModule, PGRLinks } from "@egovernments/digit-ui-module-pgr";
 // import { Body, TopBar } from "@egovernments/digit-ui-react-components";
@@ -25,6 +27,7 @@ import QAGRO from "./userInfo/qa-gro.json";
 import QACSR from "./userInfo/qa-csr.json";
 import QACT from "./userInfo/qa-citizen.json";
 import QADSO from "./userInfo/qa-dso.json";
+import QAPGRCSR from "./userInfo/QAPGRCSR.json";
 
 import FSM_EDITOR from "./userInfo/fsm-editor.json";
 import FSM_COLLECTOR from "./userInfo/fsm-collector.json";
@@ -93,9 +96,10 @@ const userInfo = {
   QAPTDV,
   QAPTFI,
   QAPTA,
+  QAPGRCSR,
 };
 
-const enabledModules = ["PGR", "FSM", "Payment", "PT", "QuickPayLinks", "DSS", "MCollect", "TL"];
+const enabledModules = ["PGR", "FSM", "Payment", "PT", "QuickPayLinks", "DSS", "MCollect","HRMS", "TL"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -136,15 +140,17 @@ const initDigitUI = () => {
     ...PTComponents,
     MCollectLinks,
     MCollectModule,
-    TLModule,
-    TLLinks,
+    HRMSModule,
+    // TLModule,
+    // TLLinks,
   });
 
   initFSMComponents();
   initPGRComponents();
   initDSSComponents();
   initMCollectComponents();
-  initTLComponents();
+  initHRMSComponents()
+  // initTLComponents();
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),

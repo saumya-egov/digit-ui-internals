@@ -49,9 +49,7 @@ const DrillDown = () => {
   };
 
   if (isUlbLoading) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (
@@ -81,6 +79,6 @@ const DrillDown = () => {
       </GenericChart>
     </FilterContext.Provider>
   );
-}
+};
 
 export default DrillDown;

@@ -41,7 +41,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
   }
 
   const onSubmit = (data) => {
-    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: city });
+    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId: city, fromSearchResults: true });
   };
 
   const payment = {};
@@ -80,12 +80,22 @@ const PropertySearchResults = ({ template, header, actionButtonLabel }) => {
         <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
       </div>
 
-      <div style={{ marginLeft: "16px", marginTop: "16px" }}>
+      {/* <div
+        style={{
+          paddingLeft: "16px",
+          paddingTop: "16px",
+          position: "fixed",
+          bottom: "40px",
+          backgroundColor: "#e3e3e3",
+          textAlign: "left",
+          width: "100%",
+        }}
+      >
         <p>{t("PT_TEXT_WANT_TO_ADD_A_NEW_PROPERTY")} </p>
         <p className="link">
           <Link to="/digit-ui/citizen/pt/property/new-application/info">{t("PT_COMMON_CLICK_HERE_TO_REGISTER_NEW_PROPERTY")}</Link>
         </p>
-      </div>
+      </div> */}
     </div>
   );
 };

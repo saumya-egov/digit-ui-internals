@@ -11,6 +11,7 @@ const CustomTable = ({ data, onSearch }) => {
   const { t } = useTranslation();
   const { value, setValue, ulbTenants } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
   const lastYearDate = {
     startDate: subYears(value?.range?.startDate, 1).getTime(),
     endDate: subYears(value?.range?.endDate, 1).getTime(),
@@ -33,21 +34,22 @@ const CustomTable = ({ data, onSearch }) => {
   });
 
   const renderHeader = (plot) => {
-    const units = ["Total Waste Dumped", "Total Waste Collected"];
+    const code = `DSS_HEADER_${plot?.name.toUpperCase()}`
+    const units = ["TotalSeptageDumped", "TotalSeptageCollected"];
     if (id === "fsmVehicleLogReportByDDR" && units.includes(plot?.name)) {
-      return `${plot?.name} (${t("DSS_KL")})`;
+      return `${t(code)} (${t("DSS_KL")})`;
     }
     if (plot?.symbol === "amount") {
-      return `${plot?.name} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`
+      return `${t(code)} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`
     }
-    return plot?.name;
+    return t(code);
   };
 
   const getDrilldownCharts = (value, filterKey) => {
     if (response?.responseData?.drillDownChartId && response?.responseData?.drillDownChartId !== "none") {
       let currentValue = value;
       if (filterKey === "tenantId") {
-        currentValue = ulbTenants.find(tenant => tenant.ulbKey === value || tenant.code === value);
+        currentValue = dssTenants.find(tenant => tenant?.city?.ddrName === value || tenant?.code === value);
         if (currentValue === undefined) return;
       }
       setFilterStack([...filterStack, { id: response?.responseData?.drillDownChartId, name: value, filterKey, filterValue: currentValue?.code }]);
@@ -59,10 +61,10 @@ const CustomTable = ({ data, onSearch }) => {
     const firstCell = rowA.values[columnId];
     const secondCell = rowB.values[columnId];
     let value1, value2;
-    value1 = typeof firstCell === 'object' ? firstCell?.value : firstCell;
-    value2 = typeof secondCell === 'object' ? secondCell?.value : secondCell;
-    return typeof value1 === 'number' ? value1 - value2 : value1.localeCompare(value2);
-  }, [])
+    value1 = typeof firstCell === "object" ? firstCell?.value : firstCell;
+    value2 = typeof secondCell === "object" ? secondCell?.value : secondCell;
+    return typeof value1 === "number" ? value1 - value2 : value1.localeCompare(value2);
+  }, []);
 
   const tableColumns = useMemo(
     () =>
@@ -79,13 +81,13 @@ const CustomTable = ({ data, onSearch }) => {
               <span>
                 {rowValue}
                 {` `}
-                {insight >= 0 ? <UpwardArrow /> : <DownwardArrow /> }
+                {insight >= 0 ? <UpwardArrow /> : <DownwardArrow />}
                 {` `}
                 {`${Math.abs(insight)}%`}
               </span>
             );
           }
-          const filter = response?.responseData?.filter.find(elem => elem.column === column.Header) 
+          const filter = response?.responseData?.filter.find(elem => elem.column === column.id)
           if (filter !== undefined) {
             return (
               <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value, filter?.key)}>
@@ -93,9 +95,9 @@ const CustomTable = ({ data, onSearch }) => {
               </span>
             );
           }
-          if (column.Header.toLowerCase() === "citizen average rating") {
+          if (column.id === "CitizenAverageRating") {
             return (
-              <Rating currentRating={Math.round(value)} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
+              <Rating currentRating={Math.round(value)} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />
             )
           }
           if (column.symbol === "amount") {
@@ -117,16 +119,16 @@ const CustomTable = ({ data, onSearch }) => {
       case "Cr":
         return Number((val / 10000000).toFixed(2));
     }
-  }
+  };
 
   const tableData = useMemo(() => {
     if (!response || !lastYearResponse) return;
-    return response?.responseData?.data?.map((rows) => {
+    return response?.responseData?.data?.map((rows, id) => {
       const lyData = lastYearResponse?.responseData?.data?.find((lyRow) => lyRow?.headerName === rows?.headerName);
       return rows?.plots?.reduce((acc, row, currentIndex) => {
         let value = row?.value !== null ? row?.value : row?.label || "";
         let insight = null;
-        if (row.symbol === "number" && row.name !== "Citizen Average Rating" && lyData !== undefined) {
+        if ((row.symbol === "number" || row.symbol === "percentage") && row.name !== "CitizenAverageRating" && lyData !== undefined) {
           let prevData = lyData.plots[currentIndex].value;
           if (prevData === value) insight = 0;
           else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
@@ -134,7 +136,7 @@ const CustomTable = ({ data, onSearch }) => {
         if (typeof value === "number" && !Number.isInteger(value)) {
           value = Math.round((value + Number.EPSILON) * 100) / 100;
         }
-        acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : value;
+        acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : row?.name === "S.N." ? id + 1: value;
         return acc;
       }, {});
     });
@@ -162,9 +164,7 @@ const CustomTable = ({ data, onSearch }) => {
       {filterStack.length > 1 && (
         <div className="tag-container">
           <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
-          {filterStack.map((filter, id) => (
-            id > 0 ? <RemoveableTag key={id} text={t(filter?.name)} onClick={() => removeULB(id)} /> : null
-          ))}
+          {filterStack.map((filter, id) => (id > 0 ? <RemoveableTag key={id} text={t(filter?.name)} onClick={() => removeULB(id)} /> : null))}
         </div>
       )}
       <Table

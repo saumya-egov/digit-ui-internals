@@ -12,16 +12,19 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setCanSubmit] = useState(false);
 
-  const allCities = Digit.Hooks.pt.useTenants();
+  const allCities = Digit.Hooks.pt.useTenants()?.sort((a, b) => a?.i18nKey?.localeCompare?.(b?.i18nKey));
 
-  const [cityCode, setCityCode] = useState(() => allCities[0]);
+  const [cityCode, setCityCode] = useState();
   const [formValue, setFormValue] = useState();
 
   useLayoutEffect(() => {
     const getActionBar = () => {
       let el = document.querySelector("div.action-bar-wrap");
-      if (el) el.style.position = "static";
-      else {
+      if (el) {
+        el.style.position = "static";
+        el.style.padding = "8px 0";
+        el.style.boxShadow = "none";
+      } else {
         setTimeout(() => {
           getActionBar();
         }, 100);
@@ -57,20 +60,12 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
     {
       body: [
         {
-          label: mobileNumber.label,
-          type: mobileNumber.type,
-          populators: {
-            name: mobileNumber.name,
-            validation: { pattern: /^[6-9]{1}[0-9]{9}$ / },
-          },
-          isMandatory: false,
-        },
-        {
           label: "PT_SELECT_CITY",
+          isMandatory: true,
           type: "custom",
           populators: {
             name: "city",
-            defaultValue: allCities[0],
+            defaultValue: null,
             rules: { required: true },
             customProps: { t, isMendatory: true, option: [...allCities], optionKey: "i18nKey" },
             component: (props, customProps) => (
@@ -88,6 +83,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
         {
           label: "PT_SELECT_LOCALITY",
           type: "custom",
+          isMandatory: true,
           populators: {
             name: "locality",
             defaultValue: formValue?.locality,
@@ -104,14 +100,24 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
                 keepNull={false}
                 optionCardStyles={{ height: "600px", overflow: "auto", zIndex: "10" }}
                 selected={formValue?.locality}
+                disable={!cityCode}
               />
             ),
           },
         },
         {
+          label: mobileNumber.label,
+          type: mobileNumber.type,
+          populators: {
+            name: mobileNumber.name,
+            validation: { pattern: /^[6-9]{1}[0-9]{9}$ / },
+          },
+          isMandatory: false,
+        },
+        {
           label: property.label,
           description: t(property.description) + "\n" + propertyIdFormat,
-          descriptionStyles: { whiteSpace: "pre" },
+          descriptionStyles: { whiteSpace: "pre", fontSize: "14px", fontWeight: "400", fontFamily: "Roboto" },
           type: property.type,
           populators: {
             name: property.name,
@@ -173,7 +179,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
         heading={propsConfig.texts.header}
         text={propsConfig.texts.text}
         cardStyle={{ margin: "auto" }}
-        headingStyle={{ fontSize: "32px", marginBottom: "16px" }}
+        headingStyle={{ fontSize: "32px", marginBottom: "16px", fontFamily: "Roboto Condensed,sans-serif" }}
         isDisabled={!canSubmit}
         onFormValueChange={onFormValueChange}
       ></FormComposer>

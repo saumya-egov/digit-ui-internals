@@ -22,14 +22,13 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
 
   const chartData = useMemo(() => {
     if (!response) return null;
-    const compareFn = (a, b) => b.value - a.value;  
+    const compareFn = (a, b) => b.value - a.value;
     return response?.responseData?.data?.[0]?.plots
       .sort(compareFn)
       .reduce((acc, plot, index) => {
         if (index < 4) acc = acc.concat(plot);
         else if (index === 4) acc = acc.concat({ label: null, name: "DSS.OTHERS", value: plot?.value, symbol: "number" });
         else acc[4].value += plot?.value;
-        console.log(acc[5]);
         return acc;
       }, [])
   }, [response])

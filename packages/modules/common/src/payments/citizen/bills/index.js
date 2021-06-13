@@ -11,15 +11,21 @@ export const MyBills = ({ stateCode }) => {
     moduleCode: businessService,
     language: Digit.SessionStorage.get("locale") || "en_IN",
   });
+
   const history = useHistory();
   const { url } = useRouteMatch();
   const location = useLocation();
 
-  const { isLoading, data } = Digit.Hooks.useFetchCitizenBillsForBuissnessService({ businessService }, { refetchOnMount: false });
-  const { tenantId } = Digit.UserService.getUser()?.info || location.state;
+  const { tenantId } = Digit.UserService.getUser()?.info || location?.state || {};
 
-  if (!tenantId && businessService !== "PT") history.push(`/digit-ui/citizen/login`, { from: url });
+  if (!tenantId && !location?.state?.fromSearchResults) {
+    history.replace(`/digit-ui/citizen/login`, { from: url });
+  }
 
+  const { isLoading, data } = Digit.Hooks.useFetchCitizenBillsForBuissnessService(
+    { businessService },
+    { refetchOnMount: true, enabled: !location?.state?.fromSearchResults }
+  );
   const { isLoading: mdmsLoading, data: mdmsBillingData } = Digit.Hooks.useGetPaymentRulesForBusinessServices(tenantId);
 
   const billsList = data?.Bill || [];
