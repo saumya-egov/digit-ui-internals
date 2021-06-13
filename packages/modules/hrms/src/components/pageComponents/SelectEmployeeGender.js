@@ -20,7 +20,6 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
 
     function setValue(value, input) {
         onSelect(config.key, { ...formData[config.key], [input]: value });
-        console.log("find value here", value, input, formData);
     }
 
     return (
@@ -49,10 +48,6 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
                                     {
                                         code: "TRANSGENDER",
                                         name: "COMMON_GENDER_TRANSGENDER"
-                                    },
-                                    {
-                                        code: "OTHERS",
-                                        name: "COMMON_GENDER_OTHERS"
                                     }
                                 ]}
                                 key={input.name}
