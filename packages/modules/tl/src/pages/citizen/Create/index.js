@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
 import { Redirect, Route, Switch, useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import { newConfig } from "../../../config/config";
-//import CheckPage from "./CheckPage";
-//import PTAcknowledgement from "./PTAcknowledgement";
+import CheckPage from "./CheckPage";
+import TLAcknowledgement from "./TLAcknowledgement";
 
 const CreateTradeLicence = ({ parentRoute }) => {
   const queryClient = useQueryClient();
@@ -65,7 +65,7 @@ const CreateTradeLicence = ({ parentRoute }) => {
 
   const onSuccess = () => {
     clearParams();
-    queryClient.invalidateQueries("PT_CREATE_TRADE");
+    queryClient.invalidateQueries("TL_CREATE_TRADE");
   };
   newConfig.forEach((obj) => {
     config = config.concat(obj.body.filter((a) => !a.hideInCitizen));
@@ -83,12 +83,12 @@ const CreateTradeLicence = ({ parentRoute }) => {
           </Route>
         );
       })}
-      {/* <Route path={`${match.path}/check`}>
+      <Route path={`${match.path}/check`}>
         <CheckPage onSubmit={createProperty} value={params} />
       </Route>
       <Route path={`${match.path}/acknowledgement`}>
-        <PTAcknowledgement data={params} onSuccess={onSuccess} />
-      </Route> */}
+        <TLAcknowledgement data={params} onSuccess={onSuccess} />
+      </Route>
       <Route>
         <Redirect to={`${match.path}/${config.indexRoute}`} />
       </Route>
