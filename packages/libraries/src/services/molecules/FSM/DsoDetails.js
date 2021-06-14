@@ -16,7 +16,7 @@ const DsoDetails = async (tenantId, filters = {}) => {
       ?.filter((vehicle) => vehicle.status === "ACTIVE")
       ?.map((vehicle) => ({
         id: vehicle.id,
-        registrationNumber: vehicle.registrationNumber,
+        registrationNumber: vehicle?.registrationNumber,
         type: vehicle.type,
         i18nKey: `FSM_VEHICLE_TYPE_${vehicle.type}`,
         capacity: vehicle.tankCapacity,
