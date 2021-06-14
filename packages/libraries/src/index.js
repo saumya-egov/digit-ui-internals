@@ -6,7 +6,7 @@ import { initI18n } from "./translations/index";
 
 import { Storage, PersistantStorage } from "./services/atoms/Utils/Storage";
 import { UploadServices } from "./services/atoms/UploadServices";
-import Download from "./services/atoms/Download";
+
 
 import { LocationService } from "./services/elements/Location";
 import { LocalityService } from "./services/elements/Localities";
@@ -27,6 +27,7 @@ import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
 import { ULBService } from "./services/molecules/Ulb";
 import { FileDesludging } from "./services/molecules/FSM/FileDesludging";
 import { ComponentRegistryService } from "./services/elements/ComponentRegistry";
+import  HrmsService from "./services/elements/HRMS"
 
 import Contexts from "./contexts";
 import Hooks from "./hooks";
@@ -55,13 +56,13 @@ const initLibraries = () => {
   setupLibraries("PGRService", PGRService);
   setupLibraries("FSMService", FSMService);
   setupLibraries("PTService", PTService);
+  setupLibraries("HRMSService", HrmsService);
   setupLibraries("MCollectService", MCollectService);
   setupLibraries("PaymentService", PaymentService);
   setupLibraries("DateUtils", dateUtils);
   setupLibraries("WorkflowService", WorkflowService);
   setupLibraries("MDMSService", MdmsService);
   setupLibraries("UploadServices", UploadServices);
-  setupLibraries("Download", Download);
   setupLibraries("GetServiceDefinitions", GetServiceDefinitions);
   setupLibraries("Complaint", Complaint);
   setupLibraries("FileDesludging", FileDesludging);

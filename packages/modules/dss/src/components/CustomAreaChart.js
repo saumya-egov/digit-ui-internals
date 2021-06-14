@@ -109,11 +109,11 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", height: "85%" }}>
       {id === "fsmCapacityUtilization" && <p>{t("DSS_FSM_TOTAL_SLUDGE_TREATED")} - {totalWaste} {t("DSS_KL")}</p>}
       <ResponsiveContainer width="99%" height={id === "fsmTotalCumulativeCollection" ? 400 : 300}>
-        {(!chartData || chartData?.length === 0) ? 
+        {(!chartData || chartData?.length === 0) ?
           <div className="no-data">
             <p>{t('DSS_NO_DATA')}</p>
           </div> :
-          <AreaChart width="100%" height="100%" data={chartData} margin={{ left: 30 }}>
+          <AreaChart width="100%" height="100%" data={chartData} margin={{ left: 30, top: 10 }}>
             <defs>
               <linearGradient id="colorUv" x1=".5" x2=".5" y2="1">
                 <stop stopColor="#048BD0" stopOpacity={0.5} />

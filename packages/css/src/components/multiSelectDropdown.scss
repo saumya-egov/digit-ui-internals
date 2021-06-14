@@ -1,5 +1,5 @@
 .multi-select-dropdown-wrap{
-    @apply relative text-form-field text-text-primary w-full; 
+    @apply relative text-form-field text-text-primary w-full;
     .master, .master-active{
         @apply relative border border-solid border-input-border h-10 w-full;
         input[type=text]{
@@ -31,9 +31,12 @@
     }
 
     .server{
-        
+
         box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
         top:40px;
+
+        max-height:20vmax;
+        overflow: scroll;
         @apply absolute min-w-full z-20;
         div{
             @apply flex w-full bg-white;

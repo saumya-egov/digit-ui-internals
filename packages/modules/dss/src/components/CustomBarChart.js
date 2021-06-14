@@ -57,8 +57,8 @@ const CustomBarChart = ({
   }, [response]);
 
   const goToDrillDownCharts = () => {
-    history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`)
-  }
+    history.push(`/digit-ui/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`);
+  };
   if (isLoading) {
     return <Loader />;
   }

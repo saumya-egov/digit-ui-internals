@@ -83,7 +83,7 @@ const mCollectAccess = () => {
   const MCOLLECT_ACCESS = userRoles.filter((role) => mCollectRoles.includes(role));
 
   return MCOLLECT_ACCESS.length > 0;
-}
+};
 
 export default {
   pdf: PDFUtil,
@@ -98,5 +98,5 @@ export default {
   fsmAccess,
   dss,
   ptAccess,
-  mCollectAccess
+  mCollectAccess,
 };

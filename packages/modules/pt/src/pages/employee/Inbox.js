@@ -26,6 +26,7 @@ const Inbox = ({
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
+  const [enableSarch, setEnableSearch] = useState(() => (isInbox ? {} : { enabled: false }));
 
   const [searchParams, setSearchParams] = useState(() => {
     return initialStates.searchParams || {};
@@ -45,7 +46,7 @@ const Inbox = ({
     rawSearchHandler,
     combineResponse,
     wfConfig,
-    searchConfig,
+    searchConfig: { ...enableSarch, ...searchConfig },
     middlewaresWf,
     middlewareSearch,
   });
@@ -73,6 +74,7 @@ const Inbox = ({
     if (keys_to_delete) keys_to_delete.forEach((key) => delete _new[key]);
     delete filterParam.delete;
     setSearchParams({ ..._new });
+    setEnableSearch({ enabled: true });
   };
 
   const handleSort = useCallback((args) => {

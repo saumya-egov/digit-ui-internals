@@ -9,7 +9,7 @@ const useComplaintTypes = ({ stateCode }) => {
     (async () => {
       const res = await Digit.GetServiceDefinitions.getMenu(stateCode, t);
       let menu = res.filter((o) => o.key !== "");
-      menu.push({ key: "Others", name: "Others" });
+      menu.push({ key: "Others", name: t("SERVICEDEFS.OTHERS") });
       setComplaintTypes(menu);
     })();
   }, [stateCode]);

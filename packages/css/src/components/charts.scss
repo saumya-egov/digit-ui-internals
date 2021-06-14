@@ -1,6 +1,6 @@
 .chartHeader {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
 
   .sideContent {
@@ -21,6 +21,10 @@
       @apply absolute;
     }
   }
+}
+
+.column-direction {
+  flex-direction: column;
 }
 
 .chart-wrapper {
@@ -79,7 +83,7 @@
       width: 31%;
     }
   }
-  .chartHeader {
+  .column-direction {
     flex-direction: row;
   }
   .options-m {
