@@ -34,7 +34,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
 
 
   useEffect(() => {
-    const assignmentssData = assignments?.map((assignment) => {
+    var promises = assignments?.map((assignment) => {
       return assignment ?
         cleanup({
           id: assignment?.id,
@@ -50,7 +50,12 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
         }) : []
     });
 
-    onSelect(config.key, assignmentssData.filter(value => Object.keys(value).length !== 0));
+    Promise.all(promises).then(function (results) {
+      onSelect(
+        config.key,
+        results.filter((value) => Object.keys(value).length !== 0)
+      );
+    });
   }, [assignments]);
 
   let department = [];
