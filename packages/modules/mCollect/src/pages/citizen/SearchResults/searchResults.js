@@ -28,11 +28,10 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
     { enabled: consumerCode ? true : false }
   ); */
 
-  /* 
-  if (paymentDetails.isLoading || result.isLoading) {
+  if (result.isLoading) {
     return <Loader />;
   }
- */
+
   /* if (result.error || !consumerCode) {
     return <div>{t("CS_PT_NO_PROPERTIES_FOUND")}</div>;
   } */
@@ -58,7 +57,7 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   const searchResults = result?.data?.Bills?.map((bill) => {
     return {
       businesService: bill.businessService,
-      total_due: bill.totalAmount,
+      total_due: bill.status === "PAID" ? 0 : bill.totalAmount,
       OwnerName: bill.payerName || "NA",
       //bil_due__date: bill.billDetails[0].expiryDate || 0,
       bil_due__date: `${
