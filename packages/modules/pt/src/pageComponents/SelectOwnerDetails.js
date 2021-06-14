@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useRouteMatch } from "react-router-dom";
 
-const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+const SelectOwnerDetails = ({ t, config, onSelect, userType, formData, ownerIndex }) => {
+  const { pathname: url } = useLocation();
+  const editScreen = url.includes("/modify-application/");
+  const mutationScreen = url.includes("/property-mutation/");
+
+  let index = mutationScreen ? ownerIndex : window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
   const [name, setName] = useState((formData.owners && formData.owners[index] && formData.owners[index].name) || formData?.owners?.name || "");
   const [email, setEmail] = useState((formData.owners && formData.owners[index] && formData.owners[index].email) || formData?.owners?.emailId || "");
@@ -20,9 +24,6 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   );
   const isUpdateProperty = formData?.isUpdateProperty || false;
   let isEditProperty = formData?.isEditProperty || false;
-  const { pathname: url } = useLocation();
-  const editScreen = url.includes("/modify-application/");
-  const mutationScreen = url.includes("/property-mutation/");
 
   function setOwnerName(e) {
     setName(e.target.value);
@@ -52,7 +53,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     } else {
       if (mutationScreen) {
         ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };
-        onSelect(config.key, ownerStep, false, "", "", { index });
+        onSelect("", ownerStep);
         return;
       }
       ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };

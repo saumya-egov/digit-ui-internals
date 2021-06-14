@@ -39,8 +39,9 @@ const MutationCitizen = (props) => {
       : "";
 
     console.log(params, "inside mutation form");
-
-    if (typeof activeRouteObj.nextStep === "string") history.push(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);
+    if (!activeRouteObj.nextStep) {
+      console.log("inside owners details");
+    } else if (typeof activeRouteObj.nextStep === "string") history.push(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);
     else if (typeof activeRouteObj.nextStep === "object") {
       let nextStep = activeRouteObj.nextStep[configObj.routeKey];
       history.push(`${pathArray.join("/")}/${nextStep}${queryString}`);

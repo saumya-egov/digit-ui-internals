@@ -174,7 +174,7 @@ export const newConfigMutate = [
         nextStep: {
           INSTITUTIONALPRIVATE: "inistitution-details",
           INSTITUTIONALGOVERNMENT: "inistitution-details",
-          "INDIVIDUAL.SINGLEOWNER": "owner-details",
+          "INDIVIDUAL.SINGLEOWNER": "multiple-owners",
           "INDIVIDUAL.MULTIPLEOWNERS": "multiple-owners",
         },
       },

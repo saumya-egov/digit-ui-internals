@@ -1,9 +1,15 @@
 import { CardLabel, CardLabelDesc, Dropdown, FormStep, UploadFile } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { stringReplaceAll } from "../utils";
 
-const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData, ownerIndex }) => {
+  const { pathname: url } = useLocation();
+  const editScreen = url.includes("/modify-application/");
+  const isMutation = url.includes("property-mutation");
+
+  let index = isMutation ? ownerIndex : window.location.href.charAt(window.location.href.length - 1);
+
   const [uploadedFile, setUploadedFile] = useState(formData?.owners[index]?.documents?.specialProofIdentity?.fileStoreId || null);
   const [file, setFile] = useState(formData?.owners[index]?.documents?.specialProofIdentity);
   const [error, setError] = useState(null);
@@ -22,12 +28,16 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData })
     dropdownData.forEach((data) => {
       data.i18nKey = stringReplaceAll(data.code, ".", "_");
     });
-
+    console.log(formData?.owners[index]?.ownerType?.code, "owner type code");
     dropdownData = dropdownData?.filter((dropdown) => dropdown.parentValue.includes(formData?.owners[index]?.ownerType?.code));
     if (dropdownData.length == 1 && dropdownValue != dropdownData[0]) {
       setTypeOfDropdownValue(dropdownData[0]);
     }
   }
+
+  useEffect(() => {
+    console.log(Documentsob, "Find Docsob");
+  }, [Documentsob]);
 
   function setTypeOfDropdownValue(dropdownValue) {
     setDropdownValue(dropdownValue);

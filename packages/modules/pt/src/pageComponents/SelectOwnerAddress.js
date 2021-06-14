@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CheckBox, CardLabel, LabelFieldPair, TextArea } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 
-const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+const SelectOwnerAddress = ({ t, config, onSelect, userType, formData, ownerIndex }) => {
+  const { pathname: url } = useLocation();
+  const editScreen = url.includes("/modify-application/");
+  const isMutation = url.includes("property-mutation");
+
+  let index = isMutation ? ownerIndex : window.location.href.charAt(window.location.href.length - 1);
   const [permanentAddress, setPermanentAddress] = useState(
     (formData.owners && formData.owners[index] && formData.owners[index].permanentAddress) || formData?.owners?.permanentAddress || ""
   );
@@ -12,21 +16,20 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
   );
   const isUpdateProperty = formData?.isUpdateProperty || false;
   let isEditProperty = formData?.isEditProperty || false;
-  const { pathname: url } = useLocation();
-  const editScreen = url.includes("/modify-application/");
 
   function setOwnerPermanentAddress(e) {
     setPermanentAddress(e.target.value);
   }
   function setCorrespondenceAddress(e) {
     if (e.target.checked == true) {
+      const address = isMutation ? formData?.searchResult?.property?.address : formData?.address;
       let obj = {
-        doorNo: formData?.address?.doorNo,
-        street: formData?.address?.street,
-        landmark: formData?.address?.landmark,
-        locality: formData?.address?.locality?.name,
-        city: formData?.address?.city?.name,
-        pincode: formData?.address?.pincode,
+        doorNo: address?.doorNo,
+        street: address?.street,
+        landmark: address?.landmark,
+        locality: address?.locality?.name,
+        city: address?.city?.name,
+        pincode: address?.pincode,
       };
       let addressDetails = "";
       for (const key in obj) {

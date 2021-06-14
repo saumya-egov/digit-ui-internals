@@ -3,26 +3,29 @@ import { FormStep, RadioOrSelect, RadioButtons, LabelFieldPair, CardLabel, Dropd
 import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
-const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+const SelectSpecialOwnerCategoryType = ({ t, config, onSelect, userType, formData, ownerIndex }) => {
+  const { pathname: url } = useLocation();
+  const editScreen = url.includes("/modify-application/");
+  const isMutation = url.includes("property-mutation");
+
+  let index = isMutation ? ownerIndex : window.location.href.charAt(window.location.href.length - 1);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const isUpdateProperty = formData?.isUpdateProperty || false;
   let isEditProperty = formData?.isEditProperty || false;
   const [ownerType, setOwnerType] = useState(
-    (formData.owners && formData.owners[index] && formData.owners[index].ownerType) || formData.owners?.ownerType || {}
+    (formData.owners && formData.owners[index] && formData.owners[index]?.ownerType) || formData.owners?.ownerType || {}
   );
   const { data: Menu, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "OwnerType");
   Menu ? Menu.sort((a, b) => a.name.localeCompare(b.name)) : "";
-  const { pathname: url } = useLocation();
-  const editScreen = url.includes("/modify-application/");
-  const isMutation = url.includes("property-mutation");
 
   const onSkip = () => onSelect();
 
   function setTypeOfOwner(value) {
     setOwnerType(value);
   }
+
+  console.log(formData, "inside " + url);
 
   function goNext() {
     let ownerDetails = formData.owners && formData.owners[index];
