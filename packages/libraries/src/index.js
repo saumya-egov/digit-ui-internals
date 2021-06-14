@@ -7,7 +7,6 @@ import { initI18n } from "./translations/index";
 import { Storage, PersistantStorage } from "./services/atoms/Utils/Storage";
 import { UploadServices } from "./services/atoms/UploadServices";
 
-
 import { LocationService } from "./services/elements/Location";
 import { LocalityService } from "./services/elements/Localities";
 import { LocalizationService } from "./services/elements/Localization/service";
@@ -21,13 +20,14 @@ import { MdmsService } from "./services/elements/MDMS";
 import { Complaint } from "./services/elements/Complaint";
 import { UserService } from "./services/elements/User";
 import { PTService } from "./services/elements/PT";
+import { TLService } from "./services/elements/TL";
 import { MCollectService } from "./services/elements/MCollect";
 
 import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
 import { ULBService } from "./services/molecules/Ulb";
 import { FileDesludging } from "./services/molecules/FSM/FileDesludging";
 import { ComponentRegistryService } from "./services/elements/ComponentRegistry";
-import  HrmsService from "./services/elements/HRMS"
+import HrmsService from "./services/elements/HRMS";
 
 import Contexts from "./contexts";
 import Hooks from "./hooks";
@@ -56,6 +56,7 @@ const initLibraries = () => {
   setupLibraries("PGRService", PGRService);
   setupLibraries("FSMService", FSMService);
   setupLibraries("PTService", PTService);
+  setupLibraries("TLService", TLService);
   setupLibraries("HRMSService", HrmsService);
   setupLibraries("MCollectService", MCollectService);
   setupLibraries("PaymentService", PaymentService);
