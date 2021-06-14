@@ -511,61 +511,85 @@ export const setPropertyDetails = (data) => {
   return data;
 };
 
-/*   method to convert collected details to proeprty create object */
-export const convertToProperty = (data = {}) => {
-  console.info("propertyFormData", data);
-  let isResdential = data.isResdential;
-  let propertyType = data.PropertyType;
-  let selfOccupied = data.selfOccupied;
-  let Subusagetypeofrentedarea = data.Subusagetypeofrentedarea || null;
-  let subusagetype = data.subusagetype || null;
-  let IsAnyPartOfThisFloorUnOccupied = data.IsAnyPartOfThisFloorUnOccupied || null;
-  let builtUpArea = data?.floordetails?.builtUpArea || null;
-  let noOfFloors = data?.noOfFloors;
-  let noOofBasements = data?.noOofBasements;
-  let unit = data?.units;
-  let basement1 = Array.isArray(data?.units) && data?.units["-1"] ? data?.units["-1"] : null;
-  let basement2 = Array.isArray(data?.units) && data?.units["-2"] ? data?.units["-2"] : null;
-  data = setDocumentDetails(data);
-  data = setOwnerDetails(data);
-  data = setAddressDetails(data);
-  data = setPropertyDetails(data);
+export const getownerarray = (data) => {
+  let ownerarray = [];
+  data?.owners.owners.map((ob) => {
+    ownerarray.push({
+      mobileNumber: ob.mobilenumber,
+      name: ob.name,
+      fatherOrHusbandName: "",
+      relationship: "",
+      dob: null,
+      gender: ob.gender.code,
+      permanentAddress: data?.owners?.permanentAddress,
+    });
+  });
+  return ownerarray;
+};
 
+export const gettradeunits = (data) => {
+  let tradeunits = [];
+  data?.TradeDetails?.units.map((ob) => {
+    tradeunits.push({ tradeType: ob.tradesubtype.code, uom: null, uomValue: null });
+  });
+  return tradeunits;
+};
+
+export const getaccessories = (data) => {
+  let tradeaccessories = [];
+  data?.TradeDetails?.accessories.map((ob) => {
+    tradeaccessories.push({ uom: ob.unit, accessoryCategory: ob.accessory.code, uomValue: ob.uom, count: ob.accessorycount });
+  });
+  return tradeaccessories;
+};
+
+export const convertToTrade = (data = {}) => {
+  console.info("tradeformdata", data);
   const formdata = {
-    Property: {
-      tenantId: data.tenantId,
-      address: data.address,
-
-      ownershipCategory: data?.ownershipCategory?.value,
-      owners: data.owners,
-      institution: data.institution || null,
-
-      documents: data.documents || [],
-      ...data.propertyDetails,
-
-      additionalDetails: {
-        inflammable: false,
-        heightAbove36Feet: false,
-        isResdential: isResdential,
-        propertyType: propertyType,
-        selfOccupied: selfOccupied,
-        Subusagetypeofrentedarea: Subusagetypeofrentedarea,
-        subusagetype: subusagetype,
-        IsAnyPartOfThisFloorUnOccupied: IsAnyPartOfThisFloorUnOccupied,
-        builtUpArea: builtUpArea,
-        noOfFloors: noOfFloors,
-        noOofBasements: noOofBasements,
-        unit: unit,
-        basement1: basement1,
-        basement2: basement2,
+    Licenses: [
+      {
+        action: "INITIATE",
+        applicationType: "NEW",
+        commencementDate: Date.parse(data?.TradeDetails?.CommencementDate),
+        financialYear: "2020-21",
+        licenseType: "PERMANENT",
+        tenantId: data?.address?.city?.code,
+        tradeLicenseDetail: {
+          address: {
+            city: data?.address?.city?.code,
+            locality: {
+              code: data?.address?.locality?.code,
+            },
+            tenantId: data?.tenantId,
+          },
+          applicationDocuments: null,
+          accessories: data?.TradeDetails?.accessories ? getaccessories(data) : null,
+          // owners: [
+          //   {mobileNumber: "7878787878",
+          //    name: "testg",
+          //     fatherOrHusbandName: "DA",
+          //      relationship: "FATHER",
+          //      dob: 950380199000,
+          //      gender: "MALE",
+          //      permanentAddress: "VXF",
+          // }
+          // ],
+          owners: getownerarray(data),
+          structureType: data?.TradeDetails?.VehicleType ? data?.TradeDetails?.VehicleType.code : data?.TradeDetails?.BuildingType.code,
+          subOwnerShipCategory: data?.ownershipCategory?.code,
+          // tradeUnits:[
+          //   {tradeType: "GOODS.MANUFACTURE.TST-18", uom: null, uomValue: null}
+          // ],
+          tradeUnits: gettradeunits(data),
+        },
+        tradeName: data?.TradeDetails?.TradeName,
+        wfDocuments: [],
+        workflowCode: "NewTL",
       },
-
-      creationReason: "CREATE",
-      source: "MUNICIPAL_RECORDS",
-      channel: "CITIZEN",
-    },
+    ],
   };
-  console.info("propertyCreated", formdata);
+
+  console.info("TradeCreated", formdata);
   return formdata;
 };
 

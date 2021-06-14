@@ -21,6 +21,9 @@ import SelectCommencementDate from "./pageComponents/SelectCommencementDate";
 import SelectTradeUnits from "./pageComponents/SelectTradeUnits";
 import SelectAccessories from "./pageComponents/SelectAccessories";
 import SelectAccessoriesDetails from "./pageComponents/SelectAccessoriesDetails";
+import CheckPage from "./pages/citizen/Create/CheckPage";
+import TLDocument from "./pageComponents/TLDocumets";
+import TLAcknowledgement from "./pages/citizen/Create/TLAcknowledgement";
 
 import CitizenApp from "./pages/citizen";
 
@@ -79,6 +82,9 @@ const componentsToRegister = {
   SelectOwnerAddress,
   SelectProofIdentity,
   SelectOwnershipProof,
+  CheckPage,
+  TLDocument,
+  TLAcknowledgement,
 };
 
 export const initTLComponents = () => {

@@ -82,6 +82,8 @@ import usemcollectTenants from "./mcollect/useTenants";
 
 import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
+import useTLDocumentSearch from "./tl/useTLDocumentSearch";
+import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
@@ -164,11 +166,13 @@ const hrms = {
   useHrmsMDMS,
   useHRMSCreate,
   useHRMSUpdate,
-  useHRMSCount
-}
+  useHRMSCount,
+};
 const tl = {
   useTenants: useTenantsTL,
   useTradeLicenseMDMS,
+  useTLDocumentSearch,
+  useTradeLicenseAPI,
 };
 
 const Hooks = {
