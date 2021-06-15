@@ -58,7 +58,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       return response?.responseData?.data?.[0]?.plots;
     }
     return response?.responseData?.data?.[0]?.plots.map((plot) => {
-      const totalDays = getDaysInMonth(new Date(plot?.name));
+      const [month, year] = plot?.name.split('-');
+      const totalDays = getDaysInMonth(Date.parse(`${month} 1, ${year}`));
       const value = (plot?.value / (totalCapacity * totalDays)) * 100;
       return { ...plot, value };
     })
