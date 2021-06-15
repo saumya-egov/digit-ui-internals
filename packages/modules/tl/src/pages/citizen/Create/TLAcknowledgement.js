@@ -68,8 +68,8 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
   ) : (
     <Card>
       <BannerPicker t={t} data={mutation.data} isSuccess={mutation.isSuccess} isLoading={mutation.isIdle || mutation.isLoading} />
-      {mutation.isSuccess && <CardText>{t("CS_FILE_PROPERTY_RESPONSE")}</CardText>}
-      {!mutation.isSuccess && <CardText>{t("CS_FILE_PROPERTY_FAILED_RESPONSE")}</CardText>}
+      {mutation.isSuccess && <CardText>{t("TL_FILE_TRADE_RESPONSE")}</CardText>}
+      {!mutation.isSuccess && <CardText>{t("TL_FILE_TRADE_FAILED_RESPONSE")}</CardText>}
       {/* {mutation.isSuccess && (
         <LinkButton
           label={
@@ -96,7 +96,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
           />
         )}
       </StatusTable>
-      {mutation.isSuccess && <SubmitBar label={t("PT_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
+      {mutation.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
 
       <Link to={`/digit-ui/citizen`}>
         <LinkButton label={t("CORE_COMMON_GO_TO_HOME")} />
