@@ -12,6 +12,7 @@ const EditForm = ({ applicationData }) => {
 
   const defaultValues = {
     originalData: applicationData,
+    address: applicationData?.address,
     // address: {
     //   pincode: applicationData.address.pincode || "",
     //   locality: {
@@ -112,22 +113,22 @@ const EditForm = ({ applicationData }) => {
       documents: data?.documents?.documents,
       units: data?.units?.[0]?.usageCategory ? data?.units : applicationData?.units,
       additionalDetails: applicationData?.additionalDetails || null,
-      auditDetails: applicationData?.auditDetails,
+      // auditDetails: applicationData?.auditDetails,
       workflow: {
         businessService: "PT.UPDATE",
         action: "OPEN",
         moduleName: "PT",
       },
-      occupancyDate: applicationData?.occupancyDate || null,
-      usage: applicationData?.usage || null,
-      financialYear: applicationData?.financialYear || null,
-      assessmentNumber: applicationData?.assessmentNumber || null,
-      assessmentDate: applicationData?.assessmentDate || "0",
-      adhocExemption: applicationData?.adhocExemption || null,
-      adhocPenalty: applicationData?.adhocPenalty || null,
-      adhocExemptionReason: applicationData?.adhocExemptionReason || null,
-      adhocPenaltyReason: applicationData?.adhocPenaltyReason || null,
-      calculation: applicationData?.calculation || null,
+      // occupancyDate: applicationData?.occupancyDate || null,
+      // usage: applicationData?.usage || null,
+      // financialYear: applicationData?.financialYear || null,
+      // assessmentNumber: applicationData?.assessmentNumber || null,
+      // assessmentDate: applicationData?.assessmentDate || "0",
+      // adhocExemption: applicationData?.adhocExemption || null,
+      // adhocPenalty: applicationData?.adhocPenalty || null,
+      // adhocExemptionReason: applicationData?.adhocExemptionReason || null,
+      // adhocPenaltyReason: applicationData?.adhocPenaltyReason || null,
+      // calculation: applicationData?.calculation || null,
       applicationStatus: "UPDATE",
     };
 
@@ -147,9 +148,9 @@ const EditForm = ({ applicationData }) => {
 
   return (
     <FormComposer
-      heading={t("ES_TITLE_MODIFY_DESULDGING_APPLICATION")}
+      heading={t("PT_APPLICATION_SUMMARY")}
       isDisabled={!canSubmit}
-      label={t("ES_FSM_APPLICATION_UPDATE")}
+      label={t("ES_COMMON_APPLICATION_SUBMIT")}
       config={configs.map((config) => {
         return {
           ...config,
