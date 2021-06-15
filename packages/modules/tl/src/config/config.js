@@ -64,6 +64,28 @@ export const newConfig = [
           cardText: "TL_STREET_TEXT",
           submitBarLabel: "CS_COMMON_NEXT",
         },
+        inputs: [
+          {
+            label: "TL_LOCALIZATION_STREET_NAME",
+            type: "text",
+            name: "street",
+            validation: {
+              // pattern: "[a-zA-Z0-9]{1,255}",
+              maxlength: 256,
+              title: "CORE_COMMON_STREET_INVALID",
+            },
+          },
+          {
+            label: "TL_LOCALIZATION_BUILDING_NO",
+            type: "text",
+            name: "doorNo",
+            validation: {
+              // pattern: "([A-z0-9À-ž@#$&()\\-`.+,/s ]){1,63}",
+              maxlength: 256,
+              title: "CORE_COMMON_DOOR_INVALID",
+            },
+          },
+        ],
         nextStep: "landmark",
       },
       {
@@ -278,7 +300,7 @@ export const newConfig = [
         texts: {
           headerCaption: "",
           header: "TL_OWNERSHIP_INFO_SUB_HEADER",
-          cardText: "PT_FORM3_HEADER_MESSAGE",
+          cardText: "TL_OWNER_DETAILS_TEXT",
           submitBarLabel: "CS_COMMON_NEXT",
         },
         withoutLabel: true,
