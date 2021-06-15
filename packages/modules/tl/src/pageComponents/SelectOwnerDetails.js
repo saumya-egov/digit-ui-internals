@@ -45,6 +45,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   }
   function setPrimaryOwner(i, e) {
     let units = [...fields];
+    units.map((units) => {
+      units.isprimaryowner = false;
+    });
     units[i].isprimaryowner = ismultiple ? e.target.checked : true;
     setisPrimaryOwner(e.target.checked);
     setFeilds(units);
@@ -68,7 +71,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   ];
 
   return (
-    <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!name || !mobileNumber || !gender}>
+    <FormStep config={config} onSelect={goNext} onSkip={onSkip} t={t} isDisabled={!fields[0].name || !fields[0].mobilenumber || !fields[0].gender}>
       {fields.map((field, index) => {
         return (
           <div key={`${field}-${index}`}>
@@ -124,8 +127,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               <CheckBox
                 label={t("Primary Owner")}
                 onChange={(e) => setPrimaryOwner(index, e)}
-                value={isPrimaryOwner}
-                //checked={isCorrespondenceAddress || false}
+                value={field.isprimaryowner}
+                checked={field.isprimaryowner}
                 style={{ paddingTop: "10px" }}
                 //disable={isUpdateProperty || isEditProperty}
               />
