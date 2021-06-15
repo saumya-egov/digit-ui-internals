@@ -50,9 +50,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
       if (oldPropertyId) qs.oldPropertyIds = oldPropertyId;
       if (mobileNumber) qs.mobileNumber = mobileNumber;
       onSelect(propsConfig.key, data, null, null, null, {
-        ...qs,
-        locality: data.locality?.code,
-        city: cityCode,
+        queryParams: { ...qs, locality: data.locality?.code, city: cityCode },
       });
     } else {
       history.push(

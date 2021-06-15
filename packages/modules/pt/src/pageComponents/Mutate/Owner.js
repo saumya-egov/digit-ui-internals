@@ -137,7 +137,6 @@ const OwnerCitizen = (props) => {
   const prevOwnerLength = prevOwnerCount.current;
 
   const addNewOwner = () => {
-    console.log("add owner called");
     const newOwner = createOwnerDetails();
     setOwners((prev) => [...prev, newOwner]);
   };
@@ -204,7 +203,7 @@ const OwnerSteps = ({ owner, addNewOwner, removeOwner, setOwners, owners, ownerI
         pathArray.push(ownerIndex + 1);
         history.push(`${pathArray.join("/")}/${config[0].route}`);
       } else {
-        props.onSelect(propsConfig.key, owners);
+        props.onSelect(propsConfig.key, owners, "", "", "", { nesting: 2 });
       }
     } else if (typeof activeRouteObj.nextStep === "string") {
       history.push(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);

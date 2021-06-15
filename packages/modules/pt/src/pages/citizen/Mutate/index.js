@@ -27,23 +27,30 @@ const MutationCitizen = (props) => {
     config = config.concat(obj.body.filter((a) => !a.hideInCitizen));
   });
 
-  function handleSelect(key, data, skipStep, index, isAddMultiple = false, queryParams, configObj) {
+  function handleSelect(key, data, skipStep, index, isAddMultiple = false, configObj) {
     let pathArray = pathname.split("/");
     let currentPath = pathArray.pop();
+    if (configObj?.nesting) {
+      for (let i = 0; i < configObj?.nesting - 1; i++) {
+        currentPath = pathArray.pop();
+      }
+    }
+
     let activeRouteObj = config.filter((e) => e.route === currentPath)[0];
     selectParams(key, data);
+    let { queryParams } = configObj || {};
     let queryString = queryParams
       ? `?${Object.keys(queryParams)
           .map((_key) => `${_key}=${queryParams[_key]}`)
           .join("&")}`
       : "";
 
-    console.log(params, "inside mutation form");
+    console.log(params, currentPath, "inside mutation form");
     if (!activeRouteObj.nextStep) {
-      console.log("inside owners details");
+      console.log(activeRouteObj, "inside owners details");
     } else if (typeof activeRouteObj.nextStep === "string") history.push(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);
     else if (typeof activeRouteObj.nextStep === "object") {
-      let nextStep = activeRouteObj.nextStep[configObj.routeKey];
+      let nextStep = activeRouteObj.nextStep[configObj?.routeKey];
       history.push(`${pathArray.join("/")}/${nextStep}${queryString}`);
     }
   }
