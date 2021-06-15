@@ -15,6 +15,7 @@ import { PGRService } from "./services/elements/PGR";
 import { FSMService } from "./services/elements/FSM";
 import { PaymentService } from "./services/elements/Payment";
 import * as dateUtils from "./services/atoms/Utils/Date";
+import Download from "./services/atoms/Download";
 import { WorkflowService } from "./services/elements/WorkFlow";
 import { MdmsService } from "./services/elements/MDMS";
 import { Complaint } from "./services/elements/Complaint";
@@ -73,6 +74,7 @@ const initLibraries = () => {
   setupLibraries("Hooks", Hooks);
   setupLibraries("Customizations", {});
   setupLibraries("Utils", Utils);
+  setupLibraries("Download", Download);
 
   return new Promise((resolve) => {
     initI18n(resolve);
