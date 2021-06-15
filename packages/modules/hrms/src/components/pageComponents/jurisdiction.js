@@ -132,7 +132,7 @@ function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylis
   };
 
   const selectrole = (e, data) => {
-    const index = jurisdiction?.roles.filter((ele=> ele.code==data.code));
+    const index = jurisdiction?.roles.filter((ele) => ele.code == data.code);
     let res = null;
     if (index.length) {
       jurisdiction?.roles.splice(jurisdiction?.roles.indexOf(index[0]), 1);
@@ -149,7 +149,7 @@ function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylis
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
       <div className="label-field-pair">
         <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-        {t("HR_JURISDICTION")} {index + 1}
+          {t("HR_JURISDICTION")} {index + 1}
         </h2>
       </div>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>

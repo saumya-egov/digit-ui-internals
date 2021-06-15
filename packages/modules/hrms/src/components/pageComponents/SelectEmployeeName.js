@@ -14,7 +14,7 @@ const SelectEmployeeName = ({ t, config, onSelect, formData = {}, userType, regi
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
       isMandatory: true,
-    }
+    },
   ];
 
   function setValue(value, input) {

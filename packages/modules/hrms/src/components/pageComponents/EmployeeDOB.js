@@ -15,7 +15,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
       isMandatory: true,
-    }
+    },
   ];
 
   function setValue(value, input) {

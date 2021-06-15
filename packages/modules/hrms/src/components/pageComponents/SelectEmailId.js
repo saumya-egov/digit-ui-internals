@@ -14,7 +14,7 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
       validation: {
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
-    }
+    },
   ];
 
   function setValue(value, input) {

@@ -28,19 +28,21 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   if (props.isLoading) {
     result = <Loader />;
   } else if (!data || data?.length === 0) {
-    result = (EmptyInboxComp && <EmptyInboxComp data={data} />) || (
-      <Card style={{ marginTop: 20 }}>
-        {/* TODO Change localization key */}
-
-        {t("CS_MYAPPLICATIONS_NO_APPLICATION")
-          .split("\\n")
-          .map((text, index) => (
-            <p key={index} style={{ textAlign: "center" }}>
-              {text}
-            </p>
-          ))}
-      </Card>
-    );
+    result =
+      (EmptyInboxComp && <EmptyInboxComp data={data} />) ||
+      (data?.length === 0 ? (
+        <Card style={{ marginTop: 20 }}>
+          {t("CS_MYAPPLICATIONS_NO_APPLICATION")
+            .split("\\n")
+            .map((text, index) => (
+              <p key={index} style={{ textAlign: "center" }}>
+                {text}
+              </p>
+            ))}
+        </Card>
+      ) : (
+        <Loader />
+      ));
   } else if (data?.length > 0) {
     result = (
       <ApplicationTable

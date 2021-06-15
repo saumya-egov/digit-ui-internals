@@ -17,7 +17,6 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
     ]
   );
 
-
   const handleAddUnit = () => {
     setassignments((prev) => [
       ...prev,
@@ -32,22 +31,22 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
     ]);
   };
 
-
   useEffect(() => {
     var promises = assignments?.map((assignment) => {
-      return assignment ?
-        cleanup({
-          id: assignment?.id,
-          position: assignment?.position,
-          govtOrderNumber: assignment?.govtOrderNumber,
-          tenantid: assignment?.tenantId,
-          auditDetails: assignment?.auditDetails,
-          fromDate: assignment?.fromDate ? new Date(assignment?.fromDate).getTime() : undefined,
-          toDate: assignment?.toDate ? new Date(assignment?.toDate).getTime() : undefined,
-          isCurrentAssignment: assignment?.isCurrentAssignment,
-          department: assignment?.department?.code,
-          designation: assignment?.designation?.code,
-        }) : []
+      return assignment
+        ? cleanup({
+            id: assignment?.id,
+            position: assignment?.position,
+            govtOrderNumber: assignment?.govtOrderNumber,
+            tenantid: assignment?.tenantId,
+            auditDetails: assignment?.auditDetails,
+            fromDate: assignment?.fromDate ? new Date(assignment?.fromDate).getTime() : undefined,
+            toDate: assignment?.toDate ? new Date(assignment?.toDate).getTime() : undefined,
+            isCurrentAssignment: assignment?.isCurrentAssignment,
+            department: assignment?.department?.code,
+            designation: assignment?.designation?.code,
+          })
+        : [];
     });
 
     Promise.all(promises).then(function (results) {
@@ -59,23 +58,20 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
   }, [assignments]);
 
   let department = [];
-  let designation = []
+  let designation = [];
   const [focusIndex, setFocusIndex] = useState(-1);
 
   function getdepartmentdata() {
-    return data?.MdmsRes?.["common-masters"]?.Department.map(ele=> {
-      ele["i18key"] = t("COMMON_MASTERS_DEPARTMENT_"+ ele.code)
-      return ele
-  }
-    )
-
+    return data?.MdmsRes?.["common-masters"]?.Department.map((ele) => {
+      ele["i18key"] = t("COMMON_MASTERS_DEPARTMENT_" + ele.code);
+      return ele;
+    });
   }
   function getdesignationdata() {
-    return data?.MdmsRes?.["common-masters"]?.Designation.map(ele=> {
-      ele["i18key"] = t("COMMON_MASTERS_DESIGNATION_"+ ele.code)
-      return ele
-    })
-
+    return data?.MdmsRes?.["common-masters"]?.Designation.map((ele) => {
+      ele["i18key"] = t("COMMON_MASTERS_DESIGNATION_" + ele.code);
+      return ele;
+    });
   }
   if (isLoading) {
     return <Loader />;
@@ -100,8 +96,8 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
       ))}
       <LinkButton label={t("HR_ADD_ASSIGNMENT")} onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
     </div>
-  )
-}
+  );
+};
 function Assignment({
   t,
   assignment,
@@ -112,9 +108,8 @@ function Assignment({
   getdepartmentdata,
   department,
   designation,
-  getdesignationdata
+  getdesignationdata,
 }) {
-
   const selectDepartment = (value) => {
     setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, department: value } : item)));
   };
@@ -123,27 +118,27 @@ function Assignment({
   };
 
   const onAssignmentChange = (value) => {
-    setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, isCurrentAssignment: value } : {...item, isCurrentAssignment: false })));
+    setassignments((pre) =>
+      pre.map((item) => (item.key === assignment.key ? { ...item, isCurrentAssignment: value } : { ...item, isCurrentAssignment: false }))
+    );
     if (value) {
       setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, toDate: null } : item)));
     }
-  }
+  };
   const onIsHODchange = (value) => {
-    console.log(value)
+    console.log(value);
     setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, isHOD: value } : item)));
-
-  }
+  };
   return (
     <div key={index + 1} style={{ marginBottom: "16px" }}>
       <div className="label-field-pair">
         <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-          {t("HR_ASSIGNMENT")} {index+ 1}
+          {t("HR_ASSIGNMENT")} {index + 1}
         </h2>
       </div>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
-
-      <LabelFieldPair>
-          <CardLabel className="card-label-smaller"> { `${t("HR_DEPT_LABEL")} * `}</CardLabel>
+        <LabelFieldPair>
+          <CardLabel className="card-label-smaller"> {`${t("HR_DEPT_LABEL")} * `}</CardLabel>
           <Dropdown
             className="form-field"
             selected={assignment?.department}
@@ -155,7 +150,7 @@ function Assignment({
           />
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller" >{ `${t("HR_DESG_LABEL")} * `}</CardLabel>
+          <CardLabel className="card-label-smaller">{`${t("HR_DESG_LABEL")} * `}</CardLabel>
           <Dropdown
             className="form-field"
             selected={assignment?.designation}
@@ -167,7 +162,7 @@ function Assignment({
           />
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller"> { `${t("HR_ASMT_FROM_DATE_LABEL")} * `} </CardLabel>
+          <CardLabel className="card-label-smaller"> {`${t("HR_ASMT_FROM_DATE_LABEL")} * `} </CardLabel>
           <div className="field">
             <DatePicker
               type="date"
@@ -182,7 +177,10 @@ function Assignment({
           </div>
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("HR_ASMT_TO_DATE_LABEL")}{ (assignment?.isCurrentAssignment) ? "": " * " } </CardLabel>
+          <CardLabel className="card-label-smaller">
+            {t("HR_ASMT_TO_DATE_LABEL")}
+            {assignment?.isCurrentAssignment ? "" : " * "}{" "}
+          </CardLabel>
           <div className="field">
             <DatePicker
               type="date"
@@ -199,7 +197,9 @@ function Assignment({
         </LabelFieldPair>
 
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller" style={{ color: "white" }}>.</CardLabel>
+          <CardLabel className="card-label-smaller" style={{ color: "white" }}>
+            .
+          </CardLabel>
           <div className="field">
             <CheckBox
               onChange={(e) => onAssignmentChange(e.target.checked)}
@@ -208,8 +208,6 @@ function Assignment({
             />
           </div>
         </LabelFieldPair>
-
-
       </div>
     </div>
   );

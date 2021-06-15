@@ -113,7 +113,7 @@ export const StoreService = {
       code: "DSS",
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
     });
-    console.log(stateCode)
+    console.log(stateCode);
 
     await LocalizationService.getLocale({
       modules: [
@@ -133,7 +133,7 @@ export const StoreService = {
     return initData;
   },
   defaultData: async (stateCode, moduleCode, language) => {
-    console.log(moduleCode, stateCode )
+    console.log(moduleCode, stateCode);
     const LocalePromise = LocalizationService.getLocale({
       modules: [`rainmaker-${moduleCode.toLowerCase()}`],
       locale: language,

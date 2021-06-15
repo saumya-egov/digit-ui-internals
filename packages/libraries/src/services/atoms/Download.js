@@ -56,15 +56,15 @@ const Download = {
       const pdfWidth = pdf.internal.pageSize.width * (1 - margin);
       const x = pdf.internal.pageSize.width * (margin / 2);
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      let position = 10
+      let position = 10;
       let heightLeft = pdfHeight;
       pdf.addImage(pngImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
-      heightLeft -= pageHeight
+      heightLeft -= pageHeight;
       while (heightLeft > 0) {
-        position += heightLeft - pdfHeight
+        position += heightLeft - pdfHeight;
         pdf.addPage();
         pdf.addImage(pngImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
-        heightLeft -= pageHeight
+        heightLeft -= pageHeight;
       }
       pdf.save(`${fileName}.pdf`);
     });
