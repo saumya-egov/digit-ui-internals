@@ -45,6 +45,8 @@ const Download = {
       scrollX: 0,
       useCORS: true,
       scale: 1.5,
+      windowWidth: document.documentElement.offsetWidth,
+      windowHeight: document.documentElement.offsetHeight,
     }).then((canvas) => {
       const pdf = getPDF(canvas);
       const pngImage = canvas.toDataURL("image/jpeg");
