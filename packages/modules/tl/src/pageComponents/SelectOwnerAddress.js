@@ -78,7 +78,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData }) => {
       />
       {/* <CardLabel>{t("PT_OWNER_S_ADDRESS")}</CardLabel> */}
       <CheckBox
-        label={t("PT_COMMON_SAME_AS_PROPERTY_ADDRESS")}
+        label={t("TL_COMMON_SAME_AS_TRADE_ADDRESS")}
         onChange={setCorrespondenceAddress}
         value={isCorrespondenceAddress}
         checked={isCorrespondenceAddress || false}

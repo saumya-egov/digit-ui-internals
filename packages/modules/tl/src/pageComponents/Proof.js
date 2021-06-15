@@ -4,12 +4,12 @@ import { stringReplaceAll } from "../utils";
 
 const Proof = ({ t, config, onSelect, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
-  const [uploadedFile, setUploadedFile] = useState(formData?.address?.documents?.OwnerPhotoProof?.fileStoreId || null);
-  const [file, setFile] = useState(formData?.address?.documents?.OwnerPhotoProof);
+  const [uploadedFile, setUploadedFile] = useState(formData?.owners?.documents?.OwnerPhotoProof?.fileStoreId || null);
+  const [file, setFile] = useState(formData?.owners?.documents?.OwnerPhotoProof);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
 
-  const [dropdownValue, setDropdownValue] = useState(formData?.address?.documents?.OwnerPhotoProof?.documentType || null);
+  const [dropdownValue, setDropdownValue] = useState(formData?.owners?.documents?.OwnerPhotoProof?.documentType || null);
   let dropdownData = [];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
@@ -32,14 +32,14 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
     let fileDetails = file;
     if (fileDetails) fileDetails.documentType = dropdownValue;
     if (fileDetails) fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
-    let address = formData?.address;
-    if (address && address.documents) {
-      address.documents["OwnerPhotoProof"] = fileDetails;
+    let owners = formData?.owners;
+    if (owners && owners.documents) {
+      owners.documents["OwnerPhotoProof"] = fileDetails;
     } else {
-      address["documents"] = [];
-      address.documents["OwnerPhotoProof"] = fileDetails;
+      owners["documents"] = [];
+      owners.documents["OwnerPhotoProof"] = fileDetails;
     }
-    onSelect(config.key, address);
+    onSelect(config.key, owners);
     // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
   };
   const onSkip = () => onSelect();
@@ -83,7 +83,7 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
         selected={dropdownValue}
         optionKey="i18nKey"
         select={setTypeOfDropdownValue}
-        placeholder={t(`PT_MUTATION_SELECT_DOC_LABEL`)}
+        //placeholder={t(`PT_MUTATION_SELECT_DOC_LABEL`)}
       />
       <UploadFile
         extraStyleName={"propertyCreate"}

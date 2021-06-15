@@ -21,9 +21,11 @@ const Download = {
     const element = ReactDOM.findDOMNode(node.current);
     html2canvas(element, {
       scrollY: -window.scrollY,
+      scrollX: 0,
       useCORS: true,
+      scale: 1.5,
     }).then((canvas) => {
-      saveAs(canvas.toDataURL("image/jpeg", 0.5), `${fileName}.jpeg`);
+      saveAs(canvas.toDataURL("image/jpeg", 1), `${fileName}.jpeg`);
     });
   },
 
@@ -34,21 +36,36 @@ const Download = {
       const o = width > height ? "l" : "p";
       const format = "a4";
 
-      return new jsPDF(o, "mm", format, true);
+      return new jsPDF(o, "mm", format);
     };
 
     const element = ReactDOM.findDOMNode(node.current);
     html2canvas(element, {
       scrollY: -window.scrollY,
+      scrollX: 0,
       useCORS: true,
-      scale: 2,
+      scale: 1.5,
+      windowWidth: document.documentElement.offsetWidth,
+      windowHeight: document.documentElement.offsetHeight,
     }).then((canvas) => {
       const pdf = getPDF(canvas);
-      const pngImage = canvas.toDataURL("image/png", 0.5);
-      // console.log("pngImage", pngImage, canvas.width, canvas.height)
-      const imageWidth = canvas.width > canvas.height ? 297 : 210;
-      const imageHeight = canvas.width < canvas.height ? 297 : 210;
-      pdf.addImage(pngImage, "PNG", 0, 0, imageWidth, imageHeight, "", "FAST");
+      const pngImage = canvas.toDataURL("image/jpeg");
+      const imgProps = pdf.getImageProperties(pngImage);
+      const margin = 0.1;
+      const pageHeight = 295;
+      const pdfWidth = pdf.internal.pageSize.width * (1 - margin);
+      const x = pdf.internal.pageSize.width * (margin / 2);
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      let position = 10;
+      let heightLeft = pdfHeight;
+      pdf.addImage(pngImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
+      heightLeft -= pageHeight;
+      while (heightLeft > 0) {
+        position += heightLeft - pdfHeight;
+        pdf.addPage();
+        pdf.addImage(pngImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
+        heightLeft -= pageHeight;
+      }
       pdf.save(`${fileName}.pdf`);
     });
   },

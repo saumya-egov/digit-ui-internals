@@ -52,38 +52,42 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters, showDateRange = true, sh
           </span>
         </div>
       )}
-      {showDateRange && <div className="filters-input">
-        <DateRange onFilterChange={handleFilterChange} values={value?.range} t={t} />
-      </div>
-      }
-      {showDDR && <div className="filters-input">
-        <div>{t("ES_DSS_DDR")}</div>
-        <MultiSelectDropdown
-          options={ulbTenants}
-          optionsKey="ddrKey"
-          onSelect={selectFilters}
-          selected={selected}
-          defaultLabel={t("ES_DSS_ALL_DDR_SELECTED")}
-          defaultUnit={t("ES_DSS_DDR_SELECTED")}
-        />
-      </div>
-      }
-      {showUlb && <div className="filters-input">
-        <div>{t("ES_DSS_ULB")}</div>
-        <MultiSelectDropdown
-          options={ulbTenants}
-          optionsKey="ulbKey"
-          onSelect={selectFilters}
-          selected={selected}
-          defaultLabel={t("ES_DSS_ALL_ULB_SELECTED")}
-          defaultUnit={t("ES_DSS_ULB_SELECTED")}
-        />
-      </div>
-      }
-      {showDenomination && <div className="filters-input" style={{ flexBasis: "16%" }}>
-        <Switch onSelect={handleFilterChange} t={t} />
-      </div>
-      }
+      {showDateRange && (
+        <div className="filters-input">
+          <DateRange onFilterChange={handleFilterChange} values={value?.range} t={t} />
+        </div>
+      )}
+      {showDDR && (
+        <div className="filters-input">
+          <div>{t("ES_DSS_DDR")}</div>
+          <MultiSelectDropdown
+            options={ulbTenants}
+            optionsKey="ddrKey"
+            onSelect={selectFilters}
+            selected={selected}
+            defaultLabel={t("ES_DSS_ALL_DDR_SELECTED")}
+            defaultUnit={t("ES_DSS_DDR_SELECTED")}
+          />
+        </div>
+      )}
+      {showUlb && (
+        <div className="filters-input">
+          <div>{t("ES_DSS_ULB")}</div>
+          <MultiSelectDropdown
+            options={ulbTenants}
+            optionsKey="ulbKey"
+            onSelect={selectFilters}
+            selected={selected}
+            defaultLabel={t("ES_DSS_ALL_ULB_SELECTED")}
+            defaultUnit={t("ES_DSS_ULB_SELECTED")}
+          />
+        </div>
+      )}
+      {showDenomination && (
+        <div className="filters-input" style={{ flexBasis: "16%" }}>
+          <Switch onSelect={handleFilterChange} t={t} />
+        </div>
+      )}
     </div>
   );
 };

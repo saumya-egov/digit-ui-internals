@@ -140,7 +140,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
     return menu;
   };
 
-  console.log(usageCategoryMajorMenu(usagecat), subUsageCategoryMenu(usagecat), getfloorlistdata(floorlist), "options inside units");
+  // console.log(usageCategoryMajorMenu(usagecat), subUsageCategoryMenu(usagecat), getfloorlistdata(floorlist), "options inside units");
 
   function goNext() {
     let unitsData = units?.map((unit) => ({

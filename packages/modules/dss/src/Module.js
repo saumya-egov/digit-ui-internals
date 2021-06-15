@@ -25,8 +25,8 @@ const DssBreadCrumb = ({ location }) => {
     {
       path: "/digit-ui/employee/dss/drilldown",
       content: t("ES_COMMON_DSS_DRILL"),
-      show: location.pathname.includes('drilldown') ? true : false,
-    }
+      show: location.pathname.includes("drilldown") ? true : false,
+    },
   ];
 
   return <BreadCrumb crumbs={crumbs} />;

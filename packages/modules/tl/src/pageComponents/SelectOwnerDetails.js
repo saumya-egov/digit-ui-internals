@@ -8,7 +8,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   const [isPrimaryOwner, setisPrimaryOwner] = useState(false);
   const [gender, setGender] = useState(formData?.owners?.gender);
   const [mobileNumber, setMobileNumber] = useState(formData?.owners?.mobileNumber || "");
-  const [fields, setFeilds] = useState([{ name: "", gender: "", mobilenumber: null, isprimaryowner: false }]);
+  const [fields, setFeilds] = useState(
+    (formData?.owners && formData?.owners?.owners) || [{ name: "", gender: "", mobilenumber: null, isprimaryowner: false }]
+  );
   let ismultiple = formData?.ownershipCategory?.code.includes("SINGLEOWNER") ? false : true;
 
   const isUpdateProperty = formData?.isUpdateProperty || false;
@@ -61,6 +63,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     { name: "Female", value: "FEMALE", code: "FEMALE" },
     { name: "Male", value: "MALE", code: "MALE" },
     { name: "Transgender", value: "TRANSGENDER", code: "TRANSGENDER" },
+    { name: "OTHERS", value: "OTHERS", code: "OTHERS" },
     // { name: "Other", value: "OTHER", code: "OTHER" },
   ];
 
@@ -70,7 +73,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
         return (
           <div key={`${field}-${index}`}>
             {ismultiple && <hr color="#d6d5d4" className="break-line"></hr>}
-            <CardLabel>{`${t("TL_COMMON_TABLE_COL_OWN_NAME")}`}</CardLabel>
+            <CardLabel>{`${t("TL_NEW_OWNER_DETAILS_NAME_LABEL")}`}</CardLabel>
             <TextInput
               t={t}
               type={"text"}
@@ -97,7 +100,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               selectedOption={field.gender}
               onSelect={(e) => setGenderName(index, e)}
               isDependent={true}
-              labelKey="PT_COMMON_GENDER"
+              labelKey="TL_GENDER"
               disabled={isUpdateProperty || isEditProperty}
             />
             <CardLabel>{`${t("TL_MOBILE_NUMBER_LABEL")}`}</CardLabel>

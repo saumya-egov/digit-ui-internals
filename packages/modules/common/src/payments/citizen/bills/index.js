@@ -1,3 +1,4 @@
+import { Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useParams, useHistory, useRouteMatch, useLocation } from "react-router-dom";
 import Routes from "./routes";
@@ -43,6 +44,10 @@ export const MyBills = ({ stateCode }) => {
   };
 
   const getProps = () => ({ billsList, paymentRules: getPaymentRestrictionDetails(), businessService });
+
+  if (mdmsLoading) {
+    return <Loader />;
+  }
 
   return (
     <React.Fragment>
