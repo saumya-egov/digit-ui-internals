@@ -21,7 +21,8 @@ const Details = () => {
   const history = useHistory();
   const [displayMenu, setDisplayMenu] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch({ codes: employeeId }, tenantId);
+  const isupdate = Digit.SessionStorage.get("isupdate");
+  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch({ codes: employeeId }, tenantId, null, isupdate);
 
   function onActionSelect(action) {
     setSelectedAction(action);
