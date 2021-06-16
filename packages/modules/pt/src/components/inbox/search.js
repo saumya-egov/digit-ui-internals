@@ -10,7 +10,7 @@ const fieldComponents = {
   mobileNumber: MobileNumber,
 };
 
-const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams, isInboxPage, defaultSearchParams }) => {
+const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams, isInboxPage, defaultSearchParams, clearSearch: _clearSearch }) => {
   const { t } = useTranslation();
   const { register, handleSubmit, reset, watch, control, setError, clearErrors, formState } = useForm({
     defaultValues: searchParams,
@@ -69,13 +69,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
   function clearSearch() {
     const resetValues = searchFields.reduce((acc, field) => ({ ...acc, [field?.name]: "" }), {});
     reset(resetValues);
-    const _newParams = { ...searchParams };
-    _newParams.delete = [];
-    searchFields.forEach((e) => {
-      _newParams.delete.push(e?.name);
-    });
-
-    onSearch({ ..._newParams });
+    _clearSearch();
   }
 
   const clearAll = (mobileView) => {
@@ -135,15 +129,18 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                     ) : null}
                   </div>
                 ))}
-              {type === "desktop" && !mobileView && !isInboxPage && <SubmitBar className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />}
+              {type === "desktop" && !mobileView && !isInboxPage && (
+                <div>
+                  <SubmitBar className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />
+                  <div style={{ width: "100%", textAlign: "right" }}>
+                    <span style={{ paddingTop: "16px", textAlign: "center" }} className="clear-search">
+                      {clearAll()}
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
-            {type === "desktop" && !mobileView && !isInboxPage && (
-              <div style={{ width: "100%", textAlign: "right" }}>
-                <span style={{ paddingRight: "60px" }} className="clear-search">
-                  {clearAll()}
-                </span>
-              </div>
-            )}
+
             {isInboxPage && (
               <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
                 {type === "desktop" && !mobileView && (
