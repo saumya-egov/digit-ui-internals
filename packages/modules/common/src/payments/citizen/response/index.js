@@ -35,7 +35,7 @@ export const SuccessfulPayment = (props) => {
     {
       tenantId,
       businessService: business_service,
-      receiptNumbers: data?.payments?.paymentDetails[0].receiptNumber,
+      receiptNumbers: data?.payments?.Payments[0].paymentDetails[0].receiptNumber,
       // receiptNumbers: "PT/107/2021-22/224890",
       // receiptNumbers: "PT/107/2021-22/224891",
     },
