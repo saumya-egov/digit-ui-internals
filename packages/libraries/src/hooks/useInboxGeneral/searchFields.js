@@ -18,7 +18,7 @@ const inboxSearchFields = {
       maxLength: 10,
       minLength: 10,
       roles: [],
-      pattern: "[6-9][0-9]{9}",
+      pattern: "^$|[6-9][0-9]{9}",
       errorMessages: {
         pattern: "",
         minLength: "",
@@ -48,7 +48,7 @@ const searchFieldsForSearch = {
       maxLength: 10,
       minLength: 10,
       roles: [],
-      pattern: "[6-9][0-9]{9}",
+      pattern: "^$|[6-9][0-9]{9}",
       errorMessages: {
         pattern: "",
         minLength: "",
