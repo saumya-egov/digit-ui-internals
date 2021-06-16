@@ -140,7 +140,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
     return menu;
   };
 
-  console.log(usageCategoryMajorMenu(usagecat), subUsageCategoryMenu(usagecat), getfloorlistdata(floorlist), "options inside units");
+  // console.log(usageCategoryMajorMenu(usagecat), subUsageCategoryMenu(usagecat), getfloorlistdata(floorlist), "options inside units");
 
   function goNext() {
     let unitsData = units?.map((unit) => ({
@@ -221,7 +221,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
           {...{ formState, setError, clearErrors, usageCategoryMajorMenu, subUsageCategoryMenu }}
         />
       ))}
-      <LinkButton label="Add Unit" onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
+      <LinkButton label="Add Unit" onClick={handleAddUnit} style={{ color: "orange", width: "fit-content" }}></LinkButton>
     </div>
   );
 };

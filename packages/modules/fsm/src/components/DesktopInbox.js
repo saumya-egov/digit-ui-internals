@@ -102,7 +102,7 @@ const DesktopInbox = (props) => {
           },
           {
             Header: t("ES_INBOX_VEHICLE_NO"),
-            accessor: (row) => row.vehicle.registrationNumber,
+            accessor: (row) => row.vehicle?.registrationNumber,
           },
           {
             Header: t("ES_INBOX_DSO_NAME"),

@@ -12,7 +12,11 @@ import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
 const PropertyUsageType = ({ t, config, onSelect, userType, formData, formState, setError, clearErrors, onBlur }) => {
-  const [usageCategoryMajor, setPropertyPurpose] = useState(formData?.usageCategoryMajor);
+  const [usageCategoryMajor, setPropertyPurpose] = useState(
+    formData?.usageCategoryMajor && formData?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS"
+      ? { code: `${formData?.usageCategoryMajor?.code}`, i18nKey: `PROPERTYTAX_BILLING_SLAB_OTHERS` }
+      : formData?.usageCategoryMajor
+  );
   //   const { data: Menu, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "OccupancyType");
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -124,7 +128,7 @@ const PropertyUsageType = ({ t, config, onSelect, userType, formData, formState,
   return (
     <React.Fragment>
       <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!usageCategoryMajor}>
-        <div >
+        <div>
           <RadioButtons
             t={t}
             optionsKey="i18nKey"

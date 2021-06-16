@@ -69,7 +69,7 @@ const UploadFile = (props) => {
       <div>
         <ButtonSelector
           theme="border"
-          label="Choose File"
+          label={t("CS_COMMON_CHOOSE_FILE")}
           style={{ ...(extraStyles ? extraStyles?.buttonStyles : {}), ...(props.disabled ? { display: "none" } : {}) }}
           textStyles={props?.textStyles}
         />
@@ -88,7 +88,7 @@ const UploadFile = (props) => {
               </div>
             ) : (
               <h2 className="file-upload-status" style={{ marginTop: "18px" }}>
-                {t(`PT_ACTION_NO_FILEUPLOADED`)}
+                {t(`CS_ACTION_NO_FILEUPLOADED`)}
               </h2>
             )}
           </div>

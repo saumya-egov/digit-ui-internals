@@ -97,16 +97,29 @@ export const StoreService = {
     });
 
     initData.modules.push({
+      module: "HRMS",
+      code: "HRMS",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
+
+    initData.modules.push({
+      module: "TL",
+      code: "TL",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
+
+    initData.modules.push({
       module: "DSS",
       code: "DSS",
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
     });
+    console.log(stateCode);
 
     await LocalizationService.getLocale({
       modules: [
         `rainmaker-common`,
         `rainmaker-${stateCode.toLowerCase()}`,
-        ...initData.tenants.map((tenant) => `rainmaker-${tenant.code.toLowerCase()}`),
+        // ...initData.tenants.map((tenant) => `rainmaker-${tenant.code.toLowerCase()}`),
       ],
       locale: initData.selectedLanguage,
       tenantId: stateCode,
@@ -120,6 +133,7 @@ export const StoreService = {
     return initData;
   },
   defaultData: async (stateCode, moduleCode, language) => {
+    console.log(moduleCode, stateCode);
     const LocalePromise = LocalizationService.getLocale({
       modules: [`rainmaker-${moduleCode.toLowerCase()}`],
       locale: language,

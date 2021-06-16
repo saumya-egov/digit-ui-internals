@@ -101,7 +101,7 @@ const PropertyInformation = () => {
   return (
     <React.Fragment>
       <Header>{t("PT_PROPERTY_INFORMATION")}</Header>
-      <div >
+      <div>
         <Card>
           <StatusTable>
             <Row label={t("PT_PROPERTY_PTUID")} text={`${property.propertyId || "NA"}`} textStyle={{ whiteSpace: "pre" }} />
@@ -229,7 +229,7 @@ const PropertyInformation = () => {
           </div>
           <div>
             {property?.status === "ACTIVE" && (
-              <div style={{ marginTop: "24px", position: "fixed", bottom: "0px", width: "100%", marginLeft: "-6%" }}>
+              <div style={{ marginTop: "1em", bottom: "0px", width: "100%", marginBottom: "1.2em" }}>
                 <Link to={{ pathname: `/digit-ui/citizen/pt/property/edit-application/action=UPDATE/${property.propertyId}` }}>
                   <SubmitBar label={t("PT_UPDATE_PROPERTY_BUTTON")} />
                 </Link>

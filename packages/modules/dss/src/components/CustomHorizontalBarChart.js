@@ -2,7 +2,7 @@ import React, { useContext, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime } from "date-fns";
 import { Loader, ResponseComposer } from "@egovernments/digit-ui-react-components";
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis, Text } from "recharts";
 import FilterContext from "./FilterContext";
 import { useHistory } from "react-router-dom";
 
@@ -78,10 +78,11 @@ const CustomHorizontalBarChart = ({
   return (
     <Fragment>
       <ResponsiveContainer width="99%" height={300}>
-        {chartData?.length === 0 ? 
+        {chartData?.length === 0 ? (
           <div className="no-data">
-            <p>{t('DSS_NO_DATA')}</p>
-          </div> :
+            <p>{t("DSS_NO_DATA")}</p>
+          </div>
+        ) : (
           <BarChart width="100%" height="100%" layout={layout} data={chartData} barGap={14} barSize={15}>
             <CartesianGrid />
             <YAxis
@@ -97,7 +98,7 @@ const CustomHorizontalBarChart = ({
                 fill: "#505A5F",
               }}
               unit={id === "fsmCapacityUtilization" ? "%" : ""}
-              tick={{ fontSize: "14px", fill: "#505A5F" }}
+              // tick={{ fontSize: "14px", fill: "#505A5F" }}
             />
             <XAxis dataKey={xDataKey} type={xAxisType} tick={{ fontSize: "14px", fill: "#505A5F" }} />
             {bars?.map((bar, id) => (
@@ -106,7 +107,7 @@ const CustomHorizontalBarChart = ({
             <Legend formatter={renderLegend} iconType="circle" />
             <Tooltip cursor={false} formatter={tooltipFormatter} />
           </BarChart>
-        }
+        )}
       </ResponsiveContainer>
       {showDrillDown && (
         <p style={{ textAlign: "right", color: "#F47738" }} onClick={goToDrillDownCharts}>

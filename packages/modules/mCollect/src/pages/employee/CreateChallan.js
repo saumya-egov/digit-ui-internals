@@ -151,20 +151,20 @@ const CreateChallen = ({ ChallanData }) => {
   useEffect(() => {
     if (isEdit && ChallanData[0] && fetchBillData && !fromDate && !toDate) {
       let fromdate = ChallanData[0]
-      ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString() +
-      "-" +
-      (new Date(ChallanData[0].taxPeriodFrom).getMonth()+1) +
-      "-" +
-      new Date(ChallanData[0].taxPeriodFrom).getDate()
-      : null;
+        ? new Date(ChallanData[0].taxPeriodFrom).getFullYear().toString() +
+          "-" +
+          (new Date(ChallanData[0].taxPeriodFrom).getMonth() + 1) +
+          "-" +
+          new Date(ChallanData[0].taxPeriodFrom).getDate()
+        : null;
       ChallanData[0] && setFromDate(fromdate);
       let todate = ChallanData[0]
-      ? new Date(ChallanData[0].taxPeriodTo).getFullYear().toString() +
-      "-" +
-      (new Date(ChallanData[0].taxPeriodTo).getMonth()+1) +
-      "-" +
-      new Date(ChallanData[0].taxPeriodTo).getDate()
-      : null;
+        ? new Date(ChallanData[0].taxPeriodTo).getFullYear().toString() +
+          "-" +
+          (new Date(ChallanData[0].taxPeriodTo).getMonth() + 1) +
+          "-" +
+          new Date(ChallanData[0].taxPeriodTo).getDate()
+        : null;
       ChallanData[0] && setToDate(todate);
     }
   });
@@ -185,7 +185,7 @@ const CreateChallen = ({ ChallanData }) => {
   useEffect(() => {
     setTaxHeadMasterFields(
       TaxHeadMaster.filter((ele) => {
-      let  temp = selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_","")
+        let temp = selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_", "");
         return (
           selectedCategoryType &&
           selectedCategoryType.code.split(temp + "_")[1] &&
@@ -201,10 +201,12 @@ const CreateChallen = ({ ChallanData }) => {
 
   useEffect(() => {
     Digit.MDMSService.getPaymentRules(tenantId, "[?(@.type=='Adhoc')]").then((value) => {
-
-      setAPIcategories((func.setServiceCategory(value.MdmsRes.BillingService.BusinessService).map(ele=>{ele.code="BILLINGSERVICE_BUSINESSSERVICE_"+((ele.code).toUpperCase())
-      return ele
-    })));
+      setAPIcategories(
+        func.setServiceCategory(value.MdmsRes.BillingService.BusinessService).map((ele) => {
+          ele.code = "BILLINGSERVICE_BUSINESSSERVICE_" + ele.code.toUpperCase();
+          return ele;
+        })
+      );
       setAPITaxHeadMaster(value.MdmsRes.BillingService.TaxHeadMaster);
     });
   }, [tenantId]);
@@ -240,13 +242,13 @@ const CreateChallen = ({ ChallanData }) => {
     });
     let Challan = {};
     if (!isEdit) {
-      let temp=selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_", "")
+      let temp = selectedCategory.code.replace("BILLINGSERVICE_BUSINESSSERVICE_", "");
       Challan = {
         citizen: {
           name: data.name,
           mobileNumber: data.mobileNumber,
         },
-        businessService: selectedCategoryType ? temp + "." + humanized(selectedCategoryType.code,temp) : "",
+        businessService: selectedCategoryType ? temp + "." + humanized(selectedCategoryType.code, temp) : "",
         consumerType: temp,
         description: data.comments,
         taxPeriodFrom: Date.parse(fromDate),
@@ -544,4 +546,3 @@ const CreateChallen = ({ ChallanData }) => {
   );
 };
 export default CreateChallen;
-

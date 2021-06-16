@@ -49,9 +49,7 @@ const DrillDown = () => {
   };
 
   if (isUlbLoading) {
-    return (
-      <Loader />
-    );
+    return <Loader />;
   }
 
   return (
@@ -59,28 +57,20 @@ const DrillDown = () => {
       <Header>{t(title)}</Header>
       <Filters t={t} ulbTenants={ulbTenants} showDenomination={false} showDDR={false} />
       {filters?.filters?.tenantId.length > 0 && (
-          <div className="tag-container">
-            {filters?.filters?.tenantId?.map((filter, id) => (
-              <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
-            ))}
-            <p className="clearText" onClick={handleClear}>
-              {t(`DSS_FILTER_CLEAR`)}
-            </p>
-          </div>
-        )}
-      <GenericChart header={""}
-        showDownload={true}
-        showSearch={true}
-        className={"fullWidth"}
-        onChange={(e) => onSearch(e.target.value)}
-      >
-        <CustomTable
-          data={{ id: chart }}
-          onSearch={searchQuery}
-        />
+        <div className="tag-container">
+          {filters?.filters?.tenantId?.map((filter, id) => (
+            <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+          ))}
+          <p className="clearText" onClick={handleClear}>
+            {t(`DSS_FILTER_CLEAR`)}
+          </p>
+        </div>
+      )}
+      <GenericChart header={""} showDownload={true} showSearch={true} className={"fullWidth"} onChange={(e) => onSearch(e.target.value)}>
+        <CustomTable data={{ id: chart }} onSearch={searchQuery} />
       </GenericChart>
     </FilterContext.Provider>
   );
-}
+};
 
 export default DrillDown;

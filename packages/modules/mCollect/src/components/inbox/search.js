@@ -72,9 +72,13 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                     <Label>{input.label}</Label>
                     {input.type !== "date" ? (
                       <div className="field-container">
-                      {input?.componentInFront ? <span className="citizen-card-input citizen-card-input--front" style={{flex: "none"}}>{input?.componentInFront}</span> : null}
-                      <TextInput {...input} inputRef={register} watch={watch} shouldUpdate={true} />
-                    </div>
+                        {input?.componentInFront ? (
+                          <span className="citizen-card-input citizen-card-input--front" style={{ flex: "none" }}>
+                            {input?.componentInFront}
+                          </span>
+                        ) : null}
+                        <TextInput {...input} inputRef={register} watch={watch} shouldUpdate={true} />
+                      </div>
                     ) : (
                       <Controller
                         render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
@@ -87,7 +91,11 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 ))}
               {type === "desktop" && !mobileView && <SubmitBar className="submit-bar-search" label={t("UC_SEARCH_LABEL")} submit />}
             </div>
-            {type === "desktop" && !mobileView && <span style={{display: "flex", justifyContent: "flex-end"}}className="clear-search">{clearAll()}</span>}
+            {type === "desktop" && !mobileView && (
+              <span style={{ display: "flex", justifyContent: "flex-end" }} className="clear-search">
+                {clearAll()}
+              </span>
+            )}
           </div>
         </div>
         {(type === "mobile" || mobileView) && (

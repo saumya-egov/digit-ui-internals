@@ -60,6 +60,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     { name: "Female", value: "FEMALE", code: "FEMALE" },
     { name: "Male", value: "MALE", code: "MALE" },
     { name: "Transgender", value: "TRANSGENDER", code: "TRANSGENDER" },
+    { name: "OTHERS", value: "OTHERS", code: "OTHERS" },
     // { name: "Other", value: "OTHER", code: "OTHER" },
   ];
 
@@ -191,7 +192,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       t={t}
       isDisabled={!name || !mobileNumber || !gender || !relationship || !fatherOrHusbandName}
     >
-      <div >
+      <div>
         <CardLabel>{`${t("PT_OWNER_NAME")}`}</CardLabel>
         <TextInput
           t={t}
