@@ -23,8 +23,11 @@ const CloseBtn = (props) => {
 };
 
 const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction, actionData, applicationData, businessService }) => {
-  const { data: fieldInspectorData } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_FIELD_INSPECTOR" }], isActive: true });
-  const { data: approverData } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_APPROVER" }], isActive: true });
+  const { data: fieldInspectorData, isLoading: PTFILoading } = Digit.Hooks.useEmployeeSearch(tenantId, {
+    roles: [{ code: "PT_FIELD_INSPECTOR" }],
+    isActive: true,
+  });
+  const { data: approverData, isLoading: PTALoading } = Digit.Hooks.useEmployeeSearch(tenantId, { roles: [{ code: "PT_APPROVER" }], isActive: true });
   const { isLoading: financialYearsLoading, data: financialYearsData } = Digit.Hooks.pt.useMDMS(
     tenantId,
     businessService,
@@ -204,6 +207,7 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
           onSubmit={submit}
           defaultValues={defaultValues}
           formId="modal-action"
+          isDisabled={PTALoading || PTFILoading}
         />
       )}
     </Modal>

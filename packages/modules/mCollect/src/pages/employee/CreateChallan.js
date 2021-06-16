@@ -546,4 +546,3 @@ const CreateChallen = ({ ChallanData }) => {
   );
 };
 export default CreateChallen;
-

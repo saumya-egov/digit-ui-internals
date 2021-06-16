@@ -83,7 +83,7 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
         selected={dropdownValue}
         optionKey="i18nKey"
         select={setTypeOfDropdownValue}
-        placeholder={t(`PT_MUTATION_SELECT_DOC_LABEL`)}
+        //placeholder={t(`PT_MUTATION_SELECT_DOC_LABEL`)}
       />
       <UploadFile
         extraStyleName={"propertyCreate"}

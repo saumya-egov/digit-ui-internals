@@ -9,7 +9,9 @@ const SelectTradeUnits = ({ t, config, onSelect, userType, formData }) => {
   const [TradeSubType, setTradeSubType] = useState(formData?.TadeDetails?.Units?.TradeSubType || "");
   const [UnitOfMeasure, setUnitOfMeasure] = useState(formData?.TadeDetails?.Units?.UnitOfMeasure || "");
   const [UomValue, setUomValue] = useState(formData?.TadeDetails?.Units?.UomValue || "");
-  const [fields, setFeilds] = useState([{ tradecategory: "", tradetype: "", tradesubtype: "", unit: null, uom: null }]);
+  const [fields, setFeilds] = useState(
+    (formData?.TradeDetails && formData?.TradeDetails?.units) || [{ tradecategory: "", tradetype: "", tradesubtype: "", unit: null, uom: null }]
+  );
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];

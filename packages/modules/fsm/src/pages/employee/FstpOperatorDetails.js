@@ -88,7 +88,7 @@ const FstpOperatorDetails = () => {
     const d = new Date();
     const timeStamp = Date.parse(new Date(d.toString().split(":")[0].slice(0, -2) + tripTime)) / 1000;
     const tripStartTimestamp = Date.parse(new Date(d.toString().split(":")[0].slice(0, -2) + tripStartTime)) / 1000;
-    vehicle.tripStartTime = tripStartTimestamp
+    vehicle.tripStartTime = tripStartTimestamp;
     vehicle.fstpEntryTime = tripStartTimestamp;
     vehicle.tripEndTime = timeStamp;
     vehicle.fstpExitTime = timeStamp;
