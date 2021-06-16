@@ -11,6 +11,7 @@ import {
   useFetchBillsForBuissnessService,
   useGetPaymentRulesForBusinessServices,
   useDemandSearch,
+  useRecieptSearch,
 } from "./payment";
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
@@ -169,6 +170,7 @@ const Hooks = {
   useCommonMDMS,
   useApplicationStatusGeneral,
   useModuleTenants,
+  useRecieptSearch,
   pgr,
   fsm,
   pt,

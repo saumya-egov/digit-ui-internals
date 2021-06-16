@@ -102,3 +102,14 @@ export const useDemandSearch = ({ consumerCode, businessService, tenantId }, con
   const queryData = useQuery(["demand_search", { consumerCode, businessService, tenantId }], queryFn, { refetchOnMount: "always", ...config });
   return queryData;
 };
+
+export const useRecieptSearch = ({ tenantId, businessService, ...params }, config = {}) => {
+  return useQuery(
+    ["reciept_search", { tenantId, businessService, params }],
+    () => Digit.PaymentService.recieptSearch(tenantId, businessService, params),
+    {
+      refetchOnMount: false,
+      ...config,
+    }
+  );
+};
