@@ -2,6 +2,10 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { SubmitBar, ActionBar, Menu } from "@egovernments/digit-ui-react-components";
 
+const buisnessServiceMap = {
+  PT: ["WF_EMPLOYEE_PT.CREATE", "WF_TAKE_ACTION"],
+};
+
 function ApplicationDetailsActionBar({ workflowDetails, displayMenu, onActionSelect, setDisplayMenu, businessService }) {
   const { t } = useTranslation();
   return (
@@ -10,13 +14,13 @@ function ApplicationDetailsActionBar({ workflowDetails, displayMenu, onActionSel
         <ActionBar>
           {displayMenu && workflowDetails?.data?.nextActions ? (
             <Menu
-              localeKeyPrefix={businessService === "PT" ? "WF_EMPLOYEE_PT.CREATE" : "ES_FSM"}
+              localeKeyPrefix={buisnessServiceMap?.[businessService]?.[0] || "ES_FSM"}
               options={workflowDetails?.data?.nextActions.map((action) => action.action)}
               t={t}
               onSelect={onActionSelect}
             />
           ) : null}
-          <SubmitBar label={t(businessService === "PT" ? "WF_TAKE_ACTION" : "ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+          <SubmitBar label={t(buisnessServiceMap?.[businessService]?.[1] || "ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>
       )}
     </React.Fragment>

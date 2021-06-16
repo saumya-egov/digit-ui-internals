@@ -16,9 +16,9 @@ const inboxSearchFields = {
       name: "mobileNumber",
       type: "mobileNumber",
       maxLength: 10,
-      minLength: 10,
+      minLength: 0,
       roles: [],
-      pattern: "[6-9][0-9]{9}",
+      pattern: "^$|[6-9][0-9]{9}",
       errorMessages: {
         pattern: "",
         minLength: "",
@@ -46,9 +46,9 @@ const searchFieldsForSearch = {
       name: "mobileNumber",
       type: "mobileNumber",
       maxLength: 10,
-      minLength: 10,
+      minLength: 0,
       roles: [],
-      pattern: "[6-9][0-9]{9}",
+      pattern: "^$|[6-9][0-9]{9}",
       errorMessages: {
         pattern: "",
         minLength: "",

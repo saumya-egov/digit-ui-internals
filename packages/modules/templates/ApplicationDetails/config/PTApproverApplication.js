@@ -21,7 +21,7 @@ export const configPTApproverApplication = ({
       {
         body: [
           {
-            label: t("ES_PT_FIELD_INSPECTORS"),
+            label: t("ES_PT_APPROVERS"),
             isMandatory: true,
             type: "dropdown",
             populators: (
