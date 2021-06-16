@@ -103,4 +103,13 @@ export const PaymentService = {
       userService: true,
       params: { tenantId, consumerCode, businessService },
     }),
+
+  recieptSearch: (tenantId, businessService, params) =>
+    Request({
+      url: Urls.payment.reciept_search,
+      urlParams: { buisnessService: businessService },
+      method: "POST",
+      auth: false,
+      params: { tenantId, ...params },
+    }),
 };
