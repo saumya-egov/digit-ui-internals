@@ -119,7 +119,7 @@ export const PTLinks = ({ matchPath, userType }) => {
 
   const links = [
     {
-      link: `${matchPath}/property/search`,
+      link: `${matchPath}/property/citizen-search`,
       i18nKey: t("PT_SEARCH_AND_PAY"),
     },
     {
