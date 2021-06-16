@@ -8,7 +8,7 @@ const inboxSearchFields = {
     {
       label: "ES_SEARCH_UNIQUE_PROPERTY_ID",
       name: "propertyIds",
-      minLength: "10",
+      // minLength: "10",
       roles: [],
     },
     {

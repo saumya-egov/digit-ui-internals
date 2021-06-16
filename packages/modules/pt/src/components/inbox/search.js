@@ -69,7 +69,16 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
   function clearSearch() {
     const resetValues = searchFields.reduce((acc, field) => ({ ...acc, [field?.name]: "" }), {});
     reset(resetValues);
-    _clearSearch();
+    if (isInboxPage) {
+      const _newParams = { ...searchParams };
+      _newParams.delete = [];
+      searchFields.forEach((e) => {
+        _newParams.delete.push(e?.name);
+      });
+      onSearch({ ..._newParams });
+    } else {
+      _clearSearch();
+    }
   }
 
   const clearAll = (mobileView) => {
