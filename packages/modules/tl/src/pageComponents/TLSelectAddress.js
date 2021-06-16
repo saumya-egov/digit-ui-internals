@@ -158,7 +158,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   }
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
-      <CardLabel>{`${t("MYCITY_CODE_LABEL")} `}</CardLabel>
+      <CardLabel>{`${t("MYCITY_CODE_LABEL")}*`}</CardLabel>
       <span className={"form-pt-dropdown-only"}>
         <RadioOrSelect
           options={cities.sort((a, b) => a.name.localeCompare(b.name))}
@@ -171,7 +171,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
           disabled={isEditProperty}
         />
       </span>
-      {selectedCity && localities && <CardLabel>{`${t("PT_LOCALITY_LABEL")} `}</CardLabel>}
+      {selectedCity && localities && <CardLabel>{`${t("TL_LOCALIZATION_LOCALITY")} `}</CardLabel>}
       {selectedCity && localities && (
         <span className={"form-pt-dropdown-only"}>
           <RadioOrSelect
