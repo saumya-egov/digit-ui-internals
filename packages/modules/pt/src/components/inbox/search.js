@@ -22,7 +22,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
 
   useEffect(() => {
     // setError("mobileNumber", { type: "maxLength", message: "new" });
-    console.log(formState?.dirtyFields, "inside form");
+    console.log(formState.errors, "inside form");
   }, [formState, form]);
 
   useEffect(() => {
@@ -132,7 +132,10 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                       )}
                     </span>
                     {formState?.dirtyFields?.[input.name] ? (
-                      <span style={{ fontWeight: "700", color: "rgba(212, 53, 28)", paddingLeft: "8px" }} className="inbox-search-form-error">
+                      <span
+                        style={{ fontWeight: "700", color: "rgba(212, 53, 28)", paddingLeft: "8px", marginTop: "-20px", fontSize: "12px" }}
+                        className="inbox-search-form-error"
+                      >
                         {formState?.errors?.[input.name]?.message}
                       </span>
                     ) : null}
@@ -158,7 +161,13 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                   </span>
                 )}
                 {type === "desktop" && !mobileView && (
-                  <SubmitBar style={{ marginTop: "unset" }} className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />
+                  <SubmitBar
+                    disabled={!!Object.keys(formState.errors).length}
+                    style={{ marginTop: "unset" }}
+                    className="submit-bar-search"
+                    label={t("ES_COMMON_SEARCH")}
+                    submit
+                  />
                 )}
               </div>
             )}
@@ -169,7 +178,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
             <button className="clear-search" style={{ flex: 1 }}>
               {clearAll(mobileView)}
             </button>
-            <SubmitBar label={t("ES_COMMON_SEARCH")} style={{ flex: 1 }} submit={true} />
+            <SubmitBar disabled={!!Object.keys(formState.errors).length} label={t("ES_COMMON_SEARCH")} style={{ flex: 1 }} submit={true} />
           </ActionBar>
         )}
       </React.Fragment>

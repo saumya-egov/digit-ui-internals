@@ -51,6 +51,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
         alignmentBaseline="middle"
         className="recharts-pie-label-text"
         fontSize="14px"
+        textAnchor="end"
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>

@@ -292,7 +292,9 @@ function SelectDocument({
             }}
             message={uploadedFile ? `1 ${t(`CS_ACTION_FILEUPLOADED`)}` : t(`CS_ACTION_NO_FILEUPLOADED`)}
             textStyles={{ width: "100%" }}
+            inputStyles={{ width: "280px" }}
             disabled={enabledActions?.[action].disableUpload || !selectedDocument?.code}
+            buttonType="button"
           />
         </div>
       </LabelFieldPair>
