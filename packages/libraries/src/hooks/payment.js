@@ -40,7 +40,7 @@ export const useFetchBillsForBuissnessService = ({ tenantId, businessService, ..
   const _tenantId = tenantId || Digit.UserService.getUser()?.info?.tenantId;
 
   const { isLoading, error, isError, data, status } = useQuery(
-    ["billsForBuisnessService", businessService, { ...filters }],
+    ["billsForBuisnessService", businessService, { ...filters }, config],
     () => Digit.PaymentService.fetchBill(_tenantId, params),
     {
       retry: (count, err) => {
