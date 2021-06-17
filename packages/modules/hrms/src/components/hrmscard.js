@@ -16,10 +16,6 @@ const HRMSCard = () => {
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
   const total = 1;
 
-  if (!Digit.Utils.hrmsAccess()) {
-    return null;
-  }
-
   return (
     <div className="employeeCard card-home-hrms" style={{ display: "inline-block" }}>
       <div className="complaint-links-container">
