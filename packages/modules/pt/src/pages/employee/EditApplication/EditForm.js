@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { FormComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,13 @@ const EditForm = ({ applicationData }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
+  const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_MUTATION_HAPPENED", false);
+  const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_MUTATION_SUCCESS_DATA", {});
+
+  useEffect(() => {
+    setMutationHappened(false);
+    clearSuccessData();
+  }, []);
 
   const defaultValues = {
     originalData: applicationData,
@@ -148,7 +155,7 @@ const EditForm = ({ applicationData }) => {
 
   return (
     <FormComposer
-      heading={t("PT_APPLICATION_SUMMARY")}
+      heading={t("PT_UPDATE_PROPERTY")}
       isDisabled={!canSubmit}
       label={t("ES_COMMON_APPLICATION_SUBMIT")}
       config={configs.map((config) => {
