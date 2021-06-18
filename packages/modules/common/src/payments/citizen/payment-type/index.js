@@ -16,7 +16,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useParams, useHistory, useLocation, Redirect } from "react-router-dom";
 
 export const SelectPaymentType = (props) => {
-  const { state } = useLocation();
+  const { state = {} } = useLocation();
   const userInfo = Digit.UserService.getUser();
 
   const { tenantId: __tenantId, authorization } = Digit.Hooks.useQueryParams();

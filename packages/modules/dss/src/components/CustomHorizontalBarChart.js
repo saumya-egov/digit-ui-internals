@@ -65,6 +65,13 @@ const CustomHorizontalBarChart = ({
 
   const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{value}</span>;
 
+  const tickFormatter = (value) => {
+    if (typeof value === "string") {
+      return value.replace("-", ", ");
+    }
+    return value;
+  }
+
   if (isLoading) {
     return <Loader />;
   }
@@ -99,7 +106,7 @@ const CustomHorizontalBarChart = ({
               unit={id === "fsmCapacityUtilization" ? "%" : ""}
               // tick={{ fontSize: "14px", fill: "#505A5F" }}
             />
-            <XAxis dataKey={xDataKey} type={xAxisType} tick={{ fontSize: "14px", fill: "#505A5F" }} />
+            <XAxis dataKey={xDataKey} type={xAxisType} tick={{ fontSize: "14px", fill: "#505A5F" }} tickFormatter={tickFormatter} />
             {bars?.map((bar, id) => (
               <Bar key={id} dataKey={bar} fill={barColors[id]} stackId={id > 1 ? 1 : id} />
             ))}
