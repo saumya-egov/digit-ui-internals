@@ -79,7 +79,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
           arv,
         };
       });
-      setUnits(defaultUnits);
+      setUnits(defaultUnits || []);
       setLoader(false);
     }
   }, [isLoading]);
@@ -221,7 +221,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
           {...{ formState, setError, clearErrors, usageCategoryMajorMenu, subUsageCategoryMenu }}
         />
       ))}
-      <LinkButton label="Add Unit" onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
+      <LinkButton label={t("PT_ADD_UNIT")} onClick={handleAddUnit} style={{ color: "orange", width: "75px" }}></LinkButton>
       {formState.errors?.[config.key]?.type === "units_missing" ? (
         <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
           {`${formState.errors?.[config.key].message.split(".")[0]} -
