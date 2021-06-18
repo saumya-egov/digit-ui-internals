@@ -1,6 +1,16 @@
 import React, { useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import {
+  Header,
+  Loader,
+  ShareIcon,
+  DownloadIcon,
+  FilterIcon,
+  RemoveableTag,
+  MultiLink,
+  EmailIcon,
+  WhatsappIcon,
+} from "@egovernments/digit-ui-react-components";
 import { startOfYear, endOfYear, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
@@ -42,29 +52,6 @@ const DashBoard = ({ stateCode }) => {
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
   const [showOptions, setShowOptions] = useState(false);
 
-  const shareOptions =
-    Digit.Utils.browser.isWebview() || window.Digit.Utils.browser.isMobile()
-      ? [
-          {
-            label: t("ES_DSS_SHARE_PDF"),
-            onClick: sharePDF,
-          },
-          {
-            label: t("ES_DSS_SHARE_IMAGE"),
-            onClick: shareImage,
-          },
-        ]
-      : [
-          {
-            label: t("ES_DSS_SHARE_PDF"),
-            onClick: sharePDF("mail"),
-          },
-          {
-            label: t("ES_DSS_SHARE_IMAGE"),
-            onClick: shareImage("whatsapp"),
-          },
-        ];
-
   const fullPageRef = useRef();
   const provided = useMemo(
     () => ({
@@ -84,11 +71,64 @@ const DashBoard = ({ stateCode }) => {
     setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
   };
 
+  const dashboardConfig = response?.responseData;
+
+  const shareOptions = navigator.share
+    ? [
+        {
+          label: t("ES_DSS_SHARE_PDF"),
+          onClick: async () => {
+            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          label: t("ES_DSS_SHARE_IMAGE"),
+          onClick: async () => {
+            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            setShowOptions(!showOptions);
+          },
+        },
+      ]
+    : [
+        {
+          icon: <EmailIcon />,
+          label: t("ES_DSS_SHARE_PDF"),
+          onClick: async () => {
+            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          icon: <WhatsappIcon />,
+          label: t("ES_DSS_SHARE_PDF"),
+          onClick: async () => {
+            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          icon: <EmailIcon />,
+          label: t("ES_DSS_SHARE_IMAGE"),
+          onClick: async () => {
+            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          icon: <WhatsappIcon />,
+          label: t("ES_DSS_SHARE_IMAGE"),
+          onClick: async () => {
+            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            setShowOptions(!showOptions);
+          },
+        },
+      ];
+
   if (isLoading || isUlbLoading || localizationLoading) {
     return <Loader />;
   }
 
-  const dashboardConfig = response?.responseData;
   return (
     <FilterContext.Provider value={provided}>
       <div ref={fullPageRef}>
@@ -97,6 +137,7 @@ const DashBoard = ({ stateCode }) => {
           <div>
             <div className="mrlg">
               <MultiLink
+                className="multilink-block-wrapper"
                 label={t(`ES_DSS_SHARE`)}
                 onHeadClick={() => setShowOptions(!showOptions)}
                 displayOptions={showOptions}
@@ -125,7 +166,13 @@ const DashBoard = ({ stateCode }) => {
             <FilterIcon onClick={() => setIsFilterModalOpen(!isFilterModalOpen)} style />
           </div>
           <div>
-            <ShareIcon />
+            <MultiLink
+              className="multilink-block-wrapper"
+              label={t(`ES_DSS_SHARE`)}
+              onHeadClick={() => setShowOptions(!showOptions)}
+              displayOptions={showOptions}
+              options={shareOptions}
+            />
             {t(`ES_DSS_SHARE`)}
           </div>
           <div>

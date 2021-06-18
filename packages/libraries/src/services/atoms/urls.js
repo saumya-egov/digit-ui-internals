@@ -26,6 +26,8 @@ const Urls = {
 
   UserSearch: "/user/_search",
 
+  Shortener: "/egov-url-shortening/shortener",
+
   fsm: {
     search: "/fsm/v1/_search",
     create: "/fsm/v1/_create",

@@ -24,6 +24,7 @@ import { PTService } from "./services/elements/PT";
 import { TLService } from "./services/elements/TL";
 import { MCollectService } from "./services/elements/MCollect";
 
+import ShareFiles from "./services/molecules/ShareFiles";
 import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
 import { ULBService } from "./services/molecules/Ulb";
 import { FileDesludging } from "./services/molecules/FSM/FileDesludging";
@@ -70,6 +71,7 @@ const initLibraries = () => {
   setupLibraries("FileDesludging", FileDesludging);
   setupLibraries("ComponentRegistryService", ComponentRegistryService);
 
+  setupLibraries("ShareFiles", ShareFiles);
   setupLibraries("Contexts", Contexts);
   setupLibraries("Hooks", Hooks);
   setupLibraries("Customizations", {});
