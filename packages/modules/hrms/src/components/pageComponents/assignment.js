@@ -128,7 +128,6 @@ function Assignment({
     }
   };
   const onIsHODchange = (value) => {
-    console.log(value);
     setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, isHOD: value } : item)));
   };
   return (
@@ -191,7 +190,6 @@ function Assignment({
               min={assignment?.fromDate}
               disabled={assignment?.isCurrentAssignment}
               onChange={(e) => {
-                console.log(e);
                 setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, toDate: e } : item)));
                 setFocusIndex(index);
               }}

@@ -10,7 +10,13 @@ const ArrowRight = ({ to }) => (
 );
 
 const HRMSCard = () => {
+  const ADMIN = Digit.Utils.hrmsAccess();
+
+  if (!ADMIN) {
+    return null;
+  }
   const tenantId = Digit.ULBService.getCurrentTenantId();
+
   const { t } = useTranslation();
   // TODO: should be fetch
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
