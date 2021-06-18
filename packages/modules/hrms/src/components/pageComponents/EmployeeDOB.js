@@ -1,6 +1,7 @@
 import React from "react";
 import { LabelFieldPair, CardLabel, TextInput, CardLabelError, DatePicker } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
+import { convertEpochToDate } from "../Utils/index";
 
 const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
@@ -21,7 +22,6 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
   function setValue(value, input) {
     onSelect(config.key, { ...formData[config.key], [input]: value });
   }
-
   return (
     <div>
       {inputs?.map((input, index) => (
@@ -38,6 +38,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
                 date={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e, input.name)}
                 disable={false}
+                max={convertEpochToDate(new Date().toJSON().slice(0, 10).replace(/-/g, "/"))}
                 defaultValue={undefined}
                 {...input.validation}
               />

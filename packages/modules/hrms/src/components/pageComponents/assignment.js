@@ -83,6 +83,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
           t={t}
           key={index}
           keys={index.key}
+          formData={formData}
           assignment={assignment}
           setassignments={setassignments}
           index={index}
@@ -107,6 +108,7 @@ function Assignment({
   setFocusIndex,
   getdepartmentdata,
   department,
+  formData,
   designation,
   getdesignationdata,
 }) {
@@ -126,7 +128,6 @@ function Assignment({
     }
   };
   const onIsHODchange = (value) => {
-    console.log(value);
     setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, isHOD: value } : item)));
   };
   return (
@@ -167,6 +168,7 @@ function Assignment({
             <DatePicker
               type="date"
               name="fromDate"
+              min={formData?.SelectDateofEmployment?.dateOfAppointment}
               onChange={(e) => {
                 setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, fromDate: e } : item)));
                 setFocusIndex(index);
@@ -185,6 +187,7 @@ function Assignment({
             <DatePicker
               type="date"
               name="toDate"
+              min={assignment?.fromDate}
               disabled={assignment?.isCurrentAssignment}
               onChange={(e) => {
                 setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, toDate: e } : item)));

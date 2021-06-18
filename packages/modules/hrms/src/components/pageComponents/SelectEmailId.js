@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
-  const isEdit = window.location.pathname.includes("/edit/");
+
   // console.log("find errors here", errors)
   const inputs = [
     {
@@ -36,7 +36,7 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
                 key={input.name}
                 value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e.target.value, input.name)}
-                disable={isEdit}
+                disable={false}
                 defaultValue={undefined}
                 {...input.validation}
               />

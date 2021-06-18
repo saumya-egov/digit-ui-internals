@@ -85,10 +85,11 @@ const CustomHorizontalBarChart = ({
   return (
     <Fragment>
       <ResponsiveContainer width="99%" height={300}>
-        {chartData?.length === 0 ? 
+        {chartData?.length === 0 ? (
           <div className="no-data">
-            <p>{t('DSS_NO_DATA')}</p>
-          </div> :
+            <p>{t("DSS_NO_DATA")}</p>
+          </div>
+        ) : (
           <BarChart width="100%" height="100%" layout={layout} data={chartData} barGap={14} barSize={15}>
             <CartesianGrid />
             <YAxis
@@ -113,7 +114,7 @@ const CustomHorizontalBarChart = ({
             <Legend formatter={renderLegend} iconType="circle" />
             <Tooltip cursor={false} formatter={tooltipFormatter} />
           </BarChart>
-        }
+        )}
       </ResponsiveContainer>
       {showDrillDown && (
         <p style={{ textAlign: "right", color: "#F47738" }} onClick={goToDrillDownCharts}>
