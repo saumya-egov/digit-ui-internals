@@ -85,11 +85,10 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
   const renderLegend = (value) => <span>{value}</span>;
 
   const tickFormatter = (value) => {
-    if (value && value !== "auto") {
-      const [month, year] = value.split("-");
-      return format(Date.parse(`${month} 1, ${year}`), "MMM, yy");
+    if (typeof value === "string") {
+      return value.replace("-", ", ");
     }
-    return "";
+    return value;
   };
 
   const renderTooltip = ({ payload, label, unit }) => {
