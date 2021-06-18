@@ -85,7 +85,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
           onClick={handleDownloadPdf}
           className="w-full"
         />)}*/}
-      <StatusTable>
+      {/* <StatusTable>
         {mutation.isSuccess && (
           <Row
             rowContainerStyle={rowContainerStyle}
@@ -95,7 +95,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
             textStyle={{ whiteSpace: "pre", width: "60%" }}
           />
         )}
-      </StatusTable>
+      </StatusTable> */}
       {mutation.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
 
       <Link to={`/digit-ui/citizen`}>
