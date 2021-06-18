@@ -10,15 +10,18 @@ const ArrowRight = ({ to }) => (
 );
 
 const HRMSCard = () => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
   const ADMIN = Digit.Utils.hrmsAccess();
+
+  if (!ADMIN) {
+    return null;
+  }
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
   const { t } = useTranslation();
   // TODO: should be fetch
   const { isLoading: hookLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
   const total = 1;
-  if (!ADMIN) {
-    return null;
-  }
+
   return (
     <div className="employeeCard card-home-hrms" style={{ display: "inline-block" }}>
       <div className="complaint-links-container">
