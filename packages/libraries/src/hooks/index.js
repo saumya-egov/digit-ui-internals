@@ -84,6 +84,8 @@ import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
 import useTLDocumentSearch from "./tl/useTLDocumentSearch";
 import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
+import useTLSearchApplication from "./tl/useTLsearchApplication";
+import useTLPaymentHistory from "./tl/userPaymentHistory";
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
@@ -173,6 +175,8 @@ const tl = {
   useTradeLicenseMDMS,
   useTLDocumentSearch,
   useTradeLicenseAPI,
+  useTLSearchApplication,
+  useTLPaymentHistory,
 };
 
 const Hooks = {

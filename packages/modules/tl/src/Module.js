@@ -24,6 +24,7 @@ import SelectAccessoriesDetails from "./pageComponents/SelectAccessoriesDetails"
 import CheckPage from "./pages/citizen/Create/CheckPage";
 import TLDocument from "./pageComponents/TLDocumets";
 import TLAcknowledgement from "./pages/citizen/Create/TLAcknowledgement";
+import MyApplications from "./pages/citizen/Applications/Application";
 
 import CitizenApp from "./pages/citizen";
 
@@ -56,6 +57,10 @@ export const TLLinks = ({ matchPath, userType }) => {
       link: `${matchPath}/tradelicence/new-application`,
       i18nKey: t("TL_CREATE_TRADE"),
     },
+    {
+      link: `${matchPath}/tradelicence/my-application`,
+      i18nKey: t("TL_MY_APPLICATIONS_HEADER"),
+    },
   ];
 
   return <CitizenHomeCard header={t("ACTION_TEST_TRADE_LICENSE")} links={links} Icon={RupeeIcon} />;
@@ -85,6 +90,7 @@ const componentsToRegister = {
   CheckPage,
   TLDocument,
   TLAcknowledgement,
+  MyApplications,
 };
 
 export const initTLComponents = () => {
