@@ -90,7 +90,7 @@ const CustomTable = ({ data, onSearch }) => {
             );
           }
           const filter = response?.responseData?.filter.find((elem) => elem.column === column.id);
-          if (filter !== undefined) {
+          if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
             return (
               <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value, filter?.key)}>
                 {t(value)}

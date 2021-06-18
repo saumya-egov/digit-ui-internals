@@ -29,8 +29,9 @@ const EditForm = ({ tenantId, data }) => {
     },
 
     SelectDateofBirthEmployment: { dob: convertEpochToDate(data?.user?.dob) },
-    Jurisdictions: data?.jurisdictions.map((ele) => {
+    Jurisdictions: data?.jurisdictions.map((ele, index) => {
       return Object.assign({}, ele, {
+        key: index,
         hierarchy: {
           code: ele.hierarchy,
           name: ele.hierarchy,
@@ -40,8 +41,9 @@ const EditForm = ({ tenantId, data }) => {
         roles: data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
-    Assignments: data?.assignments.map((ele) => {
+    Assignments: data?.assignments.map((ele, index) => {
       return Object.assign({}, ele, {
+        key: index,
         fromDate: convertEpochToDate(ele.fromDate),
         toDate: convertEpochToDate(ele.toDate),
         designation: {
@@ -98,7 +100,6 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onSubmit = (input) => {
-    console.log(Date.parse(input?.SelectDateofEmployment?.dateOfAppointment));
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles;
     });

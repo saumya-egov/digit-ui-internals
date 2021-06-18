@@ -1,11 +1,12 @@
 import React from "react";
 import { UploadFile, Dropdown } from "@egovernments/digit-ui-react-components";
+import { convertEpochToDate } from "../Utils/index";
 
 export const configEmployeeActiveApplication = ({ t, action, selectFile, uploadedFile, setUploadedFile, selectedReason, Reasons, selectReason }) => {
   return {
     label: {
       heading: `HR_ACTIVATE_EMPLOYEE_HEAD`,
-      submit: `HR_ACTIVATE_EMPLOYEE_LABEL`,
+      submit: `HR_ACTIVATE_EMPLOYEE_HEAD`,
     },
     form: [
       {
@@ -32,6 +33,7 @@ export const configEmployeeActiveApplication = ({ t, action, selectFile, uploade
             populators: {
               error: t("HR_EFFECTIVE_DATE_INVALID"),
               name: "effectiveFrom",
+              max: convertEpochToDate(new Date().toJSON().slice(0, 10).replace(/-/g, "/")),
             },
           },
           {

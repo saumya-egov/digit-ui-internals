@@ -37,6 +37,7 @@ export const Request = async ({
   useCache = false,
   params = {},
   auth,
+  urlParams = {},
   userService,
   reciept = false,
   authHeader = false,
@@ -87,9 +88,17 @@ export const Request = async ({
     params._ = Date.now();
   }
 
+  let _url = url
+    .split("/")
+    .map((path) => {
+      let key = path.split(":")?.[1];
+      return urlParams[key] ? urlParams[key] : path;
+    })
+    .join("/");
+
   const res = userDownload
-    ? await Axios({ method, url, data, params, headers, responseType: "arraybuffer" })
-    : await Axios({ method, url, data, params, headers });
+    ? await Axios({ method, url: _url, data, params, headers, responseType: "arraybuffer" })
+    : await Axios({ method, url: _url, data, params, headers });
 
   if (userDownload) return res;
 

@@ -194,6 +194,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
       actionCancelOnSubmit={closeModal}
       actionSaveLabel={t(config.label.submit)}
       actionSaveOnSubmit={() => {}}
+      isDisabled={
+        PTALoading || PTFILoading || (action === "VERIFY" && !selectedFieldInspector?.uuid) || (action === "FORWARD" && !selectedApprover?.uuid)
+      }
       formId="modal-action"
     >
       {financialYearsLoading ? (
@@ -207,7 +210,9 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
           onSubmit={submit}
           defaultValues={defaultValues}
           formId="modal-action"
-          isDisabled={PTALoading || PTFILoading}
+          isDisabled={
+            PTALoading || PTFILoading || (action === "VERIFY" && !selectedFieldInspector?.uuid) || (action === "FORWARD" && !selectedApprover?.uuid)
+          }
         />
       )}
     </Modal>
