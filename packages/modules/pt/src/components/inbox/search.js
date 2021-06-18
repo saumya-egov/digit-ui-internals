@@ -143,7 +143,12 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 ))}
               {type === "desktop" && !mobileView && !isInboxPage && (
                 <div>
-                  <SubmitBar className="submit-bar-search" label={t("ES_COMMON_SEARCH")} submit />
+                  <SubmitBar
+                    className="submit-bar-search"
+                    label={t("ES_COMMON_SEARCH")}
+                    disabled={!!Object.keys(formState.errors).length || Object.keys(form).every((key) => !form?.[key])}
+                    submit
+                  />
                   <div style={{ width: "100%", textAlign: "right" }}>
                     <span style={{ paddingTop: "16px", textAlign: "center" }} className="clear-search">
                       {clearAll()}
