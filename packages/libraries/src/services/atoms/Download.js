@@ -3,7 +3,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 
 const Download = {
-  Image: (node, fileName) => {
+  Image: (node, fileName, share, resolve = null) => {
     const saveAs = (uri, filename) => {
       const link = document.createElement("a");
 
@@ -25,11 +25,13 @@ const Download = {
       useCORS: true,
       scale: 1.5,
     }).then((canvas) => {
-      saveAs(canvas.toDataURL("image/jpeg", 1), `${fileName}.jpeg`);
+      return share
+        ? canvas.toBlob((blob) => resolve(new File([blob], `${fileName}.jpeg`, { type: "image/jpeg" })), "image/jpeg", 1)
+        : saveAs(canvas.toDataURL("image/jpeg", 1), `${fileName}.jpeg`);
     });
   },
 
-  PDF: (node, fileName) => {
+  PDF: (node, fileName, share) => {
     const getPDF = (canvas) => {
       const width = canvas.width;
       const height = canvas.height;
@@ -40,7 +42,7 @@ const Download = {
     };
 
     const element = ReactDOM.findDOMNode(node.current);
-    html2canvas(element, {
+    return html2canvas(element, {
       scrollY: -window.scrollY,
       scrollX: 0,
       useCORS: true,
@@ -66,7 +68,7 @@ const Download = {
         pdf.addImage(pngImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
         heightLeft -= pageHeight;
       }
-      pdf.save(`${fileName}.pdf`);
+      return share ? new File([pdf.output("blob")], `${fileName}.pdf`, { type: "application/pdf" }) : pdf.save(`${fileName}.pdf`);
     });
   },
 };
