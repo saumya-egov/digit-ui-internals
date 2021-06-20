@@ -56,7 +56,7 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
       <div>
         <CardLabel>{t("MYCITY_CODE_LABEL")}</CardLabel>
         {cities?.length < 5 ? (
-          <RadioButtons selectedOption={selectedCity} options={cities} optionsKey="name" onSelect={selectCity} />
+          <RadioButtons selectedOption={selectedCity} options={cities} optionsKey="i18nKey" onSelect={selectCity} />
         ) : (
           <Dropdown isMandatory selected={selectedCity} option={cities} select={selectCity} optionKey="i18nKey" t={t} />
         )}
@@ -64,7 +64,7 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
         {selectedCity && localities && (
           <React.Fragment>
             {localities?.length < 5 ? (
-              <RadioButtons selectedOption={selectedLocality} options={localities} optionsKey="name" onSelect={selectLocality} />
+              <RadioButtons selectedOption={selectedLocality} options={localities} optionsKey="i18nkey" onSelect={selectLocality} />
             ) : (
               <Dropdown isMandatory selected={selectedLocality} optionKey="i18nkey" option={localities} select={selectLocality} t={t} />
             )}
