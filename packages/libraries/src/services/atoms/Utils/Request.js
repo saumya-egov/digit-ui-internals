@@ -62,7 +62,7 @@ export const Request = async ({
       data.RequestInfo = { ...data.RequestInfo, ...userServiceData() };
     }
     if (reciept) {
-      data.RequestInfo = { ...data.RequestInfo, msgId: `string|${Digit.SessionStorage.get("locale") || `en_IN`}` };
+      data.RequestInfo = { ...data.RequestInfo, msgId: `string|${Digit.StoreData.getCurrentLanguage()}` };
     }
   }
 

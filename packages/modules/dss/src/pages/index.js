@@ -44,7 +44,7 @@ const DashBoard = ({ stateCode }) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const { moduleCode } = useParams();
 
-  const language = Digit.SessionStorage.get("locale") || "en_IN";
+  const language = Digit.StoreData.getCurrentLanguage();
 
   const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");

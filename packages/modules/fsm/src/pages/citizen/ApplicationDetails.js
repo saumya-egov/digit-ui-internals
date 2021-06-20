@@ -24,7 +24,8 @@ const ApplicationDetails = () => {
 
   const { data: paymentsHistory } = Digit.Hooks.fsm.usePaymentHistory(tenantId, id);
 
-  const coreData = Digit.Hooks.useCoreData();
+  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const { tenants } = storeData || {};
 
   const [showOptions, setShowOptions] = useState(false);
 
@@ -40,9 +41,8 @@ const ApplicationDetails = () => {
     history.goBack();
   }
 
-  const tenantInfo = coreData.tenants.find((tenant) => tenant.code === application?.tenantId);
-
   const handleDownloadPdf = async () => {
+    const tenantInfo = tenants.find((tenant) => tenant.code === application?.tenantId);
     const data = getPDFData({ ...application?.pdfData }, tenantInfo, t);
     Digit.Utils.pdf.generate(data);
     setShowOptions(false);
