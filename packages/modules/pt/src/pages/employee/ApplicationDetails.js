@@ -10,6 +10,8 @@ const ApplicationDetails = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id: applicationNumber } = useParams();
   const [showToast, setShowToast] = useState(null);
+  // const [callUpdateService, setCallUpdateValve] = useState(false);
+  const [businessService, setBusinessService] = useState("PT.CREATE");
 
   const { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
 
@@ -24,36 +26,48 @@ const ApplicationDetails = () => {
   let workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
     id: applicationDetails?.applicationData?.acknowldgementNumber,
-    moduleCode: "PT",
+    moduleCode: businessService,
     role: "PT_CEMP",
-    // serviceData: applicationDetails,
   });
 
   const closeToast = () => {
     setShowToast(null);
   };
 
+  useEffect(() => {
+    if (workflowDetails?.data?.applicationBusinessService) {
+      setBusinessService(workflowDetails?.data?.applicationBusinessService);
+    }
+  }, [workflowDetails.data]);
+
   const PT_CEMP = Digit.UserService.hasAccess(["PT_CEMP"]) || false;
 
   if (applicationDetails?.applicationData?.status === "ACTIVE" && PT_CEMP) {
+    if (businessService != "PT.UPDATE") setBusinessService("PT.UPDATE");
     workflowDetails = {
       ...workflowDetails,
       data: {
         ...workflowDetails?.data,
-        nextActions: [
-          {
-            action: "VIEW_DETAILS",
-            auditDetails: null,
-            roles: ["PT_CEMP"],
-            tenantId: "pb",
-          },
-          {
-            action: "UPDATE",
-            auditDetails: null,
-            roles: ["PT_CEMP"],
-            tenantId: "pb",
-          },
-        ],
+        actionState: {
+          nextActions: [
+            // {
+            //   action: "ASSESS_PROPERTY",
+            //   redirectionUrl: {
+            //     pathname: `/digit-ui/employee/pt/modify-application/${applicationNumber}`,
+            //     state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+            //   },
+            //   tenantId: "pb",
+            // },
+            {
+              action: "UPDATE",
+              redirectionUrl: {
+                pathname: `/digit-ui/employee/pt/modify-application/${applicationNumber}`,
+                state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+              },
+              tenantId: "pb",
+            },
+          ],
+        },
       },
     };
   }
@@ -67,6 +81,10 @@ const ApplicationDetails = () => {
     });
   }
 
+  console.log(workflowDetails?.data, "inside workflowdetails");
+
+  applicationDetails?.applicationData?.units?.sort((a, b) => b.floorNo - a.floorNo);
+
   return (
     <div>
       <Header>{t("PT_APPLICATION_TITLE")}</Header>
@@ -77,10 +95,12 @@ const ApplicationDetails = () => {
         applicationData={applicationDetails?.applicationData}
         mutate={mutate}
         workflowDetails={workflowDetails}
-        businessService="PT"
+        businessService={businessService}
+        moduleCode="PT"
         showToast={showToast}
         setShowToast={setShowToast}
         closeToast={closeToast}
+        timelineStatusPrefix={"ES_PT_COMMON_STATUS_"}
       />
     </div>
   );

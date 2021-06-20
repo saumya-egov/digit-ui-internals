@@ -20,7 +20,7 @@ import PropertyFloors from "./PropertyFloors";
 import PropertyEstimates from "./PropertyEstimates";
 import PropertyOwners from "./PropertyOwners";
 
-function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService }) {
+function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService, timelineStatusPrefix }) {
   const { t } = useTranslation();
 
   const getTimelineCaptions = (checkpoint) => {
@@ -119,7 +119,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
           {workflowDetails?.data?.timeline && workflowDetails?.data?.timeline?.length === 1 ? (
             <CheckPoint
               isCompleted={true}
-              label={t(`${businessService === "PT" ? "ES_PT_COMMON_STATUS_" : "CS_COMMON_"}${workflowDetails?.data?.timeline[0]?.state}`)}
+              label={t(`${timelineStatusPrefix}${workflowDetails?.data?.timeline[0]?.state}`)}
               customChild={getTimelineCaptions(workflowDetails?.data?.timeline[0])}
             />
           ) : (
@@ -131,7 +131,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
                       <CheckPoint
                         keyValue={index}
                         isCompleted={index === 0}
-                        label={t(`${businessService === "PT" ? "ES_PT_COMMON_STATUS_" : "CS_COMMON_FSM_"}${checkpoint.state}`)}
+                        label={t(`${timelineStatusPrefix}${checkpoint.state}`)}
                         customChild={getTimelineCaptions(checkpoint)}
                       />
                     </React.Fragment>

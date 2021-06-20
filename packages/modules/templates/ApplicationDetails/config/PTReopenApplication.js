@@ -1,39 +1,37 @@
 import React from "react";
 import { Dropdown, UploadFile } from "@egovernments/digit-ui-react-components";
 
-export const configPTApproverApplication = ({
+export const configPTDocVerifierApplication = ({
   t,
   action,
-  approvers,
-  selectedApprover,
-  setSelectedApprover,
+  docVerifiers,
+  selectedDocVerifier,
+  setSelectedDocVerifier,
   selectFile,
   uploadedFile,
   setUploadedFile,
-  assigneeLabel,
-  businessService,
 }) => {
   return {
     label: {
-      heading: `WF_${action?.action}_APPLICATION`,
-      submit: `WF_${businessService}_${action?.action}`,
+      heading: `WF_${action}_APPLICATION`,
+      submit: `WF_PT.CREATE_${action}`,
       cancel: "ES_PT_COMMON_CANCEL",
     },
     form: [
       {
         body: [
           {
-            label: action.isTerminateState ? null : t(assigneeLabel || `WF_ROLE_${action.assigneeRoles?.[0]}`),
-            isMandatory: !action.isTerminateState,
+            label: t("ES_PT_DOC_VERIFIERS"),
+            isMandatory: true,
             type: "dropdown",
-            populators: action.isTerminateState ? null : (
+            populators: (
               <Dropdown
-                option={approvers}
+                option={docVerifiers}
                 autoComplete="off"
                 optionKey="name"
                 id="fieldInspector"
-                select={setSelectedApprover}
-                selected={selectedApprover}
+                select={setSelectedDocVerifier}
+                selected={selectedDocVerifier}
               />
             ),
           },
@@ -45,8 +43,8 @@ export const configPTApproverApplication = ({
             },
           },
           {
-            label: action.docUploadRequired ? t("ES_PT_UPLOAD_FILE") : null,
-            populators: action.docUploadRequired ? (
+            label: t("ES_PT_UPLOAD_FILE"),
+            populators: (
               <UploadFile
                 // accept=".jpg"
                 onUpload={selectFile}
@@ -55,7 +53,7 @@ export const configPTApproverApplication = ({
                 }}
                 message={uploadedFile ? `1 ${t(`ES_PT_ACTION_FILEUPLOADED`)}` : t(`ES_PT_ACTION_NO_FILEUPLOADED`)}
               />
-            ) : null,
+            ),
           },
         ],
       },

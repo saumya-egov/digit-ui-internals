@@ -96,23 +96,29 @@ export const StoreService = {
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
     });
 
-    initData.modules.push({
-      module: "HRMS",
-      code: "HRMS",
-      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
-    });
+    // initData.modules.push({
+    //   module: "TL",
+    //   code: "TL",
+    //   tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    // });
 
-    initData.modules.push({
-      module: "TL",
-      code: "TL",
-      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
-    });
+    // initData.modules.push({
+    //   module: "HRMS",
+    //   code: "HRMS",
+    //   tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    // });
 
-    initData.modules.push({
-      module: "DSS",
-      code: "DSS",
-      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
-    });
+    // initData.modules.push({
+    //   module: "TL",
+    //   code: "TL",
+    //   tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    // });
+
+    // initData.modules.push({
+    //   module: "DSS",
+    //   code: "DSS",
+    //   tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    // });
     console.log(stateCode);
 
     await LocalizationService.getLocale({
