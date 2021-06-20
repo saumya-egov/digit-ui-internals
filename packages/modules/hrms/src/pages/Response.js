@@ -35,7 +35,6 @@ const Response = (props) => {
   const { state } = props.location;
 
   const mutation = state.key === "UPDATE" ? Digit.Hooks.hrms.useHRMSUpdate(tenantId) : Digit.Hooks.hrms.useHRMSCreate(tenantId);
-  const coreData = Digit.Hooks.useCoreData();
 
   useEffect(() => {
     const onSuccess = () => {

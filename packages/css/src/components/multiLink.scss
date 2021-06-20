@@ -1,6 +1,6 @@
 .multilink-labelWrap{
     top: 73px;
-    @apply flex items-center align-middle text-center m-md absolute right-0
+    @apply flex items-center align-middle text-center m-md absolute right-0 z-10;
 }
 
 .multilink-link-button{
@@ -58,6 +58,7 @@
 
     .multilink-labelWrap{
         right: 20%;
+        top: 80px;
     }
 
     .multilink-optionWrap{

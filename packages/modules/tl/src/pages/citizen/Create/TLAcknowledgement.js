@@ -39,7 +39,6 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
     data?.address?.city ? data.address?.city?.code : tenantId,
     !window.location.href.includes("edit-application")
   );
-  const coreData = Digit.Hooks.useCoreData();
 
   useEffect(() => {
     try {
@@ -58,7 +57,6 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
   const handleDownloadPdf = async () => {
     // const { Properties = [] } = mutation.data;
     // const Property = (Properties && Properties[0]) || {};
-    // const tenantInfo = coreData.tenants.find((tenant) => tenant.code === Property.tenantId);
     // const data = await getPTAcknowledgementData({ ...Property }, tenantInfo, t);
     // Digit.Utils.pdf.generate(data);
   };

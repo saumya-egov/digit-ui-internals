@@ -51,7 +51,8 @@ const Response = (props) => {
 
   const mutation = Digit.Hooks.pt.usePropertyAPI(tenantId, state.key !== "UPDATE");
 
-  const coreData = Digit.Hooks.useCoreData();
+  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const { tenants } = storeData || {};
 
   useEffect(() => {
     if (mutation.data) setsuccessData(mutation.data);
@@ -87,7 +88,7 @@ const Response = (props) => {
   const handleDownloadPdf = async () => {
     const { Properties = [] } = mutation.data || successData;
     const Property = (Properties && Properties[0]) || {};
-    const tenantInfo = coreData.tenants.find((tenant) => tenant.code === Property.tenantId);
+    const tenantInfo = tenants.find((tenant) => tenant.code === Property.tenantId);
     const data = await getPTAcknowledgementData({ ...Property }, tenantInfo, t);
     Digit.Utils.pdf.generate(data);
   };
