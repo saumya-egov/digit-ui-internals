@@ -24,6 +24,8 @@ const CreateEmployee = () => {
           setPhonecheck(true);
         }
       });
+    } else {
+      setPhonecheck(false);
     }
   }, [mobileNumber]);
 

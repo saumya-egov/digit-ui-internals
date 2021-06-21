@@ -27,14 +27,14 @@ export const newConfig = [
       },
       {
         type: "component",
-        component: "SelectDateofBirthEmployment",
-        key: "SelectDateofBirthEmployment",
+        component: "SelectEmployeeGender",
+        key: "SelectEmployeeGender",
         withoutLabel: true,
       },
       {
         type: "component",
-        component: "SelectEmployeeGender",
-        key: "SelectEmployeeGender",
+        component: "SelectDateofBirthEmployment",
+        key: "SelectDateofBirthEmployment",
         withoutLabel: true,
       },
       {
@@ -56,11 +56,10 @@ export const newConfig = [
     body: [
       {
         type: "component",
-        component: "SelectEmployeeId",
-        key: "SelectEmployeeId",
+        component: "SelectEmployeeType",
+        key: "SelectEmployeeType",
         withoutLabel: true,
       },
-
       {
         type: "component",
         component: "SelectDateofEmployment",
@@ -69,10 +68,11 @@ export const newConfig = [
       },
       {
         type: "component",
-        component: "SelectEmployeeType",
-        key: "SelectEmployeeType",
+        component: "SelectEmployeeId",
+        key: "SelectEmployeeId",
         withoutLabel: true,
       },
+
       {
         type: "component",
         component: "Banner",

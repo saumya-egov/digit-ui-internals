@@ -95,7 +95,9 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
           getdesignationdata={getdesignationdata}
         />
       ))}
-      <LinkButton label={t("HR_ADD_ASSIGNMENT")} onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
+      <label onClick={handleAddUnit} className="link-label" style={{ width: "12rem" }}>
+        {t("HR_ADD_ASSIGNMENT")}
+      </label>
     </div>
   );
 };
@@ -138,30 +140,6 @@ function Assignment({
         </h2>
       </div>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
-        <LabelFieldPair>
-          <CardLabel className="card-label-smaller"> {`${t("HR_DEPT_LABEL")} * `}</CardLabel>
-          <Dropdown
-            className="form-field"
-            selected={assignment?.department}
-            disable={false}
-            optionKey={"i18key"}
-            option={getdepartmentdata(department) || []}
-            select={selectDepartment}
-            t={t}
-          />
-        </LabelFieldPair>
-        <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{`${t("HR_DESG_LABEL")} * `}</CardLabel>
-          <Dropdown
-            className="form-field"
-            selected={assignment?.designation}
-            disable={false}
-            option={getdesignationdata(designation) || []}
-            select={selectDesignation}
-            optionKey={"i18key"}
-            t={t}
-          />
-        </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel className="card-label-smaller"> {`${t("HR_ASMT_FROM_DATE_LABEL")} * `} </CardLabel>
           <div className="field">
@@ -210,6 +188,31 @@ function Assignment({
               label={t("HR_CURRENTLY_ASSIGNED_HERE_SWITCH_LABEL")}
             />
           </div>
+        </LabelFieldPair>
+        <LabelFieldPair>
+          <CardLabel className="card-label-smaller"> {`${t("HR_DEPT_LABEL")} * `}</CardLabel>
+          <Dropdown
+            className="form-field"
+            selected={assignment?.department}
+            disable={false}
+            optionKey={"i18key"}
+            option={getdepartmentdata(department) || []}
+            select={selectDepartment}
+            t={t}
+          />
+        </LabelFieldPair>
+
+        <LabelFieldPair>
+          <CardLabel className="card-label-smaller">{`${t("HR_DESG_LABEL")} * `}</CardLabel>
+          <Dropdown
+            className="form-field"
+            selected={assignment?.designation}
+            disable={false}
+            option={getdesignationdata(designation) || []}
+            select={selectDesignation}
+            optionKey={"i18key"}
+            t={t}
+          />
         </LabelFieldPair>
       </div>
     </div>
