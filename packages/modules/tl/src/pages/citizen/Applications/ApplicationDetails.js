@@ -12,7 +12,8 @@ const ApplicationDetails = () => {
   const history = useHistory();
   const [bill, setBill] = useState(null);
 
-  const state = tenantId;
+  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const { tenants } = storeData || {};
 
   const { isLoading, isError, error, data: application, error: errorApplication } = Digit.Hooks.tl.useTLSearchApplication({
     tenantId: tenantId,
@@ -21,6 +22,7 @@ const ApplicationDetails = () => {
 
   const { data: paymentsHistory } = Digit.Hooks.tl.useTLPaymentHistory(tenantId, id);
   useEffect(() => {
+    console.log(application);
     if (application) {
       Digit.PaymentService.fetchBill(tenantId, {
         consumerCode: application[0]?.applicationNumber,
@@ -30,8 +32,6 @@ const ApplicationDetails = () => {
       });
     }
   }, [application]);
-
-  const coreData = Digit.Hooks.useCoreData();
 
   const [showOptions, setShowOptions] = useState(false);
 
@@ -45,30 +45,31 @@ const ApplicationDetails = () => {
     history.goBack();
   }
 
-  const tenantInfo = coreData.tenants.find((tenant) => tenant.code === application[0]?.tenantId);
   const handleDownloadPdf = async () => {
-    let res = application?.Licenses[0];
+    const tenantInfo = tenants.find((tenant) => tenant.code === application[0]?.tenantId);
+    let res = application[0];
+    console.log(tenantInfo);
     const data = getPDFData({ ...res }, tenantInfo, t);
-    data.then((res) => Digit.Utils.pdf.generate(res));
+    data.then((ress) => Digit.Utils.pdf.generate(ress));
     setShowOptions(false);
   };
 
   const downloadPaymentReceipt = async () => {
     const receiptFile = { filestoreIds: [paymentsHistory.Payments[0]?.fileStoreId] };
     if (!receiptFile?.fileStoreIds?.[0]) {
-      const newResponse = await Digit.PaymentService.generatePdf(state, { Payments: [paymentsHistory.Payments[0]] }, "tradelicense-receipt");
-      const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: newResponse.filestoreIds[0] });
+      const newResponse = await Digit.PaymentService.generatePdf(tenantId, { Payments: [paymentsHistory.Payments[0]] }, "tradelicense-receipt");
+      const fileStore = await Digit.PaymentService.printReciept(tenantId, { fileStoreIds: newResponse.filestoreIds[0] });
       window.open(fileStore[newResponse.filestoreIds[0]], "_blank");
       setShowOptions(false);
     } else {
-      const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: receiptFile.filestoreIds[0] });
+      const fileStore = await Digit.PaymentService.printReciept(tenantId, { fileStoreIds: receiptFile.filestoreIds[0] });
       window.open(fileStore[receiptFile.filestoreIds[0]], "_blank");
       setShowOptions(false);
     }
   };
 
   const downloadTLcertificate = async () => {
-    const TLcertificatefile = await Digit.PaymentService.generatePdf(tenantId, application, "tlcertificate");
+    const TLcertificatefile = await Digit.PaymentService.generatePdf(tenantId, { Licenses: application }, "tlcertificate");
     const receiptFile = await Digit.PaymentService.printReciept(tenantId, { fileStoreIds: TLcertificatefile.filestoreIds[0] });
     window.open(receiptFile[TLcertificatefile.filestoreIds[0]], "_blank");
     setShowOptions(false);
