@@ -9,7 +9,7 @@ const EditForm = ({ tenantId, data }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
-console.log(convertEpochToDate(data?.dateOfAppointment))
+  console.log(convertEpochToDate(data?.dateOfAppointment));
   const defaultValues = {
     tenantId: tenantId,
     employeeStatus: "EMPLOYED",
@@ -29,8 +29,9 @@ console.log(convertEpochToDate(data?.dateOfAppointment))
     },
 
     SelectDateofBirthEmployment: { dob: convertEpochToDate(data?.user?.dob) },
-    Jurisdictions: data?.jurisdictions.map((ele) => {
+    Jurisdictions: data?.jurisdictions.map((ele, index) => {
       return Object.assign({}, ele, {
+        key: index,
         hierarchy: {
           code: ele.hierarchy,
           name: ele.hierarchy,
@@ -40,8 +41,9 @@ console.log(convertEpochToDate(data?.dateOfAppointment))
         roles: data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
-    Assignments: data?.assignments.map((ele) => {
+    Assignments: data?.assignments.map((ele, index) => {
       return Object.assign({}, ele, {
+        key: index,
         fromDate: convertEpochToDate(ele.fromDate),
         toDate: convertEpochToDate(ele.toDate),
         designation: {
@@ -98,15 +100,14 @@ console.log(convertEpochToDate(data?.dateOfAppointment))
   };
 
   const onSubmit = (input) => {
-    console.log( Date.parse(input?.SelectDateofEmployment?.dateOfAppointment))
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles;
     });
-    let requestdata= Object.assign({},data,)
+    let requestdata = Object.assign({}, data);
     roles = [].concat.apply([], roles);
 
     requestdata.assignments = input?.Assignments;
-    requestdata.dateOfAppointment =  Date.parse(input?.SelectDateofEmployment?.dateOfAppointment)
+    requestdata.dateOfAppointment = Date.parse(input?.SelectDateofEmployment?.dateOfAppointment);
     requestdata.code = input?.SelectEmployeeId?.code ? input?.SelectEmployeeId?.code : undefined;
     requestdata.jurisdictions = input?.Jurisdictions;
     requestdata.user.emailId = input?.SelectEmployeeEmailId?.emailId ? input?.SelectEmployeeEmailId?.emailId : undefined;

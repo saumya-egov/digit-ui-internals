@@ -1,6 +1,16 @@
 import React, { useMemo, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, ShareIcon, DownloadIcon, FilterIcon, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import {
+  Header,
+  Loader,
+  ShareIcon,
+  DownloadIcon,
+  FilterIcon,
+  RemoveableTag,
+  MultiLink,
+  EmailIcon,
+  WhatsappIcon,
+} from "@egovernments/digit-ui-react-components";
 import { startOfYear, endOfYear, format, addMonths } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
@@ -10,7 +20,7 @@ import { useParams } from "react-router-dom";
 const getInitialRange = () => {
   const startDate = addMonths(startOfYear(new Date()), 3);
   const endDate = addMonths(endOfYear(new Date()), 3);
-  const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
+  const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, title, duration };
 };
@@ -34,12 +44,14 @@ const DashBoard = ({ stateCode }) => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const { moduleCode } = useParams();
 
-  const language = Digit.SessionStorage.get("locale") || "en_IN";
+  const language = Digit.StoreData.getCurrentLanguage();
 
   const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
+  const [showOptions, setShowOptions] = useState(false);
+
   const fullPageRef = useRef();
   const provided = useMemo(
     () => ({
@@ -59,11 +71,64 @@ const DashBoard = ({ stateCode }) => {
     setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
   };
 
+  const dashboardConfig = response?.responseData;
+
+  const shareOptions = navigator.share
+    ? [
+        {
+          label: t("ES_DSS_SHARE_PDF"),
+          onClick: async () => {
+            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          label: t("ES_DSS_SHARE_IMAGE"),
+          onClick: async () => {
+            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            setShowOptions(!showOptions);
+          },
+        },
+      ]
+    : [
+        {
+          icon: <EmailIcon />,
+          label: t("ES_DSS_SHARE_PDF"),
+          onClick: async () => {
+            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          icon: <WhatsappIcon />,
+          label: t("ES_DSS_SHARE_PDF"),
+          onClick: async () => {
+            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          icon: <EmailIcon />,
+          label: t("ES_DSS_SHARE_IMAGE"),
+          onClick: async () => {
+            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            setShowOptions(!showOptions);
+          },
+        },
+        {
+          icon: <WhatsappIcon />,
+          label: t("ES_DSS_SHARE_IMAGE"),
+          onClick: async () => {
+            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            setShowOptions(!showOptions);
+          },
+        },
+      ];
+
   if (isLoading || isUlbLoading || localizationLoading) {
     return <Loader />;
   }
 
-  const dashboardConfig = response?.responseData;
   return (
     <FilterContext.Provider value={provided}>
       <div ref={fullPageRef}>
@@ -71,8 +136,13 @@ const DashBoard = ({ stateCode }) => {
           <Header styles={{ marginBottom: "0px" }}>{t(dashboardConfig?.[0]?.name)}</Header>
           <div>
             <div className="mrlg">
-              <ShareIcon className="mrsm" />
-              {t(`ES_DSS_SHARE`)}
+              <MultiLink
+                className="multilink-block-wrapper"
+                label={t(`ES_DSS_SHARE`)}
+                onHeadClick={() => setShowOptions(!showOptions)}
+                displayOptions={showOptions}
+                options={shareOptions}
+              />
             </div>
             <div className="mrsm" onClick={handlePrint}>
               <DownloadIcon className="mrsm" />
@@ -96,7 +166,13 @@ const DashBoard = ({ stateCode }) => {
             <FilterIcon onClick={() => setIsFilterModalOpen(!isFilterModalOpen)} style />
           </div>
           <div>
-            <ShareIcon />
+            <MultiLink
+              className="multilink-block-wrapper"
+              label={t(`ES_DSS_SHARE`)}
+              onHeadClick={() => setShowOptions(!showOptions)}
+              displayOptions={showOptions}
+              options={shareOptions}
+            />
             {t(`ES_DSS_SHARE`)}
           </div>
           <div>

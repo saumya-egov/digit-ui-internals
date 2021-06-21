@@ -21,7 +21,8 @@ const Details = () => {
   const history = useHistory();
   const [displayMenu, setDisplayMenu] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch({ codes: employeeId }, tenantId);
+  const isupdate = Digit.SessionStorage.get("isupdate");
+  const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch({ codes: employeeId }, tenantId, null, isupdate);
 
   function onActionSelect(action) {
     setSelectedAction(action);
@@ -89,13 +90,28 @@ const Details = () => {
             </StatusTable>
             <StatusTable>
               <Row label={t("HR_EMPLOYMENT_TYPE_LABEL")} text={data?.Employees?.[0]?.employeeType} textStyle={{ whiteSpace: "pre" }} />
-               </StatusTable>
-             {(data?.Employees?.[0]?.isActive) == false  ? <StatusTable>
-              <Row label={t("HR_EFFECTIVE_DATE")} text={convertEpochFormateToDate(data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.effectiveFrom)} />
-                 <Row label={t("HR_DEACTIVATION_REASON")} text={(data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0].reasonForDeactivation)} />
-             <Row label={t("HR_ORDER_NO")} text={(data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.orderNo)} />
-             </StatusTable>: null }
-
+            </StatusTable>
+            {data?.Employees?.[0]?.isActive == false ? (
+              <StatusTable>
+                <Row
+                  label={t("HR_EFFECTIVE_DATE")}
+                  text={convertEpochFormateToDate(
+                    data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.effectiveFrom
+                  )}
+                />
+                <Row
+                  label={t("HR_DEACTIVATION_REASON")}
+                  text={
+                    data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]
+                      .reasonForDeactivation
+                  }
+                />
+                <Row
+                  label={t("HR_ORDER_NO")}
+                  text={data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.orderNo}
+                />
+              </StatusTable>
+            ) : null}
 
             <StatusTable>
               <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -117,8 +133,21 @@ const Details = () => {
             {data?.Employees?.[0]?.jurisdictions?.length > 0
               ? data?.Employees?.[0]?.jurisdictions.map((element, index) => {
                   return (
-                    <StatusTable key={index} style={{maxWidth: "640px", border: "1px solid rgb(214, 213, 212)", inset: "0px", width: "auto", padding:'.2rem', marginBottom: "2rem"}}>
-                      <div style={{ paddingBottom: "2rem" }}> {t("HR_JURISDICTION")} {index + 1}</div>
+                    <StatusTable
+                      key={index}
+                      style={{
+                        maxWidth: "640px",
+                        border: "1px solid rgb(214, 213, 212)",
+                        inset: "0px",
+                        width: "auto",
+                        padding: ".2rem",
+                        marginBottom: "2rem",
+                      }}
+                    >
+                      <div style={{ paddingBottom: "2rem" }}>
+                        {" "}
+                        {t("HR_JURISDICTION")} {index + 1}
+                      </div>
                       <Row label={t("HR_HIERARCHY_LABEL")} text={element?.hierarchy} textStyle={{ whiteSpace: "pre" }} />
                       <Row label={t("HR_BOUNDARY_TYPE_LABEL")} text={element?.boundaryType} textStyle={{ whiteSpace: "pre" }} />
                       <Row label={t("HR_BOUNDARY_LABEL")} text={element?.boundary} />
@@ -132,8 +161,20 @@ const Details = () => {
               : null}
             {data?.Employees?.[0]?.assignments.length > 0 ? <CardSubHeader>{t("HR_ASSIGN_DET_HEADER")}</CardSubHeader> : null}
             {data?.Employees?.[0]?.assignments.map((element, index) => (
-              <StatusTable key={index} style={{maxWidth: "640px", border: "1px solid rgb(214, 213, 212)", inset: "0px", width: "auto", padding:'.2rem', marginBottom: "2rem"}}>
-                <div style={{ paddingBottom: "2rem" }}>{t("HR_ASSIGNMENT")} {index + 1}</div>
+              <StatusTable
+                key={index}
+                style={{
+                  maxWidth: "640px",
+                  border: "1px solid rgb(214, 213, 212)",
+                  inset: "0px",
+                  width: "auto",
+                  padding: ".2rem",
+                  marginBottom: "2rem",
+                }}
+              >
+                <div style={{ paddingBottom: "2rem" }}>
+                  {t("HR_ASSIGNMENT")} {index + 1}
+                </div>
                 <Row label={t("HR_ASMT_FROM_DATE_LABEL")} text={convertEpochFormateToDate(element?.fromDate)} textStyle={{ whiteSpace: "pre" }} />
                 <Row
                   label={t("HR_ASMT_TO_DATE_LABEL")}

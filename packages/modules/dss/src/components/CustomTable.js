@@ -23,24 +23,26 @@ const CustomTable = ({ data, onSearch }) => {
     type: "metric",
     tenantId,
     requestDate: lastYearDate,
-    filters: id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
+    filters:
+      id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
   });
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
+    filters:
+      id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
   });
 
   const renderHeader = (plot) => {
-    const code = `DSS_HEADER_${plot?.name.toUpperCase()}`
+    const code = `DSS_HEADER_${plot?.name.toUpperCase()}`;
     const units = ["TotalSeptageDumped", "TotalSeptageCollected"];
     if (id === "fsmVehicleLogReportByDDR" && units.includes(plot?.name)) {
       return `${t(code)} (${t("DSS_KL")})`;
     }
     if (plot?.symbol === "amount") {
-      return `${t(code)} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`
+      return `${t(code)} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`;
     }
     return t(code);
   };
@@ -49,7 +51,7 @@ const CustomTable = ({ data, onSearch }) => {
     if (response?.responseData?.drillDownChartId && response?.responseData?.drillDownChartId !== "none") {
       let currentValue = value;
       if (filterKey === "tenantId") {
-        currentValue = dssTenants.find(tenant => tenant?.city?.ddrName === value || tenant?.code === value);
+        currentValue = dssTenants.find((tenant) => tenant?.city?.ddrName === value || tenant?.code === value);
         if (currentValue === undefined) return;
       }
       setFilterStack([...filterStack, { id: response?.responseData?.drillDownChartId, name: value, filterKey, filterValue: currentValue?.code }]);
@@ -87,8 +89,8 @@ const CustomTable = ({ data, onSearch }) => {
               </span>
             );
           }
-          const filter = response?.responseData?.filter.find(elem => elem.column === column.id)
-          if (filter !== undefined) {
+          const filter = response?.responseData?.filter.find((elem) => elem.column === column.id);
+          if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
             return (
               <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value, filter?.key)}>
                 {t(value)}
@@ -96,9 +98,7 @@ const CustomTable = ({ data, onSearch }) => {
             );
           }
           if (column.id === "CitizenAverageRating") {
-            return (
-              <Rating currentRating={Math.round(value)} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />
-            )
+            return <Rating currentRating={Math.round(value)} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
           }
           if (column.symbol === "amount") {
             return String(convertDenomination(value));
@@ -136,7 +136,7 @@ const CustomTable = ({ data, onSearch }) => {
         if (typeof value === "number" && !Number.isInteger(value)) {
           value = Math.round((value + Number.EPSILON) * 100) / 100;
         }
-        acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : row?.name === "S.N." ? id + 1: value;
+        acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : row?.name === "S.N." ? id + 1 : value;
         return acc;
       }, {});
     });
@@ -154,7 +154,7 @@ const CustomTable = ({ data, onSearch }) => {
   if (!tableColumns || !tableData) {
     return (
       <div className="no-data">
-        <p>{t('DSS_NO_DATA')}</p>
+        <p>{t("DSS_NO_DATA")}</p>
       </div>
     );
   }

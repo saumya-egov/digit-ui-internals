@@ -85,6 +85,14 @@ const mCollectAccess = () => {
   return MCOLLECT_ACCESS.length > 0;
 };
 
+const hrmsAccess = () => {
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo.info.roles.map((roleData) => roleData.code);
+  const hrmsRoles = ["HRMS_ADMIN"];
+  const HRMS_ACCESS = userRoles.filter((role) => hrmsRoles.includes(role));
+  return HRMS_ACCESS.length > 0;
+};
+
 export default {
   pdf: PDFUtil,
   browser: BrowserUtil,
@@ -99,4 +107,5 @@ export default {
   dss,
   ptAccess,
   mCollectAccess,
+  hrmsAccess,
 };
