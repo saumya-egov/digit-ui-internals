@@ -50,14 +50,14 @@ const ApplicationDetails = () => {
         ...workflowDetails?.data,
         actionState: {
           nextActions: [
-            // {
-            //   action: "ASSESS_PROPERTY",
-            //   redirectionUrl: {
-            //     pathname: `/digit-ui/employee/pt/modify-application/${applicationNumber}`,
-            //     state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
-            //   },
-            //   tenantId: "pb",
-            // },
+            {
+              action: "ASSESS_PROPERTY",
+              redirectionUrl: {
+                pathname: `/digit-ui/employee/pt/assessment-details/${applicationNumber}`,
+                state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+              },
+              tenantId: "pb",
+            },
             {
               action: "UPDATE",
               redirectionUrl: {
