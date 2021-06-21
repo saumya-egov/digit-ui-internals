@@ -28,13 +28,13 @@ const AssessmentDetails = () => {
     ptCalculationEstimateMutate({ Assessment: AssessmentData });
   }, []);
 
-  const {
-    isLoading: updatingApplication,
-    isError: updateApplicationError,
-    data: updateResponse,
-    error: updateError,
-    mutate,
-  } = Digit.Hooks.pt.useApplicationActions(tenantId);
+  // const {
+  //   isLoading: updatingApplication,
+  //   isError: updateApplicationError,
+  //   data: updateResponse,
+  //   error: updateError,
+  //   mutate,
+  // } = Digit.Hooks.pt.useApplicationActions(tenantId);
 
   let workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
@@ -72,7 +72,7 @@ const AssessmentDetails = () => {
         { Assessment: AssessmentData },
         {
           onError: (error, variables) => {
-            setShowToast({ key: "error", action: error?.response?.data?.Errors[0]?.message || error });
+            setShowToast({ key: "error", action: error?.response?.data?.Errors[0]?.message || error.message });
             setTimeout(closeToast, 5000);
           },
           onSuccess: (data, variables) => {
@@ -97,7 +97,7 @@ const AssessmentDetails = () => {
         isLoading={isLoading}
         isDataLoading={isLoading}
         applicationData={applicationDetails?.applicationData}
-        mutate={mutate}
+        mutate={null}
         workflowDetails={
           queryClient.getQueryData(["PT_ASSESSMENT", propertyId, location?.state?.Assessment?.financialYear])
             ? { ...workflowDetails, data: { ...workflowDetails.data, nextActions: [] } }
@@ -109,6 +109,7 @@ const AssessmentDetails = () => {
         showToast={showToast}
         setShowToast={setShowToast}
         closeToast={closeToast}
+        timelineStatusPrefix={"ES_PT_COMMON_STATUS_"}
       />
       {!queryClient.getQueryData(["PT_ASSESSMENT", propertyId, location?.state?.Assessment?.financialYear]) && (
         <ActionBar>
