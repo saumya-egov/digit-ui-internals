@@ -1,23 +1,10 @@
-import {
-  getFixedFilename,
-  getPropertyTypeLocale,
-  getPropertyOwnerTypeLocale,
-  getPropertyUsageTypeLocale,
-  getPropertySubUsageTypeLocale,
-  getPropertyOccupancyTypeLocale,
-  getMohallaLocale,
-  pdfDocumentName,
-  pdfDownloadLink,
-  getCityLocale,
-} from "./index";
+import { pdfDocumentName, pdfDownloadLink } from "./index";
 
 const capitalize = (text) => text.substr(0, 1).toUpperCase() + text.substr(1);
 const ulbCamel = (ulb) => ulb.toLowerCase().split(" ").map(capitalize).join(" ");
 
 const getOwner = (application, t) => {
-  application.owners = application?.tradeLicenseDetail.owners.filter((owner) => owner.status == "ACTIVE") || [];
-
-  console.log(application?.tradeLicenseDetail?.subOwnerShipCategory);
+  application.owners = application?.tradeLicenseDetail?.owners?.filter((owner) => owner.status == "ACTIVE") || [];
   if (application?.tradeLicenseDetail?.subOwnerShipCategory == "INDIVIDUAL.SINGLEOWNER") {
     return {
       title: t("TL_COMMON_OWN_DETAILS"),
@@ -69,7 +56,7 @@ const getTradeDetails = (application, t) => {
 };
 const getAccesory = (application, t) => {
   let values = [];
-  application.tradeLicenseDetail.accessories.map((application) => {
+  application.tradeLicenseDetail?.accessories?.map((application) => {
     let value = [
       { title: t("TL_REVIEWACCESSORY_TYPE_LABEL"), value: t(application?.accessoryCategory) || "N/A" },
       { title: t("TL_NEW_TRADE_ACCESSORY_COUNT_LABEL"), value: t(application?.count) || "N/A" },
@@ -86,7 +73,7 @@ const getAccesory = (application, t) => {
 };
 const getTrade = (application, t) => {
   let values = [];
-  application.tradeLicenseDetail.tradeUnits.map((ele) => {
+  application.tradeLicenseDetail?.tradeUnits?.map((ele) => {
     let value = [
       { title: t("TL_NEW_TRADE_DETAILS_TRADE_CAT_LABEL"), value: t(`TRADELICENSE_TRADETYPE_${ele?.tradeType.split(".")[0]}`) || "N/A" },
       { title: t("TL_NEW_TRADE_DETAILS_TRADE_TYPE_LABEL"), value: t(`TRADELICENSE_TRADETYPE_${ele?.tradeType.split(".")[1]}`) || "N/A" },
@@ -112,8 +99,11 @@ const getTrade = (application, t) => {
 
 const getPTAcknowledgementData = async (application, tenantInfo, t) => {
   console.log(application);
-  const filesArray = application?.tradeLicenseDetail?.applicationDocuments.map((value) => value?.fileStoreId);
-  const res = await Digit.UploadServices.Filefetch(filesArray, application?.tenantId.split(".")[0]);
+  const filesArray = application?.tradeLicenseDetail?.applicationDocuments?.map((value) => value?.fileStoreId);
+  let res;
+  if (filesArray) {
+    res = await Digit.UploadServices.Filefetch(filesArray, application?.tenantId.split(".")[0]);
+  }
   return {
     t: t,
     tenantId: tenantInfo?.code,
@@ -139,7 +129,7 @@ const getPTAcknowledgementData = async (application, tenantInfo, t) => {
       {
         title: t("TL_COMMON_DOCS"),
         values:
-          application?.tradeLicenseDetail?.applicationDocuments.length > 0
+          application?.tradeLicenseDetail?.applicationDocuments?.length > 0
             ? application?.tradeLicenseDetail?.applicationDocuments.map((document, index) => {
                 let documentLink = pdfDownloadLink(res?.data, document?.fileStoreId);
                 return {
@@ -147,7 +137,7 @@ const getPTAcknowledgementData = async (application, tenantInfo, t) => {
                   value: pdfDocumentName(documentLink, index) || "N/A",
                 };
               })
-            : "NA",
+            : [],
       },
     ],
   };
