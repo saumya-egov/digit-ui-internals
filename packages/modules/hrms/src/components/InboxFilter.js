@@ -68,7 +68,17 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
       <div className="filter">
         <div className="filter-card">
           <div className="heading">
-            <div className="filter-label">{t("HR_COMMON_FILTER")}:</div>
+            <div className="filter-label" style={{ display: "flex", alignItems: "center" }}>
+              <span>
+                <svg width="17" height="17" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M0.66666 2.48016C3.35999 5.9335 8.33333 12.3335 8.33333 12.3335V20.3335C8.33333 21.0668 8.93333 21.6668 9.66666 21.6668H12.3333C13.0667 21.6668 13.6667 21.0668 13.6667 20.3335V12.3335C13.6667 12.3335 18.6267 5.9335 21.32 2.48016C22 1.60016 21.3733 0.333496 20.2667 0.333496H1.71999C0.613327 0.333496 -0.01334 1.60016 0.66666 2.48016Z"
+                    fill="#505A5F"
+                  />
+                </svg>
+              </span>
+              <span>{t("HR_COMMON_FILTER")}:</span>{" "}
+            </div>
             <div className="clearAll" onClick={clearAll}>
               {t("HR_COMMON_CLEAR_ALL")}
             </div>
