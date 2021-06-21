@@ -32,7 +32,7 @@ const DatePicker = (props) => {
           disabled={props.disabled}
           value={getDatePrint() ? getDatePrint() : ""}
           readOnly
-          className={`employee-card-input ${props.disabled && "disabled"}`}
+          className={`employee-card-input ${props.disabled ? "disabled" : ""}`}
           style={{ width: "calc(100%-62px)" }}
         />
         <CalendarIcon style={{ right: "6px", zIndex: "10", top: 6, position: "absolute" }} />
