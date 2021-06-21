@@ -39,7 +39,6 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
     data?.address?.city ? data.address?.city?.code : tenantId,
     !window.location.href.includes("edit-application")
   );
-  const coreData = Digit.Hooks.useCoreData();
 
   useEffect(() => {
     try {
@@ -58,7 +57,6 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
   const handleDownloadPdf = async () => {
     // const { Properties = [] } = mutation.data;
     // const Property = (Properties && Properties[0]) || {};
-    // const tenantInfo = coreData.tenants.find((tenant) => tenant.code === Property.tenantId);
     // const data = await getPTAcknowledgementData({ ...Property }, tenantInfo, t);
     // Digit.Utils.pdf.generate(data);
   };
@@ -85,7 +83,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
           onClick={handleDownloadPdf}
           className="w-full"
         />)}*/}
-      <StatusTable>
+      {/* <StatusTable>
         {mutation.isSuccess && (
           <Row
             rowContainerStyle={rowContainerStyle}
@@ -95,7 +93,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
             textStyle={{ whiteSpace: "pre", width: "60%" }}
           />
         )}
-      </StatusTable>
+      </StatusTable> */}
       {mutation.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
 
       <Link to={`/digit-ui/citizen`}>

@@ -109,7 +109,8 @@ export const PaymentService = {
       url: Urls.payment.reciept_search,
       urlParams: { buisnessService: businessService },
       method: "POST",
-      auth: false,
+      // do not change this directly add a param if needed
+      auth: true,
       params: { tenantId, ...params },
     }),
 };

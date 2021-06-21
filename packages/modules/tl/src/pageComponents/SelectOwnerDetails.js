@@ -107,22 +107,27 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               disabled={isUpdateProperty || isEditProperty}
             />
             <CardLabel>{`${t("TL_MOBILE_NUMBER_LABEL")}`}</CardLabel>
-            <TextInput
-              type={"text"}
-              t={t}
-              isMandatory={false}
-              optionKey="i18nKey"
-              name="mobileNumber"
-              value={field.mobilenumber}
-              onChange={(e) => setMobileNo(index, e)}
-              //disable={isUpdateProperty || isEditProperty}
-              {...(validation = {
-                isRequired: true,
-                pattern: "[6-9]{1}[0-9]{9}",
-                type: "tel",
-                title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
-              })}
-            />
+            <div className="field-container">
+              <span className="employee-card-input employee-card-input--front" style={{ marginTop: "-1px" }}>
+                +91
+              </span>
+              <TextInput
+                type={"text"}
+                t={t}
+                isMandatory={false}
+                optionKey="i18nKey"
+                name="mobileNumber"
+                value={field.mobilenumber}
+                onChange={(e) => setMobileNo(index, e)}
+                //disable={isUpdateProperty || isEditProperty}
+                {...(validation = {
+                  isRequired: true,
+                  pattern: "[6-9]{1}[0-9]{9}",
+                  type: "tel",
+                  title: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID"),
+                })}
+              />
+            </div>
             {ismultiple && (
               <CheckBox
                 label={t("Primary Owner")}

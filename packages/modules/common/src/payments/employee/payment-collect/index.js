@@ -21,6 +21,12 @@ export const CollectPayment = (props) => {
   const { data: paymentdetails, isLoading } = Digit.Hooks.useFetchPayment({ tenantId: tenantId, consumerCode, businessService });
   const bill = paymentdetails?.Bill ? paymentdetails?.Bill[0] : {};
 
+  const { isLoading: storeLoading, data: store } = Digit.Services.useStore({
+    stateCode: props.stateCode,
+    moduleCode: businessService.split(".")[0],
+    language: Digit.StoreData.getCurrentLanguage(),
+  });
+
   const { cardConfig } = useCardPaymentDetails(props, t);
   const { chequeConfig } = useChequeDetails(props, t);
   const { cashConfig } = useCashPaymentDetails(props, t);

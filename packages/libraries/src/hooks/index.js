@@ -3,7 +3,6 @@ import useWorkflowDetails from "./workflow";
 import useSessionStorage from "./useSessionStorage";
 import useQueryParams from "./useQueryParams";
 import useClickOutside from "./useClickOutside";
-import useCoreData from "./useCoreData";
 import {
   useFetchPayment,
   usePaymentUpdate,
@@ -20,6 +19,7 @@ import useCommonMDMS from "./useMDMS";
 import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useApplicationStatusGeneral from "./useStatusGeneral";
 import useModuleTenants from "./useModuleTenants";
+import useStore from "./useStore";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -85,6 +85,8 @@ import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
 import useTLDocumentSearch from "./tl/useTLDocumentSearch";
 import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
+import useTLSearchApplication from "./tl/useTLsearchApplication";
+import useTLPaymentHistory from "./tl/userPaymentHistory";
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
@@ -174,6 +176,8 @@ const tl = {
   useTradeLicenseMDMS,
   useTLDocumentSearch,
   useTradeLicenseAPI,
+  useTLSearchApplication,
+  useTLPaymentHistory,
 };
 
 const Hooks = {
@@ -187,7 +191,6 @@ const Hooks = {
   useWorkflowDetails,
   useInitStore,
   useClickOutside,
-  useCoreData,
   useUserSearch,
   useApplicationsForBusinessServiceSearch,
   useDemandSearch,
@@ -198,6 +201,7 @@ const Hooks = {
   useApplicationStatusGeneral,
   useModuleTenants,
   useRecieptSearch,
+  useStore,
   pgr,
   fsm,
   pt,

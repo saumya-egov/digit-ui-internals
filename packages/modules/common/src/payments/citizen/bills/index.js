@@ -10,7 +10,7 @@ export const MyBills = ({ stateCode }) => {
   const { isLoading: storeLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode: businessService,
-    language: Digit.SessionStorage.get("locale") || "en_IN",
+    language: Digit.StoreData.getCurrentLanguage(),
   });
 
   const history = useHistory();

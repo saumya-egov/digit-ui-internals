@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useQueryClient } from "react-query";
 
 export const SuccessfulPayment = (props) => {
-  debugger;
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const { eg_pg_txnid: egId, workflow: workflw } = Digit.Hooks.useQueryParams();
@@ -213,7 +212,7 @@ export const SuccessfulPayment = (props) => {
           rowContainerStyle={rowContainerStyle}
           last
           label={t(ommitRupeeSymbol ? "CS_PAYMENT_AMOUNT_PAID_WITHOUT_SYMBOL" : "CS_PAYMENT_AMOUNT_PAID")}
-          text={"₹ " + amount}
+          text={"₹ " + reciept_data?.paymentDetails?.[0]?.totalAmountPaid}
         />
         {(business_service !== "PT" || workflw) && (
           <Row

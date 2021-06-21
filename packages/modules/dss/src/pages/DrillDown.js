@@ -10,7 +10,7 @@ import Filters from "../components/Filters";
 const getInitialRange = () => {
   const startDate = addMonths(startOfYear(new Date()), 3);
   const endDate = addMonths(endOfYear(new Date()), 3);
-  const title = `${format(startDate, "MMM d, yy")} - ${format(endDate, "MMM d, yy")}`;
+  const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, title, duration };
 };
