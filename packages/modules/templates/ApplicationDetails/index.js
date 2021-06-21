@@ -92,6 +92,7 @@ const ApplicationDetails = (props) => {
       onSuccess: (data, variables) => {
         setShowToast({ key: "success", action: selectedAction });
         setTimeout(closeToast, 5000);
+        queryClient.clear();
         queryClient.refetchQueries("APPLICATION_SEARCH");
       },
     });
