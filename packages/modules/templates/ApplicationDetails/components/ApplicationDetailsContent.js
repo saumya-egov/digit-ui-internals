@@ -32,36 +32,13 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
         source: applicationData.source || "",
       };
       return <TLCaption data={caption} />;
-    } else if (
-      checkpoint.status === "PENDING_APPL_FEE_PAYMENT"
-      // ||
-      // checkpoint.status === "ASSING_DSO" ||
-      // checkpoint.status === "PENDING_DSO_APPROVAL"
-    ) {
+    } else if (checkpoint.status === "PENDING_APPL_FEE_PAYMENT") {
       const caption = {
         date: Digit.DateUtils.ConvertTimestampToDate(applicationData?.auditDetails.createdTime),
         name: checkpoint.assigner.name,
       };
       return <TLCaption data={caption} />;
-    }
-
-    //  else if (checkpoint.status === "DSO_REJECTED") {
-    //   const caption = {
-    //     date: Digit.DateUtils.ConvertTimestampToDate(applicationData?.auditDetails.createdTime),
-    //     name: checkpoint?.assigner?.name,
-    //     comment: checkpoint?.comment ? t(`ES_ACTION_REASON_${checkpoint?.comment}`) : null,
-    //     otherComment: applicationDetails?.additionalDetails?.comments?.DSO_REJECT,
-    //   };
-    //   return <TLCaption data={caption} />;
-    // } else if (checkpoint.status === "DSO_INPROGRESS") {
-    //   const caption = {
-    //     name: `${checkpoint?.assigner?.name} (${t("ES_FSM_DSO")})`,
-    //     mobileNumber: checkpoint?.assigner?.mobileNumber,
-    //     date: `${t("CS_FSM_EXPECTED_DATE")} ${Digit.DateUtils.ConvertTimestampToDate(applicationData?.possibleServiceDate)}`,
-    //   };
-    //   return <TLCaption data={caption} />;
-    // }
-    else if (checkpoint.status === "COMPLETED") {
+    } else if (checkpoint.status === "COMPLETED") {
       return (
         <div>
           <Rating withText={true} text={t(`ES_FSM_YOU_RATED`)} currentRating={checkpoint.rating} />

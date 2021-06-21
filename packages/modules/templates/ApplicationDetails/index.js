@@ -64,43 +64,6 @@ const ApplicationDetails = (props) => {
 
   useEffect(() => {
     console.log(selectedAction, "here is selected action");
-
-    // switch (selectedAction) {
-    //   case "DSO_ACCEPT":
-    //   case "ACCEPT":
-    //   case "ASSIGN":
-    //   case "GENERATE_DEMAND":
-    //   case "FSM_GENERATE_DEMAND":
-    //   case "REASSIGN":
-    //   case "COMPLETE":
-    //   case "COMPLETED":
-    //   case "CANCEL":
-    //   case "SENDBACK":
-    //   case "DSO_REJECT":
-    //   case "REJECT":
-    //   case "DECLINE":
-    //   case "REASSING":
-    //   case "SENDBACKTOCITIZEN":
-    //   case "VERIFY":
-    //   case "FORWARD":
-    //   case "APPROVE":
-    //   case "ASSESS_PROPERTY":
-    //   // return setShowModal(true);
-    //   case "SUBMIT":
-    //   case "FSM_SUBMIT":
-    //     return history.push("/digit-ui/employee/fsm/modify-application/" + applicationNumber);
-    //   case "PAY":
-    //   case "FSM_PAY":
-    //   case "ADDITIONAL_PAY_REQUEST":
-    //     return history.push(`/digit-ui/employee/payment/collect/FSM.TRIP_CHARGES/${applicationNumber}`);
-    //   case "VIEW_DETAILS":
-    //     return history.push(`/digit-ui/employee/pt/property-details/${applicationNumber}`);
-    //   case "UPDATE":
-    //     return history.push(`/digit-ui/employee/pt/modify-application/${applicationNumber}`);
-    //   default:
-    //     console.log("default case");
-    //     break;
-    // }
   }, [selectedAction]);
 
   const closeModal = () => {
@@ -123,7 +86,7 @@ const ApplicationDetails = (props) => {
     // } else {
     mutate(data, {
       onError: (error, variables) => {
-        setShowToast({ key: "error", action: error });
+        setShowToast({ key: "error", error });
         setTimeout(closeToast, 5000);
       },
       onSuccess: (data, variables) => {

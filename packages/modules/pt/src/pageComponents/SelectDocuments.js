@@ -170,7 +170,7 @@ function SelectDocument({
       const docType = dropDownData
         .filter((e) => e.code === originalDoc?.documentType)
         .map((e) => ({ ...e, i18nKey: e?.code?.replaceAll(".", "_") }))[0];
-      console.log(dropDownData, docType, doc?.code, "inside update docs");
+      // console.log(dropDownData, docType, doc?.code, "inside update docs");
       if (!docType) setHidden(true);
       else {
         setSelectedDocument(docType);
@@ -245,12 +245,12 @@ function SelectDocument({
           if (enabledActions?.[action].disableUpload) {
             hideInput = value?.every((e) => filterValue?.includes(e[arrayAttribute]));
             if (doc?.code === "OWNER.SPECIALCATEGORYPROOF") {
-              console.log(
-                hideInput,
-                value.map((e) => e[arrayAttribute]),
-                filterValue,
-                "here find the trueth"
-              );
+              // console.log(
+              //   hideInput,
+              //   value.map((e) => e[arrayAttribute]),
+              //   filterValue,
+              //   "here find the trueth"
+              // );
             }
           } else {
             const valueArr = formDataValue?.map((e) => formArrayAttrPath.reduce((acc, f) => acc?.[f], e) || e);
@@ -298,7 +298,7 @@ function SelectDocument({
     return null;
   }
 
-  console.log(dropDownData, "dropdown data");
+  // console.log(dropDownData, "dropdown data");
 
   return (
     <div style={{ marginBottom: "24px" }}>

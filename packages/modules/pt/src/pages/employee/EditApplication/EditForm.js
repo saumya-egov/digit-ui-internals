@@ -98,7 +98,7 @@ const EditForm = ({ applicationData }) => {
         city: data?.address?.city?.name,
       },
       propertyType: data?.PropertyType?.code,
-      creationReason: "UPDATE", // required
+      creationReason: state.workflow?.businessService === "PT.CREATE" ? "CREATE" : "UPDATE",
       usageCategory: data?.usageCategoryMinor?.subuagecode ? data?.usageCategoryMinor?.subuagecode : data?.usageCategoryMajor?.code,
       usageCategoryMajor: data?.usageCategoryMajor?.code.split(".")[0],
       usageCategoryMinor: data?.usageCategoryMajor?.code.split(".")[1] || null,

@@ -72,6 +72,25 @@ const ApplicationDetails = () => {
     };
   }
 
+  if (
+    PT_CEMP &&
+    // businessService === "PT.UPDATE" &&
+    workflowDetails?.data?.actionState?.isStateUpdatable &&
+    !workflowDetails?.data?.actionState?.nextActions?.find((e) => e.action === "UPDATE")
+  ) {
+    if (!workflowDetails?.data?.actionState?.nextActions) workflowDetails.data.actionState.nextActions = [];
+    workflowDetails?.data?.actionState?.nextActions.push({
+      action: "UPDATE",
+      redirectionUrl: {
+        pathname: `/digit-ui/employee/pt/modify-application/${applicationNumber}`,
+        state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+      },
+      tenantId: "pb",
+    });
+  }
+
+  // console.log(PT_CEMP && businessService === "PT.UPDATE" && workflowDetails?.actionState?.isStateUpdatable);
+
   if (!(applicationDetails?.applicationDetails[0]?.values?.[0].title === "PT_PROPERTY_APPLICATION_NO")) {
     applicationDetails?.applicationDetails?.unshift({
       values: [
