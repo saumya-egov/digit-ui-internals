@@ -23,13 +23,14 @@ import { UserService } from "./services/elements/User";
 import { PTService } from "./services/elements/PT";
 import { TLService } from "./services/elements/TL";
 import { MCollectService } from "./services/elements/MCollect";
+import HrmsService from "./services/elements/HRMS";
 
 import ShareFiles from "./services/molecules/ShareFiles";
 import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
 import { ULBService } from "./services/molecules/Ulb";
 import { FileDesludging } from "./services/molecules/FSM/FileDesludging";
 import { ComponentRegistryService } from "./services/elements/ComponentRegistry";
-import HrmsService from "./services/elements/HRMS";
+import StoreData from "./services/molecules/StoreData";
 
 import Contexts from "./contexts";
 import Hooks from "./hooks";
@@ -70,6 +71,7 @@ const initLibraries = () => {
   setupLibraries("Complaint", Complaint);
   setupLibraries("FileDesludging", FileDesludging);
   setupLibraries("ComponentRegistryService", ComponentRegistryService);
+  setupLibraries("StoreData", StoreData);
 
   setupLibraries("ShareFiles", ShareFiles);
   setupLibraries("Contexts", Contexts);

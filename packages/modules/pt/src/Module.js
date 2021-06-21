@@ -1,7 +1,6 @@
 import { Header, CitizenHomeCard, RupeeIcon } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
 import Area from "./pageComponents/Area";
 import GroundFloorDetails from "./pageComponents/GroundFloorDetails";
@@ -96,8 +95,7 @@ export const PTModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
   const moduleCode = "PT";
-  const state = useSelector((state) => state);
-  const language = state?.common?.selectedLanguage;
+  const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
 
   addComponentsToRegistry();
