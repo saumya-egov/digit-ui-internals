@@ -83,7 +83,7 @@ const ApplicationDetails = () => {
       action: "UPDATE",
       redirectionUrl: {
         pathname: `/digit-ui/employee/pt/modify-application/${applicationNumber}`,
-        state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+        state: { workflow: { action: "REOPEN", moduleName: "PT", businessService } },
       },
       tenantId: "pb",
     });

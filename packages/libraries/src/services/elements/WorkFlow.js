@@ -48,9 +48,13 @@ export const WorkflowService = {
       const actionState = businessServiceResponse
         ?.filter((state) => state.uuid === processInstances[0]?.state.uuid)
         .map((state) => {
+          console.log(state, "inside workflow call");
           let _nextActions = state.actions?.map?.((ac) => {
-            let nextState = getStateForUUID(ac.nextState);
-            return { ...nextState, assigneeRoles: ac.roles, action: ac.action };
+            let actionResultantState = getStateForUUID(ac.nextState);
+            let assignees = actionResultantState?.actions?.reduce?.((acc, act) => {
+              return [...acc, ...act.roles];
+            }, []);
+            return { ...actionResultantState, assigneeRoles: assignees, action: ac.action };
           });
           return { ...state, nextActions: _nextActions };
         })?.[0];
