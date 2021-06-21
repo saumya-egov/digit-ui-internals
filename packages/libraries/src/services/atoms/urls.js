@@ -86,6 +86,9 @@ const Urls = {
   },
   tl: {
     create: "/tl-services/v1/_create",
+    search: "/tl-services/v1/_search",
+    fetch_payment_details: "/billing-service/bill/v2/_fetchbill",
+    download_pdf: "/egov-pdf/download/TL/",
   },
 };
 
