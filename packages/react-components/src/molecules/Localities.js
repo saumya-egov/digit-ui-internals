@@ -22,7 +22,7 @@ const Localities = ({ selectLocality, tenantId, boundaryType, keepNull, selected
       optionCardStyles={optionCardStyles}
       optionKey="i18nkey"
       style={style}
-      disable={disable}
+      disable={!tenantlocalties?.length || disable}
     />
   );
   //  <h1>ABCD</h1>
