@@ -76,7 +76,7 @@ const CustomTable = ({ data, onSearch }) => {
         symbol: plot?.symbol,
         sortType: sortRows,
         Cell: (args) => {
-          const { value, column } = args;
+          const { value, column, row } = args;
           if (typeof value === "object") {
             const { insight, value: rowValue } = value;
             return (
@@ -98,12 +98,12 @@ const CustomTable = ({ data, onSearch }) => {
             );
           }
           if (column.id === "CitizenAverageRating") {
-            return <Rating currentRating={Math.round(value)} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
+            return <Rating id={row.id} currentRating={Math.round(value * 10) / 10} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
           }
           if (column.symbol === "amount") {
             return String(convertDenomination(value));
           }
-          return String(value);
+          return String(t(value));
         },
       })),
     [response, value?.denomination]
@@ -128,7 +128,7 @@ const CustomTable = ({ data, onSearch }) => {
       return rows?.plots?.reduce((acc, row, currentIndex) => {
         let value = row?.value !== null ? row?.value : row?.label || "";
         let insight = null;
-        if ((row.symbol === "number" || row.symbol === "percentage") && row.name !== "CitizenAverageRating" && lyData !== undefined) {
+        if ((row.symbol === "number" || row.symbol === "percentage" || row.symbol === "amount") && row.name !== "CitizenAverageRating" && lyData !== undefined) {
           let prevData = lyData.plots[currentIndex].value;
           if (prevData === value) insight = 0;
           else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
