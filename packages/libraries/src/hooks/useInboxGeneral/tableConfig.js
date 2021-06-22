@@ -109,6 +109,7 @@ export const TableConfig = (t) => ({
           const map = {
             "PT.CREATE": "ES_PT_NEW_PROPERTY",
             "PT.MUTATION": "ES_PT_TRANSFER_OWNERSHIP",
+            "PT.UPDATE": "ES_PT_UPDATE_PROPERTY",
           };
           return GetCell(t(`${map[row.original?.workflowData?.businessService]}`));
         },
