@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
 
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useHistory } from "react-router-dom";
 import { ActionBar, Header, Loader, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { useQueryClient } from "react-query";
 
@@ -14,6 +14,7 @@ const AssessmentDetails = () => {
   const AssessmentData = location?.state?.Assessment;
   const [showToast, setShowToast] = useState(null);
   const queryClient = useQueryClient();
+  const history = useHistory();
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, propertyId);
   const { isLoading: assessmentLoading, mutate: assessmentMutate } = Digit.Hooks.pt.usePropertyAssessment(tenantId);
@@ -85,6 +86,10 @@ const AssessmentDetails = () => {
     }
   };
 
+  const proceeedToPay = () => {
+    history.push(`/digit-ui/employee/payment/collect/PT/${propertyId}`);
+  };
+
   if (ptCalculationEstimateLoading || assessmentLoading) {
     return <Loader />;
   }
@@ -111,9 +116,13 @@ const AssessmentDetails = () => {
         closeToast={closeToast}
         timelineStatusPrefix={"ES_PT_COMMON_STATUS_"}
       />
-      {!queryClient.getQueryData(["PT_ASSESSMENT", propertyId, location?.state?.Assessment?.financialYear]) && (
+      {!queryClient.getQueryData(["PT_ASSESSMENT", propertyId, location?.state?.Assessment?.financialYear]) ? (
         <ActionBar>
           <SubmitBar label={t("ES_PT_TITLE_ASSESS_PROPERTY")} onSubmit={handleAssessment} />
+        </ActionBar>
+      ) : (
+        <ActionBar>
+          <SubmitBar label={t("PROCEED_TO_PAY")} onSubmit={proceeedToPay} />
         </ActionBar>
       )}
     </div>
