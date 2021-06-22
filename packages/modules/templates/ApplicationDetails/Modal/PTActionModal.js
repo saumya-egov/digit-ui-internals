@@ -2,6 +2,7 @@ import { Loader, Modal, FormComposer } from "@egovernments/digit-ui-react-compon
 import React, { useState, useEffect } from "react";
 
 import { configPTRejectApplication, configPTVerifyApplication, configPTApproverApplication, configPTAssessProperty } from "../config";
+import * as predefinedConfig from "../config";
 
 const Heading = (props) => {
   return <h1 className="heading-m">{props.label}</h1>;
@@ -93,61 +94,65 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
   }, [file]);
 
   function submit(data) {
-    let workflow = { action: action?.action, comments: data?.comments, businessService, moduleName: moduleCode };
-    workflow["assignes"] = action?.isTerminateState ? [] : [selectedApprover];
-    if (uploadedFile)
-      workflow["documents"] = [
-        {
-          documentType: "Document - 1",
-          fileName: file?.name,
-          fileStoreId: uploadedFile,
-        },
-      ];
+    if (!action?.showFinancialYearsModal) {
+      let workflow = { action: action?.action, comments: data?.comments, businessService, moduleName: moduleCode };
+      workflow["assignes"] = action?.isTerminateState ? [] : [selectedApprover];
+      if (uploadedFile)
+        workflow["documents"] = [
+          {
+            documentType: "Document - 1",
+            fileName: file?.name,
+            fileStoreId: uploadedFile,
+          },
+        ];
 
-    submitAction({
-      Property: {
-        ...applicationData,
-        workflow,
-      },
-      Assessment: {
-        financialYear: selectedFinancialYear?.name,
-        propertyId: applicationData?.propertyId,
-        tenantId,
-        source: applicationData?.source,
-        channel: applicationData?.channel,
-        assessmentDate: Date.now(),
-      },
-    });
+      submitAction({
+        Property: {
+          ...applicationData,
+          workflow,
+        },
+      });
+    } else {
+      submitAction({
+        customFunctionToExecute: action?.customFunctionToExecute,
+        Assessment: {
+          financialYear: selectedFinancialYear?.name,
+          propertyId: applicationData?.propertyId,
+          tenantId,
+          source: applicationData?.source,
+          channel: applicationData?.channel,
+          assessmentDate: Date.now(),
+        },
+      });
+    }
   }
+
   useEffect(() => {
     if (action) {
-      switch (action?.action) {
-        case "ASSESS_PROPERTY":
-          return setConfig(
-            configPTAssessProperty({
-              t,
-              action,
-              financialYears,
-              selectedFinancialYear,
-              setSelectedFinancialYear,
-            })
-          );
-        default:
-          console.log("default case inside modal");
-          setConfig(
-            configPTApproverApplication({
-              t,
-              action,
-              approvers,
-              selectedApprover,
-              setSelectedApprover,
-              selectFile,
-              uploadedFile,
-              setUploadedFile,
-              businessService,
-            })
-          );
-          break;
+      if (action?.showFinancialYearsModal) {
+        setConfig(
+          configPTAssessProperty({
+            t,
+            action,
+            financialYears,
+            selectedFinancialYear,
+            setSelectedFinancialYear,
+          })
+        );
+      } else {
+        setConfig(
+          configPTApproverApplication({
+            t,
+            action,
+            approvers,
+            selectedApprover,
+            setSelectedApprover,
+            selectFile,
+            uploadedFile,
+            setUploadedFile,
+            businessService,
+          })
+        );
       }
     }
   }, [action, approvers, financialYears, selectedFinancialYear, uploadedFile]);
@@ -160,7 +165,7 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
       actionCancelOnSubmit={closeModal}
       actionSaveLabel={t(config.label.submit)}
       actionSaveOnSubmit={() => {}}
-      isDisabled={PTALoading || (!action?.isTerminateState && !selectedApprover?.uuid)}
+      isDisabled={!action.showFinancialYearsModal ? PTALoading || (!action?.isTerminateState && !selectedApprover?.uuid) : !selectedFinancialYear}
       formId="modal-action"
     >
       {financialYearsLoading ? (
@@ -174,7 +179,7 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
           onSubmit={submit}
           defaultValues={defaultValues}
           formId="modal-action"
-          isDisabled={PTALoading || (!action?.isTerminateState && !selectedApprover?.uuid)}
+          // isDisabled={!action.showFinancialYearsModal ? PTALoading || (!action?.isTerminateState && !selectedApprover?.uuid) : !selectedFinancialYear}
         />
       )}
     </Modal>
