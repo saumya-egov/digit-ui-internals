@@ -1,5 +1,5 @@
 import { Dropdown, LogoutIcon, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { AppModules } from "./AppModules";
@@ -28,6 +28,17 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
   const { stateInfo } = storeData || {};
   const CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
+
+  useEffect(() => {
+    if (!pathname?.includes("application-details")) {
+      if (!pathname?.includes("inbox")) {
+        Digit.SessionStorage.del("fsm/inbox/searchParams");
+      }
+      if (pathname?.includes("search")) {
+        Digit.SessionStorage.del("fsm/search/searchParams");
+      }
+    }
+  }, [pathname]);
 
   history.listen(() => {
     window?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
