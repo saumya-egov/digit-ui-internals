@@ -61,6 +61,7 @@ import NAWANSHAHR_QA_GRO from "./userInfo/qa-gro-nawanshahr.json";
 import * as comps from "@egovernments/digit-ui-react-components";
 
 import { subFormRegistry } from "@egovernments/digit-ui-libraries";
+import IframeComponent from "./components/IframeComponent";
 
 import { pgrCustomizations, pgrComponents } from "./pgr";
 
@@ -163,7 +164,12 @@ const initDigitUI = () => {
 
   const registry = Digit.ComponentRegistryService.getRegistry();
   console.log(registry);
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} />, document.getElementById("root"));
+  window.location.href.includes("iframe")
+    ? ReactDOM.render(<IframeComponent />, document.getElementById("root"))
+    : ReactDOM.render(
+        <DigitUI stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} />,
+        document.getElementById("root")
+      );
 };
 
 initLibraries().then(() => {
