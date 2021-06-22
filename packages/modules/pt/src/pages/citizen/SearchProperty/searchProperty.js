@@ -93,7 +93,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
             component: (props, customProps) => (
               <Localities
                 selectLocality={(d) => {
-                  console.log(d, "locality changed");
+                  // console.log(d, "locality changed");
                   props.onChange(d);
                 }}
                 tenantId={cityCode}
@@ -102,6 +102,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
                 optionCardStyles={{ height: "600px", overflow: "auto", zIndex: "10" }}
                 selected={formValue?.locality}
                 disable={!cityCode}
+                disableLoader={true}
               />
             ),
           },
@@ -147,8 +148,6 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
     if (city?.code !== cityCode) {
       setCityCode(city?.code);
     }
-
-    let { errors } = formState;
 
     if (!_.isEqual(data, formValue)) {
       // if (data?.city.code !== formValue?.city?.code) setValue("locality", null);
