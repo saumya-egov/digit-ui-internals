@@ -18,6 +18,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
   const [formValue, setFormValue] = useState();
 
   useLayoutEffect(() => {
+    //Why do we need this? !!!!!
     const getActionBar = () => {
       let el = document.querySelector("div.action-bar-wrap");
       if (el) {
@@ -170,7 +171,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
   }
 
   return (
-    <div style={{ marginTop: "16px" }}>
+    <div style={{ marginTop: "16px", marginBottom: "16px" }}>
       <FormComposer
         onSubmit={onPropertySearch}
         noBoxShadow
