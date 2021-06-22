@@ -35,7 +35,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
   }, []);
 
   // moduleCode, type, config = {}, payload = []
-  const { data: propertyIdFormat, isLoading } = Digit.Hooks.pt.useMDMS(tenantId, "DIGIT-UI", "HelpText", {
+  const { data: propertyIdFormat, isLoading } = Digit.Hooks.pt.useMDMS(tenantId.split(".")[0], "DIGIT-UI", "HelpText", {
     select: (data) => {
       return data?.["DIGIT-UI"]?.["HelpText"]?.[0]?.PT?.propertyIdFormat;
     },
