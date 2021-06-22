@@ -38,7 +38,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
             id: assignment?.id,
             position: assignment?.position,
             govtOrderNumber: assignment?.govtOrderNumber,
-            tenantid: assignment?.tenantId,
+            tenantid: assignment?.tenantid,
             auditDetails: assignment?.auditDetails,
             fromDate: assignment?.fromDate ? new Date(assignment?.fromDate).getTime() : undefined,
             toDate: assignment?.toDate ? new Date(assignment?.toDate).getTime() : undefined,

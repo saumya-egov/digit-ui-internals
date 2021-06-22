@@ -1,14 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { ActionBar, CloseSvg, RadioButtons, Dropdown, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { ActionBar, CloseSvg, RadioButtons, RemoveableTag, Dropdown, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { ApplyFilterBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 
 const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props }) => {
-  // const tenantId = );
-
+  const [filters, onSelectFilterRoles] = useState(searchParams?.filters?.role || { role: [] });
   const [_searchParams, setSearchParams] = useState(() => searchParams);
+  const [selectedRoles, onSelectFilterRolessetSelectedRole] = useState(null);
   const { t } = useTranslation();
   const tenantIds = Digit.SessionStorage.get("HRMS_TENANTS");
+
+  function onSelectRoles(value, type) {
+    if (!ifExists(filters.role, value)) {
+      onSelectFilterRoles({ ...filters, role: [...filters.role, value] });
+    }
+  }
+
+  const onRemove = (index, key) => {
+    let afterRemove = filters[key].filter((value, i) => {
+      return i !== index;
+    });
+    onSelectFilterRoles({ ...filters, [key]: afterRemove });
+  };
 
   const [tenantId, settenantId] = useState(() => {
     return tenantIds.filter(
@@ -39,6 +52,24 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   }, [tenantId]);
 
   useEffect(() => {
+    if (filters.role && filters.role.length > 0) {
+      let res = [];
+      filters.role.forEach((ele) => {
+        res.push(ele.code);
+      });
+
+      setSearchParams({ roles: [...res].join(",") });
+      if (filters.role && filters.role.length > 1) {
+        let res = [];
+        filters.role.forEach((ele) => {
+          res.push(ele.code);
+        });
+        setSearchParams({ roles: [...res].join(",") });
+      }
+    }
+  }, [filters.role]);
+
+  useEffect(() => {
     if (departments) {
       setSearchParams({ designations: departments.code });
     }
@@ -49,6 +80,10 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
       setSearchParams({ roles: roles.code });
     }
   }, [roles]);
+
+  const ifExists = (list, key) => {
+    return list?.filter((object) => object.code === key.code).length;
+  };
 
   useEffect(() => {
     if (isActive) {
@@ -62,6 +97,23 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
     setRoles(null);
     setIsactive(null);
     props?.onClose?.();
+    onSelectFilterRoles({ role: [] });
+  };
+
+  const GetSelectOptions = (lable, options, selected = null, select, optionKey, onRemove, key) => {
+    selected = selected || { [optionKey]: " ", code: "" };
+    return (
+      <div>
+        <div className="filter-label">{lable}</div>
+        {<Dropdown option={options} selected={selected} select={(value) => select(value, key)} optionKey={optionKey} />}
+        <div className="tag-container">
+          {filters?.role?.length > 0 &&
+            filters?.role?.map((value, index) => {
+              return <RemoveableTag key={index} text={`${value[optionKey].slice(0, 22)} ...`} onClick={() => onRemove(index, key)} />;
+            })}
+        </div>
+      </div>
+    );
   };
   return (
     <React.Fragment>
@@ -90,7 +142,6 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
                     fill="#505A5F"
                   />
                 </svg>
-                {/* {t("ES_COMMON_CLEAR_ALL")} */}
               </span>
             )}
             {props.type === "mobile" && (
@@ -109,8 +160,17 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
               <Dropdown option={data?.MdmsRes["common-masters"]?.Designation} selected={departments} select={setDepartments} optionKey={"name"} />
             </div>
             <div>
-              <div className="filter-label">{t("HR_COMMON_TABLE_COL_ROLE")}</div>
-              <Dropdown option={data?.MdmsRes["ACCESSCONTROL-ROLES"]?.roles || null} selected={roles} select={setRoles} optionKey={"name"} />
+              <div>
+                {GetSelectOptions(
+                  t("HR_COMMON_TABLE_COL_ROLE"),
+                  data?.MdmsRes["ACCESSCONTROL-ROLES"]?.roles,
+                  selectedRoles,
+                  onSelectRoles,
+                  "name",
+                  onRemove,
+                  "role"
+                )}
+              </div>
             </div>
             <div>
               <div className="filter-label">{t("HR_EMP_STATUS_LABEL")}</div>
@@ -125,11 +185,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
                 ]}
               />
               <div>
-                <SubmitBar
-                  // disabled={_.isEqual(_searchParams, searchParams)}
-                  onSubmit={() => onFilterChange(_searchParams)}
-                  label={t("HR_COMMON_APPLY")}
-                />
+                <SubmitBar onSubmit={() => onFilterChange(_searchParams)} label={t("HR_COMMON_APPLY")} />
               </div>
             </div>
           </div>

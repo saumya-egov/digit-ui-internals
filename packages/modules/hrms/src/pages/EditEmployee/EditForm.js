@@ -29,7 +29,7 @@ const EditForm = ({ tenantId, data }) => {
     SelectEmployeeName: { employeeName: data?.user?.name },
     SelectEmployeeEmailId: { emailId: data?.user?.emailId },
     SelectEmployeeCorrespondenceAddress: { correspondenceAddress: data?.user?.correspondenceAddress },
-    SelectDateofEmployment: { dateOfAppointment: convertEpochToDate(1578268800000) },
+    SelectDateofEmployment: { dateOfAppointment: convertEpochToDate(data?.dateOfAppointment) },
     SelectEmployeeType: { code: data?.employeeType, active: true },
     SelectEmployeeGender: {
       gender: {
@@ -131,7 +131,6 @@ const EditForm = ({ tenantId, data }) => {
     });
     let requestdata = Object.assign({}, data);
     roles = [].concat.apply([], roles);
-
     requestdata.assignments = input?.Assignments;
     requestdata.dateOfAppointment = Date.parse(input?.SelectDateofEmployment?.dateOfAppointment);
     requestdata.code = input?.SelectEmployeeId?.code ? input?.SelectEmployeeId?.code : undefined;
