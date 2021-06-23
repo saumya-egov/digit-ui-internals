@@ -38,6 +38,9 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
         Digit.SessionStorage.del("fsm/search/searchParams");
       }
     }
+    if (!pathname?.includes("dss")) {
+      Digit.SessionStorage.del("DSS_FILTERS");
+    }
   }, [pathname]);
 
   history.listen(() => {

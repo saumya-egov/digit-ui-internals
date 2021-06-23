@@ -58,6 +58,20 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     );
   };
 
+  const renderTooltip = ({ payload, label }) => {
+    return (
+      <div style={{
+        margin: "0px",
+        padding: "10px",
+        backgroundColor: "rgb(255, 255, 255)",
+        border: "1px solid rgb(204, 204, 204)",
+        whiteSpace: "nowrap",
+      }}>
+        <p className="recharts-tooltip-label">{`${t(`PROPERTYTYPE_MASTERS_${payload?.[0]?.name}`)}: ${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, false)}`}</p>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return <Loader />;
   }
@@ -87,7 +101,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
             <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip formatter={(value, name) => [`₹ ${value}`, t(`PROPERTYTYPE_MASTERS_${name}`)]} />
+        <Tooltip content={renderTooltip} />
         <Legend layout="horizontal" align="bottom" iconType="circle" formatter={renderLegend} />
       </PieChart>
     </ResponsiveContainer>
