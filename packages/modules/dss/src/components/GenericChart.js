@@ -27,9 +27,9 @@ const GenericChart = ({ header, subHeader, className, caption, children, showSea
       target: "mail",
     },
     {
-      code: "sharePdf",
-      i18nKey: t("ES_DSS_SHARE_PDF"),
-      target: "whatsapp",
+      code: "shareImage",
+      i18nKey: t("ES_DSS_SHARE_IMAGE"),
+      target: "mail",
     },
   ];
 
