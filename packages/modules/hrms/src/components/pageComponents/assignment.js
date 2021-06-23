@@ -16,6 +16,9 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
       },
     ]
   );
+  const reviseIndexKeys = () => {
+    setassignments((prev) => prev.map((unit, index) => ({ ...unit, key: index })));
+  };
 
   const handleAddUnit = () => {
     setassignments((prev) => [
@@ -29,6 +32,14 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
         designation: null,
       },
     ]);
+  };
+
+  const handleRemoveUnit = (unit) => {
+    setassignments((prev) => prev.filter((el) => el.key !== unit.key));
+    if (FormData.errors?.Assignments?.type == unit.key) {
+      clearErrors("Jurisdictions");
+    }
+    reviseIndexKeys();
   };
 
   useEffect(() => {
@@ -93,6 +104,8 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
           department={department}
           designation={designation}
           getdesignationdata={getdesignationdata}
+          assignments={assignments}
+          handleRemoveUnit={handleRemoveUnit}
         />
       ))}
       <label onClick={handleAddUnit} className="link-label" style={{ width: "12rem" }}>
@@ -104,6 +117,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
 function Assignment({
   t,
   assignment,
+  assignments,
   setassignments,
   index,
   focusIndex,
@@ -111,6 +125,7 @@ function Assignment({
   getdepartmentdata,
   department,
   formData,
+  handleRemoveUnit,
   designation,
   getdesignationdata,
 }) {
@@ -134,12 +149,17 @@ function Assignment({
   };
   return (
     <div key={index + 1} style={{ marginBottom: "16px" }}>
-      <div className="label-field-pair">
-        <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-          {t("HR_ASSIGNMENT")} {index + 1}
-        </h2>
-      </div>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
+        <div className="label-field-pair">
+          <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
+            {t("HR_ASSIGNMENT")} {index + 1}
+          </h2>
+        </div>
+        {assignments.length > 1 && !assignment?.id && !assignment?.isCurrentAssignment ? (
+          <div onClick={() => handleRemoveUnit(assignment)} style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}>
+            X
+          </div>
+        ) : null}
         <LabelFieldPair>
           <CardLabel className="card-label-smaller"> {`${t("HR_ASMT_FROM_DATE_LABEL")} * `} </CardLabel>
           <div className="field">
