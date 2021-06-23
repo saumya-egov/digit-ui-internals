@@ -24,7 +24,7 @@ const CustomTable = ({ data, onSearch }) => {
     tenantId,
     requestDate: lastYearDate,
     filters:
-      id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
+      id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
   });
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
@@ -32,7 +32,7 @@ const CustomTable = ({ data, onSearch }) => {
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters:
-      id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: [filterStack[filterStack.length - 1]?.filterValue] },
+      id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
   });
 
   const renderHeader = (plot) => {
@@ -51,10 +51,10 @@ const CustomTable = ({ data, onSearch }) => {
     if (response?.responseData?.drillDownChartId && response?.responseData?.drillDownChartId !== "none") {
       let currentValue = value;
       if (filterKey === "tenantId") {
-        currentValue = dssTenants.find((tenant) => tenant?.city?.ddrName === value || tenant?.code === value);
+        currentValue = dssTenants.filter((tenant) => tenant?.city?.ddrName === value || tenant?.code === value).map(tenant => tenant?.code);
         if (currentValue === undefined) return;
       }
-      setFilterStack([...filterStack, { id: response?.responseData?.drillDownChartId, name: value, filterKey, filterValue: currentValue?.code }]);
+      setFilterStack([...filterStack, { id: response?.responseData?.drillDownChartId, name: value, filterKey, filterValue: currentValue }]);
       setChartKey(response?.responseData?.drillDownChartId);
     }
   };
@@ -78,7 +78,10 @@ const CustomTable = ({ data, onSearch }) => {
         Cell: (args) => {
           const { value, column, row } = args;
           if (typeof value === "object") {
-            const { insight, value: rowValue } = value;
+            let { insight, value: rowValue } = value;
+            if (column.symbol === "amount") {
+              rowValue = convertDenomination(rowValue);
+            }
             return (
               <span>
                 {rowValue}

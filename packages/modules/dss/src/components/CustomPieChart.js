@@ -25,7 +25,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
     const compareFn = (a, b) => b.value - a.value;
     return response?.responseData?.data?.[0]?.plots.sort(compareFn).reduce((acc, plot, index) => {
       if (index < 4) acc = acc.concat(plot);
-      else if (index === 4) acc = acc.concat({ label: null, name: "DSS.OTHERS", value: plot?.value, symbol: "number" });
+      else if (index === 4) acc = acc.concat({ label: null, name: "DSS.OTHERS", value: plot?.value, symbol: "amount" });
       else acc[4].value += plot?.value;
       return acc;
     }, []);
@@ -51,7 +51,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
         alignmentBaseline="middle"
         className="recharts-pie-label-text"
         fontSize="14px"
-        textAnchor="end"
+        textAnchor={x > cx ? "start" : "end"}
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>

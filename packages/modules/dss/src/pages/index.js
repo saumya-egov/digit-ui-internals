@@ -76,11 +76,11 @@ const DashBoard = ({ stateCode }) => {
   const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
 
   const removeULB = (id) => {
-    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } });
+    handleFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } });
   };
 
   const handleClear = () => {
-    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
+    handleFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
   };
 
   const dashboardConfig = response?.responseData;
@@ -189,7 +189,6 @@ const DashBoard = ({ stateCode }) => {
               displayOptions={showOptions}
               options={shareOptions}
             />
-            {t(`ES_DSS_SHARE`)}
           </div>
           <div>
             <DownloadIcon />
