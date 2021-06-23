@@ -33,6 +33,7 @@ const SelectEmployeeEmailId = ({ t, config, onSelect, formData = {}, userType, r
             </CardLabel>
             <div className="field">
               <TextInput
+                type={input.type}
                 key={input.name}
                 value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e.target.value, input.name)}

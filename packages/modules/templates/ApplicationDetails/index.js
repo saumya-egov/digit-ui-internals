@@ -84,19 +84,26 @@ const ApplicationDetails = (props) => {
     //     state: { ...selectedAction.redirectionUrl?.state, data },
     //   });
     // } else {
-    mutate(data, {
-      onError: (error, variables) => {
-        setShowToast({ key: "error", error });
-        setTimeout(closeToast, 5000);
-      },
-      onSuccess: (data, variables) => {
-        setShowToast({ key: "success", action: selectedAction });
-        setTimeout(closeToast, 5000);
-        queryClient.clear();
-        queryClient.refetchQueries("APPLICATION_SEARCH");
-      },
-    });
-    // }
+
+    if (typeof data?.customFunctionToExecute === "function") {
+      data?.customFunctionToExecute({ ...data });
+    }
+
+    if (mutate) {
+      mutate(data, {
+        onError: (error, variables) => {
+          setShowToast({ key: "error", error });
+          setTimeout(closeToast, 5000);
+        },
+        onSuccess: (data, variables) => {
+          setShowToast({ key: "success", action: selectedAction });
+          setTimeout(closeToast, 5000);
+          queryClient.clear();
+          queryClient.refetchQueries("APPLICATION_SEARCH");
+        },
+      });
+    }
+
     closeModal();
   };
 

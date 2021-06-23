@@ -24,12 +24,16 @@ const CreateEmployee = () => {
           setPhonecheck(true);
         }
       });
+    } else {
+      setPhonecheck(false);
     }
   }, [mobileNumber]);
 
   const onFormValueChange = (setValue = true, formData) => {
     if (/^[6-9]\d{9}$/.test(formData?.SelectEmployeePhoneNumber?.mobileNumber)) {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    } else {
+      setPhonecheck(false);
     }
     let setcheck = false;
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {

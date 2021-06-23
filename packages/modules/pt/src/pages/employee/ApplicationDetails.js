@@ -51,10 +51,10 @@ const ApplicationDetails = () => {
         actionState: {
           nextActions: [
             {
-              action: "ASSESS_PROPERTY",
+              action: "VIEW_DETAILS",
               redirectionUrl: {
-                pathname: `/digit-ui/employee/pt/assessment-details/${applicationNumber}`,
-                state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+                pathname: `/digit-ui/employee/pt/property-details/${applicationNumber}`,
+                // state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
               },
               tenantId: "pb",
             },
@@ -74,7 +74,6 @@ const ApplicationDetails = () => {
 
   if (
     PT_CEMP &&
-    // businessService === "PT.UPDATE" &&
     workflowDetails?.data?.actionState?.isStateUpdatable &&
     !workflowDetails?.data?.actionState?.nextActions?.find((e) => e.action === "UPDATE")
   ) {
@@ -102,7 +101,7 @@ const ApplicationDetails = () => {
 
   console.log(workflowDetails?.data, "inside workflowdetails");
 
-  applicationDetails?.applicationData?.units?.sort((a, b) => b.floorNo - a.floorNo);
+  // applicationDetails?.applicationData?.units?.sort((a, b) => b.floorNo - a.floorNo);
 
   return (
     <div>

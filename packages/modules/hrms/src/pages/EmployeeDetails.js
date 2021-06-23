@@ -59,26 +59,26 @@ const Details = () => {
         <Header>{t("HR_NEW_EMPLOYEE_FORM_HEADER")}</Header>
       </div>
       {!isLoading && data?.Employees.length > 0 ? (
-        <div style={{ maxHeight: "calc(100vh - 12em)", margin: "30px" }}>
+        <div style={{ maxHeight: "calc(100vh - 12em)" }}>
           <Card>
             <StatusTable>
               <Row
-                label={<CardSubHeader>{t("HR_EMP_STATUS_LABEL")} </CardSubHeader>}
+                label={<CardSubHeader className="card-section-header">{t("HR_EMP_STATUS_LABEL")} </CardSubHeader>}
                 text={
                   data?.Employees?.[0]?.isActive ? <div className="sla-cell-success"> Active </div> : <div className="sla-cell-error">Inactive</div>
                 }
                 textStyle={{ fontWeight: "bold", maxWidth: "6.5rem" }}
               />
             </StatusTable>
-            <CardSubHeader>{t("HR_PERSONAL_DETAILS_FORM_HEADER")} </CardSubHeader>
+            <CardSubHeader className="card-section-header">{t("HR_PERSONAL_DETAILS_FORM_HEADER")} </CardSubHeader>
             <StatusTable>
-              <Row label={t("HR_NAME_LABEL")} text={data?.Employees?.[0]?.user?.userName} textStyle={{ whiteSpace: "pre" }} />
+              <Row label={t("HR_NAME_LABEL")} text={data?.Employees?.[0]?.user?.name} textStyle={{ whiteSpace: "pre" }} />
               <Row label={t("HR_MOB_NO_LABEL")} text={data?.Employees?.[0]?.user?.mobileNumber} textStyle={{ whiteSpace: "pre" }} />
               <Row label={t("HR_GENDER_LABEL")} text={data?.Employees?.[0]?.user?.gender} />
               <Row label={t("HR_EMAIL_LABEL")} text={data?.Employees?.[0]?.user?.emailId} />
               <Row label={t("HR_CORRESPONDENCE_ADDRESS_LABEL")} text={data?.Employees?.[0]?.user?.correspondenceAddress} />
             </StatusTable>
-            <CardSubHeader>{t("Employee Details")}</CardSubHeader>
+            <CardSubHeader className="card-section-header">{t("Employee Details")}</CardSubHeader>
             <StatusTable>
               <Row label={t("HR_EMPLOYMENT_TYPE_LABEL")} text={data?.Employees?.[0]?.employeeType} textStyle={{ whiteSpace: "pre" }} />
               <Row
@@ -86,7 +86,7 @@ const Details = () => {
                 text={convertEpochFormateToDate(data?.Employees?.[0]?.dateOfAppointment)}
                 textStyle={{ whiteSpace: "pre" }}
               />
-              <Row label={t("HR_EMPLOYEE_ID_LABEL")} text={data?.Employees?.[0]?.id} />
+              <Row label={t("HR_EMPLOYEE_ID_LABEL")} text={data?.Employees?.[0]?.code} />
             </StatusTable>
             <StatusTable>
               <Row label={t("HR_EMPLOYMENT_TYPE_LABEL")} text={data?.Employees?.[0]?.employeeType} textStyle={{ whiteSpace: "pre" }} />
@@ -114,6 +114,7 @@ const Details = () => {
             ) : null}
 
             <StatusTable>
+              <Row label={t("TL_APPROVAL_UPLOAD_HEAD")} text={""} />
               <div style={{ display: "flex", flexWrap: "wrap" }}>
                 {data?.Employees?.[0]?.documents?.map((document, index) => {
                   // let documentLink = pdfDownloadLink(data.pdfFiles, document?.fileStoreId);
@@ -128,7 +129,9 @@ const Details = () => {
               </div>
             </StatusTable>
 
-            {data?.Employees?.[0]?.jurisdictions.length > 0 ? <CardSubHeader>{t("HR_JURIS_DET_HEADER")}</CardSubHeader> : null}
+            {data?.Employees?.[0]?.jurisdictions.length > 0 ? (
+              <CardSubHeader className="card-section-header">{t("HR_JURIS_DET_HEADER")}</CardSubHeader>
+            ) : null}
 
             {data?.Employees?.[0]?.jurisdictions?.length > 0
               ? data?.Employees?.[0]?.jurisdictions.map((element, index) => {
@@ -159,7 +162,9 @@ const Details = () => {
                   );
                 })
               : null}
-            {data?.Employees?.[0]?.assignments.length > 0 ? <CardSubHeader>{t("HR_ASSIGN_DET_HEADER")}</CardSubHeader> : null}
+            {data?.Employees?.[0]?.assignments.length > 0 ? (
+              <CardSubHeader className="card-section-header">{t("HR_ASSIGN_DET_HEADER")}</CardSubHeader>
+            ) : null}
             {data?.Employees?.[0]?.assignments.map((element, index) => (
               <StatusTable
                 key={index}
@@ -182,6 +187,7 @@ const Details = () => {
                   textStyle={{ whiteSpace: "pre" }}
                 />
                 <Row label={t("HR_DEPT_LABEL")} text={t("COMMON_MASTERS_DEPARTMENT_" + element?.department)} />
+                <Row label={t("HR_DESG_LABEL")} text={t("COMMON_MASTERS_DESIGNATION_" + element?.designation)} />
                 <Row label={t("HR_HOD_SWITCH_LABEL")} text={element?.isHOD ? element?.isHOD : "NA"} />
               </StatusTable>
             ))}

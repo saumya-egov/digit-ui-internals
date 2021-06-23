@@ -77,6 +77,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
         maxlength: 10,
         pattern: "[6-9][0-9]{9}",
         title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
+        componentInFront: "+91",
       },
       {
         label: t("HR_EMPLOYEE_ID_LABEL"),

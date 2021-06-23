@@ -34,15 +34,14 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
     <div>
       {inputs?.map((input, index) => (
         <React.Fragment key={index}>
+          {iserror ? <CardLabelError>{t(input.populators.error)}</CardLabelError> : null}
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
             <div className="field-container" style={{ width: "50%" }}>
-              <div className="employee-card-input employee-card-input--front">
-                <p>&#128269;</p>
-              </div>
+              <div className="employee-card-input employee-card-input--front">+91</div>
               <TextInput
                 className="field desktop-w-full"
                 key={input.name}
@@ -53,7 +52,6 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                 onBlur={(e) => validate(e.target.value, input)}
                 {...input.validation}
               />
-              {iserror ? <CardLabelError>{t(input.populators.error)}</CardLabelError> : null}
             </div>
           </LabelFieldPair>
         </React.Fragment>

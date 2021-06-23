@@ -81,6 +81,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
           fill="#8884d8"
           label={renderCustomLabel}
           labelLine={false}
+          isAnimationActive={false}
         >
           {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
             <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />

@@ -64,6 +64,19 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         },
       },
       {
+        Header: t("HR_DEPT_LABEL"),
+        disableSortBy: true,
+        Cell: ({ row }) => {
+          return GetCell(
+            `${
+              t(
+                "COMMON_MASTERS_DEPARTMENT_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.department
+              ) || ""
+            }`
+          );
+        },
+      },
+      {
         Header: t("HR_STATUS_LABEL"),
         disableSortBy: true,
         Cell: ({ row }) => {
@@ -98,9 +111,10 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         getCellProps={(cellInfo) => {
           return {
             style: {
-              maxWidth: cellInfo.column.Header === t("HR_EMP_ID_LABEL") ? "140px" : "",
+              maxWidth: cellInfo.column.Header == t("HR_EMP_ID_LABEL") ? "150px" : "",
               padding: "20px 18px",
               fontSize: "16px",
+              minWidth: "150px",
             },
           };
         }}

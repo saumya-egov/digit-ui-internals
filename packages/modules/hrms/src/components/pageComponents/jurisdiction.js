@@ -26,10 +26,14 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         boundaryType: jurisdiction?.boundaryType?.label,
         boundary: jurisdiction?.boundary?.code,
         tenantId: jurisdiction?.boundary?.code,
+        auditDetails: jurisdiction?.auditDetails,
       };
       res = cleanup(res);
       if (jurisdiction?.roles) {
-        res["roles"] = jurisdiction?.roles;
+        res["roles"] = jurisdiction?.roles.map((ele) => {
+          delete ele.description;
+          return ele;
+        });
       }
       return res;
     });
@@ -92,7 +96,9 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
           getroledata={getroledata}
         />
       ))}
-      <LinkButton label={t("HR_ADD_JURISDICTION")} onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
+      <label onClick={handleAddUnit} className="link-label" style={{ width: "12rem" }}>
+        {t("HR_ADD_JURISDICTION")}
+      </label>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 //import getPTAcknowledgementData from "../../../getPTAcknowledgementData";
 import { convertToTrade, convertToUpdateProperty } from "../../../utils";
+import getPDFData from "../../../utils/getTLAcknowledgementData";
 
 const GetActionMessage = (props) => {
   const { t } = useTranslation();
@@ -39,6 +40,8 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
     data?.address?.city ? data.address?.city?.code : tenantId,
     !window.location.href.includes("edit-application")
   );
+  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const { tenants } = storeData || {};
 
   useEffect(() => {
     try {
@@ -55,10 +58,12 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
   }, []);
 
   const handleDownloadPdf = async () => {
-    // const { Properties = [] } = mutation.data;
-    // const Property = (Properties && Properties[0]) || {};
-    // const data = await getPTAcknowledgementData({ ...Property }, tenantInfo, t);
-    // Digit.Utils.pdf.generate(data);
+    const { Licenses = [] } = mutation.data;
+    const License = (Licenses && Licenses[0]) || {};
+    const tenantInfo = tenants.find((tenant) => tenant.code === License.tenantId);
+    let res = License;
+    const data = getPDFData({ ...res }, tenantInfo, t);
+    data.then((ress) => Digit.Utils.pdf.generate(ress));
   };
 
   return mutation.isLoading || mutation.isIdle ? (
@@ -83,7 +88,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
           onClick={handleDownloadPdf}
           className="w-full"
         />)}*/}
-      <StatusTable>
+      {/* <StatusTable>
         {mutation.isSuccess && (
           <Row
             rowContainerStyle={rowContainerStyle}
@@ -93,7 +98,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
             textStyle={{ whiteSpace: "pre", width: "60%" }}
           />
         )}
-      </StatusTable>
+      </StatusTable> */}
       {mutation.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
 
       <Link to={`/digit-ui/citizen`}>
