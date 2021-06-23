@@ -139,7 +139,9 @@ const DashBoard = ({ stateCode }) => {
               <MultiLink
                 className="multilink-block-wrapper"
                 label={t(`ES_DSS_SHARE`)}
-                onHeadClick={() => setShowOptions(!showOptions)}
+                icon={<ShareIcon className="mrsm" />}
+                showOptions={(e) => setShowOptions(e)}
+                onHeadClick={(e) => setShowOptions(e !== undefined ? e : !showOptions)}
                 displayOptions={showOptions}
                 options={shareOptions}
               />
@@ -169,7 +171,9 @@ const DashBoard = ({ stateCode }) => {
             <MultiLink
               className="multilink-block-wrapper"
               label={t(`ES_DSS_SHARE`)}
-              onHeadClick={() => setShowOptions(!showOptions)}
+              icon={<ShareIcon className="mrsm" />}
+              showOptions={(e) => setShowOptions(e)}
+              onHeadClick={(e) => setShowOptions(e !== undefined ? e : !showOptions)}
               displayOptions={showOptions}
               options={shareOptions}
             />
