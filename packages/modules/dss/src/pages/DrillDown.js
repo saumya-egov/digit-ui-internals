@@ -39,21 +39,27 @@ const DrillDown = () => {
       }
     }
   });
+
+  const handleFilters = (data) => {
+    Digit.SessionStorage.set(key, data);
+    setFilters(data);
+  }
+
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
   const provided = useMemo(
     () => ({
       value: filters,
-      setValue: setFilters,
+      setValue: handleFilters,
     }),
     [filters]
   );
 
   const removeULB = (id) => {
-    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } });
+    handleFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } });
   };
 
   const handleClear = () => {
-    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
+    handleFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
   };
 
   if (isUlbLoading) {
