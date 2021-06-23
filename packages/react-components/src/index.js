@@ -85,6 +85,7 @@ import {
   Person,
   WhatsappIcon,
   EmailIcon,
+  DocumentSVG,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -245,4 +246,5 @@ export {
   Person,
   WhatsappIcon,
   EmailIcon,
+  DocumentSVG,
 };

@@ -127,7 +127,10 @@ const EditForm = ({ tenantId, data }) => {
 
   const onSubmit = (input) => {
     let roles = input?.Jurisdictions?.map((ele) => {
-      return ele.roles;
+      return ele.roles?.map((item) => {
+        item["tenantId"] = ele.boundary;
+        return item;
+      });
     });
     let requestdata = Object.assign({}, data);
     roles = [].concat.apply([], roles);
