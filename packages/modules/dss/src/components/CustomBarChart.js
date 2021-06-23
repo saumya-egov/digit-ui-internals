@@ -86,7 +86,7 @@ const CustomBarChart = ({
         </BarChart>
       </ResponsiveContainer>
       {showDrillDown && (
-        <p style={{ textAlign: "right", color: "#F47738", cursor: "pointer" }} onClick={goToDrillDownCharts}>
+        <p className="showMore" onClick={goToDrillDownCharts}>
           {t("DSS_SHOW_MORE")}
         </p>
       )}
