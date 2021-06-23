@@ -17,30 +17,38 @@ import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
 import { useParams } from "react-router-dom";
 
+const key = 'DSS_FILTERS';
+
 const getInitialRange = () => {
-  const startDate = addMonths(startOfYear(new Date()), 3);
-  const endDate = addMonths(endOfYear(new Date()), 3);
+  const data = Digit.SessionStorage.get(key);
+  const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : addMonths(startOfYear(new Date()), 3);
+  const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : addMonths(endOfYear(new Date()), 3);
   const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
-  return { startDate, endDate, title, duration };
+  const denomination = data?.denomination || "Unit";
+  const tenantId = data?.filters?.tenantId || []
+  return { startDate, endDate, title, duration, denomination, tenantId };
 };
 
 const DashBoard = ({ stateCode }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const [filters, setFilters] = useState((data) => ({
-    denomination: data?.denomination || "Unit",
-    range: data?.range || getInitialRange(),
-    requestDate: {
-      startDate: data?.range?.startDate.getTime() || getInitialRange().startDate.getTime(),
-      endDate: data?.range?.endDate.getTime() || getInitialRange().endDate.getTime(),
-      interval: "month",
-      title: "",
-    },
-    filters: {
-      tenantId: data?.filters?.tenantId || [],
-    },
-  }));
+  const [filters, setFilters] = useState(() => {
+    const { startDate, endDate, title, duration, denomination, tenantId } = getInitialRange();
+    return {
+      denomination,
+      range: { startDate, endDate, title, duration},
+      requestDate: {
+        startDate: startDate.getTime(),
+        endDate: endDate.getTime(),
+        interval: duration,
+        title: title,
+      },
+      filters: {
+        tenantId,
+      }
+    }
+  });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const { moduleCode } = useParams();
 
@@ -52,11 +60,15 @@ const DashBoard = ({ stateCode }) => {
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
   const [showOptions, setShowOptions] = useState(false);
 
+  const handleFilters = (data) => {
+    Digit.SessionStorage.set(key, data);
+    setFilters(data);
+  }
   const fullPageRef = useRef();
   const provided = useMemo(
     () => ({
       value: filters,
-      setValue: setFilters,
+      setValue: handleFilters,
       ulbTenants,
     }),
     [filters, isUlbLoading]
@@ -139,7 +151,9 @@ const DashBoard = ({ stateCode }) => {
               <MultiLink
                 className="multilink-block-wrapper"
                 label={t(`ES_DSS_SHARE`)}
-                onHeadClick={() => setShowOptions(!showOptions)}
+                icon={<ShareIcon className="mrsm" />}
+                showOptions={(e) => setShowOptions(e)}
+                onHeadClick={(e) => setShowOptions(e !== undefined ? e : !showOptions)}
                 displayOptions={showOptions}
                 options={shareOptions}
               />
@@ -169,7 +183,9 @@ const DashBoard = ({ stateCode }) => {
             <MultiLink
               className="multilink-block-wrapper"
               label={t(`ES_DSS_SHARE`)}
-              onHeadClick={() => setShowOptions(!showOptions)}
+              icon={<ShareIcon className="mrsm" />}
+              showOptions={(e) => setShowOptions(e)}
+              onHeadClick={(e) => setShowOptions(e !== undefined ? e : !showOptions)}
               displayOptions={showOptions}
               options={shareOptions}
             />

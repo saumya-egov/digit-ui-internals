@@ -7,29 +7,37 @@ import FilterContext from "../components/FilterContext";
 import GenericChart from "../components/GenericChart";
 import Filters from "../components/Filters";
 
+const key = 'DSS_FILTERS';
+
 const getInitialRange = () => {
-  const startDate = addMonths(startOfYear(new Date()), 3);
-  const endDate = addMonths(endOfYear(new Date()), 3);
+  const data = Digit.SessionStorage.get(key);
+  const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : addMonths(startOfYear(new Date()), 3);
+  const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : addMonths(endOfYear(new Date()), 3);
   const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
-  return { startDate, endDate, title, duration };
+  const denomination = data?.denomination || "Unit";
+  const tenantId = data?.filters?.tenantId || []
+  return { startDate, endDate, title, duration, denomination, tenantId };
 };
 
 const DrillDown = () => {
   const [searchQuery, onSearch] = useState();
   const { ulb, chart, title } = Digit.Hooks.useQueryParams();
   const { t } = useTranslation();
-  const [filters, setFilters] = useState({
-    range: getInitialRange(),
-    requestDate: {
-      startDate: getInitialRange().startDate.getTime(),
-      endDate: getInitialRange().endDate.getTime(),
-      interval: "month",
-      title: "",
-    },
-    filters: {
-      tenantId: ulb !== "" ? [ulb] : [],
-    },
+  const [filters, setFilters] = useState(() => {
+    const { startDate, endDate, title, duration, denomination, tenantId } = getInitialRange();
+    return {
+      range: { startDate, endDate, title, duration},
+      requestDate: {
+        startDate: startDate.getTime(),
+        endDate: endDate.getTime(),
+        interval: duration,
+        title: title,
+      },
+      filters: {
+        tenantId: tenantId,
+      }
+    }
   });
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
   const provided = useMemo(

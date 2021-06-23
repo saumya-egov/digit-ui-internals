@@ -73,7 +73,7 @@ const ErrorSvg = ({ className }) => (
   </svg>
 );
 
-const StarFilled = ({ className, onClick, styles }) => (
+const StarFilled = ({ className, id, onClick, styles, percentage = 100 }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     enableBackground="new 0 0 24 24"
@@ -85,12 +85,17 @@ const StarFilled = ({ className, onClick, styles }) => (
     width="48px"
     height="48px"
   >
+    <linearGradient id={id} x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0%"  stopColor="#F47738" stopOpacity={1}></stop>
+      <stop offset={`${percentage}%`} stopColor="#F47738" stopOpacity={1}></stop>
+      <stop offset={`${percentage}%`} stopColor="white" stopOpacity={0}></stop>
+    </linearGradient>
     <g>
       <path d="M0,0h24v24H0V0z" fill="none" />
       <path d="M0,0h24v24H0V0z" fill="none" />
     </g>
     <g>
-      <path d="M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z" />
+      <path d="M12,17.27L18.18,21l-1.64-7.03L22,9.24l-7.19-0.61L12,2L9.19,8.63L2,9.24l5.46,4.73L5.82,21L12,17.27z" fill={`url(#${id})`} stroke="#F47738" strokeWidth={1} />
     </g>
   </svg>
 );
@@ -107,7 +112,7 @@ const StarEmpty = ({ className, onClick, styles }) => (
     onClick={onClick}
   >
     <path d="M0 0h24v24H0V0z" fill="none" />
-    <path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z" />
+    <path d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z" strokeWidth={1} />
   </svg>
 );
 
