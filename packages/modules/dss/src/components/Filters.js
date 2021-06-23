@@ -8,11 +8,11 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters, showDateRange = true, sh
   const { value, setValue } = useContext(FilterContext);
 
   const [selected, setSelected] = useState(() =>
-    ulbTenants.filter((tenant) => value.filters.tenantId.find((selectedTenant) => selectedTenant === tenant.code))
+    ulbTenants?.ulb.filter((tenant) => value.filters.tenantId.find((selectedTenant) => selectedTenant === tenant.code))
   );
 
   useEffect(() => {
-    setSelected(ulbTenants.filter((tenant) => value.filters.tenantId.find((selectedTenant) => selectedTenant === tenant.code)));
+    setSelected(ulbTenants?.ulb.filter((tenant) => value.filters.tenantId.find((selectedTenant) => selectedTenant === tenant.code)));
   }, [value.filters.tenantId]);
 
   const selectULB = (data) => {
@@ -61,7 +61,7 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters, showDateRange = true, sh
         <div className="filters-input">
           <div>{t("ES_DSS_DDR")}</div>
           <MultiSelectDropdown
-            options={ulbTenants}
+            options={ulbTenants?.ddr}
             optionsKey="ddrKey"
             onSelect={selectFilters}
             selected={selected}
@@ -74,7 +74,7 @@ const Filters = ({ t, ulbTenants, isOpen, closeFilters, showDateRange = true, sh
         <div className="filters-input">
           <div>{t("ES_DSS_ULB")}</div>
           <MultiSelectDropdown
-            options={ulbTenants}
+            options={ulbTenants?.ulb}
             optionsKey="ulbKey"
             onSelect={selectFilters}
             selected={selected}
