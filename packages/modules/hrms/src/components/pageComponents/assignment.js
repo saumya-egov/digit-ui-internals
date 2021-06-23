@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import cleanup from "../Utils/cleanup";
 import { CardLabel, LabelFieldPair, Dropdown, TextInput, LinkButton, DatePicker, CheckBox, Loader } from "@egovernments/digit-ui-react-components";
+import { convertEpochToDate } from "../Utils/index";
+
 const Assignments = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
+  const [currentassignemtDate, setCurrentAssiginmentDate] = useState(null);
   const [assignments, setassignments] = useState(
     formData?.Assignments || [
       {
         key: 1,
         fromDate: undefined,
         toDate: undefined,
-        isCurrentAssignment: undefined,
+        isCurrentAssignment: false,
         department: null,
         designation: null,
       },
@@ -27,7 +30,7 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
         key: prev.length + 1,
         fromDate: undefined,
         toDate: undefined,
-        isCurrentAssignment: undefined,
+        isCurrentAssignment: false,
         department: null,
         designation: null,
       },
@@ -65,6 +68,13 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
         config.key,
         results.filter((value) => Object.keys(value).length !== 0)
       );
+    });
+
+    assignments.map((ele) => {
+      if (ele.isCurrentAssignment) {
+        console.log(ele.fromDate);
+        setCurrentAssiginmentDate(ele.fromDate);
+      }
     });
   }, [assignments]);
 
@@ -106,6 +116,8 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
           getdesignationdata={getdesignationdata}
           assignments={assignments}
           handleRemoveUnit={handleRemoveUnit}
+          setCurrentAssiginmentDate={setCurrentAssiginmentDate}
+          currentassignemtDate={currentassignemtDate}
         />
       ))}
       <label onClick={handleAddUnit} className="link-label" style={{ width: "12rem" }}>
@@ -128,6 +140,8 @@ function Assignment({
   handleRemoveUnit,
   designation,
   getdesignationdata,
+  setCurrentAssiginmentDate,
+  currentassignemtDate,
 }) {
   const selectDepartment = (value) => {
     setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, department: value } : item)));
@@ -141,31 +155,55 @@ function Assignment({
       pre.map((item) => (item.key === assignment.key ? { ...item, isCurrentAssignment: value } : { ...item, isCurrentAssignment: false }))
     );
     if (value) {
-      setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, toDate: null } : item)));
+      setassignments((pre) =>
+        pre.map((item) =>
+          item.key === assignment.key
+            ? {
+                ...item,
+                toDate: null,
+              }
+            : item
+        )
+      );
+      assignments.map((ele) => {
+        if (ele.key == assignment.key) {
+          setCurrentAssiginmentDate(ele.fromDate);
+        }
+      });
+    } else {
+      setCurrentAssiginmentDate(null);
     }
   };
   const onIsHODchange = (value) => {
     setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, isHOD: value } : item)));
   };
+
+  const ValidateDatePickers = (value) => {
+    assignments;
+  };
   return (
     <div key={index + 1} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
-        <div className="label-field-pair">
-          <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-            {t("HR_ASSIGNMENT")} {index + 1}
-          </h2>
-        </div>
-        {assignments.length > 1 && !assignment?.id && !assignment?.isCurrentAssignment ? (
-          <div onClick={() => handleRemoveUnit(assignment)} style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}>
-            X
+        <LabelFieldPair>
+          <div className="label-field-pair" style={{ width: "100%" }}>
+            <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
+              {t("HR_ASSIGNMENT")} {index + 1}
+            </h2>
           </div>
-        ) : null}
+          {assignments.length > 1 && !assignment?.id && !assignment?.isCurrentAssignment ? (
+            <div onClick={() => handleRemoveUnit(assignment)} style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}>
+              X
+            </div>
+          ) : null}
+        </LabelFieldPair>
+
         <LabelFieldPair>
           <CardLabel className="card-label-smaller"> {`${t("HR_ASMT_FROM_DATE_LABEL")} * `} </CardLabel>
           <div className="field">
             <DatePicker
               type="date"
               name="fromDate"
+              max={currentassignemtDate ? currentassignemtDate : convertEpochToDate(new Date())}
               min={formData?.SelectDateofEmployment?.dateOfAppointment}
               onChange={(e) => {
                 setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, fromDate: e } : item)));
@@ -186,6 +224,7 @@ function Assignment({
               type="date"
               name="toDate"
               min={assignment?.fromDate}
+              max={currentassignemtDate ? currentassignemtDate : convertEpochToDate(new Date())}
               disabled={assignment?.isCurrentAssignment}
               onChange={(e) => {
                 setassignments((pre) => pre.map((item) => (item.key === assignment.key ? { ...item, toDate: e } : item)));

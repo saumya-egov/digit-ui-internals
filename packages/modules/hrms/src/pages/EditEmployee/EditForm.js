@@ -56,6 +56,7 @@ const EditForm = ({ tenantId, data }) => {
         key: index,
         fromDate: convertEpochToDate(ele.fromDate),
         toDate: convertEpochToDate(ele.toDate),
+        isCurrentAssignment: ele.isCurrentAssignment,
         designation: {
           code: ele.designation,
           i18key: "COMMON_MASTERS_DESIGNATION_" + ele.designation,

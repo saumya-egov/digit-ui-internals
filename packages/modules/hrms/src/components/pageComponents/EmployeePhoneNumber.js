@@ -34,24 +34,28 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
     <div>
       {inputs?.map((input, index) => (
         <React.Fragment key={index}>
-          {iserror ? <CardLabelError>{t(input.populators.error)}</CardLabelError> : null}
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field-container" style={{ width: "50%" }}>
-              <div className="employee-card-input employee-card-input--front">+91</div>
-              <TextInput
-                className="field desktop-w-full"
-                key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
-                onChange={(e) => setValue(e.target.value, input.name)}
-                disable={false}
-                defaultValue={undefined}
-                onBlur={(e) => validate(e.target.value, input)}
-                {...input.validation}
-              />
+            <div className="field-container" style={{ width: "50%", display: "block" }}>
+              <div>
+                <div style={{ display: "flex" }}>
+                  <div className="employee-card-input employee-card-input--front">+91</div>
+                  <TextInput
+                    className="field desktop-w-full"
+                    key={input.name}
+                    value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
+                    onChange={(e) => setValue(e.target.value, input.name)}
+                    disable={false}
+                    defaultValue={undefined}
+                    onBlur={(e) => validate(e.target.value, input)}
+                    {...input.validation}
+                  />
+                </div>
+                <div>{iserror ? <CardLabelError>{t(input.populators.error)}</CardLabelError> : null}</div>
+              </div>
             </div>
           </LabelFieldPair>
         </React.Fragment>

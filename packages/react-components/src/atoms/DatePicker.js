@@ -35,7 +35,7 @@ const DatePicker = (props) => {
           className={`employee-card-input ${props.disabled ? "disabled" : ""}`}
           style={{ width: "calc(100%-62px)" }}
         />
-        <CalendarIcon className={`${props.disabled ? "disabled" : ""}`} style={{ right: "6px", zIndex: "10", top: 6, position: "absolute" }} />
+        <CalendarIcon isdisabled={props.disabled ? true : false} style={{ right: "6px", zIndex: "10", top: 6, position: "absolute" }} />
         <input
           className={`${props.disabled ? "disabled" : ""}`}
           style={{ right: "6px", zIndex: "100", top: 6, position: "absolute", opacity: 0, width: "100%" }}

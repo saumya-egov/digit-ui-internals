@@ -201,16 +201,21 @@ function Jurisdiction({
   return (
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
-        <div className="label-field-pair">
-          <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-            {t("HR_JURISDICTION")} {index + 1}
-          </h2>
-        </div>
-        {jurisdictions.length > 1 ? (
-          <div onClick={() => handleRemoveUnit(jurisdiction)} style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}>
-            X
+        <LabelFieldPair>
+          <div className="label-field-pair" style={{ width: "100%" }}>
+            <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
+              {t("HR_JURISDICTION")} {index + 1}
+            </h2>
           </div>
-        ) : null}
+          {jurisdictions.length > 1 ? (
+            <div
+              onClick={() => handleRemoveUnit(jurisdiction)}
+              style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}
+            >
+              X
+            </div>
+          ) : null}
+        </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel isMandatory={true} className="card-label-smaller">{`${t("HR_HIERARCHY_LABEL")} * `}</CardLabel>
           <Dropdown
