@@ -3,7 +3,6 @@ import useWorkflowDetails from "./workflow";
 import useSessionStorage from "./useSessionStorage";
 import useQueryParams from "./useQueryParams";
 import useClickOutside from "./useClickOutside";
-import useCoreData from "./useCoreData";
 import {
   useFetchPayment,
   usePaymentUpdate,
@@ -11,6 +10,7 @@ import {
   useFetchBillsForBuissnessService,
   useGetPaymentRulesForBusinessServices,
   useDemandSearch,
+  useRecieptSearch,
 } from "./payment";
 import { useUserSearch } from "./userSearch";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
@@ -19,6 +19,7 @@ import useCommonMDMS from "./useMDMS";
 import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useApplicationStatusGeneral from "./useStatusGeneral";
 import useModuleTenants from "./useModuleTenants";
+import useStore from "./useStore";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -82,6 +83,14 @@ import usemcollectTenants from "./mcollect/useTenants";
 
 import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
+import useTLDocumentSearch from "./tl/useTLDocumentSearch";
+import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
+
+import useHRMSSearch from "./hrms/useHRMSsearch";
+import useHrmsMDMS from "./hrms/useHRMSMDMS";
+import useHRMSCreate from "./hrms/useHRMScreate";
+import useHRMSUpdate from "./hrms/useHRMSUpdate";
+import useHRMSCount from "./hrms/useHRMSCount";
 
 const pgr = {
   useComplaintDetails,
@@ -153,9 +162,18 @@ const mcollect = {
   usemcollectTenants,
 };
 
+const hrms = {
+  useHRMSSearch,
+  useHrmsMDMS,
+  useHRMSCreate,
+  useHRMSUpdate,
+  useHRMSCount,
+};
 const tl = {
   useTenants: useTenantsTL,
   useTradeLicenseMDMS,
+  useTLDocumentSearch,
+  useTradeLicenseAPI,
 };
 
 const Hooks = {
@@ -169,7 +187,6 @@ const Hooks = {
   useWorkflowDetails,
   useInitStore,
   useClickOutside,
-  useCoreData,
   useUserSearch,
   useApplicationsForBusinessServiceSearch,
   useDemandSearch,
@@ -179,11 +196,14 @@ const Hooks = {
   useCommonMDMS,
   useApplicationStatusGeneral,
   useModuleTenants,
+  useRecieptSearch,
+  useStore,
   pgr,
   fsm,
   pt,
   dss,
   mcollect,
+  hrms,
   tl,
 };
 

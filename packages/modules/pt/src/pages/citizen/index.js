@@ -27,8 +27,7 @@ const App = () => {
           {!shouldHideBackButton(hideBackButtonConfig) ? <BackButton>Back</BackButton> : ""}
           <PrivateRoute path={`${path}/property/new-application`} component={CreateProperty} />
           <PrivateRoute path={`${path}/property/edit-application`} component={EditProperty} />
-          <PrivateRoute path={`${path}/property/property-mutation`} component={MutateProperty} />
-          <Route path={`${path}/property/search`} component={SearchPropertyComponent} />
+          <Route path={`${path}/property/citizen-search`} component={SearchPropertyComponent} />
           <Route path={`${path}/property/search-results`} component={SearchResultsComponent} />
           <PrivateRoute path={`${path}/property/application/:acknowledgementIds`} component={PTApplicationDetails}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-applications`} component={PTMyApplications}></PrivateRoute>

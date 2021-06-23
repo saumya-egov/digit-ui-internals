@@ -36,6 +36,9 @@ module.exports = function (app) {
     "/egov-searcher/bill-genie/mcollectbills/_get",
     "/egov-searcher/bill-genie/billswithaddranduser/_get",
     "/egov-pdf/download/UC/mcollect-challan",
+    "/egov-hrms/employees/_count",
+    "/tl-services/v1/_create",
+    "/egov-url-shortening/shortener",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
 };

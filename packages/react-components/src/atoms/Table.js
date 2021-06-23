@@ -160,7 +160,12 @@ const Table = ({
       {
         <div className="pagination">
           {`${t("CS_COMMON_ROWS_PER_PAGE")} :`}
-          <select className="cp" value={pageSize} style={{ marginRight: "15px" }} onChange={onPageSizeChange}>
+          <select
+            className="cp"
+            value={pageSize}
+            style={{ marginRight: "15px" }}
+            onChange={manualPagination ? onPageSizeChange : (e) => setPageSize(Number(e.target.value))}
+          >
             {[10, 20, 30, 40, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 {pageSize}

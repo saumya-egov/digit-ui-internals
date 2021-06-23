@@ -1,7 +1,6 @@
 import { Header, CitizenHomeCard, RupeeIcon, HomeLink } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { useRouteMatch } from "react-router-dom";
 import TradeLicense from "../src/pageComponents/TradeLicense";
 import TLSelectGeolocation from "../src/pageComponents/TLSelectGeolocation";
@@ -21,6 +20,9 @@ import SelectCommencementDate from "./pageComponents/SelectCommencementDate";
 import SelectTradeUnits from "./pageComponents/SelectTradeUnits";
 import SelectAccessories from "./pageComponents/SelectAccessories";
 import SelectAccessoriesDetails from "./pageComponents/SelectAccessoriesDetails";
+import CheckPage from "./pages/citizen/Create/CheckPage";
+import TLDocument from "./pageComponents/TLDocumets";
+import TLAcknowledgement from "./pages/citizen/Create/TLAcknowledgement";
 
 import CitizenApp from "./pages/citizen";
 
@@ -28,8 +30,7 @@ export const TLModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
   const moduleCode = "TL";
-  const state = useSelector((state) => state);
-  const language = state?.common?.selectedLanguage;
+  const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
 
   //addComponentsToRegistry();
@@ -79,6 +80,9 @@ const componentsToRegister = {
   SelectOwnerAddress,
   SelectProofIdentity,
   SelectOwnershipProof,
+  CheckPage,
+  TLDocument,
+  TLAcknowledgement,
 };
 
 export const initTLComponents = () => {

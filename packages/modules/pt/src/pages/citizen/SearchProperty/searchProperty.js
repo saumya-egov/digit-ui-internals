@@ -24,6 +24,7 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
         el.style.position = "static";
         el.style.padding = "8px 0";
         el.style.boxShadow = "none";
+        el.style.marginBottom = "16px";
       } else {
         setTimeout(() => {
           getActionBar();

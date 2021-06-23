@@ -82,6 +82,9 @@ import {
   DropIcon,
   RupeeIcon,
   ComplaintIcon,
+  Person,
+  WhatsappIcon,
+  EmailIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -239,4 +242,7 @@ export {
   DropIcon,
   RupeeIcon,
   ComplaintIcon,
+  Person,
+  WhatsappIcon,
+  EmailIcon,
 };

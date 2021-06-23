@@ -29,7 +29,7 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
             status={{ name: translateState(option), code: option.code }}
             searchParams={searchParams}
           />
-        )
+        );
       })}
     </div>
   );

@@ -6,7 +6,6 @@ import { initI18n } from "./translations/index";
 
 import { Storage, PersistantStorage } from "./services/atoms/Utils/Storage";
 import { UploadServices } from "./services/atoms/UploadServices";
-import Download from "./services/atoms/Download";
 
 import { LocationService } from "./services/elements/Location";
 import { LocalityService } from "./services/elements/Localities";
@@ -16,17 +15,22 @@ import { PGRService } from "./services/elements/PGR";
 import { FSMService } from "./services/elements/FSM";
 import { PaymentService } from "./services/elements/Payment";
 import * as dateUtils from "./services/atoms/Utils/Date";
+import Download from "./services/atoms/Download";
 import { WorkflowService } from "./services/elements/WorkFlow";
 import { MdmsService } from "./services/elements/MDMS";
 import { Complaint } from "./services/elements/Complaint";
 import { UserService } from "./services/elements/User";
 import { PTService } from "./services/elements/PT";
+import { TLService } from "./services/elements/TL";
 import { MCollectService } from "./services/elements/MCollect";
+import HrmsService from "./services/elements/HRMS";
 
+import ShareFiles from "./services/molecules/ShareFiles";
 import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
 import { ULBService } from "./services/molecules/Ulb";
 import { FileDesludging } from "./services/molecules/FSM/FileDesludging";
 import { ComponentRegistryService } from "./services/elements/ComponentRegistry";
+import StoreData from "./services/molecules/StoreData";
 
 import Contexts from "./contexts";
 import Hooks from "./hooks";
@@ -55,22 +59,26 @@ const initLibraries = () => {
   setupLibraries("PGRService", PGRService);
   setupLibraries("FSMService", FSMService);
   setupLibraries("PTService", PTService);
+  setupLibraries("TLService", TLService);
+  setupLibraries("HRMSService", HrmsService);
   setupLibraries("MCollectService", MCollectService);
   setupLibraries("PaymentService", PaymentService);
   setupLibraries("DateUtils", dateUtils);
   setupLibraries("WorkflowService", WorkflowService);
   setupLibraries("MDMSService", MdmsService);
   setupLibraries("UploadServices", UploadServices);
-  setupLibraries("Download", Download);
   setupLibraries("GetServiceDefinitions", GetServiceDefinitions);
   setupLibraries("Complaint", Complaint);
   setupLibraries("FileDesludging", FileDesludging);
   setupLibraries("ComponentRegistryService", ComponentRegistryService);
+  setupLibraries("StoreData", StoreData);
 
+  setupLibraries("ShareFiles", ShareFiles);
   setupLibraries("Contexts", Contexts);
   setupLibraries("Hooks", Hooks);
   setupLibraries("Customizations", {});
   setupLibraries("Utils", Utils);
+  setupLibraries("Download", Download);
 
   return new Promise((resolve) => {
     initI18n(resolve);

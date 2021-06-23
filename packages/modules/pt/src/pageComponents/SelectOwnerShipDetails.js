@@ -38,11 +38,6 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
   }, [formData?.ownershipCategory, SubOwnerShipCategoryOb]);
 
   useEffect(() => {
-    console.log(
-      editScreen && !isLoading && !ownerShipCatLoading && SubOwnerShipCategoryOb && OwnerShipCategoryOb,
-      { editScreen, isLoading, ownerShipCatLoading, SubOwnerShipCategoryOb, OwnerShipCategoryOb },
-      "inside useEffect"
-    );
     if (userType === "employee" && editScreen && !isLoading && !ownerShipCatLoading && OwnerShipCategoryOb) {
       const arr = getDropdwonForProperty(ownerShipdropDown);
       const defaultValue = arr.filter((e) => e.code === formData?.originalData?.ownershipCategory)[0];

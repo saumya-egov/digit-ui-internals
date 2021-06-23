@@ -1,7 +1,6 @@
 import { Dropdown, LogoutIcon, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
 import { Link, Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import { AppModules } from "./AppModules";
 import ChangeLanguage from "./ChangeLanguage";
@@ -25,7 +24,8 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
   const innerWidth = window.innerWidth;
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const userDetails = Digit.UserService.getUser();
-  const { stateInfo } = useSelector((state) => state.common);
+  const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const { stateInfo } = storeData || {};
   const CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
 

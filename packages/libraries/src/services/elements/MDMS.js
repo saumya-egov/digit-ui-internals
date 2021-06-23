@@ -604,6 +604,26 @@ const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getHrmsEmployeeRolesandDesignations = () => ({
+  moduleDetails: [
+    {
+      moduleName: "common-masters",
+      masterDetails: [
+        { name: "Department", filter: "[?(@.active == true)]" },
+        { name: "Designation", filter: "[?(@.active == true)]" },
+      ],
+    },
+    {
+      moduleName: "tenant",
+      masterDetails: [{ name: "tenants" }],
+    },
+    {
+      moduleName: "ACCESSCONTROL-ROLES",
+      masterDetails: [{ name: "roles", filter: "$.[?(@.code!='CITIZEN')]" }],
+    },
+    { moduleName: "egov-location", masterDetails: [{ name: "TenantBoundary" }] },
+  ],
+});
 const getFSTPPlantCriteria = (tenantId, moduleCode, type) => ({
   type,
   details: {
@@ -1000,8 +1020,10 @@ export const MdmsService = {
     );
   },
   getDataByCriteria: async (tenantId, mdmsDetails, moduleCode) => {
+    console.log("function");
     const key = `MDMS.${tenantId}.${moduleCode}.${mdmsDetails.type}.${JSON.stringify(mdmsDetails.details)}`;
     const inStoreValue = PersistantStorage.get(key);
+    console.log(inStoreValue);
     if (inStoreValue) {
       return inStoreValue;
     }
@@ -1125,6 +1147,15 @@ export const MdmsService = {
   },
   getMCollectApplcationStatus: (tenantId, moduleCode, type, filter) => {
     return MdmsService.getDataByCriteria(tenantId, getMCollectApplicationStatusCriteria(tenantId, moduleCode, type, filter), moduleCode);
+  },
+  getHrmsEmployeeRolesandDesignation: (tenantId) => {
+    return MdmsService.call(tenantId, getHrmsEmployeeRolesandDesignations());
+  },
+  getHrmsEmployeeTypes: (tenantId, moduleCode, type, filter) => {
+    return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
+  },
+  getHrmsEmployeeReason: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getGeneralCriteria(tenantId, moduleCode, type), moduleCode);
   },
   getMultipleTypes: (tenantId, moduleCode, types) => {
     return MdmsService.getDataByCriteria(tenantId, getMultipleTypes(tenantId, moduleCode, types), moduleCode);

@@ -23,7 +23,10 @@ const Urls = {
   ChangePassword: "/user/password/nologin/_update",
   UserProfileUpdate: "/user/profile/_update",
   EmployeeSearch: "/egov-hrms/employees/_search",
+
   UserSearch: "/user/_search",
+
+  Shortener: "/egov-url-shortening/shortener",
 
   fsm: {
     search: "/fsm/v1/_search",
@@ -46,6 +49,7 @@ const Urls = {
     create_citizen_reciept: "/pg-service/transaction/v1/_create",
     update_citizen_reciept: "/pg-service/transaction/v1/_update",
     search_bill: "/billing-service/bill/v2/_search",
+    reciept_search: "/collection-services/payments/:buisnessService/_search",
   },
 
   pt: {
@@ -72,7 +76,16 @@ const Urls = {
     search_bill_pt: "/egov-searcher/bill-genie/billswithaddranduser/_get",
     update: "/echallan-services/eChallan/v1/_update",
     download_pdf: "/egov-pdf/download/UC/mcollect-challan",
-    receipt_download: "/egov-pdf/download/PAYMENT/consolidatedreceipt"
+    receipt_download: "/egov-pdf/download/PAYMENT/consolidatedreceipt",
+  },
+  hrms: {
+    search: "/egov-hrms/employees/_search",
+    count: "/egov-hrms/employees/_count",
+    create: "/egov-hrms/employees/_create",
+    update: "/egov-hrms/employees/_update",
+  },
+  tl: {
+    create: "/tl-services/v1/_create",
   },
 };
 

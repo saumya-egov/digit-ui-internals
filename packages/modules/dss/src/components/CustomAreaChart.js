@@ -60,7 +60,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
       return response?.responseData?.data?.[0]?.plots;
     }
     return response?.responseData?.data?.[0]?.plots.map((plot) => {
-      const totalDays = getDaysInMonth(new Date(plot?.name));
+      const [month, year] = plot?.name.split("-");
+      const totalDays = getDaysInMonth(Date.parse(`${month} 1, ${year}`));
       const value = (plot?.value / (totalCapacity * totalDays)) * 100;
       return { ...plot, value };
     });
@@ -83,7 +84,12 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
 
   const renderLegend = (value) => <span>{value}</span>;
 
-  const tickFormatter = (value) => (value && value !== "auto" ? format(new Date(value), "MMM, yy") : "");
+  const tickFormatter = (value) => {
+    if (typeof value === "string") {
+      return value.replace("-", ", ");
+    }
+    return value;
+  };
 
   const renderTooltip = ({ payload, label, unit }) => {
     return (
@@ -96,9 +102,9 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
           whiteSpace: "nowrap",
         }}
       >
-        <p>{`${label !== undefined && label !== "auto" ? format(new Date(label), "MMM, yy") : ""} :${
-          id === "fsmTotalCumulativeCollection" ? " ₹" : ""
-        }${payload?.[0]?.value}${id === "fsmTotalCumulativeCollection" ? (value?.denomination !== "Unit" ? value?.denomination : "") : `%`}`}</p>
+        <p>{`${tickFormatter(label)} :${id === "fsmTotalCumulativeCollection" ? " ₹" : ""}${payload?.[0]?.value}${
+          id === "fsmTotalCumulativeCollection" ? (value?.denomination !== "Unit" ? value?.denomination : "") : `%`
+        }`}</p>
       </div>
     );
   };

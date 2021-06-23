@@ -51,6 +51,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
         alignmentBaseline="middle"
         className="recharts-pie-label-text"
         fontSize="14px"
+        textAnchor="end"
       >
         {`${(percent * 100).toFixed(0)}%`}
       </text>
@@ -85,7 +86,7 @@ const CustomPieChart = ({ dataKey = "value", data }) => {
             <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
           ))}
         </Pie>
-        <Tooltip formatter={(value, name) => [`₹ ${value}`, t(name)]} />
+        <Tooltip formatter={(value, name) => [`₹ ${value}`, t(`PROPERTYTYPE_MASTERS_${name}`)]} />
         <Legend layout="horizontal" align="bottom" iconType="circle" formatter={renderLegend} />
       </PieChart>
     </ResponsiveContainer>
