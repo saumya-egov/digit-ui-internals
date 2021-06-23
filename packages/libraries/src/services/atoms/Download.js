@@ -51,8 +51,8 @@ const Download = {
       windowHeight: document.documentElement.offsetHeight,
     }).then((canvas) => {
       const pdf = getPDF(canvas);
-      const pngImage = canvas.toDataURL("image/jpeg");
-      const imgProps = pdf.getImageProperties(pngImage);
+      const jpegImage = canvas.toDataURL("image/jpeg");
+      const imgProps = pdf.getImageProperties(jpegImage);
       const margin = 0.1;
       const pageHeight = 295;
       const pdfWidth = pdf.internal.pageSize.width * (1 - margin);
@@ -60,12 +60,12 @@ const Download = {
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
       let position = 10;
       let heightLeft = pdfHeight;
-      pdf.addImage(pngImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
+      pdf.addImage(jpegImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
       heightLeft -= pageHeight;
       while (heightLeft > 0) {
         position += heightLeft - pdfHeight;
         pdf.addPage();
-        pdf.addImage(pngImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
+        pdf.addImage(jpegImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
         heightLeft -= pageHeight;
       }
       return share ? new File([pdf.output("blob")], `${fileName}.pdf`, { type: "application/pdf" }) : pdf.save(`${fileName}.pdf`);

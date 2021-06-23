@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useRef } from "react";
 import LinkButton from "./LinkButton";
 import { PrimaryDownlaodIcon } from "./svgindex";
 import { useTranslation } from "react-i18next";
 
-const MultiLink = ({ className, onHeadClick, displayOptions = false, options, label }) => {
+const MultiLink = ({ className, onHeadClick, displayOptions = false, options, label, icon, showOptions }) => {
   const { t } = useTranslation();
+  const menuRef = useRef();
+  Digit.Hooks.useClickOutside(menuRef, () => showOptions?.(false));
   return (
-    <div className={className}>
+    <div className={className} ref={menuRef}>
       <div className="multilink-labelWrap" onClick={onHeadClick}>
-        <PrimaryDownlaodIcon />
+        {icon ? icon : <PrimaryDownlaodIcon />}
         <LinkButton label={label || t("CS_COMMON_DOWNLOAD")} className="multilink-link-button" />
       </div>
       {displayOptions ? (
