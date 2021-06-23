@@ -28,7 +28,9 @@ const EmployeeChallan = (props) => {
       case "UPDATE_CHALLAN":
         return history.push(`/digit-ui/employee/mcollect/modify-challan/${challanno}`);
       case "BUTTON_PAY":
-        return history.push(`/digit-ui/employee/payment/collect/${challanDetails?.businessService}/${challanno}/tenantId=${tenantId}`);
+        return history.push(
+          `/digit-ui/employee/payment/collect/${challanDetails?.businessService}/${challanno}/tenantId=${tenantId}?workflow=mcollect`
+        );
       default:
         console.log("default case");
         break;

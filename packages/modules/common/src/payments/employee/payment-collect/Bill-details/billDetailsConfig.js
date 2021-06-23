@@ -24,4 +24,14 @@ export const BillDetailsKeyNoteConfig = () => ({
       },
     ],
   },
+  mcollect: {
+    heading: "Payment Information",
+    details: [
+      {
+        keyValue: "Challan No",
+        keyPath: ["consumerCode"],
+        fallback: "",
+      },
+    ],
+  },
 });

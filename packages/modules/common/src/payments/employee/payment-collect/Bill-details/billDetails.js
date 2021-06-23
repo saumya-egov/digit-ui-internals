@@ -31,10 +31,27 @@ export const BillDetailsFormConfig = (props, t) => ({
       ],
     },
   ],
+  mcollect: [
+    {
+      head: t("PAYMENT INFORMATION"),
+      body: [
+        {
+          withoutLabel: true,
+          type: "custom",
+          populators: {
+            name: "amount",
+            customProps: { businessService: props.businessService, consumerCode: props.consumerCode },
+            component: (props, customProps) => <BillDetails onChange={props.onChange} amount={props.value} {...customProps} />,
+          },
+        },
+      ],
+    },
+  ],
 });
 
 const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
   const { t } = useTranslation();
+  const { workflow: ModuleWorkflow } = Digit.Hooks.useQueryParams();
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { data, isLoading } = Digit.Hooks.useFetchPayment({ tenantId, businessService, consumerCode });
@@ -124,7 +141,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
   const thStyle = { textAlign: "left", borderBottom: "#D6D5D4 1px solid", padding: "16px 12px", whiteSpace: "break-spaces" };
   const tdStyle = { textAlign: "left", borderBottom: "#D6D5D4 1px solid", padding: "8px 10px", breakWord: "no-break" };
 
-  const config = BillDetailsKeyNoteConfig()[businessService];
+  const config = BillDetailsKeyNoteConfig()[ModuleWorkflow ? ModuleWorkflow : businessService];
 
   return (
     <React.Fragment>
