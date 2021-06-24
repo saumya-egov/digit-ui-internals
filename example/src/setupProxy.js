@@ -39,6 +39,7 @@ module.exports = function (app) {
     "/egov-hrms/employees/_count",
     "/tl-services/v1/_create",
     "/egov-url-shortening/shortener",
+    "/inbox/v1/_search",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
 };
