@@ -17,6 +17,8 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
   const [mobileNumber, setMobileNumber] = useState(formData?.mobileNumber || "");
   const [challanNo, setchallanNumber] = useState(formData?.challanNo || "");
   const [Servicecateogry, setServicecateogry] = useState(formData?.Servicecateogry || "");
+  const [city, setcity] = useState(formData?.city || "");
+  const allCities = Digit.Hooks.mcollect.usemcollectTenants()?.sort((a, b) => a?.i18nKey?.localeCompare?.(b?.i18nKey));
   // moduleCode, type, config = {}, payload = []
 
   const { data: Menu, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(tenantId, "BillingService", "BusinessService");
@@ -25,15 +27,19 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
   }
   const onChallanSearch = async (data) => {
     //history.push(`/digit-ui/citizen/mcollect/search-results`);
-    if (!mobileNumber && !challanNo && !Servicecateogry) {
+    if (!mobileNumber && !challanNo && !Servicecateogry && !city) {
       return alert("Provide at least one parameter");
     } else if (!Servicecateogry) {
       return alert("Please Provide Service Category");
-    } else {
+    } else if (!city.code)
+    {
+      return alert("Please Provide City");
+    }
+     else {
       history.push(
         `/digit-ui/citizen/mcollect/search-results?mobileNumber=${mobileNumber}&challanNo=${challanNo}&Servicecategory=${
           Servicecateogry ? Servicecateogry.code.split("_")[Servicecateogry.code.split("_").length - 1] : ""
-        }`
+        }&tenantId=${city.code}`
       );
     }
   };
@@ -55,6 +61,10 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
 
   function setServicecateogryvalue(value) {
     setServicecateogry(value);
+  }
+
+  function selectCity(value) {
+    setcity(value);
   }
 
   return (
@@ -80,10 +90,21 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         headingStyle={{ fontSize: "32px", marginBottom: "16px" }}
         onSelect={onChallanSearch}
         componentInFront={<div className="employee-card-input employee-card-input--front">+91</div>}
-        isDisabled={!Servicecateogry}
+        isDisabled={!Servicecateogry || !city.code}
         //onSkip={onSkip}
         t={t}
       >
+        <CardLabel>{`${t("UC_CITY_LABEL")}*`}</CardLabel>
+        <Dropdown
+            className="form-field"
+            isMandatory={true}
+            selected={city}
+            //disable={employeeMenu?.length === 1}
+            option={allCities}
+            select={selectCity}
+            optionKey="code"
+            t={t}
+          />
         <CardLabel>{`${t("UC_SERVICE_CATEGORY_LABEL")}*`}</CardLabel>
         {Menu && (
           <RadioOrSelect
