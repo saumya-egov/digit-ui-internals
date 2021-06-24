@@ -45,7 +45,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
   const clearAll = (mobileView) => {
     const mobileViewStyles = mobileView ? { margin: 0 } : {};
     return (
-      <LinkLabel style={{ display: "", ...mobileViewStyles }} onClick={clearSearch}>
+      <LinkLabel style={{ display: "", ...mobileViewStyles, margin: "0px"}} onClick={clearSearch}>
         {t("HR_COMMON_CLEAR_SEARCH")}
       </LinkLabel>
     );
@@ -98,14 +98,15 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
               style={{
                 display: "flex",
                 justifyContent: "flex-end",
+                alignItems: "center"
               }}
             >
-              {type === "desktop" && !mobileView && <div className="clear-search">{clearAll()}</div>}
+              {type === "desktop" && !mobileView && <div style={{marginTop: "0px"}} className="clear-search">{clearAll()}</div>}
               {type === "desktop" && !mobileView && (
                 <SubmitBar
-                  style={{ marginTop: "0px", flex: 1, maxWidth: "290px", marginLeft: "35px" }}
+                  style={{ marginTop: "0px", flex: 1, maxWidth: "310px", marginLeft: "35px" }}
                   className="submit-bar-search"
-                  label={t("HR_COMMON_SEARCH")}
+                  label={t("ES_COMMON_SEARCH")}
                   submit
                 />
               )}

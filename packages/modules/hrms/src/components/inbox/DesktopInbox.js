@@ -44,10 +44,10 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
             <div className="tooltip">
               {" "}
               {GetCell(`${row.original?.user?.roles.length}`)}
-              <span className="tooltiptext">
+              <span className="tooltiptext" style={{whiteSpace: "nowrap"}}>
                 {row.original?.user?.roles.map((ele, index) => (
                   <span>
-                    {`${index + 1}.` + t(`ACCESSCONTROL_ROLES_ROLES_${ele.code}`)} <br />{" "}
+                    {`${index + 1}. ` + t(`ACCESSCONTROL_ROLES_ROLES_${ele.code}`)} <br />{" "}
                   </span>
                 ))}
               </span>
