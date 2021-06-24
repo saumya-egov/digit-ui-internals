@@ -77,6 +77,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
         {isModalOpen && (
           <div className="options-card" style={{ overflow: "visible", width: "unset", maxWidth: "unset" }}>
             <DateRangePicker
+              className="pickerShadow"
               focusedRange={focusedRange}
               ranges={[values]}
               rangeColors={["#9E9E9E"]}

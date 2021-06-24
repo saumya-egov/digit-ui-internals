@@ -1,15 +1,27 @@
 import React, { Fragment, useCallback, useContext, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { startOfMonth, endOfMonth, getTime, subYears } from "date-fns";
+import { startOfMonth, endOfMonth, getTime, subYears, differenceInDays } from "date-fns";
 import { UpwardArrow, TextInput, Loader, Table, RemoveableTag, Rating, DownwardArrow } from "@egovernments/digit-ui-react-components";
 import FilterContext from "./FilterContext";
+
+const InsightView = ({ rowValue, insight }) => {
+  return (
+    <span>
+      {rowValue}
+      {` `}
+      {insight >= 0 ? <UpwardArrow /> : <DownwardArrow />}
+      {` `}
+      {`${Math.abs(insight)}%`}
+    </span>
+  );
+}
 
 const CustomTable = ({ data, onSearch }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
   const { t } = useTranslation();
-  const { value, setValue, ulbTenants } = useContext(FilterContext);
+  const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
   const lastYearDate = {
@@ -76,40 +88,44 @@ const CustomTable = ({ data, onSearch }) => {
         symbol: plot?.symbol,
         sortType: sortRows,
         Cell: (args) => {
-          const { value, column, row } = args;
-          if (typeof value === "object") {
-            let { insight, value: rowValue } = value;
+          const { value: cellValue, column, row } = args;
+          if (column.id === "CapacityUtilization") {
+            const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
+            const { range } = value;
+            const { startDate, endDate } = range;
+            const numberOfDays = differenceInDays(endDate, startDate);
+            const ulbs  = dssTenants.filter((tenant) => tenant?.city?.ddrName === row.original.key || tenant?.code === row.original.key).map(tenant => tenant.code);
+            const totalCapacity = fstpMdmsData?.filter(plant => ulbs.find(ulb => plant.ULBS.includes(ulb))).reduce((acc, plant) => acc + Number(plant.PlantOperationalCapacityKLD), 0)
+            const result = `${((rowValue / (totalCapacity * numberOfDays)) * 100).toFixed(2)}%`;
+            return typeof cellValue === 'object' ? <InsightView insight={cellValue?.insight} rowValue={result} /> : String(result);
+          }
+          if (typeof cellValue === "object") {
+            let { insight, value: rowValue } = cellValue;
             if (column.symbol === "amount") {
               rowValue = convertDenomination(rowValue);
             }
             return (
-              <span>
-                {rowValue}
-                {` `}
-                {insight >= 0 ? <UpwardArrow /> : <DownwardArrow />}
-                {` `}
-                {`${Math.abs(insight)}%`}
-              </span>
+              <InsightView insight={rowValue} rowValue={rowValue} />
             );
           }
           const filter = response?.responseData?.filter.find((elem) => elem.column === column.id);
           if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
             return (
-              <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(value, filter?.key)}>
-                {t(value)}
+              <span style={{ color: "#F47738", cursor: "pointer" }} onClick={() => getDrilldownCharts(cellValue, filter?.key)}>
+                {t(cellValue)}
               </span>
             );
           }
           if (column.id === "CitizenAverageRating") {
-            return <Rating id={row.id} currentRating={Math.round(value * 10) / 10} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
+            return <Rating id={row.id} currentRating={Math.round(cellValue * 10) / 10} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
           }
           if (column.symbol === "amount") {
-            return String(convertDenomination(value));
+            return String(convertDenomination(cellValue));
           }
-          return String(t(value));
+          return String(t(cellValue));
         },
       })),
-    [response, value?.denomination]
+    [response, value?.denomination, value?.range]
   );
 
   const convertDenomination = (val) => {
@@ -140,6 +156,7 @@ const CustomTable = ({ data, onSearch }) => {
           value = Math.round((value + Number.EPSILON) * 100) / 100;
         }
         acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : row?.name === "S.N." ? id + 1 : value;
+        acc['key'] = rows.headerName; 
         return acc;
       }, {});
     });
