@@ -87,7 +87,6 @@ const useInboxGeneral = ({
   const client = useQueryClient();
   const { t } = useTranslation();
 
-  debugger;
   const { services, fetchFilters, searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()[businessService];
 
   let { workflowFilters, searchFilters } = fetchFilters(filters);
