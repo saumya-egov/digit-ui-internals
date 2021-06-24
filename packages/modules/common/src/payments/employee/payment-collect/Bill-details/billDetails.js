@@ -33,7 +33,7 @@ export const BillDetailsFormConfig = (props, t) => ({
   ],
   mcollect: [
     {
-      head: t("PAYMENT INFORMATION"),
+      head: t("COMMON_PAY_SCREEN_HEADER"),
       body: [
         {
           withoutLabel: true,
@@ -174,7 +174,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
         <hr style={{ width: "40%" }} className="underline" />
         <Row label={t("CS_PAYMENT_TOTAL_AMOUNT")} textStyle={{ fontWeight: "bold" }} text={"₹ " + bill?.totalAmount} />
       </StatusTable>
-      {showDetails ? (
+      {showDetails && !ModuleWorkflow ? (
         <React.Fragment>
           <div style={{ maxWidth: "95%", display: "inline-block", textAlign: "right" }}>
             <div style={{ display: "flex", padding: "10px", paddingLeft: "unset", maxWidth: "95%" }}>
@@ -248,43 +248,50 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
           </div>{" "}
         </React.Fragment>
       ) : (
-        <div style={{}} onClick={() => setShowDetails(true)} className="filter-button">
-          {t("ES_COMMON_VIEW_DETAILS")}
+        !ModuleWorkflow && (
+          <div style={{}} onClick={() => setShowDetails(true)} className="filter-button">
+            {t("ES_COMMON_VIEW_DETAILS")}
+          </div>
+        )
+      )}
+      {!ModuleWorkflow && (
+        <div className="bill-payment-amount">
+          <CardSectionHeader>{t("CS_COMMON_PAYMENT_AMOUNT")}</CardSectionHeader>
+          <RadioButtons
+            style={{ display: "flex" }}
+            innerStyles={{ padding: "5px" }}
+            selectedOption={paymentType}
+            onSelect={setPaymentType}
+            options={paymentRules.partPaymentAllowed ? [t("CS_PAYMENT_FULL_AMOUNT"), t("CS_PAYMENT_CUSTOM_AMOUNT")] : [t("CS_PAYMENT_FULL_AMOUNT")]}
+          />
+          <div style={{ position: "relative" }}>
+            <span
+              className="payment-amount-front"
+              style={{ border: `1px solid ${paymentType === t("CS_PAYMENT_FULL_AMOUNT") ? "#9a9a9a" : "black"}` }}
+            >
+              ₹
+            </span>
+            {paymentType !== t("CS_PAYMENT_FULL_AMOUNT") ? (
+              <TextInput
+                style={{ width: "30%" }}
+                className="text-indent-xl"
+                onChange={(e) => onChangeAmount(e.target.value)}
+                value={amount}
+                disable={getTotal() === 0}
+              />
+            ) : (
+              <TextInput style={{ width: "30%" }} className="text-indent-xl" value={getTotal()} disable={true} />
+            )}
+            {formError === "CS_CANT_PAY_BELOW_MIN_AMOUNT" ? (
+              <span className="card-label-error">
+                {t(formError)}: {"₹" + minAmountPayable}
+              </span>
+            ) : (
+              <span className="card-label-error">{t(formError)}</span>
+            )}
+          </div>
         </div>
       )}
-      <div className="bill-payment-amount">
-        <CardSectionHeader>{t("CS_COMMON_PAYMENT_AMOUNT")}</CardSectionHeader>
-        <RadioButtons
-          style={{ display: "flex" }}
-          innerStyles={{ padding: "5px" }}
-          selectedOption={paymentType}
-          onSelect={setPaymentType}
-          options={paymentRules.partPaymentAllowed ? [t("CS_PAYMENT_FULL_AMOUNT"), t("CS_PAYMENT_CUSTOM_AMOUNT")] : [t("CS_PAYMENT_FULL_AMOUNT")]}
-        />
-        <div style={{ position: "relative" }}>
-          <span className="payment-amount-front" style={{ border: `1px solid ${paymentType === t("CS_PAYMENT_FULL_AMOUNT") ? "#9a9a9a" : "black"}` }}>
-            ₹
-          </span>
-          {paymentType !== t("CS_PAYMENT_FULL_AMOUNT") ? (
-            <TextInput
-              style={{ width: "30%" }}
-              className="text-indent-xl"
-              onChange={(e) => onChangeAmount(e.target.value)}
-              value={amount}
-              disable={getTotal() === 0}
-            />
-          ) : (
-            <TextInput style={{ width: "30%" }} className="text-indent-xl" value={getTotal()} disable={true} />
-          )}
-          {formError === "CS_CANT_PAY_BELOW_MIN_AMOUNT" ? (
-            <span className="card-label-error">
-              {t(formError)}: {"₹" + minAmountPayable}
-            </span>
-          ) : (
-            <span className="card-label-error">{t(formError)}</span>
-          )}
-        </div>
-      </div>
     </React.Fragment>
   );
 };

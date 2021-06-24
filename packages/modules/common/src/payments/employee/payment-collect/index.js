@@ -164,7 +164,7 @@ export const CollectPayment = (props) => {
 
   const config = [
     {
-      head: t("COMMON_PAYMENT_HEAD"),
+      head: !ModuleWorkflow ? t("COMMON_PAYMENT_HEAD") : "",
       body: [
         {
           label: t("PAY_TOTAL_AMOUNT"),
@@ -269,6 +269,9 @@ export const CollectPayment = (props) => {
   });
 
   const getFormConfig = () => {
+    if (ModuleWorkflow) {
+      config.splice(0, 1);
+    }
     let conf = config.concat(formConfigMap[formState?.paymentMode?.code] || []);
     conf = conf?.concat(cashConfig);
     return BillDetailsFormConfig({ consumerCode, businessService }, t)[ModuleWorkflow ? ModuleWorkflow : businessService]

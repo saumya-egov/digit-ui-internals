@@ -25,10 +25,10 @@ export const BillDetailsKeyNoteConfig = () => ({
     ],
   },
   mcollect: {
-    heading: "Payment Information",
+    heading: "COMMON_PAY_SCREEN_HEADER",
     details: [
       {
-        keyValue: "Challan No",
+        keyValue: "UC_CHALLAN_NO",
         keyPath: ["consumerCode"],
         fallback: "",
       },
