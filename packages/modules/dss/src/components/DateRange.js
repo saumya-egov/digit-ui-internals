@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { ArrowDown, Modal, ButtonSelector, Calender } from "@egovernments/digit-ui-react-components";
 import { DateRangePicker, defaultStaticRanges, createStaticRanges } from "react-date-range";
-import { format, addHours, addMinutes, addSeconds, isEqual, startOfYear, endOfYear } from "date-fns";
+import { format, addMonths, addHours, addMinutes, addSeconds, isEqual, startOfYear, endOfYear } from "date-fns";
 
 function isEndDateFocused(focusNumber) {
   return focusNumber === 1;
