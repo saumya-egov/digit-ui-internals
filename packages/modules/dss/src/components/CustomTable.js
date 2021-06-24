@@ -93,7 +93,7 @@ const CustomTable = ({ data, onSearch }) => {
             const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
             const { range } = value;
             const { startDate, endDate } = range;
-            const numberOfDays = differenceInDays(endDate, startDate);
+            const numberOfDays = Math.max(differenceInDays(endDate, startDate), 1);
             const ulbs  = dssTenants.filter((tenant) => tenant?.city?.ddrName === row.original.key || tenant?.code === row.original.key).map(tenant => tenant.code);
             const totalCapacity = fstpMdmsData?.filter(plant => ulbs.find(ulb => plant.ULBS.includes(ulb))).reduce((acc, plant) => acc + Number(plant.PlantOperationalCapacityKLD), 0)
             const result = `${((rowValue / (totalCapacity * numberOfDays)) * 100).toFixed(2)}%`;
@@ -105,7 +105,7 @@ const CustomTable = ({ data, onSearch }) => {
               rowValue = convertDenomination(rowValue);
             }
             return (
-              <InsightView insight={rowValue} rowValue={rowValue} />
+              <InsightView insight={insight} rowValue={rowValue} />
             );
           }
           const filter = response?.responseData?.filter.find((elem) => elem.column === column.id);
