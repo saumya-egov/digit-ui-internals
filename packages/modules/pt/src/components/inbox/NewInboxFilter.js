@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox, Localities, SubmitBar } from "@egovernments/digit-ui-react-components";
 
 import { useTranslation } from "react-i18next";
@@ -18,6 +18,10 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props })
     delete filterParam.delete;
     setSearchParams({ ..._new });
   };
+
+  useEffect(() => {
+    console.log(_searchParams, "search params inside filter");
+  }, [_searchParams]);
 
   const clearAll = () => {
     setSearchParams(defaultSearchParams);
