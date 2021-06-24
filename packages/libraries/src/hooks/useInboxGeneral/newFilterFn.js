@@ -18,7 +18,7 @@ export const filterFunctions = {
       searchFilters.oldpropertyids = filtersArg?.oldpropertyids;
     }
     if (applicationStatus && applicationStatus?.[0]) {
-      workflowFilters.applicationStatus = applicationStatus.map((status) => status.uuid);
+      workflowFilters.status = applicationStatus.map((status) => status.uuid);
     }
     if (filtersArg?.locality?.length) {
       searchFilters.locality = filtersArg?.locality.map((item) => item.code.split("_").pop()).join(",");

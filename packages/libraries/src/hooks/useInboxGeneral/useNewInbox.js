@@ -49,8 +49,6 @@ const useNewInboxGeneral = ({ tenantId, ModuleCode, filters, middleware = [] }) 
   const { fetchFilters, searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()[ModuleCode];
   let { workflowFilters, searchFilters, limit, offset, sortBy, sortOrder } = fetchFilters(filters);
 
-  debugger;
-
   const query = useQuery(
     ["INBOX", workflowFilters, searchFilters, ModuleCode, limit, offset, sortBy, sortOrder],
     () =>
