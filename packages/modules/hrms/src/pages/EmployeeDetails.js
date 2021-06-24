@@ -8,7 +8,7 @@ import { convertEpochFormateToDate, pdfDownloadLink, pdfDocumentName } from "../
 
 const Details = () => {
   const activeworkflowActions = ["DEACTIVATE_EMPLOYEE_HEAD", "COMMON_EDIT_EMPLOYEE_HEADER"];
-  const deactiveworkflowActions = ["ACTIVATE_EMPLOYEE_HEAD", "COMMON_EDIT_EMPLOYEE_HEADER"];
+  const deactiveworkflowActions = ["ACTIVATE_EMPLOYEE_HEAD"];
   const [selectedAction, setSelectedAction] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const { t } = useTranslation();
@@ -27,6 +27,11 @@ const Details = () => {
   const closeModal = () => {
     setSelectedAction(null);
     setShowModal(false);
+  };
+  const handleDownload = async (document) => {
+    const res = await Digit.UploadServices.Filefetch([document?.documentId], document.tenantId.split(".")[0]);
+    let documentLink = pdfDownloadLink(res.data, document?.documentId);
+    window.open(documentLink, "_blank");
   };
 
   const submitAction = (data) => {};
@@ -112,10 +117,8 @@ const Details = () => {
               <Row label={t("TL_APPROVAL_UPLOAD_HEAD")} text={""} />
               <div style={{ display: "flex", flexWrap: "wrap" }}>
                 {data?.Employees?.[0]?.documents?.map((document, index) => {
-                  // let documentLink = pdfDownloadLink(data.pdfFiles, document?.fileStoreId);
-                  // console.log(documentLink)
                   return (
-                    <a target="_" href={""} style={{ minWidth: "160px" }} key={index}>
+                    <a onClick={() => handleDownload(document)} style={{ minWidth: "160px" }} key={index}>
                       <DocumentSVG width={85} height={100} style={{ background: "#f6f6f6", padding: "8px" }} />
                       <p style={{ marginTop: "8px" }}>{document.documentName}</p>
                     </a>
