@@ -87,11 +87,12 @@ const useInboxGeneral = ({
   const client = useQueryClient();
   const { t } = useTranslation();
 
+  debugger;
   const { services, fetchFilters, searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()[businessService];
 
   let { workflowFilters, searchFilters } = fetchFilters(filters);
 
-  const { data: processInstances, isLoading: wfFetching, isSuccess: wfSuccess } = useQuery(
+  const { data: processInstances, isFetching: wfFetching, isFetched, isSuccess: wfSuccess } = useQuery(
     ["WORKFLOW_INBOX", businessService, workflowFilters],
     () =>
       Digit.WorkflowService.getAllApplication(tenantId, { businessServices: services.join(), ...workflowFilters })
@@ -121,17 +122,24 @@ const useInboxGeneral = ({
     return { ...object, [item?.["businessId"]]: item };
   }, {});
 
+  const allowSearch = isInbox ? isFetched && wfSuccess && !!searchFilters[businessIdsParamForSearch] : true;
+
+  console.log({ isFetched, wfSuccess, third: !!!!searchFilters[businessIdsParamForSearch] }, ">>>>>>>>>>>>>>>>>>>>");
+
   const searchResult = useQuery(
     ["SEARCH_INBOX", businessService, searchFilters, workflowFilters, isInbox],
-    () =>
-      _searchFn()
-        .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
-        .then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch))
-        .catch(catchSearch),
+    () => {
+      if (allowSearch)
+        return _searchFn()
+          .then((d) => rawSearchHandler(d, searchResponseKey, businessIdAliasForSearch))
+          .then((data) => callMiddlewares(data[searchResponseKey], middlewareSearch))
+          .catch(catchSearch);
+    },
     {
-      enabled: !isInbox || (!wfFetching && wfSuccess),
+      enabled: allowSearch,
       select: (d) => {
         console.log(d.length + " records fetched", "inside select");
+        console.log(!wfFetching && wfSuccess, "search called");
         return d.map((searchResult) => ({
           totalCount: d.totalCount,
           ...combineResponse(searchResult, processInstanceBuisnessIdMap?.[searchResult?.[businessIdAliasForSearch]]),
