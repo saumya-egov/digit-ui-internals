@@ -94,6 +94,11 @@ import useHRMSCreate from "./hrms/useHRMScreate";
 import useHRMSUpdate from "./hrms/useHRMSUpdate";
 import useHRMSCount from "./hrms/useHRMSCount";
 
+
+import useReceiptsSearch from "./receipts/useReceiptsSearch";
+import useReceiptsMDMS from "./receipts/useReceiptsMDMS";
+import useReceiptsUpdate from "./receipts/useReceiptsUpdate";
+
 const pgr = {
   useComplaintDetails,
   useComplaintsList,
@@ -180,6 +185,12 @@ const tl = {
   useTLPaymentHistory,
 };
 
+const receipts = {
+  useReceiptsMDMS,
+  useReceiptsSearch,
+  useReceiptsUpdate,
+};
+
 const Hooks = {
   useSessionStorage,
   useQueryParams,
@@ -209,6 +220,7 @@ const Hooks = {
   mcollect,
   hrms,
   tl,
+  receipts
 };
 
 export default Hooks;
