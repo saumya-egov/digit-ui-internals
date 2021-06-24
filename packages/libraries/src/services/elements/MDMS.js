@@ -636,6 +636,42 @@ const getFSTPPlantCriteria = (tenantId, moduleCode, type) => ({
     ],
   },
 });
+const getCancelReceiptReason = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "CancelReceiptReason" }],
+      },
+    ],
+  },
+});
+const getReceiptStatus = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "ReceiptStatus" }],
+      },
+    ],
+  },
+});
+const getCancelReceiptReasonAndStatus = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "ReceiptStatus" },{ name: "uiCommonPay" }],
+      },
+    ],
+  },
+});
 
 const GetEgovLocations = (MdmsRes) => {
   return MdmsRes["egov-location"].TenantBoundary[0].boundary.children.map((obj) => ({
@@ -1163,4 +1199,14 @@ export const MdmsService = {
   getFSTPPlantInfo: (tenantId, moduleCode, types) => {
     return MdmsService.getDataByCriteria(tenantId, getFSTPPlantCriteria(tenantId, moduleCode, types), moduleCode);
   },
+  getCancelReceiptReason: (tenantId,moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getCancelReceiptReason(tenantId, moduleCode), moduleCode);
+  },
+  getReceiptStatus: (tenantId,moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getReceiptStatus(tenantId, moduleCode), moduleCode);
+  },
+  getCancelReceiptReasonAndStatus: (tenantId,moduleCode) => {
+    return MdmsService.getDataByCriteria(tenantId, getCancelReceiptReasonAndStatus(tenantId, moduleCode), moduleCode);
+  },
+  
 };
