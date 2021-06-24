@@ -63,7 +63,14 @@ const EmployeeApp = ({ path, url, userType }) => {
           <PrivateRoute
             path={`${path}/inbox`}
             component={() => (
-              <Inbox parentRoute={path} businessService="PT" filterComponent="PT_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
+              <Inbox
+                useNewInboxAPI={true}
+                parentRoute={path}
+                businessService="PT"
+                filterComponent="PT_INBOX_FILTER"
+                initialStates={inboxInitialState}
+                isInbox={true}
+              />
             )}
           />
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />

@@ -131,15 +131,15 @@ export const TableConfig = (t) => ({
         },
         mobileCell: (original) => GetMobCell(t(`ES_PT_COMMON_STATUS_${original?.workflowData?.state?.["state"]}`)),
       },
-      {
-        Header: t("ES_INBOX_SLA_DAYS_REMAINING"),
-        Cell: ({ row }) => {
-          const wf = row.original.workflowData;
-          const math = Math.round(wf.businesssServiceSla / (24 * 60 * 60 * 1000)) || "-";
-          return GetSlaCell(math);
-        },
-        mobileCell: (original) => GetSlaCell(Math.round(original?.workflowData?.["businesssServiceSla"] / (24 * 60 * 60 * 1000))),
-      },
+      // {
+      //   Header: t("ES_INBOX_SLA_DAYS_REMAINING"),
+      //   Cell: ({ row }) => {
+      //     const wf = row.original.workflowData;
+      //     const math = Math.round(wf.businesssServiceSla / (24 * 60 * 60 * 1000)) || "-";
+      //     return GetSlaCell(math);
+      //   },
+      //   mobileCell: (original) => GetSlaCell(Math.round(original?.workflowData?.["businesssServiceSla"] / (24 * 60 * 60 * 1000))),
+      // },
     ],
     serviceRequestIdKey: (original) => original?.[t("ES_INBOX_UNIQUE_PROPERTY_ID")]?.props?.children,
   },

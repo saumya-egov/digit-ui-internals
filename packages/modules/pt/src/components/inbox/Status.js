@@ -16,6 +16,8 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
     return `ES_PT_STATUS_${state.state || "CREATED"}`;
   };
 
+  console.log(statusData, "status data");
+
   if (isLoading) {
     return <Loader />;
   }
@@ -31,7 +33,7 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
             businessServices={businessServices}
             key={index}
             onAssignmentChange={onAssignmentChange}
-            status={{ name: translateState(option), code: option.applicationStatus }}
+            status={{ name: translateState(option), code: option.applicationStatus, ...option }}
             searchParams={searchParams}
           />
         );
@@ -41,9 +43,9 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
           return (
             <StatusCount
               businessServices={businessServices}
-              key={index}
+              key={option.uuid}
               onAssignmentChange={onAssignmentChange}
-              status={{ name: translateState(option), code: option.applicationStatus }}
+              status={{ name: translateState(option), code: option.applicationStatus, ...option }}
               searchParams={searchParams}
             />
           );

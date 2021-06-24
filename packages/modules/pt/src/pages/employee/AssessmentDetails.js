@@ -29,14 +29,6 @@ const AssessmentDetails = () => {
     ptCalculationEstimateMutate({ Assessment: AssessmentData });
   }, []);
 
-  // const {
-  //   isLoading: updatingApplication,
-  //   isError: updateApplicationError,
-  //   data: updateResponse,
-  //   error: updateError,
-  //   mutate,
-  // } = Digit.Hooks.pt.useApplicationActions(tenantId);
-
   let workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
     id: applicationDetails?.applicationData?.acknowldgementNumber,
@@ -47,7 +39,7 @@ const AssessmentDetails = () => {
 
   applicationDetails?.applicationDetails?.shift();
   applicationDetails?.applicationDetails?.unshift({
-    title: "ES_PT_TITLE_PROPERTY_TAX_BILL_DETAILS",
+    title: "ES_BILL_DETAILS_PT_DETAILS_HEADING",
     values: [
       {
         title: "PT_TITLE_UNIQUE_PROPERTY_ID",
@@ -122,7 +114,7 @@ const AssessmentDetails = () => {
         </ActionBar>
       ) : (
         <ActionBar>
-          <SubmitBar label={t("PROCEED_TO_PAY")} onSubmit={proceeedToPay} />
+          <SubmitBar label={t("PAYMENT_COLLECT_LABEL")} onSubmit={proceeedToPay} />
         </ActionBar>
       )}
     </div>

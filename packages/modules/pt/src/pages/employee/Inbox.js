@@ -6,6 +6,7 @@ import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
 const Inbox = ({
+  useNewInboxAPI,
   parentRoute,
   businessService = "PT",
   initialStates = {},
@@ -22,6 +23,7 @@ const Inbox = ({
 }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
+  debugger;
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
@@ -37,19 +39,25 @@ const Inbox = ({
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
 
-  const { isFetching, isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = Digit.Hooks.useInboxGeneral({
-    tenantId,
-    businessService,
-    isInbox,
-    filters: { ...searchParams, ...paginationParams, sortParams },
-    rawWfHandler,
-    rawSearchHandler,
-    combineResponse,
-    wfConfig,
-    searchConfig: { ...enableSarch, ...searchConfig },
-    middlewaresWf,
-    middlewareSearch,
-  });
+  const { isFetching, isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = useNewInboxAPI
+    ? Digit.Hooks.useNewInboxGeneral({
+        tenantId,
+        ModuleCode: businessService,
+        filters: { ...searchParams, ...paginationParams, sortParams },
+      })
+    : Digit.Hooks.useInboxGeneral({
+        tenantId,
+        businessService,
+        isInbox,
+        filters: { ...searchParams, ...paginationParams, sortParams },
+        rawWfHandler,
+        rawSearchHandler,
+        combineResponse,
+        wfConfig,
+        searchConfig: { ...enableSarch, ...searchConfig },
+        middlewaresWf,
+        middlewareSearch,
+      });
 
   useEffect(() => {
     console.log("data from the hook", hookLoading, rest, data);

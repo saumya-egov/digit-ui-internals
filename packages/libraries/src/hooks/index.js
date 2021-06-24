@@ -20,6 +20,7 @@ import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useApplicationStatusGeneral from "./useStatusGeneral";
 import useModuleTenants from "./useModuleTenants";
 import useStore from "./useStore";
+import useNewInboxGeneral from "./useInboxGeneral/useNewInbox";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -197,6 +198,7 @@ const Hooks = {
   useApplicationStatusGeneral,
   useModuleTenants,
   useRecieptSearch,
+  useNewInboxGeneral,
   useStore,
   pgr,
   fsm,
