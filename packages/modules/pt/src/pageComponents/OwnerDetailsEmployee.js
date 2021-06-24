@@ -190,7 +190,12 @@ const OwnerForm = (_props) => {
                     control={control}
                     name={"institution.name"}
                     defaultValue={owner?.name}
-                    rules={{ required: "institution name required" }}
+                    rules={{
+                      required: t("CORE_COMMON_REQUIRED_ERRMSG"),
+                      validate: {
+                        pattern: (v) => (/^[a-zA-Z\s]+$/.test(v) ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")),
+                      },
+                    }}
                     render={(props) => (
                       <TextInput
                         value={props.value}
@@ -217,7 +222,7 @@ const OwnerForm = (_props) => {
                   control={control}
                   name={"institution.type"}
                   defaultValue={owner?.relationship}
-                  rules={{ required: "RelationShip Required" }}
+                  rules={{ required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                   render={(props) => (
                     <Dropdown
                       className="form-field"
@@ -244,7 +249,10 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"name"}
                 defaultValue={owner?.name}
-                rules={{ required: "NAME_REQUIRED", validate: { pattern: (val) => (/^\w+( +\w+)*$/.test(val) ? true : t("INVALID_NAME")) } }}
+                rules={{
+                  required: t("CORE_COMMON_REQUIRED_ERRMSG"),
+                  validate: { pattern: (val) => (/^\w+( +\w+)*$/.test(val) ? true : t("INVALID_NAME")) },
+                }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
@@ -272,7 +280,7 @@ const OwnerForm = (_props) => {
                   control={control}
                   name={"gender"}
                   defaultValue={owner?.gender}
-                  rules={{ required: "REQUIRED" }}
+                  rules={{ required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                   render={(props) => (
                     <Dropdown
                       className="form-field"
@@ -302,7 +310,7 @@ const OwnerForm = (_props) => {
                     control={control}
                     name={"altContactNumber"}
                     defaultValue={owner?.altContactNumber}
-                    rules={isIndividualTypeOwner ? {} : { required: "altContact Required" }}
+                    rules={isIndividualTypeOwner ? {} : { required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                     render={(props) => (
                       <MobileNumber
                         value={props.value}
@@ -328,7 +336,10 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"mobileNumber"}
                 defaultValue={owner?.mobileNumber}
-                rules={{ required: "Required", validate: (v) => (/^[6789]\d{9}$/.test(v) ? true : "invalid Phone") }}
+                rules={{
+                  required: t("CORE_COMMON_REQUIRED_ERRMSG"),
+                  validate: (v) => (/^[6789]\d{9}$/.test(v) ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")),
+                }}
                 render={(props) => (
                   <MobileNumber
                     value={props.value}
@@ -354,7 +365,10 @@ const OwnerForm = (_props) => {
                     control={control}
                     name={"fatherOrHusbandName"}
                     defaultValue={owner?.fatherOrHusbandName}
-                    rules={{ required: "NAME_REQUIRED", validate: { pattern: (val) => (/^\w+( +\w+)*$/.test(val) ? true : t("INVALID_NAME")) } }}
+                    rules={{
+                      required: t("CORE_COMMON_REQUIRED_ERRMSG"),
+                      validate: { pattern: (val) => (/^\w+( +\w+)*$/.test(val) ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")) },
+                    }}
                     render={(props) => (
                       <TextInput
                         value={props.value}
@@ -378,7 +392,7 @@ const OwnerForm = (_props) => {
                   control={control}
                   name={"relationship"}
                   defaultValue={owner?.relationship}
-                  rules={{ required: "RelationShip Required" }}
+                  rules={{ required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                   render={(props) => (
                     <Dropdown
                       className="form-field"
@@ -402,7 +416,7 @@ const OwnerForm = (_props) => {
                   control={control}
                   name={"ownerType"}
                   defaultValue={owner?.ownerType}
-                  rules={{ required: "required" }}
+                  rules={{ required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                   render={(props) => (
                     <Dropdown
                       className="form-field"
@@ -427,7 +441,7 @@ const OwnerForm = (_props) => {
                     control={control}
                     name={"designation"}
                     defaultValue={owner?.designation || ""}
-                    rules={{ required: "required" }}
+                    rules={{ required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                     render={(props) => (
                       <TextInput
                         value={props.value}
@@ -454,7 +468,7 @@ const OwnerForm = (_props) => {
                   control={control}
                   name={"documents.documentType"}
                   defaultValue={owner?.documents?.documentType}
-                  rules={{ required: "required" }}
+                  rules={{ required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                   render={(props) => (
                     <Dropdown
                       className="form-field"
@@ -478,7 +492,7 @@ const OwnerForm = (_props) => {
                     control={control}
                     name={"documents.documentUid"}
                     defaultValue={owner?.documents?.documentUid}
-                    rules={{ required: "required" }}
+                    rules={{ required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                     render={(props) => (
                       <TextInput
                         value={props.value}
@@ -506,7 +520,7 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"emailId"}
                 defaultValue={owner?.emailId}
-                rules={{ validate: (e) => ((e && /^[^\s@]+@[^\s@]+$/.test(e)) || !e ? true : "INVALID_EMAIL") }}
+                rules={{ validate: (e) => ((e && /^[^\s@]+@[^\s@]+$/.test(e)) || !e ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")) }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
@@ -531,7 +545,7 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"correspondenceAddress"}
                 defaultValue={owner?.correspondenceAddress}
-                rules={isIndividualTypeOwner ? {} : { required: "REQUIRED" }}
+                rules={isIndividualTypeOwner ? {} : { required: t("CORE_COMMON_REQUIRED_ERRMSG") }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
