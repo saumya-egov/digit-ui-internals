@@ -54,7 +54,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                     {...input.validation}
                   />
                 </div>
-                <div>{iserror ? <CardLabelError>{t(input.populators.error)}</CardLabelError> : null}</div>
+                <div>{iserror ? <CardLabelError style={{ width: "100%" }}>{t(input.populators.error)}</CardLabelError> : null}</div>
               </div>
             </div>
           </LabelFieldPair>

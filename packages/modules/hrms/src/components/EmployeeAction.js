@@ -73,7 +73,13 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     setFile(e.target.files[0]);
   }
   useEffect(() => {
-    setReasons(data?.["egov-hrms"]?.DeactivationReason);
+    console.log(data?.["egov-hrms"]?.DeactivationReason);
+    setReasons(
+      data?.["egov-hrms"]?.DeactivationReason.map((ele) => {
+        ele["i18key"] = "EGOV_HRMS_DEACTIVATIONREASON_" + ele.code;
+        return ele;
+      })
+    );
   }, [data]);
 
   useEffect(() => {
