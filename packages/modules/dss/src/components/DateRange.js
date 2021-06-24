@@ -13,8 +13,8 @@ const staticRanges = [
     {
       label: 'This Year',
       range: () => ({
-        startDate: startOfYear(new Date()),
-        endDate: endOfYear(new Date())
+        startDate: addMonths(startOfYear(new Date()), 3),
+        endDate: addMonths(endOfYear(new Date()), 3)
       })
     }
   ])
