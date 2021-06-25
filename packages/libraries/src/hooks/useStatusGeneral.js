@@ -32,7 +32,7 @@ const useApplicationStatusGeneral = ({ businessServices = [], tenantId }, config
       return { ...state, roles };
     };
 
-    const roleStateMapArray = states?.map(addRoleToState);
+    const roleStateMapArray = states?.map(addRoleToState).filter((e) => !!e.state);
 
     const userRoleStates = roleStateMapArray.filter(({ roles }) => roles?.some((role) => userRoles.includes(role)));
     const otherRoleStates = roleStateMapArray.filter(({ roles }) => !roles?.some((role) => userRoles.includes(role)));
@@ -40,7 +40,7 @@ const useApplicationStatusGeneral = ({ businessServices = [], tenantId }, config
     return { userRoleStates, otherRoleStates };
   };
 
-  const queryData = useQuery(["workflow_states", tenantId], () => fetch(), { select, ...config });
+  const queryData = useQuery(["workflow_states", tenantId, ...businessServices], () => fetch(), { select, ...config });
 
   return queryData;
 };

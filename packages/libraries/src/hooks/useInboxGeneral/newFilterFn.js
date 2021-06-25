@@ -26,9 +26,13 @@ export const filterFunctions = {
     if (filtersArg?.uuid && filtersArg?.uuid.code === "ASSIGNED_TO_ME") {
       workflowFilters.assignee = uuid;
     }
+
+    searchFilters.mobileNumber = "9999999999";
+
     if (mobileNumber) {
       searchFilters.mobileNumber = mobileNumber;
     }
+
     if (propertyIds) {
       searchFilters.propertyIds = propertyIds;
     }
@@ -50,7 +54,7 @@ export const filterFunctions = {
     // }
 
     workflowFilters.businessService = "PT.CREATE";
-
+    // searchFilters.mobileNumber = "9898568989";
     return { searchFilters, workflowFilters, limit, offset, sortBy, sortOrder };
   },
 };

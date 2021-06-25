@@ -43,7 +43,7 @@ const callMiddlewares = async (data, middlewares) => {
   return ret || [];
 };
 
-const useNewInboxGeneral = ({ tenantId, ModuleCode, filters, middleware = [] }) => {
+const useNewInboxGeneral = ({ tenantId, ModuleCode, filters, middleware = [], config = {} }) => {
   const client = useQueryClient();
   const { t } = useTranslation();
   const { fetchFilters, searchResponseKey, businessIdAliasForSearch, businessIdsParamForSearch } = inboxConfig()[ModuleCode];
@@ -57,9 +57,24 @@ const useNewInboxGeneral = ({ tenantId, ModuleCode, filters, middleware = [] }) 
       }),
     {
       select: (data) => {
-        return data.items?.map((obj) => ({ searchData: obj.businessObject, workflowData: obj.moduleSearchCriteria }));
+        const { statusMap, totalCount } = data;
+        client.setQueryData(`INBOX_STATUS_MAP_${ModuleCode}`, (oldStatusMap) => {
+          if (!oldStatusMap) return statusMap;
+          else return [...oldStatusMap.filter((e) => statusMap.some((f) => f.stateId === e.stateId))];
+        });
+        if (data.items.length) {
+          return data.items?.map((obj) => ({
+            searchData: obj.businessObject,
+            workflowData: obj.ProcessInstance,
+            statusMap,
+            totalCount,
+          }));
+        } else {
+          return [{ statusMap, totalCount, dataEmpty: true }];
+        }
       },
       retry: false,
+      ...config,
     }
   );
 
@@ -71,17 +86,6 @@ const useNewInboxGeneral = ({ tenantId, ModuleCode, filters, middleware = [] }) 
     tableConfig: TableConfig(t)[ModuleCode],
     searchFields: getSearchFields(true)[ModuleCode],
   };
-
-  //   return {
-  //     ...searchResult,
-  //     revalidate,
-  //     searchResponseKey,
-  //     businessIdsParamForSearch,
-  //     businessIdAliasForSearch,
-  //     tableConfig: TableConfig(t)[ModuleCode],
-  //     searchFields: getSearchFields(isInbox)[ModuleCode],
-  //     wfFetching,
-  //   };
 };
 
 export default useNewInboxGeneral;
