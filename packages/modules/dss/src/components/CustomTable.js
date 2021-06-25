@@ -101,7 +101,7 @@ const CustomTable = ({ data, onSearch }) => {
           }
           if (typeof cellValue === "object") {
             let { insight, value: rowValue } = cellValue;
-            if (column.symbol === "amount") {
+            if (column.symbol === "amount" && plot?.name !=="TotalSeptageCollected" && plot?.name !== "TotalSeptageDumped") {
               rowValue = convertDenomination(rowValue);
             }
             return (
@@ -119,7 +119,7 @@ const CustomTable = ({ data, onSearch }) => {
           if (column.id === "CitizenAverageRating") {
             return <Rating id={row.id} currentRating={Math.round(cellValue * 10) / 10} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
           }
-          if (column.symbol === "amount") {
+          if (column.symbol === "amount" && plot?.name !=="TotalSeptageCollected" && plot?.name !== "TotalSeptageDumped") {
             return String(convertDenomination(cellValue));
           }
           return String(t(cellValue));
