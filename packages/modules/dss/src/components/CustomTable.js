@@ -54,7 +54,7 @@ const CustomTable = ({ data, onSearch }) => {
       return `${t(code)} (${t("DSS_KL")})`;
     }
     if (plot?.symbol === "amount") {
-      return `${t(code)} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`;
+      return `${t(code)} ${value.denomination !== "Unit" && plot?.name !=="CapacityUtilization" ? `(${value.denomination})` : ""}`;
     }
     return t(code);
   };
