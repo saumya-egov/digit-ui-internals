@@ -95,7 +95,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
     let minFloor = units.reduce((min, unit) => Math.min(min, Number(unit.floorNo?.code) || Number(0)), Number(0));
     let maxFloor = units.reduce((max, unit) => Math.max(max, Number(unit.floorNo?.code) || Number(0)), Number(0));
 
-    // let totalGroundFloorArea = units.reduce((acc, { floorNo, builtUpArea }) => acc + (floorNo?.code == 0 ? Number(builtUpArea) : 0));
+    let totalGroundFloorArea = units.reduce((acc, { floorNo, builtUpArea }) => acc + (floorNo?.code == 0 ? Number(builtUpArea) : 0), 0);
 
     const continuousFloorsArr = floorListData.filter((e) => {
       let num = Number(e?.code);
@@ -114,11 +114,13 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
 
     if (unitsMissing.length) {
       setError(config.key, { type: "units_missing", message: `PT_FLOORS_MISSING_UNITS.${unitsMissing.map((e) => e?.code).join()}` });
+    } else if (totalGroundFloorArea > Number(formData?.landarea)) {
+      setError(config.key, { type: "landArea extended", message: t("PT_BUILTUPAREA_GRATER_THAN_LANDAREA") });
     } else {
       clearErrors(config.key);
     }
 
-    console.log(maxFloor + 1, "noOfFloors in form");
+    console.log(totalGroundFloorArea, Number(formData?.landArea), totalGroundFloorArea > Number(formData?.landArea), "noOfFloors in form");
     onSelect("noOfFloors", maxFloor + 1);
   };
 
@@ -226,10 +228,10 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
         />
       ))}
       <LinkButton label={t("PT_ADD_UNIT")} onClick={handleAddUnit} style={{ color: "orange", width: "175px" }}></LinkButton>
-      {formState.errors?.[config.key]?.type === "units_missing" ? (
+      {["units_missing", "landArea extended"].includes(formState.errors?.[config.key]?.type) ? (
         <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
           {`${formState.errors?.[config.key].message.split(".")[0]} -
-           ${formState.errors?.[config.key].message.split(".")[1]}`}
+           ${formState.errors?.[config.key].message.split(".")[1] || " "}`}
         </CardLabelError>
       ) : null}
     </div>
