@@ -80,7 +80,7 @@ const Area = ({ t, config, onSelect, value, userType, formData, setError: setFor
 
   useEffect(() => {
     if (userType === "employee") {
-      if (!floorarea) setFormError(config.key, { type: "required", message: `${config.key.toUpperCase()}_REQUIRED` });
+      if (!floorarea) setFormError(config.key, { type: "required", message: t("CORE_COMMON_REQUIRED_ERRMSG") });
       else clearFormErrors(config.key);
       onSelect(config.key, floorarea);
     }
@@ -107,7 +107,7 @@ const Area = ({ t, config, onSelect, value, userType, formData, setError: setFor
       return (
         <React.Fragment>
           <LabelFieldPair key={index}>
-            <CardLabel className="card-label-smaller">{t(input.label)}</CardLabel>
+            <CardLabel className="card-label-smaller">{t(input.label) + " *"}</CardLabel>
             <div className="field">
               <TextInput
                 key={input.name}
