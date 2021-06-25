@@ -95,6 +95,8 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
     let minFloor = units.reduce((min, unit) => Math.min(min, Number(unit.floorNo?.code) || Number(0)), Number(0));
     let maxFloor = units.reduce((max, unit) => Math.max(max, Number(unit.floorNo?.code) || Number(0)), Number(0));
 
+    // let totalGroundFloorArea = units.reduce((acc, { floorNo, builtUpArea }) => acc + (floorNo?.code == 0 ? Number(builtUpArea) : 0));
+
     const continuousFloorsArr = floorListData.filter((e) => {
       let num = Number(e?.code);
       return (num < maxFloor && num > minFloor) || num === maxFloor || num === minFloor;
@@ -115,6 +117,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
     } else {
       clearErrors(config.key);
     }
+
     console.log(maxFloor + 1, "noOfFloors in form");
     onSelect("noOfFloors", maxFloor + 1);
   };
@@ -194,6 +197,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
   }, [formData?.PropertyType]);
 
   useEffect(() => {
+    console.log(units, "inside units change");
     goNext();
     calculateNumberOfFloors();
   }, [units, formData.PropertyType]);
@@ -309,9 +313,19 @@ function Unit({
     if (!_.isEqual(formValue, part)) setUnits((prev) => prev.map((item) => (item.key === unit.key ? { ...item, ...formValue } : item)));
 
     for (let key in formValue) {
-      if (!formValue[key] && !localFormState.errors[key]) {
-        setLocalError(key, { type: `${key.toUpperCase()}_REQUIRED`, message: `COMMON_ERROR_REQUIRED` });
-      } else if (formValue[key] && localFormState.errors[key]) {
+      if (!localFormState.errors[key]) {
+        if (!formValue[key]) {
+          setLocalError(key, { type: `${key.toUpperCase()}_REQUIRED`, message: t(`CORE_COMMON_REQUIRED_ERRMSG`) });
+        } else if (["builtUpArea", "arv"].includes(key) && isNaN(formValue[key])) {
+          setLocalError(key, { type: `${key.toUpperCase()}_INVALID`, message: t(`ERR_DEFAULT_INPUT_FIELD_MSG`) });
+        }
+      } else if (
+        ["builtUpArea", "arv"].includes(key) &&
+        !isNaN(formValue[key]) &&
+        localFormState.errors[key].type === `${key.toUpperCase()}_INVALID`
+      ) {
+        clearLocalErrors([key]);
+      } else if (formValue[key] && localFormState.errors[key].type === `${key.toUpperCase()}_REQUIRED`) {
         clearLocalErrors([key]);
       }
     }
@@ -342,7 +356,7 @@ function Unit({
           </div>
         ) : null}
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("PT_FORM2_SELECT_FLOOR")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_SELECT_FLOOR") + " *"}</CardLabel>
           <Controller
             name="floorNo"
             defaultValue={unit.floorNo}
@@ -363,7 +377,7 @@ function Unit({
         </LabelFieldPair>
         <CardLabelError style={errorStyle}>{localFormState.touched.floorNo ? errors?.floorNo?.message : ""}</CardLabelError>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("PT_PROPERTY_DETAILS_USAGE_TYPE_HEADER")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_PROPERTY_DETAILS_USAGE_TYPE_HEADER") + " *"}</CardLabel>
           <Dropdown
             className="form-field"
             selected={usageType}
@@ -376,7 +390,7 @@ function Unit({
         </LabelFieldPair>
 
         <LabelFieldPair style={["RESIDENTIAL"].includes(usageType?.code) ? { display: "none" } : {}}>
-          <CardLabel className="card-label-smaller">{t("PT_FORM2_USAGE_TYPE")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_USAGE_TYPE") + " *"}</CardLabel>
           <Controller
             name="usageCategory"
             defaultValue={subUsageCategoryMenu(usageType)?.filter((e) => e?.code === unit.existingUsageCategory)[0]}
@@ -400,7 +414,7 @@ function Unit({
         ) : null}
 
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("PT_FORM2_OCCUPANCY")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_OCCUPANCY") + " *"}</CardLabel>
           <Controller
             name="occupancyType"
             defaultValue={unit?.occupancyType}
@@ -424,7 +438,7 @@ function Unit({
         {formValue.occupancyType?.code === "RENTED" ? (
           <React.Fragment>
             <LabelFieldPair>
-              <CardLabel className="card-label-smaller">{t("PT_FORM2_TOTAL_ANNUAL_RENT")}</CardLabel>
+              <CardLabel className="card-label-smaller">{t("PT_FORM2_TOTAL_ANNUAL_RENT") + " *"}</CardLabel>
               <div className="field">
                 <Controller
                   name="arv"
@@ -450,11 +464,12 @@ function Unit({
           </React.Fragment>
         ) : null}
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("PT_FORM2_BUILT_AREA")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_FORM2_BUILT_AREA") + " *"}</CardLabel>
           <div className="field">
             <Controller
               name="builtUpArea"
               defaultValue={unit?.builtUpArea}
+              // rules={}
               control={control}
               render={(props) => (
                 <TextInput
