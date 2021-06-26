@@ -16,7 +16,9 @@
   },
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
+    "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
+    "start:script": "./scripts/create.sh",
     "dev:css": "cd packages/css && yarn start",
     "dev:libraries": "cd packages/libraries && yarn start",
     "dev:components": "cd packages/react-components && yarn start",
@@ -43,7 +45,8 @@
     "build:mcollect": "cd packages/modules/mCollect && yarn build",
     "build:receipts": "cd packages/modules/receipts && yarn build",
     "build:tl": "cd packages/modules/tl && yarn build",
-    "build:hrms": "cd packages/modules/hrms && yarn build"
+    "build:hrms": "cd packages/modules/hrms && yarn build",
+    "deploy:jenkins": "./scripts/jenkins.sh"
   },
   "devDependencies": {
     "husky": ">=4.3.6",
