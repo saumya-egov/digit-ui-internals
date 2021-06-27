@@ -156,6 +156,10 @@ export const PTLinks = ({ matchPath, userType }) => {
       link: `${matchPath}/property/my-applications`,
       i18nKey: t("PT_MY_APPLICATION"),
     },
+    {
+      link: `${matchPath}/property/transfer-of-ownership`,
+      i18nKey: t("PT_PROPERTY_MUTATION"),
+    },
   ];
 
   return <CitizenHomeCard header={t("ACTION_TEST_PROPERTY_TAX")} links={links} Icon={RupeeIcon} />;
