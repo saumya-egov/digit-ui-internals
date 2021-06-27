@@ -5,7 +5,6 @@ import ApplicationLinks from "./inbox/ApplicationLinks";
 import { getActionButton, printReciept } from "../utils";
 import { Link } from "react-router-dom";
 
-
 const MobileInbox = ({
   data,
   isLoading,
@@ -23,8 +22,8 @@ const MobileInbox = ({
 }) => {
   const { t } = useTranslation();
   const GetMobCell = (value) => <span className="sla-cell">{value}</span>;
-  const convertEpochToDate = dateEpoch => {
-    if (dateEpoch == null || dateEpoch == undefined || dateEpoch == '') {
+  const convertEpochToDate = (dateEpoch) => {
+    if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
       return "NA";
     }
     const dateFromApi = new Date(dateEpoch);
@@ -46,7 +45,8 @@ const MobileInbox = ({
     {
       Header: t("UC_CHALLAN_NUMBER"),
       mobileCell: (original) => GetMobCell(original?.["challanNo"]),
-    }, {
+    },
+    {
       Header: t("UC_COMMON_TABLE_COL_PAYEE_NAME"),
       mobileCell: (original) => GetMobCell(original?.["name"]),
     },
@@ -55,12 +55,12 @@ const MobileInbox = ({
       mobileCell: (original) => {
         let code = stringReplaceAll(`${original?.["businessService"]}`, ".", "_");
         code = code.toUpperCase();
-        return GetMobCell(t(`BILLINGSERVICE_BUSINESSSERVICE_${code}`))
-      }
+        return GetMobCell(t(`BILLINGSERVICE_BUSINESSSERVICE_${code}`));
+      },
     },
     {
       Header: t("UC_DUE_DATE"),
-      mobileCell: (original) => GetMobCell((original?.dueDate === "NA" ? "NA" : convertEpochToDate(original?.dueDate))),
+      mobileCell: (original) => GetMobCell(original?.dueDate === "NA" ? "NA" : convertEpochToDate(original?.dueDate)),
     },
     {
       Header: t("UC_TOTAL_AMOUNT"),
@@ -74,13 +74,17 @@ const MobileInbox = ({
       Header: t("UC_TABLE_COL_ACTION"),
       mobileCell: (original) => {
         const amount = original?.totalAmount;
-        let action = "ACTIVE"
-        if (amount > 0) action = "COLLECT"
+        let action = "ACTIVE";
+        if (amount > 0) action = "COLLECT";
         if (action == "COLLECT") {
           return (
             <div>
               <span className="link">
-                <Link to={{ pathname: `/digit-ui/employee/payment/collect/${original?.["businessService"]}/${original?.["challanNo"]}/tenantId=${original?.["tenantId"]}` }}>
+                <Link
+                  to={{
+                    pathname: `/digit-ui/employee/payment/collect/${original?.["businessService"]}/${original?.["challanNo"]}/tenantId=${original?.["tenantId"]}?workflow=mcollect`,
+                  }}
+                >
                   {t(`UC_${action}`)}
                 </Link>
               </span>
@@ -91,28 +95,31 @@ const MobileInbox = ({
             <div>
               <span className="link">
                 <Link>
-                  <a href="javascript:void(0)"
+                  <a
+                    href="javascript:void(0)"
                     style={{
                       color: "#FE7A51",
-                      cursor: "pointer"
+                      cursor: "pointer",
                     }}
-                    onClick={value => {
+                    onClick={(value) => {
                       printReciept(original?.["businessService"], original?.["challanNo"]);
                     }}
-                  > {t(`${"UC_DOWNLOAD_RECEIPT"}`)} </a>
+                  >
+                    {" "}
+                    {t(`${"UC_DOWNLOAD_RECEIPT"}`)}{" "}
+                  </a>
                 </Link>
               </span>
             </div>
-          )
+          );
         } else {
           return GetMobCell(t(`${"NA"}`));
         }
-      }
-    }
+      },
+    },
   ];
 
   const serviceRequestIdKey = (original) => original?.[t("ES_INBOX_UNIQUE_PROPERTY_ID")]?.props?.children;
-
 
   const getData = () => {
     return data?.map((dataObj) => {

@@ -140,7 +140,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData, setError, cl
     return (
       <div>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("MYCITY_CODE_LABEL")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("MYCITY_CODE_LABEL") + " *"}</CardLabel>
           <Controller
             name={"city"}
             defaultValue={cities?.length === 1 ? cities[0] : selectedCity}
@@ -161,7 +161,7 @@ const PTSelectAddress = ({ t, config, onSelect, userType, formData, setError, cl
         </LabelFieldPair>
         <CardLabelError style={errorStyle}>{localFormState.touched.city ? errors?.city?.message : ""}</CardLabelError>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("PT_LOCALITY_LABEL")}</CardLabel>
+          <CardLabel className="card-label-smaller">{t("PT_LOCALITY_LABEL") + " *"}</CardLabel>
           <Controller
             name="locality"
             defaultValue={null}

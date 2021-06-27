@@ -23,6 +23,13 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
     onSelectFilterRoles({ ...filters, [key]: afterRemove });
   };
 
+  useEffect(() => {
+    if (filters.role.length > 1) {
+      onSelectFilterRolessetSelectedRole({ name: `${filters.role.length} selected` });
+    } else {
+      onSelectFilterRolessetSelectedRole(filters.role[0]);
+    }
+  }, [filters.role]);
   const [tenantId, settenantId] = useState(() => {
     return tenantIds.filter(
       (ele) =>
@@ -71,7 +78,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
 
   useEffect(() => {
     if (departments) {
-      setSearchParams({ designations: departments.code });
+      setSearchParams({ departments: departments.code });
     }
   }, [departments]);
 
@@ -100,7 +107,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
     onSelectFilterRoles({ role: [] });
   };
 
-  const GetSelectOptions = (lable, options, selected = null, select, optionKey, onRemove, key) => {
+  const GetSelectOptions = (lable, options, selected, select, optionKey, onRemove, key) => {
     selected = selected || { [optionKey]: " ", code: "" };
     return (
       <div>
@@ -157,7 +164,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
             </div>
             <div>
               <div className="filter-label">{t("HR_COMMON_TABLE_COL_DEPT")}</div>
-              <Dropdown option={data?.MdmsRes["common-masters"]?.Designation} selected={departments} select={setDepartments} optionKey={"name"} />
+              <Dropdown option={data?.MdmsRes["common-masters"]?.Department} selected={departments} select={setDepartments} optionKey={"name"} />
             </div>
             <div>
               <div>
@@ -180,8 +187,8 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
                 selectedOption={isActive}
                 optionsKey="name"
                 options={[
-                  { code: true, name: t("HR_ACTIVATE_EMPLOYEE_HEAD") },
-                  { code: false, name: t("HR_DEACTIVATE_EMPLOYEE_HEAD") },
+                  { code: true, name: t("HR_ACTIVATE_HEAD") },
+                  { code: false, name: t("HR_DEACTIVATE_HEAD") },
                 ]}
               />
               <div>

@@ -137,7 +137,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
       <React.Fragment>
         <LabelFieldPair>
           <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
-            {t("PT_PROVIDE_OWNERSHIP_DETAILS")}
+            {t("PT_PROVIDE_OWNERSHIP_DETAILS") + " *"}
           </CardLabel>
           <Dropdown
             className="form-field"

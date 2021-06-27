@@ -56,6 +56,7 @@ const EditForm = ({ tenantId, data }) => {
         key: index,
         fromDate: convertEpochToDate(ele.fromDate),
         toDate: convertEpochToDate(ele.toDate),
+        isCurrentAssignment: ele.isCurrentAssignment,
         designation: {
           code: ele.designation,
           i18key: "COMMON_MASTERS_DESIGNATION_" + ele.designation,
@@ -127,7 +128,10 @@ const EditForm = ({ tenantId, data }) => {
 
   const onSubmit = (input) => {
     let roles = input?.Jurisdictions?.map((ele) => {
-      return ele.roles;
+      return ele.roles?.map((item) => {
+        item["tenantId"] = ele.boundary;
+        return item;
+      });
     });
     let requestdata = Object.assign({}, data);
     roles = [].concat.apply([], roles);

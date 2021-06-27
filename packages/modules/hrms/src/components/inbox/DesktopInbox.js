@@ -44,7 +44,13 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
             <div className="tooltip">
               {" "}
               {GetCell(`${row.original?.user?.roles.length}`)}
-              <span className="tooltiptext">{row.original?.user?.roles.map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_${ele.code}`) + "\n")}</span>
+              <span className="tooltiptext" style={{whiteSpace: "nowrap"}}>
+                {row.original?.user?.roles.map((ele, index) => (
+                  <span>
+                    {`${index + 1}. ` + t(`ACCESSCONTROL_ROLES_ROLES_${ele.code}`)} <br />{" "}
+                  </span>
+                ))}
+              </span>
             </div>
           );
         },
@@ -93,7 +99,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
     result = (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
-        {t("CS_MYAPPLICATIONS_NO_APPLICATION")
+        {t("COMMON_TABLE_NO_RECORD_FOUND")
           .split("\\n")
           .map((text, index) => (
             <p key={index} style={{ textAlign: "center" }}>

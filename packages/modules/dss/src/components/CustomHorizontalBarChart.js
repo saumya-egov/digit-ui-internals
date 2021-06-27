@@ -117,7 +117,7 @@ const CustomHorizontalBarChart = ({
         )}
       </ResponsiveContainer>
       {showDrillDown && (
-        <p style={{ textAlign: "right", color: "#F47738" }} onClick={goToDrillDownCharts}>
+        <p className="showMore" onClick={goToDrillDownCharts}>
           {t("DSS_SHOW_MORE")}
         </p>
       )}

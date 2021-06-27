@@ -80,12 +80,14 @@ const CreateEmployee = () => {
   };
 
   const onSubmit = (data) => {
-    let roles = data.Jurisdictions.map((ele) => {
-      ele.roles["tenantId"] = ele.boundary;
-      return ele.roles;
+    let roles = data?.Jurisdictions?.map((ele) => {
+      return ele.roles?.map((item) => {
+        item["tenantId"] = ele.boundary;
+        return item;
+      });
     });
 
-    roles = [].concat.apply([], roles);
+    const mappedroles = [].concat.apply([], roles);
     let Employees = [
       {
         tenantId: tenantId,
@@ -102,7 +104,7 @@ const CreateEmployee = () => {
           emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : undefined,
           gender: data?.SelectEmployeeGender?.gender.code,
           dob: new Date(data?.SelectDateofBirthEmployment?.dob).getTime(),
-          roles: roles,
+          roles: mappedroles,
           tenantId: tenantId,
         },
         serviceHistory: [],

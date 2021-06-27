@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { mobileNumber, challanNo, Servicecategory } = Digit.Hooks.useQueryParams();
+  const { mobileNumber, challanNo, Servicecategory,tenantId } = Digit.Hooks.useQueryParams();
   const filters = {};
   if (mobileNumber) filters.mobileNumber = mobileNumber;
   if (challanNo) filters.consumerCode = challanNo;
@@ -16,8 +16,9 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
   //filters.url = "egov-searcher/bill-genie/mcollectbills/_get"
 
   //const tenantId = Digit.ULBService.getCurrentTenantId();
-  const userInfo = Digit.UserService.getUser();
-  const tenantId = userInfo?.info?.permanentCity;
+  // const userInfo = Digit.UserService.getUser();
+  // let tenantId = userInfo?.info?.permanentCity;
+  // tenantId = tenantId;
   const result = Digit.Hooks.mcollect.useMcollectSearchBill({ tenantId, filters });
   //const result = await Axios.post(`https://qa.digit.org/egov-searcher/bill-genie/mcollectbills/_get?`, {"searchCriteria":{"tenantId":"pb.amritsar","mobileNumber":"7878787878","businesService":"ADVT.Hoardings"},"RequestInfo":{"apiId":"Rainmaker","authToken":"1fff79b7-694d-4b18-8a6f-2dbdac1531aa"}})
   let bills = result?.data?.Bills;
@@ -81,13 +82,6 @@ const ChallanSearchResults = ({ template, header, actionButtonLabel }) => {
           </Header>
         )}
         <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
-      </div>
-
-      <div style={{ marginLeft: "16px", marginTop: "16px" }}>
-        <p>{t("PT_TEXT_WANT_TO_ADD_A_NEW_PROPERTY")} </p>
-        <p className="link">
-          <Link to="/digit-ui/citizen/pt/property/new-application/info">{t("PT_COMMON_CLICK_HERE_TO_REGISTER_NEW_PROPERTY")}</Link>
-        </p>
       </div>
     </div>
   );

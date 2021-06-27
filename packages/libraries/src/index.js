@@ -36,6 +36,7 @@ import Contexts from "./contexts";
 import Hooks from "./hooks";
 import Utils from "./utils";
 import { subFormRegistry } from "./subFormRegistry";
+import ReceiptsService from "./services/elements/Receipts";
 
 const setupLibraries = (Library, props) => {
   window.Digit = window.Digit || {};
@@ -61,6 +62,7 @@ const initLibraries = () => {
   setupLibraries("PTService", PTService);
   setupLibraries("TLService", TLService);
   setupLibraries("HRMSService", HrmsService);
+  setupLibraries("ReceiptsService", ReceiptsService);
   setupLibraries("MCollectService", MCollectService);
   setupLibraries("PaymentService", PaymentService);
   setupLibraries("DateUtils", dateUtils);

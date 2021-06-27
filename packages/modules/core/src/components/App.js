@@ -38,6 +38,9 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl }) => {
         Digit.SessionStorage.del("fsm/search/searchParams");
       }
     }
+    if (!pathname?.includes("dss")) {
+      Digit.SessionStorage.del("DSS_FILTERS");
+    }
   }, [pathname]);
 
   history.listen(() => {
@@ -196,7 +199,7 @@ function TopBar(props) {
   return (
     <div className="topbar">
       <img className="city" src={cityDetails?.logoId} />
-      <p className="ulb" style={mobileView ? { fontSize: "14px", width: "50%", display: "inline-block", marginTop: "15px" } : {}}>
+      <p className="ulb" style={mobileView ? { fontSize: "14px", width: "49%", display: "inline-block", marginTop: "15px" } : {}}>
         {t(cityDetails?.i18nKey).toUpperCase()}{" "}
         {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
       </p>

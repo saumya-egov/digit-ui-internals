@@ -24,4 +24,14 @@ export const BillDetailsKeyNoteConfig = () => ({
       },
     ],
   },
+  mcollect: {
+    heading: "COMMON_PAY_SCREEN_HEADER",
+    details: [
+      {
+        keyValue: "UC_CHALLAN_NO",
+        keyPath: ["consumerCode"],
+        fallback: "",
+      },
+    ],
+  },
 });
