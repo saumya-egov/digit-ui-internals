@@ -68,8 +68,8 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
             />
             <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
             <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
-            <PrivateRoute path={`${path}/details/:id`} component={() => <Details />} />
-            <PrivateRoute path={`${path}/edit/:id`} component={() => <EditEmpolyee />} />
+            <PrivateRoute path={`${path}/details/:tenantId/:id`} component={() => <Details />} />
+            <PrivateRoute path={`${path}/edit/:tenantId/:id`} component={() => <EditEmpolyee />} />
           </div>
         </React.Fragment>
       </Switch>

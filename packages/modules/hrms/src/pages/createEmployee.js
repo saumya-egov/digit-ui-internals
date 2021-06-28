@@ -10,6 +10,7 @@ const CreateEmployee = () => {
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
+  const [checkfield, setcheck]= useState(false)
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -51,14 +52,14 @@ const defaultValues = {
     } else {
       setPhonecheck(false);
     }
-    let setcheck = false;
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
+      console.log(key?.roles?.length)
       if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
-        setcheck = false;
+        setcheck(false);
         break;
       } else {
-        setcheck = true;
+        setcheck(true);
       }
     }
 
@@ -84,7 +85,7 @@ const defaultValues = {
       formData?.SelectEmployeeName?.employeeName &&
       formData?.SelectEmployeeType?.code &&
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
-      setcheck &&
+      checkfield &&
       setassigncheck &&
       phonecheck
     ) {
