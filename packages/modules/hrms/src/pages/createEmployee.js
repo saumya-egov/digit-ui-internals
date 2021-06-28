@@ -10,9 +10,11 @@ const CreateEmployee = () => {
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
-  const [defaultValues, setDefaultValues] = useState({});
+  const [boundarycheck, setboundarycheck]= useState(null);
+  // const [defaultValues, setDefaultValues] = useState({});
   const { t } = useTranslation();
   const history = useHistory();
+
 
   useEffect(() => {
     if (/^[6-9]\d{9}$/.test(mobileNumber)) {
@@ -29,6 +31,22 @@ const CreateEmployee = () => {
     }
   }, [mobileNumber]);
 
+const defaultValues = {
+
+      Jurisdictions:
+        [{
+          id: undefined,
+          key: 1,
+          hierarchy: null,
+          boundaryType: null,
+           boundary: {
+            code: tenantId
+          },
+          roles: [],
+        }]
+      }
+
+
   const onFormValueChange = (setValue = true, formData) => {
     if (/^[6-9]\d{9}$/.test(formData?.SelectEmployeePhoneNumber?.mobileNumber)) {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
@@ -43,6 +61,10 @@ const CreateEmployee = () => {
         break;
       } else {
         setcheck = true;
+      }
+      if(key.boundary == tenantId){
+        setboundarycheck(null);
+
       }
     }
 
@@ -61,7 +83,6 @@ const CreateEmployee = () => {
         setassigncheck = true;
       }
     }
-
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&

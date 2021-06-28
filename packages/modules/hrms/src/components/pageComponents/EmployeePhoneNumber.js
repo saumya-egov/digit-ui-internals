@@ -54,7 +54,13 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                     {...input.validation}
                   />
                 </div>
-                <div>{iserror ? <CardLabelError style={{ width: "100%" }}>{t(input.populators.error)}</CardLabelError> : null}</div>
+                <div>{iserror ? <CardLabelError style={{ width: "100%" }}>{t(input.populators.error)}</CardLabelError> : <span style={{
+                  color: "gray", width: "100%", border: "none",
+                  background: "none",
+                  justifyContent: "end"
+                }}>
+                  {t("HR_MOBILE_NO_CHECK")}
+                </span>}</div>
               </div>
             </div>
           </LabelFieldPair>
