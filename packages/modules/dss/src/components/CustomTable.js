@@ -54,7 +54,7 @@ const CustomTable = ({ data, onSearch }) => {
       return `${t(code)} (${t("DSS_KL")})`;
     }
     if (plot?.symbol === "amount") {
-      return `${t(code)} ${value.denomination !== "Unit" ? `(${value.denomination})` : ""}`;
+      return `${t(code)} ${value.denomination !== "Unit" && plot?.name !=="CapacityUtilization" ? `(${value.denomination})` : ""}`;
     }
     return t(code);
   };
@@ -93,7 +93,7 @@ const CustomTable = ({ data, onSearch }) => {
             const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
             const { range } = value;
             const { startDate, endDate } = range;
-            const numberOfDays = differenceInDays(endDate, startDate);
+            const numberOfDays = Math.max(differenceInDays(endDate, startDate), 1);
             const ulbs  = dssTenants.filter((tenant) => tenant?.city?.ddrName === row.original.key || tenant?.code === row.original.key).map(tenant => tenant.code);
             const totalCapacity = fstpMdmsData?.filter(plant => ulbs.find(ulb => plant.ULBS.includes(ulb))).reduce((acc, plant) => acc + Number(plant.PlantOperationalCapacityKLD), 0)
             const result = `${((rowValue / (totalCapacity * numberOfDays)) * 100).toFixed(2)}%`;
@@ -101,11 +101,11 @@ const CustomTable = ({ data, onSearch }) => {
           }
           if (typeof cellValue === "object") {
             let { insight, value: rowValue } = cellValue;
-            if (column.symbol === "amount") {
+            if (column.symbol === "amount" && plot?.name !=="TotalSeptageCollected" && plot?.name !== "TotalSeptageDumped") {
               rowValue = convertDenomination(rowValue);
             }
             return (
-              <InsightView insight={rowValue} rowValue={rowValue} />
+              <InsightView insight={insight} rowValue={rowValue} />
             );
           }
           const filter = response?.responseData?.filter.find((elem) => elem.column === column.id);
@@ -119,7 +119,7 @@ const CustomTable = ({ data, onSearch }) => {
           if (column.id === "CitizenAverageRating") {
             return <Rating id={row.id} currentRating={Math.round(cellValue * 10) / 10} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
           }
-          if (column.symbol === "amount") {
+          if (column.symbol === "amount" && plot?.name !=="TotalSeptageCollected" && plot?.name !== "TotalSeptageDumped") {
             return String(convertDenomination(cellValue));
           }
           return String(t(cellValue));

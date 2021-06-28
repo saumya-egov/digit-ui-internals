@@ -58,7 +58,7 @@ const DashBoard = ({ stateCode }) => {
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
-  const { isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateCode, "FSM", "FSTPPlantInfo");
+  const { isLoading: isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateCode, "FSM", "FSTPPlantInfo");
   const [showOptions, setShowOptions] = useState(false);
 
   const handleFilters = (data) => {
@@ -73,7 +73,7 @@ const DashBoard = ({ stateCode }) => {
       ulbTenants,
       fstpMdmsData: mdmsData
     }),
-    [filters, isUlbLoading]
+    [filters, isUlbLoading, isMdmsLoading]
   );
   const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
 

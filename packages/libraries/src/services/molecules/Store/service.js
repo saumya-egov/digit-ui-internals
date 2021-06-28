@@ -108,13 +108,11 @@ export const StoreService = {
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
     });
 
-    if (Digit.Utils.receiptsAccess()) {
-      initData.modules.push({
-        module: "Receipts",
-        code: "Receipts",
-        tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
-      });
-    }
+    initData.modules.push({
+      module: "Receipts",
+      code: "Receipts",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
 
 
     initData.modules.push({
