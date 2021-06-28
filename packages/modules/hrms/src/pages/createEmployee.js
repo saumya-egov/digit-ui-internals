@@ -10,8 +10,6 @@ const CreateEmployee = () => {
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
-  const [boundarycheck, setboundarycheck]= useState(null);
-  // const [defaultValues, setDefaultValues] = useState({});
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -61,10 +59,6 @@ const defaultValues = {
         break;
       } else {
         setcheck = true;
-      }
-      if(key.boundary == tenantId){
-        setboundarycheck(null);
-
       }
     }
 
