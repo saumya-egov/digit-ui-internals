@@ -1,9 +1,9 @@
-import { Banner, Card, CardText, LinkButton, Loader, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Banner, Card, CardText, LinkButton, Loader, Row, StatusTable, SubmitBar, Toast } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 //import getPTAcknowledgementData from "../../../getPTAcknowledgementData";
-import { convertToTrade, convertToUpdateProperty } from "../../../utils";
+import { convertToTrade, convertToUpdateTrade, convertToEditTrade } from "../../../utils";
 import getPDFData from "../../../utils/getTLAcknowledgementData";
 
 const GetActionMessage = (props) => {
@@ -35,27 +35,55 @@ const BannerPicker = (props) => {
 
 const TLAcknowledgement = ({ data, onSuccess }) => {
   const { t } = useTranslation();
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const mutation = Digit.Hooks.tl.useTradeLicenseAPI(
     data?.address?.city ? data.address?.city?.code : tenantId,
     !window.location.href.includes("edit-application")
   );
+  const mutation1 = Digit.Hooks.tl.useTradeLicenseAPI(
+    data?.address?.city ? data.address?.city?.code : tenantId,
+    false
+  );
+  const isEdit = window.location.href.includes("edit-application");
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { tenants } = storeData || {};
+  const stateId = tenantId.split(".")[0];
+  const { isLoading, data: fydata = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "egf-master", "FinancialYear");
 
   useEffect(() => {
     try {
       let tenantId = data?.address?.city ? data.address?.city?.code : tenantId;
       data.tenantId = tenantId;
-      let formdata = convertToTrade(data);
+      console.log("data",data);
+      let formdata = !isEdit?convertToTrade(data):convertToEditTrade(data);
       formdata.Licenses[0].tenantId = formdata?.Licenses[0]?.tenantId || tenantId;
-      mutation.mutate(formdata, {
+      !isEdit?mutation.mutate(formdata, {
+        onSuccess,
+      }):mutation1.mutate(formdata, {
         onSuccess,
       });
     } catch (err) {
       console.log(err);
     }
   }, []);
+
+  useEffect(() => {
+    if(mutation.isSuccess || (mutation1.isSuccess && isEdit))
+      {
+        try{
+        let tenantId = data?.address?.city ? data.address?.city?.code : Digit.ULBService.getCurrentTenantId();
+        console.log("data",data)
+        let Licenses = !isEdit?convertToUpdateTrade(mutation.data,data):convertToUpdateTrade(mutation1.data,data);
+        mutation1.mutate(Licenses,{
+          onSuccess,
+        });
+      }
+      catch( er){
+        console.info("error in update",er);
+      }
+    }
+  },[mutation.isSuccess]);
 
   const handleDownloadPdf = async () => {
     const { Licenses = [] } = mutation.data;
@@ -66,13 +94,13 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
     data.then((ress) => Digit.Utils.pdf.generate(ress));
   };
 
-  return mutation.isLoading || mutation.isIdle ? (
+  return mutation1.isLoading || mutation1.isIdle ? (
     <Loader />
   ) : (
     <Card>
-      <BannerPicker t={t} data={mutation.data} isSuccess={mutation.isSuccess} isLoading={mutation.isIdle || mutation.isLoading} />
-      {mutation.isSuccess && <CardText>{t("TL_FILE_TRADE_RESPONSE")}</CardText>}
-      {!mutation.isSuccess && <CardText>{t("TL_FILE_TRADE_FAILED_RESPONSE")}</CardText>}
+      <BannerPicker t={t} data={mutation1.data} isSuccess={mutation1.isSuccess} isLoading={mutation1.isIdle || mutation1.isLoading} />
+      {mutation1.isSuccess && <CardText>{t("TL_FILE_TRADE_RESPONSE")}</CardText>}
+      {!mutation1.isSuccess && <CardText>{t("TL_FILE_TRADE_FAILED_RESPONSE")}</CardText>}
       {/* {mutation.isSuccess && (
         <LinkButton
           label={
@@ -99,7 +127,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
           />
         )}
       </StatusTable> */}
-      {mutation.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
+      {mutation1.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
 
       <Link to={`/digit-ui/citizen`}>
         <LinkButton label={t("CORE_COMMON_GO_TO_HOME")} />

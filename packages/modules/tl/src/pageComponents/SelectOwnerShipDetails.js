@@ -6,8 +6,9 @@ import { useLocation } from "react-router-dom";
 const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlur, formState, setError, clearErrors }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
-  const isUpdateProperty = formData?.isUpdateProperty || false;
-  let isEditProperty = formData?.isEditProperty || false;
+  //const isUpdateProperty = formData?.isUpdateProperty || false;
+  //let isEditProperty = formData?.isEditProperty || false;
+  let isEdit = window.location.href.includes("edit-application");
   const [ownershipCategory, setOwnershipCategory] = useState(formData?.ownershipCategory);
   const { data: OwnerShipCategoryOb } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "common-masters", "TLOwnerShipCategory");
   const ownerShipdropDown = [];
@@ -80,7 +81,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
         value={ownershipCategory}
         labelKey="PT_OWNERSHIP"
         isDependent={true}
-        disabled={isUpdateProperty || isEditProperty}
+        disable={isEdit}
       />
     </FormStep>
   );

@@ -24,6 +24,7 @@ import CheckPage from "./pages/citizen/Create/CheckPage";
 import TLDocument from "./pageComponents/TLDocumets";
 import TLAcknowledgement from "./pages/citizen/Create/TLAcknowledgement";
 import MyApplications from "./pages/citizen/Applications/Application";
+import TradeLicenseList  from "./pages/citizen/Renewal/TradeLicenseList";
 
 import CitizenApp from "./pages/citizen";
 
@@ -54,6 +55,10 @@ export const TLLinks = ({ matchPath, userType }) => {
     {
       link: `${matchPath}/tradelicence/new-application`,
       i18nKey: t("TL_CREATE_TRADE"),
+    },
+    {
+      link: `${matchPath}/tradelicence/renewal-list`,
+      i18nKey: t("TL_RENEWAL_HEADER"),
     },
     {
       link: `${matchPath}/tradelicence/my-application`,
@@ -88,6 +93,7 @@ const componentsToRegister = {
   CheckPage,
   TLDocument,
   TLAcknowledgement,
+  TradeLicenseList,
   MyApplications,
 };
 

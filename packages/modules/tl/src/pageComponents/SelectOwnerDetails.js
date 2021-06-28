@@ -7,7 +7,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   const [name, setName] = useState(formData?.owners?.name || "");
   const [isPrimaryOwner, setisPrimaryOwner] = useState(false);
   const [gender, setGender] = useState(formData?.owners?.gender);
-  const [mobileNumber, setMobileNumber] = useState(formData?.owners?.mobileNumber || "");
+  const [mobilenumber, setMobileNumber] = useState(formData?.owners?.mobilenumber || "");
   const [fields, setFeilds] = useState(
     (formData?.owners && formData?.owners?.owners) || [{ name: "", gender: "", mobilenumber: null, isprimaryowner: false }]
   );
@@ -116,7 +116,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
                 t={t}
                 isMandatory={false}
                 optionKey="i18nKey"
-                name="mobileNumber"
+                name="mobilenumber"
                 value={field.mobilenumber}
                 onChange={(e) => setMobileNo(index, e)}
                 //disable={isUpdateProperty || isEditProperty}
