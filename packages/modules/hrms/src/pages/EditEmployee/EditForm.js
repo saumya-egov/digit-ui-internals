@@ -11,6 +11,7 @@ const EditForm = ({ tenantId, data }) => {
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
+  const [checkfield, setcheck]= useState(false)
 
   useEffect(() => {
     if (/^[6-9]\d{9}$/.test(mobileNumber)) {
@@ -70,7 +71,6 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onFormValueChange = (setValue = true, formData) => {
-    let setcheck = false;
     if (/^[6-9]\d{9}$/.test(formData?.SelectEmployeePhoneNumber?.mobileNumber)) {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
     } else {
@@ -78,21 +78,13 @@ const EditForm = ({ tenantId, data }) => {
     }
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
+      console.log(key?.roles?.length)
       if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
-        setcheck = false;
+        setcheck(false);
         break;
       } else {
-        setcheck = true;
+        setcheck(true);
       }
-    }
-
-    if (formData?.Jurisdictions?.length > 0) {
-      setcheck = formData?.Jurisdictions?.reduce((acc, key) => {
-        if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
-          acc = false;
-        }
-        return acc;
-      });
     }
 
     let setassigncheck = false;
@@ -110,26 +102,13 @@ const EditForm = ({ tenantId, data }) => {
         setassigncheck = true;
       }
     }
-
-    console.log(
-      formData?.SelectDateofEmployment?.dateOfAppointment ,
-      formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress ,
-      formData?.SelectEmployeeGender?.gender.code ,
-      formData?.SelectEmployeeName?.employeeName ,
-      formData?.SelectEmployeeType?.code ,
-      formData?.SelectEmployeePhoneNumber?.mobileNumber ,
-      setcheck ,
-      setassigncheck ,
-      phonecheck
-    )
-
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&
       formData?.SelectEmployeeGender?.gender.code &&
       formData?.SelectEmployeeName?.employeeName &&
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
-      setcheck &&
+      checkfield &&
       phonecheck &&
       setassigncheck
     ) {
