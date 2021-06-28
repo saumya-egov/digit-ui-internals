@@ -69,6 +69,7 @@ export const newConfig = [
             label: "TL_LOCALIZATION_STREET_NAME",
             type: "text",
             name: "street",
+            disable: window.location.href.includes("edit-application"),
             validation: {
               // pattern: "[a-zA-Z0-9]{1,255}",
               maxlength: 256,
@@ -79,6 +80,7 @@ export const newConfig = [
             label: "TL_LOCALIZATION_BUILDING_NO",
             type: "text",
             name: "doorNo",
+            disable: window.location.href.includes("edit-application"),
             validation: {
               // pattern: "([A-z0-9À-ž@#$&()\\-`.+,/s ]){1,63}",
               maxlength: 256,

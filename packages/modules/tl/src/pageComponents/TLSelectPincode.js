@@ -7,14 +7,15 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
   const [pincode, setPincode] = useState(() => formData?.address?.pincode || "");
   const { pathname } = useLocation();
   const presentInModifyApplication = pathname.includes("modify");
-  let isEditProperty = formData?.isEditProperty || false;
-  if (formData?.isUpdateProperty) isEditProperty = true;
+  // let isEditProperty = formData?.isEditProperty || false;
+  let isEdit = window.location.href.includes("/edit-application/");
+  //if (formData?.isUpdateProperty) isEditProperty = true;
   const inputs = [
     {
       label: "CORE_COMMON_PINCODE",
       type: "text",
       name: "pincode",
-      disable: isEditProperty,
+      disable: isEdit,
       validation: {
         minlength: 6,
         maxlength: 7,
@@ -78,7 +79,7 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
       onChange={onChange}
       onSkip={onSkip}
       forcedError={t(pincodeServicability)}
-      isDisabled={!pincode || isEditProperty}
+      isDisabled={!pincode || isEdit}
     ></FormStep>
   );
 };

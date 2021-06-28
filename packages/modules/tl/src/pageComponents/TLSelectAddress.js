@@ -6,8 +6,9 @@ import _ from "lodash";
 const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
   const allCities = Digit.Hooks.tl.useTenants();
   let tenantId = Digit.ULBService.getCurrentTenantId();
-  let isEditProperty = formData?.isEditProperty || false;
-  if (formData?.isUpdateProperty) isEditProperty = true;
+  //let isEditProperty = formData?.isEditProperty || false;
+  const isEdit = window.location.href.includes("/edit-application/");
+  //if (formData?.isUpdateProperty) isEditProperty = true;
   const { pincode, city } = formData?.address || "";
   const cities =
     userType === "employee"
@@ -108,54 +109,6 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     }
   }, [formValue]);
 
-  if (userType === "employee") {
-    return (
-      <div>
-        <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{`${t("MYCITY_CODE_LABEL")}*`}</CardLabel>
-          <Controller
-            name={"city"}
-            defaultValue={cities?.length === 1 ? cities[0] : selectedCity}
-            control={control}
-            render={(props) => (
-              <Dropdown
-                className="form-field"
-                selected={props.value}
-                disable={isEditProperty ? isEditProperty : cities?.length === 1}
-                option={cities}
-                select={props.onChange}
-                optionKey="code"
-                onBlur={props.onBlur}
-                t={t}
-              />
-            )}
-          />
-        </LabelFieldPair>
-        <CardLabelError style={errorStyle}>{localFormState.touched.city ? errors?.city?.message : ""}</CardLabelError>
-        <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("TL_LOCALIZATION_LOCALITY")}</CardLabel>
-          <Controller
-            name="locality"
-            defaultValue={null}
-            control={control}
-            render={(props) => (
-              <Dropdown
-                className="form-field"
-                selected={props.value}
-                option={localities}
-                select={props.onChange}
-                onBlur={props.onBlur}
-                optionKey="i18nkey"
-                t={t}
-                disable={isEditProperty ? isEditProperty : false}
-              />
-            )}
-          />
-        </LabelFieldPair>
-        <CardLabelError style={errorStyle}>{localFormState.touched.locality ? errors?.locality?.message : ""}</CardLabelError>
-      </div>
-    );
-  }
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <CardLabel>{`${t("MYCITY_CODE_LABEL")}*`}</CardLabel>
@@ -168,7 +121,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
           t={t}
           isDependent={true}
           labelKey="TENANT_TENANTS"
-          disabled={isEditProperty}
+          disabled={isEdit}
         />
       </span>
       {selectedCity && localities && <CardLabel>{`${t("TL_LOCALIZATION_LOCALITY")} `}</CardLabel>}
@@ -184,7 +137,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
             t={t}
             isDependent={true}
             labelKey=""
-            disabled={isEditProperty}
+            disabled={isEdit}
           />
         </span>
       )}
