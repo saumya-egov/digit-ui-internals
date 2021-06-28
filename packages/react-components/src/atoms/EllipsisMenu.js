@@ -5,7 +5,8 @@ const Menu = ({ menu, displayKey, onSelect }) => (
   <div className="menu">
     {menu.map((item, index) => (
       <div className="item" onClick={() => onSelect(item)} key={index}>
-        {item[displayKey]}
+        {item.icon}
+        <span>{item[displayKey]}</span>
       </div>
     ))}
   </div>

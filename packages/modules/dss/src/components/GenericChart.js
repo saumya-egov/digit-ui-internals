@@ -1,6 +1,6 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Card, DownloadIcon, TextInput, CardCaption, CardLabel, EllipsisMenu, SearchIconSvg } from "@egovernments/digit-ui-react-components";
+import { Card, DownloadIcon, TextInput, CardCaption, CardLabel, EllipsisMenu, SearchIconSvg, EmailIcon, WhatsappIcon } from "@egovernments/digit-ui-react-components";
 
 const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
@@ -9,27 +9,27 @@ const SearchImg = () => {
 const GenericChart = ({ header, subHeader, className, caption, children, showSearch = false, showDownload = false, onChange }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [chartData, setChartData] = useState(null);
 
   const chart = useRef();
 
   const menuItems = [
     {
-      code: "pdf",
-      i18nKey: t("ES_COMMON_DOWNLOAD_PDF"),
-    },
-    {
       code: "image",
       i18nKey: t("ES_COMMON_DOWNLOAD_IMAGE"),
-    },
-    {
-      code: "sharePdf",
-      i18nKey: t("ES_DSS_SHARE_PDF"),
-      target: "mail",
+      icon: <DownloadIcon />
     },
     {
       code: "shareImage",
       i18nKey: t("ES_DSS_SHARE_IMAGE"),
       target: "mail",
+      icon: <EmailIcon />,
+    },
+    {
+      code: "shareImage",
+      i18nKey: t("ES_DSS_SHARE_IMAGE"),
+      target: "whatsapp",
+      icon: <WhatsappIcon />,
     },
   ];
 
@@ -48,6 +48,10 @@ const GenericChart = ({ header, subHeader, className, caption, children, showSea
     }, 500);
   }
 
+  const handleExcelDownload = () => {
+    return Digit.Download.Excel(chartData, t(header));
+  }
+
   return (
     <Card className={`chart-item ${className}`} ReactRef={chart}>
       <div className={`chartHeader ${showSearch && "column-direction"}`}>
@@ -57,12 +61,12 @@ const GenericChart = ({ header, subHeader, className, caption, children, showSea
         </div>
         <div className="sideContent">
           {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
-          {showDownload && <DownloadIcon className="mrlg" onClick={() => download({ code: "pdf" })} />}
+          {showDownload && <DownloadIcon className="mrlg" onClick={handleExcelDownload} />}
           <EllipsisMenu menuItems={menuItems} displayKey="i18nKey" onSelect={(data) => download(data)} />
         </div>
       </div>
       {caption && <CardCaption>{caption}</CardCaption>}
-      {children}
+      {React.cloneElement(children, { setChartData })}
     </Card>
   );
 };

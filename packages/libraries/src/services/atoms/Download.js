@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import XLSX from "xlsx";
 
 const Download = {
   Image: (node, fileName, share, resolve = null) => {
@@ -29,6 +30,15 @@ const Download = {
         ? canvas.toBlob((blob) => resolve(new File([blob], `${fileName}.jpeg`, { type: "image/jpeg" })), "image/jpeg", 1)
         : saveAs(canvas.toDataURL("image/jpeg", 1), `${fileName}.jpeg`);
     });
+  },
+
+  Excel: (data, filename) => {
+    const wb = XLSX.utils.book_new();
+    let ws = null;
+    ws = XLSX.utils.json_to_sheet(data)
+    wb.SheetNames.push(filename);
+    wb.Sheets[filename] = ws;
+    XLSX.writeFile(wb, `${filename}.xlsx`);
   },
 
   PDF: (node, fileName, share) => {

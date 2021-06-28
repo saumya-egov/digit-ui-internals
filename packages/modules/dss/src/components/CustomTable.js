@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useContext, useMemo, useRef, useState } from "react";
+import React, { Fragment, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { startOfMonth, endOfMonth, getTime, subYears, differenceInDays } from "date-fns";
 import { UpwardArrow, TextInput, Loader, Table, RemoveableTag, Rating, DownwardArrow } from "@egovernments/digit-ui-react-components";
@@ -16,7 +16,7 @@ const InsightView = ({ rowValue, insight }) => {
   );
 }
 
-const CustomTable = ({ data, onSearch }) => {
+const CustomTable = ({ data, onSearch, setChartData }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
@@ -46,6 +46,18 @@ const CustomTable = ({ data, onSearch }) => {
     filters:
       id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
   });
+
+  useEffect(() => {
+    if (response) {
+      const result = response?.responseData?.data?.map(rows => {
+        return rows?.plots?.reduce((acc, cell) => {
+          acc[t(`DSS_HEADER_${cell?.name.toUpperCase()}`)] = cell?.label ||  Math.round((cell?.value + Number.EPSILON) * 100) / 100;
+          return acc;
+        }, {});
+      })
+      setChartData(result);
+    }
+  }, [response])
 
   const renderHeader = (plot) => {
     const code = `DSS_HEADER_${plot?.name.toUpperCase()}`;
