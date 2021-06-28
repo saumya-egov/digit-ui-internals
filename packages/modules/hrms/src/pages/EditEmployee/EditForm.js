@@ -110,6 +110,19 @@ const EditForm = ({ tenantId, data }) => {
         setassigncheck = true;
       }
     }
+
+    console.log(
+      formData?.SelectDateofEmployment?.dateOfAppointment ,
+      formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress ,
+      formData?.SelectEmployeeGender?.gender.code ,
+      formData?.SelectEmployeeName?.employeeName ,
+      formData?.SelectEmployeeType?.code ,
+      formData?.SelectEmployeePhoneNumber?.mobileNumber ,
+      setcheck ,
+      setassigncheck ,
+      phonecheck
+    )
+
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&
