@@ -10,9 +10,9 @@ const CreateEmployee = () => {
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
-  const [defaultValues, setDefaultValues] = useState({});
   const { t } = useTranslation();
   const history = useHistory();
+
 
   useEffect(() => {
     if (/^[6-9]\d{9}$/.test(mobileNumber)) {
@@ -24,12 +24,32 @@ const CreateEmployee = () => {
           setPhonecheck(true);
         }
       });
+    } else {
+      setPhonecheck(false);
     }
   }, [mobileNumber]);
+
+const defaultValues = {
+
+      Jurisdictions:
+        [{
+          id: undefined,
+          key: 1,
+          hierarchy: null,
+          boundaryType: null,
+           boundary: {
+            code: tenantId
+          },
+          roles: [],
+        }]
+      }
+
 
   const onFormValueChange = (setValue = true, formData) => {
     if (/^[6-9]\d{9}$/.test(formData?.SelectEmployeePhoneNumber?.mobileNumber)) {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    } else {
+      setPhonecheck(false);
     }
     let setcheck = false;
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
@@ -57,7 +77,6 @@ const CreateEmployee = () => {
         setassigncheck = true;
       }
     }
-
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&
@@ -76,12 +95,14 @@ const CreateEmployee = () => {
   };
 
   const onSubmit = (data) => {
-    let roles = data.Jurisdictions.map((ele) => {
-      ele.roles["tenantId"] = ele.boundary;
-      return ele.roles;
+    let roles = data?.Jurisdictions?.map((ele) => {
+      return ele.roles?.map((item) => {
+        item["tenantId"] = ele.boundary;
+        return item;
+      });
     });
 
-    roles = [].concat.apply([], roles);
+    const mappedroles = [].concat.apply([], roles);
     let Employees = [
       {
         tenantId: tenantId,
@@ -98,7 +119,7 @@ const CreateEmployee = () => {
           emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : undefined,
           gender: data?.SelectEmployeeGender?.gender.code,
           dob: new Date(data?.SelectDateofBirthEmployment?.dob).getTime(),
-          roles: roles,
+          roles: mappedroles,
           tenantId: tenantId,
         },
         serviceHistory: [],

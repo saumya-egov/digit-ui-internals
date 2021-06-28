@@ -85,12 +85,19 @@ import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
 import useTLDocumentSearch from "./tl/useTLDocumentSearch";
 import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
+import useTLSearchApplication from "./tl/useTLsearchApplication";
+import useTLPaymentHistory from "./tl/userPaymentHistory";
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
 import useHRMSCreate from "./hrms/useHRMScreate";
 import useHRMSUpdate from "./hrms/useHRMSUpdate";
 import useHRMSCount from "./hrms/useHRMSCount";
+
+
+import useReceiptsSearch from "./receipts/useReceiptsSearch";
+import useReceiptsMDMS from "./receipts/useReceiptsMDMS";
+import useReceiptsUpdate from "./receipts/useReceiptsUpdate";
 
 const pgr = {
   useComplaintDetails,
@@ -174,6 +181,14 @@ const tl = {
   useTradeLicenseMDMS,
   useTLDocumentSearch,
   useTradeLicenseAPI,
+  useTLSearchApplication,
+  useTLPaymentHistory,
+};
+
+const receipts = {
+  useReceiptsMDMS,
+  useReceiptsSearch,
+  useReceiptsUpdate,
 };
 
 const Hooks = {
@@ -205,6 +220,7 @@ const Hooks = {
   mcollect,
   hrms,
   tl,
+  receipts
 };
 
 export default Hooks;

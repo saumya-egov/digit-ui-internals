@@ -39,21 +39,29 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field-container" style={{ width: "50%" }}>
-              <div className="employee-card-input employee-card-input--front">
-                <p>&#128269;</p>
+            <div className="field-container" style={{ width: "50%", display: "block" }}>
+              <div>
+                <div style={{ display: "flex" }}>
+                  <div className="employee-card-input employee-card-input--front">+91</div>
+                  <TextInput
+                    className="field desktop-w-full"
+                    key={input.name}
+                    value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
+                    onChange={(e) => setValue(e.target.value, input.name)}
+                    disable={false}
+                    defaultValue={undefined}
+                    onBlur={(e) => validate(e.target.value, input)}
+                    {...input.validation}
+                  />
+                </div>
+                <div>{iserror ? <CardLabelError style={{ width: "100%" }}>{t(input.populators.error)}</CardLabelError> : <span style={{
+                  color: "gray", width: "100%", border: "none",
+                  background: "none",
+                  justifyContent: "end"
+                }}>
+                  {t("HR_MOBILE_NO_CHECK")}
+                </span>}</div>
               </div>
-              <TextInput
-                className="field desktop-w-full"
-                key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
-                onChange={(e) => setValue(e.target.value, input.name)}
-                disable={false}
-                defaultValue={undefined}
-                onBlur={(e) => validate(e.target.value, input)}
-                {...input.validation}
-              />
-              {iserror ? <CardLabelError>{t(input.populators.error)}</CardLabelError> : null}
             </div>
           </LabelFieldPair>
         </React.Fragment>

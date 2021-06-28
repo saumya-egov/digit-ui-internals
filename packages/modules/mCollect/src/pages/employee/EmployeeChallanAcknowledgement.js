@@ -72,7 +72,7 @@ const MCollectAcknowledgement = () => {
 
             <Link
               to={{
-                pathname: `/digit-ui/employee/payment/collect/${params?.serviceCategory}/${params?.challanNumber}/tenantId=${params?.tenantId}`,
+                pathname: `/digit-ui/employee/payment/collect/${params?.serviceCategory}/${params?.challanNumber}/tenantId=${params?.tenantId}?workflow=mcollect`,
               }}
             >
               <SubmitBar label={t("UC_BUTTON_PAY")} />

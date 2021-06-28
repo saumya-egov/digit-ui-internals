@@ -10,6 +10,7 @@ import { initFSMComponents } from "@egovernments/digit-ui-module-fsm";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+import { initReceiptsComponents, ReceiptsModule } from "@egovernments/digit-ui-module-receipts";
 import { initMCollectComponents } from "@egovernments/digit-ui-module-mcollect";
 import { initTLComponents } from "@egovernments/digit-ui-module-tl";
 import { PaymentModule, PaymentLinks, paymentConfigs } from "@egovernments/digit-ui-module-common";
@@ -100,13 +101,13 @@ const userInfo = {
   QAPGRCSR,
 };
 
-const enabledModules = ["PGR", "FSM", "Payment", "PT", "QuickPayLinks", "DSS", "MCollect", "HRMS", "TL"];
+const enabledModules = ["PGR", "FSM", "Payment", "PT", "QuickPayLinks", "DSS", "MCollect", "HRMS", "TL","Receipts"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
-
+   
   const token = window.sessionStorage.getItem("token") || process.env[`REACT_APP_${userType}_TOKEN`];
-
+   
   // console.log(token);
 
   const citizenInfo = window.localStorage.getItem("Citizen.user-info") || userInfo[userType];
@@ -142,6 +143,7 @@ const initDigitUI = () => {
     MCollectLinks,
     MCollectModule,
     HRMSModule,
+    ReceiptsModule,
     // TLModule,
     // TLLinks,
   });
@@ -152,6 +154,7 @@ const initDigitUI = () => {
   initMCollectComponents();
   initHRMSComponents();
   initTLComponents();
+  initReceiptsComponents();
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),
@@ -159,7 +162,7 @@ const initDigitUI = () => {
 
   window.Digit.Customizations = { PGR: pgrCustomizations };
 
-  const stateCode = globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID")||'pb';
   initTokens(stateCode);
 
   const registry = Digit.ComponentRegistryService.getRegistry();

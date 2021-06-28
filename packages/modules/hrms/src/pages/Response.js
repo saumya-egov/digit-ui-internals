@@ -12,9 +12,10 @@ const GetActionMessage = (action, isSuccess, isEmployee, t) => {
 };
 
 const GetLabel = (action, isSuccess, isEmployee, t) => {
-  if (isSuccess && action == "CREATE") {
-    return GetMessage("LABEL", action, isSuccess, isEmployee, t);
+  if (isSuccess) {
+    return t("HR_EMPLOYEE_ID_LABEL");
   }
+  // return GetMessage("LABEL", action, isSuccess, isEmployee, t);
 };
 
 const BannerPicker = (props) => {

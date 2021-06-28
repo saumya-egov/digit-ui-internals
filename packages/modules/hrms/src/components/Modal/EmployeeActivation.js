@@ -16,7 +16,7 @@ export const configEmployeeActiveApplication = ({ t, action, selectFile, uploade
             type: "dropdown",
             isMandatory: true,
             name: "reasonForDeactivation",
-            populators: <Dropdown isMandatory selected={selectedReason} optionKey="code" option={Reasons} select={selectReason} t={t} />,
+            populators: <Dropdown isMandatory selected={selectedReason} optionKey="i18key" option={Reasons} select={selectReason} t={t} />,
           },
           {
             label: t("HR_ORDER_NO"),

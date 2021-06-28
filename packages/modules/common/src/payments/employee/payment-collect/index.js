@@ -11,6 +11,8 @@ import { BillDetailsFormConfig } from "./Bill-details/billDetails";
 
 export const CollectPayment = (props) => {
   // const { formData, addParams } = props;
+  const { workflow: ModuleWorkflow } = Digit.Hooks.useQueryParams();
+  console.log(ModuleWorkflow);
   const { t } = useTranslation();
   const history = useHistory();
   const queryClient = useQueryClient();
@@ -21,11 +23,11 @@ export const CollectPayment = (props) => {
   const { data: paymentdetails, isLoading } = Digit.Hooks.useFetchPayment({ tenantId: tenantId, consumerCode, businessService });
   const bill = paymentdetails?.Bill ? paymentdetails?.Bill[0] : {};
 
-  const { isLoading: storeLoading, data: store } = Digit.Services.useStore({
-    stateCode: props.stateCode,
-    moduleCode: businessService.split(".")[0],
-    language: Digit.StoreData.getCurrentLanguage(),
-  });
+  // const { isLoading: storeLoading, data: store } = Digit.Services.useStore({
+  //   stateCode: props.stateCode,
+  //   moduleCode: businessService.split(".")[0],
+  //   language: Digit.StoreData.getCurrentLanguage(),
+  // });
 
   const { cardConfig } = useCardPaymentDetails(props, t);
   const { chequeConfig } = useChequeDetails(props, t);
@@ -64,10 +66,26 @@ export const CollectPayment = (props) => {
     // console.log(data);
     bill.totalAmount = Math.round(bill.totalAmount);
     data.paidBy = data.paidBy.code;
-    // console.log(data, bill.totalAmount);
+
+    if (
+      BillDetailsFormConfig({ consumerCode, businessService }, t)[ModuleWorkflow ? ModuleWorkflow : businessService] &&
+      !data?.amount?.paymentAllowed
+    ) {
+      let action =
+        data?.amount?.error === "CS_CANT_PAY_BELOW_MIN_AMOUNT"
+          ? t(data?.amount?.error) + "- " + data?.amount?.minAmountPayable
+          : t(data?.amount?.error);
+
+      setToast({
+        key: "error",
+        action,
+      });
+      return;
+    }
 
     const { ManualRecieptDetails, paymentModeDetails, ...rest } = data;
     const { errorObj, ...details } = paymentModeDetails || {};
+
     const recieptRequest = {
       Payment: {
         mobileNumber: data.payerMobile,
@@ -76,12 +94,12 @@ export const CollectPayment = (props) => {
             businessService,
             billId: bill.id,
             totalDue: bill.totalAmount,
-            totalAmountPaid: data.amount || bill.totalAmount,
+            totalAmountPaid: data?.amount?.value || bill.totalAmount,
           },
         ],
         tenantId: bill.tenantId,
         totalDue: bill.totalAmount,
-        totalAmountPaid: data.amount || bill.totalAmount,
+        totalAmountPaid: data?.amount?.value || bill.totalAmount,
         paymentMode: data.paymentMode.code,
         payerName: data.payerName,
         paidBy: data.paidBy,
@@ -95,6 +113,7 @@ export const CollectPayment = (props) => {
       recieptRequest.Payment.paymentDetails[0].manualReceiptNumber = ManualRecieptDetails.manualReceiptNumber;
     }
     recieptRequest.Payment.paymentMode = data?.paymentMode?.code;
+
     if (data.paymentModeDetails) {
       recieptRequest.Payment = { ...recieptRequest.Payment, ...details };
       delete recieptRequest.Payment.paymentModeDetails;
@@ -145,7 +164,7 @@ export const CollectPayment = (props) => {
 
   const config = [
     {
-      head: t("COMMON_PAYMENT_HEAD"),
+      head: !ModuleWorkflow ? t("COMMON_PAYMENT_HEAD") : "",
       body: [
         {
           label: t("PAY_TOTAL_AMOUNT"),
@@ -250,10 +269,13 @@ export const CollectPayment = (props) => {
   });
 
   const getFormConfig = () => {
+    if (ModuleWorkflow) {
+      config.splice(0, 1);
+    }
     let conf = config.concat(formConfigMap[formState?.paymentMode?.code] || []);
     conf = conf?.concat(cashConfig);
-    return BillDetailsFormConfig({ consumerCode }, t)[businessService]
-      ? BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf)
+    return BillDetailsFormConfig({ consumerCode, businessService }, t)[ModuleWorkflow ? ModuleWorkflow : businessService]
+      ? BillDetailsFormConfig({ consumerCode, businessService }, t)[ModuleWorkflow ? ModuleWorkflow : businessService].concat(conf)
       : conf;
   };
 
@@ -271,6 +293,7 @@ export const CollectPayment = (props) => {
         onSubmit={onSubmit}
         formState={formState}
         defaultValues={getDefaultValues()}
+        // isDisabled={BillDetailsFormConfig({ consumerCode }, t)[businessService] ? !}
         onFormValueChange={(setValue, formValue) => {
           if (!isEqual(formValue.paymentMode, selectedPaymentMode)) {
             setFormState(formValue);
@@ -281,7 +304,7 @@ export const CollectPayment = (props) => {
 
       {toast && (
         <Toast
-          error={toast.key === "error" ? true : false}
+          error={toast.key === "error"}
           label={t(toast.key === "success" ? `ES_${businessService.split(".")[0].toLowerCase()}_${toast.action}_UPDATE_SUCCESS` : toast.action)}
           onClose={() => setToast(null)}
         />

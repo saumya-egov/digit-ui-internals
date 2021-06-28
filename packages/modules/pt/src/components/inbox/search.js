@@ -142,17 +142,17 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                   </div>
                 ))}
               {type === "desktop" && !mobileView && !isInboxPage && (
-                <div>
+                <div style={{ textAlign: "center" }}>
                   <SubmitBar
                     className="submit-bar-search"
                     label={t("ES_COMMON_SEARCH")}
+                    style={{ textAlign: "center", marginLeft: "unset" }}
                     disabled={!!Object.keys(formState.errors).length || Object.keys(form).every((key) => !form?.[key])}
                     submit
                   />
-                  <div style={{ width: "100%", textAlign: "right" }}>
-                    <span style={{ paddingTop: "16px", textAlign: "center" }} className="clear-search">
-                      {clearAll()}
-                    </span>
+                  {/* style={{ paddingTop: "16px", textAlign: "center" }} className="clear-search" */}
+                  <div style={{ width: "100%", textAlign: "right", width: "240px", textAlign: "right", marginLeft: "96px", marginTop: "8px" }}>
+                    {clearAll()}
                   </div>
                 </div>
               )}

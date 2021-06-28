@@ -38,7 +38,7 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
                 date={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
                 onChange={(e) => setValue(e, input.name)}
                 disable={false}
-                max={convertEpochToDate(new Date().toJSON().slice(0, 10).replace(/-/g, "/"))}
+                max={convertEpochToDate(new Date().setFullYear(new Date().getFullYear() - 18))}
                 defaultValue={undefined}
                 {...input.validation}
               />

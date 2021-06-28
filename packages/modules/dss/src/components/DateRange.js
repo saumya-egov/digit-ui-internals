@@ -1,11 +1,24 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { ArrowDown, Modal, ButtonSelector, Calender } from "@egovernments/digit-ui-react-components";
-import { DateRangePicker } from "react-date-range";
-import { format } from "date-fns";
+import { DateRangePicker, defaultStaticRanges, createStaticRanges } from "react-date-range";
+import { format, addMonths, addHours, addMinutes, addSeconds, isEqual, startOfYear, endOfYear } from "date-fns";
 
 function isEndDateFocused(focusNumber) {
   return focusNumber === 1;
 }
+
+const staticRanges = [
+  ...defaultStaticRanges,
+  ...createStaticRanges([
+    {
+      label: 'This Year',
+      range: () => ({
+        startDate: addMonths(startOfYear(new Date()), 3),
+        endDate: addMonths(endOfYear(new Date()), 3)
+      })
+    }
+  ])
+]
 
 const DateRange = ({ values, onFilterChange, t }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,7 +71,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
 
   const handleSubmit = (selectionRange) => {
     const startDate = selectionRange?.startDate;
-    const endDate = selectionRange?.endDate;
+    const endDate =  isEqual(selectionRange?.startDate, selectionRange?.endDate) ? addSeconds(addMinutes(addHours(selectionRange?.endDate, 23), 59), 59) : selectionRange?.endDate;
     const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
     const title = `${format(selectionRange?.startDate, "MMM d, yyyy")} - ${format(selectionRange?.endDate, "MMM d, yyyy")}`;
     onFilterChange({ range: { startDate, endDate, duration, title }, requestDate: { startDate, endDate, duration, title } });
@@ -77,12 +90,14 @@ const DateRange = ({ values, onFilterChange, t }) => {
         {isModalOpen && (
           <div className="options-card" style={{ overflow: "visible", width: "unset", maxWidth: "unset" }}>
             <DateRangePicker
+              className="pickerShadow"
               focusedRange={focusedRange}
               ranges={[values]}
               rangeColors={["#9E9E9E"]}
               onChange={handleSelect}
               onRangeFocusChange={handleFocusChange}
               showSelectionPreview={true}
+              staticRanges={staticRanges}
               inputRanges={[]}
             />
           </div>
