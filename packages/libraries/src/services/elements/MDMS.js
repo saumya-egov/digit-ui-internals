@@ -471,6 +471,19 @@ const getTLAccessoriesTypeList = (tenantId, moduleCode, type) => ({
   },
 });
 
+const getTLFinancialYearList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId: tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [{ name: "FinancialYear" }],
+      },
+    ],
+  },
+});
+
 const getPTFloorList = (tenantId, moduleCode, type) => ({
   type,
   details: {
@@ -835,6 +848,14 @@ const getTLAccessoriesType = (MdmsRes) =>
     };
   });
 
+  const getTLFinancialYear = (MdmsRes) =>
+  MdmsRes["egf-master"].FinancialYear.filter((FinancialYear) => FinancialYear.active && FinancialYear.module === "TL").map((FinancialYearList) => {
+    return {
+      ...FinancialYearList,
+      //i18nKey: `TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(TLAccessoryTypeList.code, ".", "_")}`,
+    };
+  });
+
 const getFloorList = (MdmsRes) =>
   MdmsRes["PropertyTax"].Floor.filter((PTFloor) => PTFloor.active).map((PTFloorlist) => {
     return {
@@ -937,6 +958,8 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return getTLStructureType(MdmsRes);
     case "AccessoryCategory":
       return getTLAccessoriesType(MdmsRes);
+    case "FinancialYear":
+      return getTLFinancialYear(MdmsRes);
     case "Floor":
       return getFloorList(MdmsRes);
     case "Reason":
@@ -1159,6 +1182,9 @@ export const MdmsService = {
   },
   getTLAccessoriesType: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getTLAccessoriesTypeList(tenantId, moduleCode), moduleCode);
+  },
+  getTLFinancialYear: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getTLFinancialYearList(tenantId, moduleCode), moduleCode);
   },
   getFloorList: (tenantId, moduleCode, type) => {
     return MdmsService.getDataByCriteria(tenantId, getPTFloorList(tenantId, moduleCode, type), moduleCode);

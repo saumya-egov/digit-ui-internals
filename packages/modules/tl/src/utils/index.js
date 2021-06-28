@@ -561,6 +561,10 @@ export const convertToTrade = (data = {}) => {
               code: data?.address?.locality?.code,
             },
             tenantId: data?.tenantId,
+            pincode: data?.address?.pincode,
+            doorNo: data?.address?.doorNo,
+            street: data?.address?.street,
+            landmark: data?.address?.landmark,
           },
           applicationDocuments: null,
           accessories: data?.TradeDetails?.accessories ? getaccessories(data) : null,
@@ -584,6 +588,7 @@ export const convertToTrade = (data = {}) => {
         },
         tradeName: data?.TradeDetails?.TradeName,
         wfDocuments: [],
+        applicationDocuments: [],
         workflowCode: "NewTL",
       },
     ],
@@ -592,6 +597,113 @@ export const convertToTrade = (data = {}) => {
   console.info("TradeCreated", formdata);
   return formdata;
 };
+
+export const getwfdocuments = (data) => {
+  let wfdoc = [];
+  let doc = data ? data.owners.documents : [];
+  doc && wfdoc.push({
+    fileName:doc["OwnerPhotoProof"].name,
+    fileStoreId:doc["OwnerPhotoProof"].fileStoreId,
+    documentType:"OWNERPHOTO",
+    tenantId:data?.tenantId,
+  });
+  doc && wfdoc.push({
+    fileName:doc["ProofOfIdentity"].name,
+    fileStoreId:doc["ProofOfIdentity"].fileStoreId,
+    documentType:"OWNERIDPROOF",
+    tenantId:data?.tenantId,
+  });
+  doc && wfdoc.push({
+    fileName:doc["ProofOfOwnership"].name,
+    fileStoreId:doc["ProofOfOwnership"].fileStoreId,
+    documentType:"OWNERSHIPPROOF",
+    tenantId:data?.tenantId,
+  });
+  return wfdoc;
+}
+
+export const convertToUpdateTrade = (data = {},datafromflow, tenantId) => {
+  //datafromflow = JSON.parse(sessionStorage.getItem("TL-CREATE-FORMDATA"));
+  console.log("data from create",data);
+  console.log("datafromflow",datafromflow);
+  let formdata1 = {
+    Licenses: [
+    ]
+  }
+  formdata1.Licenses[0] = {...data.Licenses[0],
+  }
+  formdata1.Licenses[0].action = "APPLY";
+  formdata1.Licenses[0].wfDocuments =  getwfdocuments(datafromflow),
+  formdata1.Licenses[0].tradeLicenseDetail.applicationDocuments = getwfdocuments(datafromflow),
+  // let wfdoc = [];
+  // let doc = datafromflow ? datafromflow.owners.documents : [];
+  // doc && wfdoc.push({
+  //   fileName:doc["OwnerPhotoProof"].name,
+  //   fileStoreId:doc["OwnerPhotoProof"].fileStoreId,
+  //   documentType:"OWNERPHOTO",
+  //   tenantId:data.Licenses[0].tenantId,
+  // });
+  // doc && wfdoc.push({
+  //   fileName:doc["ProofOfIdentity"].name,
+  //   fileStoreId:doc["ProofOfIdentity"].fileStoreId,
+  //   documentType:"OWNERIDPROOF",
+  //   tenantId:data.Licenses[0].tenantId,
+  // });
+  // doc && wfdoc.push({
+  //   fileName:doc["ProofOfOwnership"].name,
+  //   fileStoreId:doc["ProofOfOwnership"].fileStoreId,
+  //   documentType:"OWNERSHIPPROOF",
+  //   tenantId:data.Licenses[0].tenantId,
+  // });
+  // formdata1.wfDocuments = wfdoc;
+  console.info("formdata1",formdata1);
+  return formdata1;
+}
+
+export const convertToEditTrade = (data) => {
+  console.log("dataforedit",data);
+  let formdata = {
+    Licenses:[
+      { 
+        id:data?.id,
+        tenantId:data?.tenantId,
+        businessService:data?.businessService,
+        licenseType:data?.licenseType,
+        applicationType:"RENEWAL",
+        workflowCode:"EDITRENEWAL",
+        licenseNumber:data?.licenseNumber,
+        applicationNumber:data?.applicationNumber,
+        tradeName:data?.tradeName,
+        applicationDate:data?.applicationDate,
+        commencementDate:data?.commencementDate,
+        issuedDate:data?.issuedDate,
+        financialYear:data?.financialYear,
+        validFrom:data?.validFrom,
+        validTo:data?.validTo,
+        action:"INITIATE",
+        wfDocuments:[],
+        status:data?.status,
+        tradeLicenseDetail: {
+          address: data.tradeLicenseDetail.address,
+          applicationDocuments: data.tradeLicenseDetail.applicationDocuments,
+          accessories: data?.TradeDetails?.accessories ? getaccessories(data) : null,
+          owners: getownerarray(data),
+          structureType: data?.TradeDetails?.VehicleType ? data?.TradeDetails?.VehicleType.code : data?.TradeDetails?.BuildingType.code,
+          subOwnerShipCategory: data?.ownershipCategory?.code,
+          tradeUnits: gettradeunits(data),
+        },
+        calculation:null,
+        auditDetails:data?.auditDetails,    
+      }
+    ]
+  }
+  console.log("there",formdata);
+  return formdata;
+}
+
+export const getTradeforEdit = (data) => {
+  console.log(data);
+}
 
 export const setUpdateOwnerDetails = (data = []) => {
   const { institution, owners } = data;
@@ -757,14 +869,14 @@ export const convertToUpdateProperty = (data = {}) => {
     },
   };
 
-  let propertyInitialObject = JSON.parse(sessionStorage.getItem("propertyInitialObject"));
-  if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units) && data?.isEditProperty) {
-    propertyInitialObject.units = propertyInitialObject.units.filter((unit) => unit.active);
-    let oldUnits = propertyInitialObject.units.map((unit) => {
-      return { ...unit, active: false };
-    });
-    formdata.Property?.units.push(...oldUnits);
-  }
+  // let propertyInitialObject = JSON.parse(sessionStorage.getItem("propertyInitialObject"));
+  // if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units) && data?.isEditProperty) {
+  //   propertyInitialObject.units = propertyInitialObject.units.filter((unit) => unit.active);
+  //   let oldUnits = propertyInitialObject.units.map((unit) => {
+  //     return { ...unit, active: false };
+  //   });
+  //   formdata.Property?.units.push(...oldUnits);
+  // }
   /* if (
     checkArrayLength(propertyInitialObject?.owners) &&
     checkIsAnArray(formdata.Property?.owners) &&
@@ -780,19 +892,24 @@ export const convertToUpdateProperty = (data = {}) => {
     formdata.Property.owners = [...propertyInitialObject.owners];
   } */
 
-  if (checkArrayLength(propertyInitialObject?.owners) && checkIsAnArray(formdata.Property?.owners)) {
-    formdata.Property.owners = [...propertyInitialObject.owners];
-  }
-  if (propertyInitialObject?.auditDetails) {
-    formdata.Property["auditDetails"] = { ...propertyInitialObject.auditDetails };
-  }
-  console.info("propertyUpdated", formdata);
+  // if (checkArrayLength(propertyInitialObject?.owners) && checkIsAnArray(formdata.Property?.owners)) {
+  //   formdata.Property.owners = [...propertyInitialObject.owners];
+  // }
+  // if (propertyInitialObject?.auditDetails) {
+  //   formdata.Property["auditDetails"] = { ...propertyInitialObject.auditDetails };
+  // }
+  // console.info("propertyUpdated", formdata);
   return formdata;
 };
 
 /*   method to check value  if not returns NA*/
 export const checkForNA = (value = "") => {
   return checkForNotNull(value) ? value : "PT_NA";
+};
+
+export const getCommencementDataFormat = (date) => {
+  let newDate = new Date(date).getFullYear().toString() +"-"+ (new Date(date).getMonth() + 1).toString()+"-" + new Date(date).getDate().toString()
+  return newDate;
 };
 
 /*   method to check value  if not returns NA*/
