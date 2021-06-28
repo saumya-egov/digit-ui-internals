@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { FormComposer } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { newConfig } from "../../components/config/config";
 import { convertEpochToDate } from "../../components/Utils";
 
-const EditForm = ({ tenantId, data }) => {
+const EditForm = ({tenantId, data }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
-  const [checkfield, setcheck]= useState(false)
+  const [checkfield, setcheck]= useState(false);
 
   useEffect(() => {
     if (/^[6-9]\d{9}$/.test(mobileNumber)) {

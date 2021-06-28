@@ -13,9 +13,9 @@ const Details = () => {
   const [showModal, setShowModal] = useState(false);
   const { t } = useTranslation();
   const { id: employeeId } = useParams();
+  const { tenantId: tenantId } = useParams()
   const history = useHistory();
   const [displayMenu, setDisplayMenu] = useState(false);
-  const tenantId = Digit.ULBService.getCurrentTenantId();
   const isupdate = Digit.SessionStorage.get("isupdate");
   const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSSearch({ codes: employeeId }, tenantId, null, isupdate);
 
@@ -43,7 +43,7 @@ const Details = () => {
       case "ACTIVATE_EMPLOYEE_HEAD":
         return setShowModal(true);
       case "COMMON_EDIT_EMPLOYEE_HEADER":
-        return history.push(`/digit-ui/employee/hrms/edit/${employeeId}`);
+        return history.push(`/digit-ui/employee/hrms/edit/${tenantId}/${employeeId}`);
       default:
         break;
     }
@@ -73,9 +73,9 @@ const Details = () => {
             <CardSubHeader className="card-section-header">{t("HR_PERSONAL_DETAILS_FORM_HEADER")} </CardSubHeader>
             <StatusTable>
               <Row label={t("HR_NAME_LABEL")} text={data?.Employees?.[0]?.user?.name || "NA"} textStyle={{ whiteSpace: "pre" }} />
-              <Row label={t("HR_MOB_NO_LABEL")} text={data?.Employees?.[0]?.user?.mobileNumber|| "NA"} textStyle={{ whiteSpace: "pre" }} />
-              <Row label={t("HR_GENDER_LABEL")} text={data?.Employees?.[0]?.user?.gender|| "NA"} />
-              <Row label={t("HR_EMAIL_LABEL")} text={data?.Employees?.[0]?.user?.emailId|| "NA"} />
+              <Row label={t("HR_MOB_NO_LABEL")} text={data?.Employees?.[0]?.user?.mobileNumber || "NA"} textStyle={{ whiteSpace: "pre" }} />
+              <Row label={t("HR_GENDER_LABEL")} text={data?.Employees?.[0]?.user?.gender || "NA"} />
+              <Row label={t("HR_EMAIL_LABEL")} text={data?.Employees?.[0]?.user?.emailId || "NA"} />
               <Row label={t("HR_CORRESPONDENCE_ADDRESS_LABEL")} text={data?.Employees?.[0]?.user?.correspondenceAddress || "NA"} />
             </StatusTable>
             <CardSubHeader className="card-section-header">{t("Employee Details")}</CardSubHeader>
@@ -105,7 +105,7 @@ const Details = () => {
                 />
                 <Row
                   label={t("HR_ORDER_NO")}
-                  text={data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.orderNo  ||  "NA"}
+                  text={data?.Employees?.[0]?.deactivationDetails?.sort((a, b) => new Date(a.effectiveFrom) - new Date(b.effectiveFrom))[0]?.orderNo || "NA"}
                 />
               </StatusTable>
             ) : null}
