@@ -45,7 +45,7 @@ const CardDetailsComponent = ({ ...props }) => {
   return (
     <React.Fragment>
       <div className="label-field-pair">
-        <h2 className="card-label">{t("NOC_PAYMENT_CARD_LAST_DIGITS_LABEL")}</h2>
+        <h2 className="card-label">{`${t("NOC_PAYMENT_CARD_LAST_DIGITS_LABEL")} *`}</h2>
         <div className="field">
           <div className="field-container">
             <input
@@ -61,7 +61,7 @@ const CardDetailsComponent = ({ ...props }) => {
         </div>
       </div>
       <div className="label-field-pair">
-        <h2 className="card-label">{t("NOC_PAYMENT_TRANS_NO_LABEL")}</h2>
+        <h2 className="card-label">{`${t("NOC_PAYMENT_TRANS_NO_LABEL")} *`}</h2>
         <div className="field">
           <div className="field-container">
             <input
@@ -75,7 +75,7 @@ const CardDetailsComponent = ({ ...props }) => {
         </div>
       </div>
       <div className="label-field-pair">
-        <h2 className="card-label">{t("NOC_PAYMENT_RENTR_TRANS_LABEL")}</h2>
+        <h2 className="card-label">{`${t("NOC_PAYMENT_RENTR_TRANS_LABEL")} *`}</h2>
         <div className="field">
           <div className="field-container">
             <input
