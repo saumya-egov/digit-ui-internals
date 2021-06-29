@@ -14,6 +14,8 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
   let inputs;
   if (window.location.href.includes("tl")) {
     inputs = config.inputs;
+    config.inputs[0].disable = window.location.href.includes("edit-application");
+    config.inputs[1].disable = window.location.href.includes("edit-application");
   } else {
     inputs = [
       {

@@ -8,6 +8,19 @@ const SelectTradeName = ({ t, config, onSelect, value, userType, formData }) => 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const isEdit = window.location.href.includes("/edit-application/");
+  const { isLoading, data: fydata = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "egf-master", "FinancialYear");
+  
+
+  let mdmsFinancialYear = fydata["egf-master"]?fydata["egf-master"].FinancialYear.filter(y => y.module === "TL"):[];
+  let temp = mdmsFinancialYear.length > 0 ? parseInt(mdmsFinancialYear[0].id):0;
+  let FY;
+  mdmsFinancialYear && mdmsFinancialYear.map((year) => {
+    if(parseInt(year.id)>temp)
+    {
+      FY=year.finYearRange;
+      temp=parseInt(year.id);
+    }
+  })
 
   function setSelectTradeName(e) {
     setTradeName(e.target.value);
@@ -42,7 +55,7 @@ const SelectTradeName = ({ t, config, onSelect, value, userType, formData }) => 
           {...(validation = { pattern: "^[a-zA-Z-.`' ]*$", isRequired: true, type: "text", title: t("TL_INVALID_TRADE_NAME") })}
         />
       </FormStep>
-      {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("TL_LICENSE_ISSUE_YEAR_INFO_MSG")} />}
+      {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("TL_LICENSE_ISSUE_YEAR_INFO_MSG")+FY} />}
     </React.Fragment>
   );
 };

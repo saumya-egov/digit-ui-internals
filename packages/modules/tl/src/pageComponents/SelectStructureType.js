@@ -31,7 +31,7 @@ const SelectStructureType = ({ t, config, onSelect, userType, formData }) => {
         options={menu}
         selectedOption={StructureType}
         onSelect={selectStructuretype}
-        disable={isEdit}
+        disabled={isEdit}
       />
     </FormStep>
   );

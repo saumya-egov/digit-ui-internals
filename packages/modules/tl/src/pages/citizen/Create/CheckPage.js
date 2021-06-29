@@ -19,8 +19,9 @@ import TLDocument from "../../../pageComponents/TLDocumets";
 const ActionButton = ({ jumpTo }) => {
   const { t } = useTranslation();
   const history = useHistory();
-
+  
   function routeTo() {
+    sessionStorage.setItem("isDirectRenewal",false);
     history.push(jumpTo);
   }
 
@@ -35,7 +36,6 @@ const CheckPage = ({ onSubmit, value }) => {
   console.log("find values here ", value);
 
   const typeOfApplication = !isEditProperty ? `new-application` : `edit-application`;
-
   //   const pitDetailValues = pitDetail ? Object.values(pitDetail).filter((value) => !!value) : null;
 
   //   const pitMeasurement = pitDetailValues?.reduce((previous, current, index, array) => {

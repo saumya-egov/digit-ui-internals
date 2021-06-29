@@ -104,7 +104,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               onSelect={(e) => setGenderName(index, e)}
               isDependent={true}
               labelKey="TL_GENDER"
-              disabled={isUpdateProperty || isEditProperty}
+              //disabled={isUpdateProperty || isEditProperty}
             />
             <CardLabel>{`${t("TL_MOBILE_NUMBER_LABEL")}`}</CardLabel>
             <div className="field-container">
