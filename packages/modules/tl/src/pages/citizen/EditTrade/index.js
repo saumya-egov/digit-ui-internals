@@ -75,7 +75,7 @@ const getTradeEditDetails = (data) => {
         StructureType:{code:`${data.tradeLicenseDetail?.structureType.split(".")[0]}`, i18nKey:`${data.tradeLicenseDetail?.structureType.includes("IMMOVABLE")?"TL_COMMON_NO":"TL_COMMON_YES"}`},
         TradeName:data?.tradeName,
         accessories:gettradeaccessories(data?.tradeLicenseDetail?.accessories),
-        isAccessories:{code:`NONRESIDENTIAL`,i18nKey:"TL_COMMON_NO"},
+        isAccessories:gettradeaccessories(data?.tradeLicenseDetail?.accessories)?{code:`RESIDENTIAL`,i18nKey:"TL_COMMON_YES"}:{code:`NONRESIDENTIAL`,i18nKey:"TL_COMMON_NO"},
         units: gettradeunits(data?.tradeLicenseDetail?.tradeUnits),
     }
     data.address = {};
@@ -186,7 +186,8 @@ const EditTrade = ({ parentRoute }) => {
   const handleMultiple = () => {};
 
   const onSuccess = () => {
-    clearParams();
+    //clearParams();
+    //sessionStorage.removeItem("isDirectRenewal");
     queryClient.invalidateQueries("TL_CREATE_TRADE");
   };
   newConfig.forEach((obj) => {

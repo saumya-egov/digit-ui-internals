@@ -224,7 +224,7 @@ const SelectTradeUnits = ({ t, config, onSelect, userType, formData }) => {
       <hr color="#d6d5d4" className="break-line"></hr>
       <div style={{ justifyContent: "center", display: "flex", paddingBottom: "15px", color: "#FF8C00" }}>
         <button type="button" onClick={() => handleAdd()}>
-          Add More Trade Units
+          {`${t("TL_ADD_MORE_TRADE_UNITS")}`}
         </button>
       </div>
     </FormStep>

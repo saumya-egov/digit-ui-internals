@@ -41,8 +41,8 @@ export const TLList = () => {
   return (
     <React.Fragment>
       <Card>
-      <CardHeader>{`${t("Renewal of Trade License")}`}</CardHeader>
-      <CardText>For our records the list of Trade Licenses which are tagged to the logged in mobile number and pending for renewal is given below. Select the trade license which should be renewed.</CardText>
+      <CardHeader>{`${t("TL_RENEW_TRADE_HEADER")}`}</CardHeader>
+      <CardText>{`${t("TL_RENEW_TRADE_TEXT")}`}</CardText>
       </Card>
       <div >
         {applicationsList?.length > 0 &&

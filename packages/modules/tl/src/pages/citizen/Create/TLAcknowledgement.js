@@ -3,17 +3,17 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 //import getPTAcknowledgementData from "../../../getPTAcknowledgementData";
-import { convertToTrade, convertToUpdateTrade, convertToEditTrade } from "../../../utils";
+import { convertToTrade, convertToUpdateTrade, convertToEditTrade, stringToBoolean } from "../../../utils";
 import getPDFData from "../../../utils/getTLAcknowledgementData";
 
 const GetActionMessage = (props) => {
   const { t } = useTranslation();
   if (props.isSuccess) {
-    return !window.location.href.includes("edit-application") ? t("CS_TRADE_APPLICATION_SUCCESS") : t("CS_PROPERTY_UPDATE_APPLICATION_SUCCESS");
+    return !window.location.href.includes("edit-application") ? t("CS_TRADE_APPLICATION_SUCCESS") : t("CS_TRADE_UPDATE_APPLICATION_SUCCESS");
   } else if (props.isLoading) {
-    return !window.location.href.includes("edit-application") ? t("CS_TRADE_APPLICATION_SUCCESS") : t("CS_PROPERTY_UPDATE_APPLICATION_PENDING");
+    return !window.location.href.includes("edit-application") ? t("CS_TRADE_APPLICATION_SUCCESS") : t("CS_TRADE_UPDATE_APPLICATION_PENDING");
   } else if (!props.isSuccess) {
-    return !window.location.href.includes("edit-application") ? t("CS_TRADE_APPLICATION_FAILED") : t("CS_PROPERTY_UPDATE_APPLICATION_FAILED");
+    return !window.location.href.includes("edit-application") ? t("CS_TRADE_APPLICATION_FAILED") : t("CS_TRADE_UPDATE_APPLICATION_FAILED");
   }
 };
 
@@ -45,37 +45,50 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
     data?.address?.city ? data.address?.city?.code : tenantId,
     false
   );
+  const mutation2 = Digit.Hooks.tl.useTradeLicenseAPI(
+    data?.address?.city ? data.address?.city?.code : tenantId,
+    false
+  );
+  // const mutationDirect = Digit.Hooks.tl.useTradeLicenseAPI(
+  //   data?.address?.city ? data.address?.city?.code : tenantId,
+  //   false
+  // );
   const isEdit = window.location.href.includes("edit-application");
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { tenants } = storeData || {};
   const stateId = tenantId.split(".")[0];
   const { isLoading, data: fydata = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "egf-master", "FinancialYear");
+  console.log("data",data)
+  console.log("fydata",fydata);
+  let isDirectRenewal = stringToBoolean(sessionStorage.getItem("isDirectRenewal"));
+  
 
   useEffect(() => {
     try {
       let tenantId = data?.address?.city ? data.address?.city?.code : tenantId;
       data.tenantId = tenantId;
-      console.log("data",data);
-      let formdata = !isEdit?convertToTrade(data):convertToEditTrade(data);
+      let formdata = !isEdit?convertToTrade(data):convertToEditTrade(data,fydata["egf-master"]?fydata["egf-master"].FinancialYear.filter(y => y.module === "TL"):[]);
       formdata.Licenses[0].tenantId = formdata?.Licenses[0]?.tenantId || tenantId;
-      !isEdit?mutation.mutate(formdata, {
+      
+      !isEdit ?mutation.mutate(formdata, {
         onSuccess,
-      }):mutation1.mutate(formdata, {
+      }):fydata["egf-master"] && fydata["egf-master"].FinancialYear.length>0?(isDirectRenewal?mutation2.mutate(formdata, {
         onSuccess,
-      });
+      }) : mutation1.mutate(formdata, {
+        onSuccess,
+      })):console.log("skipped");
     } catch (err) {
       console.log(err);
     }
-  }, []);
+  }, [fydata]);
 
   useEffect(() => {
-    if(mutation.isSuccess || (mutation1.isSuccess && isEdit))
+    if(mutation.isSuccess || (mutation1.isSuccess && isEdit && !isDirectRenewal))
       {
         try{
         let tenantId = data?.address?.city ? data.address?.city?.code : Digit.ULBService.getCurrentTenantId();
-        console.log("data",data)
         let Licenses = !isEdit?convertToUpdateTrade(mutation.data,data):convertToUpdateTrade(mutation1.data,data);
-        mutation1.mutate(Licenses,{
+        mutation2.mutate(Licenses,{
           onSuccess,
         });
       }
@@ -83,10 +96,10 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
         console.info("error in update",er);
       }
     }
-  },[mutation.isSuccess]);
+  },[mutation.isSuccess,mutation1.isSuccess]);
 
   const handleDownloadPdf = async () => {
-    const { Licenses = [] } = mutation.data;
+    const { Licenses = [] } = mutation.data || mutation1.data || mutation2.data;
     const License = (Licenses && Licenses[0]) || {};
     const tenantInfo = tenants.find((tenant) => tenant.code === License.tenantId);
     let res = License;
@@ -94,13 +107,13 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
     data.then((ress) => Digit.Utils.pdf.generate(ress));
   };
 
-  return mutation1.isLoading || mutation1.isIdle ? (
+  return  (mutation2.isLoading || mutation2.isIdle) ? (
     <Loader />
   ) : (
     <Card>
-      <BannerPicker t={t} data={mutation1.data} isSuccess={mutation1.isSuccess} isLoading={mutation1.isIdle || mutation1.isLoading} />
-      {mutation1.isSuccess && <CardText>{t("TL_FILE_TRADE_RESPONSE")}</CardText>}
-      {!mutation1.isSuccess && <CardText>{t("TL_FILE_TRADE_FAILED_RESPONSE")}</CardText>}
+      <BannerPicker t={t} data={mutation2.data} isSuccess={mutation2.isSuccess} isLoading={(mutation2.isIdle || mutation2.isLoading)} />
+      {(mutation2.isSuccess) && <CardText>{t("TL_FILE_TRADE_RESPONSE")}</CardText>}
+      {(!mutation2.isSuccess) && <CardText>{t("TL_FILE_TRADE_FAILED_RESPONSE")}</CardText>}
       {/* {mutation.isSuccess && (
         <LinkButton
           label={
@@ -127,7 +140,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
           />
         )}
       </StatusTable> */}
-      {mutation1.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
+      {(mutation2.isSuccess) && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
 
       <Link to={`/digit-ui/citizen`}>
         <LinkButton label={t("CORE_COMMON_GO_TO_HOME")} />

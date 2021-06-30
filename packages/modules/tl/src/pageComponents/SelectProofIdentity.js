@@ -9,22 +9,22 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
   const cityDetails = Digit.ULBService.getCurrentUlb();
 
   const [dropdownValue, setDropdownValue] = useState(formData?.owners?.documents?.ProofOfIdentity?.documentType || null);
-  let dropdownData = [];
+  //let dropdownData = [];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const { data: Documentsob = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Documents");
   const docs = Documentsob?.PropertyTax?.Documents;
   const proofOfIdentity = Array.isArray(docs) && docs.filter((doc) => doc.code.includes("ADDRESSPROOF"));
-  if (proofOfIdentity.length > 0) {
-    dropdownData = proofOfIdentity[0]?.dropdownData;
-    dropdownData.forEach((data) => {
-      data.i18nKey = stringReplaceAll(data.code, ".", "_");
-    });
-  }
+  // if (proofOfIdentity.length > 0) {
+  //   dropdownData = proofOfIdentity[0]?.dropdownData;
+  //   dropdownData.forEach((data) => {
+  //     data.i18nKey = stringReplaceAll(data.code, ".", "_");
+  //   });
+  // }
 
-  function setTypeOfDropdownValue(dropdownValue) {
-    setDropdownValue(dropdownValue);
-  }
+  // function setTypeOfDropdownValue(dropdownValue) {
+  //   setDropdownValue(dropdownValue);
+  // }
 
   const handleSubmit = () => {
     let fileStoreId = uploadedFile;
@@ -70,11 +70,11 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
   }, [file]);
 
   return (
-    <FormStep config={config} onSelect={handleSubmit} onSkip={onSkip} t={t} isDisabled={!uploadedFile || !dropdownValue || error}>
+    <FormStep config={config} onSelect={handleSubmit} onSkip={onSkip} t={t} isDisabled={!uploadedFile || error}>
       <CardLabelDesc>{t(`TL_UPLOAD_RESTRICTIONS_TYPES`)}</CardLabelDesc>
       <CardLabelDesc>{t(`TL_UPLOAD_RESTRICTIONS_SIZE`)}</CardLabelDesc>
       <CardLabel>{`${t("TL_CATEGORY_DOCUMENT_TYPE")}`}</CardLabel>
-      <Dropdown
+      {/* <Dropdown
         t={t}
         isMandatory={false}
         option={dropdownData}
@@ -82,7 +82,7 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData }) => {
         optionKey="i18nKey"
         select={setTypeOfDropdownValue}
         //placeholder={t(`PT_MUTATION_SELECT_DOC_LABEL`)}
-      />
+      /> */}
       <UploadFile
         extraStyleName={"propertyCreate"}
         accept=".jpg,.png,.pdf"

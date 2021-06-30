@@ -35,9 +35,9 @@ const SearchTrade = ({ config: propsConfig, onSelect }) => {
 
   // moduleCode, type, config = {}, payload = []
 
-  const onPropertySearch = async (data) => {
+  const onTradeSearch = async (data) => {
     if (!data.mobileNumber && !data.LicenseNum) {
-      alert(t("PT_ERROR_NEED_ONE_PARAM"));
+      alert(t("TL_ERROR_NEED_ONE_PARAM"));
     }
      else {
       history.push(
@@ -107,7 +107,7 @@ const SearchTrade = ({ config: propsConfig, onSelect }) => {
   return (
     <div style={{ marginTop: "16px" }}>
       <FormComposer
-        onSubmit={onPropertySearch}
+        onSubmit={onTradeSearch}
         noBoxShadow
         inline
         config={config}

@@ -81,7 +81,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
         value={ownershipCategory}
         labelKey="PT_OWNERSHIP"
         isDependent={true}
-        disable={isEdit}
+        disabled={isEdit}
       />
     </FormStep>
   );
