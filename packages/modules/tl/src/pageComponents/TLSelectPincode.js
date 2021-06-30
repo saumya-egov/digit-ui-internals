@@ -43,7 +43,7 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
         onSelect(config.key, { ...formData.address, city, pincode: e.target.value, slum: null });
       } else {
         onSelect(config.key, { ...formData.address, pincode: e.target.value });
-        setPincodeServicability("PT_COMMON_PINCODE_NOT_SERVICABLE");
+        setPincodeServicability("TL_COMMON_PINCODE_NOT_SERVICABLE");
       }
     }
   }
@@ -53,7 +53,7 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
     if (foundValue) {
       onSelect(config.key, { pincode });
     } else {
-      setPincodeServicability("PT_COMMON_PINCODE_NOT_SERVICABLE");
+      setPincodeServicability("TL_COMMON_PINCODE_NOT_SERVICABLE");
     }
   };
 
