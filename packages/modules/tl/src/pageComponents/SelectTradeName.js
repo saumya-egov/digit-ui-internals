@@ -27,6 +27,7 @@ const SelectTradeName = ({ t, config, onSelect, value, userType, formData }) => 
   }
 
   const goNext = () => {
+    sessionStorage.setItem("CurrentFinancialYear",FY);
     onSelect(config.key, { TradeName });
   };
   //const onSkip = () => onSelect();

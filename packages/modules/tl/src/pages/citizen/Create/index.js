@@ -66,6 +66,7 @@ const CreateTradeLicence = ({ parentRoute }) => {
   const onSuccess = () => {
     //sessionStorage.setItem("TL-CREATE-FORMDATA", JSON.stringify(params));
     //clearParams();
+    sessionStorage.removeItem("CurrentFinancialYear");
     queryClient.invalidateQueries("TL_CREATE_TRADE");
   };
   newConfig.forEach((obj) => {

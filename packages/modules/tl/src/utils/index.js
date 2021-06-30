@@ -217,13 +217,14 @@ export const gettradeupdateaccessories = (data) => {
 
 export const convertToTrade = (data = {}) => {
   console.info("tradeformdata", data);
+  let Financialyear = sessionStorage.getItem("CurrentFinancialYear");
   const formdata = {
     Licenses: [
       {
         action: "INITIATE",
         applicationType: "NEW",
         commencementDate: Date.parse(data?.TradeDetails?.CommencementDate),
-        financialYear: "2021-22",
+        financialYear: Financialyear || "2021-22",
         licenseType: "PERMANENT",
         tenantId: data?.address?.city?.code,
         tradeLicenseDetail: {
@@ -333,31 +334,30 @@ export const convertToUpdateTrade = (data = {},datafromflow, tenantId) => {
 }
 
 export const getvalidfromdate = (date,fy) => {
-  let temp;
-  let i;
-  for(i=0;fy && i<fy.length;i++)
-  {  
-    if(new Date(fy[i].startingDate).getFullYear() == new Date(date).getFullYear()+1)
-    { 
-      temp = fy[i];
-      break;
+  let temp=parseInt(fy[0].id);
+  let object;
+  fy && fy.map((ob) => {
+    if(parseInt(ob.id)>temp)
+    {
+      object=ob;
+      temp=parseInt(ob.id);
     }
-  }
-  return temp;
+  })
+  return object;
 }
 
 export const getvalidTodate = (date,fy) => {
-  let temp;
-  let i;
-  for(i=0;fy && i<fy.length;i++)
-{
-    if(new Date(fy[i].endingDate).getFullYear() == new Date(date).getFullYear()+1)
-    { 
-      temp =  fy[i];
-      break;
+
+  let temp=parseInt(fy[0].id);
+  let object;
+  fy && fy.map((ob) => {
+    if(parseInt(ob.id)>temp)
+    {
+      object=ob;
+      temp=parseInt(ob.id);
     }
-}
-  return temp;
+  })
+  return object;
 }
 
 export const stringToBoolean = (value) => {
@@ -388,7 +388,7 @@ export const convertToEditTrade = (data,fy=[]) => {
         applicationDate:data?.applicationDate,
         commencementDate:data?.commencementDate,
         issuedDate:data?.issuedDate,
-        financialYear:getvalidfromdate(data?.validFrom,fy)?getvalidfromdate(data?.validFrom,fy).code:"2019-20",
+        financialYear:getvalidfromdate(data?.validFrom,fy)?getvalidfromdate(data?.validFrom,fy).finYearRange:"2020-21",
         validFrom:getvalidfromdate(data?.validFrom,fy)?getvalidfromdate(data?.validFrom,fy).startingDate:"",
         validTo:getvalidTodate(data?.validTo,fy)?getvalidTodate(data?.validTo,fy).endingDate:"",
         action:"INITIATE",
