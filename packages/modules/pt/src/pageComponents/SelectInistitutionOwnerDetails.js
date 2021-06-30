@@ -1,8 +1,11 @@
-import { CardHeader, CardLabel, Dropdown, FormStep, TextInput } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { CardHeader, CardLabel, Dropdown, FormStep, TextInput } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
-
 const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
+  const { pathname: url } = useLocation();
+  const editScreen = url.includes("/modify-application/");
+  const isMutation = url.includes("property-mutation");
   let index = 0;
   let validation = {};
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -78,10 +81,11 @@ const SelectInistitutionOwnerDetails = ({ t, config, onSelect, userType, formDat
       ownerDetails["mobileNumber"] = mobileNumber;
       ownerDetails["altContactNumber"] = altContactNumber;
       ownerDetails["emailId"] = emailId;
-      onSelect(config.key, ownerDetails, false, index);
+      onSelect(config.key, isMutation ? [ownerDetails] : ownerDetails, false, index);
     } else {
       let ownerStep = { ...ownerDetails, inistitutionName, inistitutetype, name, designation, mobileNumber, altContactNumber, emailId };
-      onSelect(config.key, ownerStep, false, index);
+      if (isMutation) onSelect(config.key, [ownerStep], false, index);
+      else onSelect(config.key, ownerStep, false, index);
     }
   };
 

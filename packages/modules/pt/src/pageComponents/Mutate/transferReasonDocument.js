@@ -1,32 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { FormStep, UploadFile, CardLabelDesc, Dropdown, CardLabel } from "@egovernments/digit-ui-react-components";
-import { stringReplaceAll } from "../utils";
+import { stringReplaceAll } from "../../utils";
 import { useLocation } from "react-router-dom";
 
-const Proof = ({ t, config, onSelect, userType, formData }) => {
+const TransferProof = ({ t, config, onSelect, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
   const { pathname: url } = useLocation();
   const isMutation = url.includes("property-mutation");
 
   let index = window.location.href.split("/").pop();
-  const [uploadedFile, setUploadedFile] = useState(
-    !isMutation ? formData?.address?.documents?.ProofOfAddress?.fileStoreId || null : formData?.[config.key]?.fileStoreId
-  );
-  const [file, setFile] = useState(formData?.address?.documents?.ProofOfAddress);
+  const [uploadedFile, setUploadedFile] = useState(formData?.[config.key]?.fileStoreId || null);
+  const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
 
-  const [dropdownValue, setDropdownValue] = useState(
-    !isMutation ? formData?.address?.documents?.ProofOfAddress?.documentType || null : formData?.[config.key]?.documentType
-  );
+  const [dropdownValue, setDropdownValue] = useState(formData?.[config.key]?.documentType || null);
   let dropdownData = [];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
-  const { data: Documentsob = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Documents");
-  const docs = Documentsob?.PropertyTax?.Documents;
-  const proofOfAddress = Array.isArray(docs) && docs.filter((doc) => doc.code.includes("ADDRESSPROOF"));
-  if (proofOfAddress.length > 0) {
-    dropdownData = proofOfAddress[0]?.dropdownData;
+  const { data: Documentsob } = Digit.Hooks.pt.useMDMS(stateId, "PropertyTax", "MutationDocuments");
+  const docs = Documentsob?.PropertyTax?.MutationDocuments;
+  const transferReason = Array.isArray(docs) && docs.filter((doc) => doc.code.includes("OWNER.TRANSFERREASONDOCUMENT"));
+
+  console.log(docs, "inside transferReason");
+  // formData?.additionalDetails?.reasonForTransfer?.code
+  if (transferReason.length > 0) {
+    dropdownData = transferReason[0]?.dropdownData.filter((e) => e.code.includes(formData?.additionalDetails?.reasonForTransfer?.code));
     dropdownData.forEach((data) => {
       data.i18nKey = stringReplaceAll(data.code, ".", "_");
     });
@@ -38,19 +37,10 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
 
   const handleSubmit = () => {
     let fileStoreId = uploadedFile;
-    let fileDetails = file;
-    if (fileDetails) fileDetails.documentType = dropdownValue;
-    if (fileDetails) fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
-    let address = !isMutation ? formData?.address : {};
-    if (address && address.documents) {
-      address.documents["ProofOfAddress"] = fileDetails;
-    } else {
-      address["documents"] = [];
-      address.documents["ProofOfAddress"] = fileDetails;
-    }
-    if (!isMutation) onSelect(config.key, address, "", index);
-    else onSelect(config.key, { documentType: dropdownValue, fileStoreId }, "", index);
+    let fileDetails = { fileStoreId, documentType: dropdownValue };
+    onSelect(config.key, fileDetails, "", index);
   };
+
   const onSkip = () => onSelect();
 
   function selectfile(e) {
@@ -110,4 +100,4 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
   );
 };
 
-export default Proof;
+export default TransferProof;

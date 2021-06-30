@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CheckBox, CardLabel, LabelFieldPair, TextArea } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 
-const SelectOwnerAddress = ({ t, config, onSelect, userType, formData, ownerIndex }) => {
+const SelectOwnerAddress = ({ t, config, onSelect, userType, formData, ownerIndex = 0 }) => {
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
   const isMutation = url.includes("property-mutation");
@@ -20,6 +20,7 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData, ownerInde
   function setOwnerPermanentAddress(e) {
     setPermanentAddress(e.target.value);
   }
+
   function setCorrespondenceAddress(e) {
     if (e.target.checked == true) {
       const address = isMutation ? formData?.searchResult?.property?.address : formData?.address;
@@ -50,7 +51,8 @@ const SelectOwnerAddress = ({ t, config, onSelect, userType, formData, ownerInde
       let ownerDetails = formData.owners && formData.owners[index];
       ownerDetails["permanentAddress"] = permanentAddress;
       ownerDetails["isCorrespondenceAddress"] = isCorrespondenceAddress;
-      onSelect(config.key, ownerDetails, "", index);
+      if (isMutation) onSelect(config.key, [ownerDetails], "", index);
+      else onSelect(config.key, ownerDetails, "", index);
     }
   };
 

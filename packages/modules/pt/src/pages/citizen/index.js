@@ -32,7 +32,7 @@ const App = () => {
           <PrivateRoute path={`${path}/property/application/:acknowledgementIds`} component={PTApplicationDetails}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-applications`} component={PTMyApplications}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-properties`} component={MyProperties}></PrivateRoute>
-          <PrivateRoute path={`${path}/property/transfer-of-ownership`} component={MutateProperty}></PrivateRoute>
+          <PrivateRoute path={`${path}/property/property-mutation`} component={MutateProperty}></PrivateRoute>
           <PrivateRoute path={`${path}/property/properties/:propertyIds`} component={PropertyInformation}></PrivateRoute>
           <PrivateRoute path={`${path}/property/owner-history/:tenantId/:propertyIds`} component={propertyOwnerHistory}></PrivateRoute>
           {/* <Redirect to={`/`}></Redirect> */}

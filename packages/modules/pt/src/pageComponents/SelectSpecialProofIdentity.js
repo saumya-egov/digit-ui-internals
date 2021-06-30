@@ -10,7 +10,7 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData, o
 
   let index = isMutation ? ownerIndex : window.location.href.charAt(window.location.href.length - 1);
 
-  const [uploadedFile, setUploadedFile] = useState(formData?.owners[index]?.documents?.specialProofIdentity?.fileStoreId || null);
+  const [uploadedFile, setUploadedFile] = useState(() => formData?.owners[index]?.documents?.specialProofIdentity?.fileStoreId || null);
   const [file, setFile] = useState(formData?.owners[index]?.documents?.specialProofIdentity);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
@@ -36,8 +36,8 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData, o
   }
 
   useEffect(() => {
-    console.log(Documentsob, "Find Docsob");
-  }, [Documentsob]);
+    console.log(uploadedFile, formData, "Find Docsob");
+  }, [Documentsob, uploadedFile]);
 
   function setTypeOfDropdownValue(dropdownValue) {
     setDropdownValue(dropdownValue);
@@ -54,7 +54,7 @@ const SelectSpecialProofIdentity = ({ t, config, onSelect, userType, formData, o
     if (ownerDetails && ownerDetails.documents) {
       ownerDetails.documents["specialProofIdentity"] = fileDetails;
     } else {
-      ownerDetails["documents"] = [];
+      ownerDetails["documents"] = {};
       ownerDetails.documents["specialProofIdentity"] = fileDetails;
     }
     onSelect(config.key, ownerDetails, "", index);

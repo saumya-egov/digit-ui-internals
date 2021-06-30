@@ -122,7 +122,7 @@ const AssessmentDetails = () => {
         </ActionBar>
       ) : (
         <ActionBar>
-          <SubmitBar label={t("PROCEED_TO_PAY")} onSubmit={proceeedToPay} />
+          <SubmitBar label={t("PAYMENT_COLLECT_LABEL")} onSubmit={proceeedToPay} />
         </ActionBar>
       )}
     </div>

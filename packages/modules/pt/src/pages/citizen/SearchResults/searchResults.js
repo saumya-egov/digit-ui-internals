@@ -1,22 +1,60 @@
-import React from "react";
-import { Header, ResponseComposer, Loader } from "@egovernments/digit-ui-react-components";
+import React, { useEffect, useState } from "react";
+import { Header, ResponseComposer, Loader, Modal, Card, KeyNote, SubmitBar } from "@egovernments/digit-ui-react-components";
 import PropTypes from "prop-types";
 import { useHistory, Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
+const Heading = (props) => {
+  return <h1 className="heading-m">{props.label}</h1>;
+};
+
+const Close = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFFFFF">
+    <path d="M0 0h24v24H0V0z" fill="none" />
+    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+  </svg>
+);
+
+const CloseBtn = (props) => {
+  return (
+    <div className="icon-bg-secondary" onClick={props.onClick}>
+      <Close />
+    </div>
+  );
+};
 
 const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation, onSelect, config }) => {
   const { t } = useTranslation();
   const { mobileNumber, propertyIds, oldPropertyIds, locality, city } = Digit.Hooks.useQueryParams();
   const filters = {};
+
+  const [modalData, setShowModal] = useState(false);
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   if (mobileNumber) filters.mobileNumber = mobileNumber;
   if (propertyIds) filters.propertyIds = propertyIds;
   if (oldPropertyIds) filters.oldPropertyIds = oldPropertyIds;
   if (locality) filters.locality = locality;
 
+  const [owners, setOwners, clearOwners] = Digit.Hooks.useSessionStorage("PT_MUTATE_MULTIPLE_OWNERS", null);
+  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_MUTATE_PROPERTY", null);
+  const [lastPath, setLastPath, clearLastPath] = Digit.Hooks.useSessionStorage("PT_MUTATE_MULTIPLE_OWNERS_LAST_PATH", null);
+
+  useEffect(() => {
+    clearOwners();
+    clearParams();
+    clearLastPath();
+    console.log("clear Params executed");
+  }, []);
+
   // console.log({ mobileNumber, propertyIds, oldPropertyIds, locality, city }, "inside search result");
 
+  const auth = !!isMutation;
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const searchArgs = city ? { tenantId: city, filters, auth: false } : { filters, auth: false };
+  const searchArgs = city ? { tenantId: city, filters, auth } : { filters, auth };
   const result = Digit.Hooks.pt.usePropertySearch(searchArgs);
   const consumerCode = result?.data?.Properties?.map((a) => a.propertyId).join(",");
 
@@ -32,6 +70,10 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
 
   const history = useHistory();
 
+  const proceedToPay = (data) => {
+    history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
+  };
+
   if (paymentDetails.isLoading || result.isLoading) {
     return <Loader />;
   }
@@ -43,7 +85,10 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
   const onSubmit = (data) => {
     if (isMutation) {
       let property = result?.data?.Properties?.filter?.((e) => e.propertyId === data.property_id)[0];
-      onSelect(config.key, { data, property });
+      console.log(data, ">>>>>>>>>>>>>>>");
+      if (Number(data.total_due) > 0) {
+        setShowModal(data);
+      } else onSelect(config.key, { data, property });
     } else history.push(`/digit-ui/citizen/payment/my-bills/PT/${data.property_id}`, { tenantId });
   };
 
@@ -84,6 +129,36 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
         )}
         <ResponseComposer data={searchResults} template={template} actionButtonLabel={actionButtonLabel} onSubmit={onSubmit} />
       </div>
+
+      {modalData ? (
+        <Modal
+          headerBarEnd={<CloseBtn onClick={closeModal} />}
+          hideSubmit={true}
+          isDisabled={false}
+          popupStyles={{ width: "319px", height: "285px", marginTop: "75px" }}
+          formId="modal-action"
+        >
+          {/* <Card> */}
+          <KeyNote
+            keyValue={t("PT_TOTAL_DUES")}
+            note={modalData?.total_due?.toLocaleString("en-IN")}
+            noteStyle={{ fontSize: "24px", fontWeight: "bold" }}
+          />
+          <p>
+            {t("PT_YOU_HAVE") +
+              " " +
+              t("PT_MUTATION_RS") +
+              " " +
+              modalData?.total_due.toLocaleString("en-IN") +
+              " " +
+              t("PT_PENDING_AMOUNT") +
+              " " +
+              t("PT_INORDER_TO_TRANSFER")}
+          </p>
+          <SubmitBar onSubmit={() => proceedToPay(modalData)} style={{ marginTop: "14px" }} label={t("PROCEED_TO_PAY")} />
+          {/* </Card> */}
+        </Modal>
+      ) : null}
 
       {/* <div
         style={{

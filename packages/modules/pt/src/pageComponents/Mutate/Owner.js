@@ -12,6 +12,7 @@ const createOwnerDetails = () => ({
   ownerType: "",
   gender: "",
   isCorrespondenceAddress: false,
+  documents: {},
   key: Date.now(),
 });
 
@@ -124,11 +125,34 @@ const config = [
 
 const OwnerCitizen = (props) => {
   const { onSelect, onSkip, formData, config: propsConfig } = props;
+  const { pathname } = useLocation();
   const [owners, setOwners] = Digit.Hooks.useSessionStorage("PT_MUTATE_MULTIPLE_OWNERS", [createOwnerDetails()]);
-  // const [focusIndex, setFocusIndex] = useState({ index: -1, type: "" });
 
+  const [lastPath, setLastPath] = Digit.Hooks.useSessionStorage("PT_MUTATE_MULTIPLE_OWNERS_LAST_PATH", `/0/${config[0].route}`);
   const { path, url } = useRouteMatch();
+
+  const allowMultipleOwners = formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS";
   const history = useHistory();
+
+  useEffect(() => {
+    console.log("/////////");
+    if (!allowMultipleOwners && owners.length > 1) {
+      setOwners([owners[0]]);
+      onSelect(propsConfig.key, [owners[0]]);
+      history.replace(`${path}/0/${config[0].route}`);
+    }
+  }, [allowMultipleOwners]);
+
+  useEffect(() => {
+    // console.log(pathname.split(path)[1], lastPath, lastPath !== pathname.split(path)[1], "this is the path");
+    if (lastPath !== pathname.split(path)[1]) {
+      setLastPath(pathname.split(path)[1]);
+    }
+  }, [pathname]);
+
+  // useEffect(() => {
+  //   if (pathname != `${path}${lastPath}` && lastPath != "") history.push(`${path}${lastPath}`);
+  // }, [lastPath]);
 
   const prevOwnerCount = useRef();
   useEffect(() => {
@@ -138,7 +162,7 @@ const OwnerCitizen = (props) => {
 
   const addNewOwner = () => {
     const newOwner = createOwnerDetails();
-    setOwners((prev) => [...prev, newOwner]);
+    if (allowMultipleOwners) setOwners((prev) => [...prev, newOwner]);
   };
 
   useEffect(() => {
@@ -163,10 +187,12 @@ const OwnerCitizen = (props) => {
             </Route>
           );
         })}
+        <Route>{pathname != `${path}${lastPath}` && lastPath != "" ? <Redirect to={`${path}${lastPath}`}></Redirect> : null}</Route>
       </Switch>
-      <Route>
-        <Redirect to={`${path}/0`} />
-      </Route>
+      {/* <Route>
+        <Redirect to={`${path}/${lastPath ? lastPath : "0"}`} />
+     
+      </Route> */}
     </React.Fragment>
   );
 };
@@ -179,12 +205,12 @@ const OwnerSteps = ({ owner, addNewOwner, removeOwner, setOwners, owners, ownerI
   const history = useHistory();
 
   const addOwner = (data) => {
+    // handle submission of prev on click of add Owner
     setOwners((prev) => prev.map((o, index) => (o.key === owner.key ? { ...o, ...data } : o)));
     addNewOwner();
   };
 
   const handleSelectForOwner = (key, data, skipStep, index, isAddMultiple = false, queryParams, configObj) => {
-    console.log(data, "inside ownerSteps");
     setOwners((prev) => prev.map((o, index) => (o.key === owner.key ? { ...o, ...data } : o)));
     let pathArray = pathname.split("/");
     let currentPath = pathArray.pop();
@@ -196,20 +222,22 @@ const OwnerSteps = ({ owner, addNewOwner, removeOwner, setOwners, owners, ownerI
           .join("&")}`
       : "";
 
+    const goToNext = skipStep ? history.replace : history.push;
+
     if (!activeRouteObj.nextStep) {
       console.log(owners.length, "length of owners");
       if (ownerIndex !== owners.length - 1) {
         pathArray.pop();
         pathArray.push(ownerIndex + 1);
-        history.push(`${pathArray.join("/")}/${config[0].route}`);
+        goToNext(`${pathArray.join("/")}/${config[0].route}`);
       } else {
         props.onSelect(propsConfig.key, owners, "", "", "", { nesting: 2 });
       }
     } else if (typeof activeRouteObj.nextStep === "string") {
-      history.push(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);
+      goToNext(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);
     } else if (typeof activeRouteObj.nextStep === "object" && activeRouteObj.nextStep) {
       let nextStep = activeRouteObj.nextStep[configObj.routeKey];
-      history.push(`${pathArray.join("/")}/${nextStep}${queryString}`);
+      goToNext(`${pathArray.join("/")}/${nextStep}${queryString}`);
     }
   };
 
@@ -234,9 +262,9 @@ const OwnerSteps = ({ owner, addNewOwner, removeOwner, setOwners, owners, ownerI
           </Route>
         );
       })}
-      <Route>
+      {/* <Route>
         <Redirect to={`${path}/${config[0].route}`} />
-      </Route>
+      </Route> */}
     </Switch>
   );
 };

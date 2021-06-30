@@ -3,14 +3,14 @@ import { FormStep, UploadFile, CardLabelDesc, Dropdown, CardLabel } from "@egove
 import { stringReplaceAll } from "../utils";
 import { useLocation } from "react-router-dom";
 
-const SelectProofIdentity = ({ t, config, onSelect, userType, formData, ownerIndex, addNewOwner }) => {
+const SelectProofIdentity = ({ t, config, onSelect, userType, formData, ownerIndex = 0, addNewOwner }) => {
   const { pathname: url } = useLocation();
   // const editScreen = url.includes("/modify-application/");
   const isMutation = url.includes("property-mutation");
 
   let index = isMutation ? ownerIndex : window.location.href.charAt(window.location.href.length - 1);
 
-  const [uploadedFile, setUploadedFile] = useState(formData?.owners[index]?.documents?.proofIdentity?.fileStoreId || null);
+  const [uploadedFile, setUploadedFile] = useState(() => formData?.owners[index]?.documents?.proofIdentity?.fileStoreId || null);
   const [file, setFile] = useState(formData?.owners[index]?.documents?.proofIdentity);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
@@ -70,7 +70,7 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData, ownerInd
     setmultipleownererror(null);
     if (formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" && index == "0" && !isMutation) {
       setmultipleownererror("PT_MULTI_OWNER_ADD_ERR_MSG");
-    } else if (isMutation && formData?.owners?.length <= 1) {
+    } else if (isMutation && formData?.owners?.length <= 1 && formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS") {
       setmultipleownererror("PT_MULTI_OWNER_ADD_ERR_MSG");
     } else {
       let fileStoreId = uploadedFile;
@@ -81,13 +81,19 @@ const SelectProofIdentity = ({ t, config, onSelect, userType, formData, ownerInd
       }
       let ownerDetails = formData.owners && formData.owners[index];
       if (ownerDetails && ownerDetails.documents) {
-        ownerDetails.documents["proofIdentity"] = fileDetails;
+        if (!isMutation) ownerDetails.documents["proofIdentity"] = fileDetails;
+        else ownerDetails.documents["proofIdentity"] = { documentType: dropdownValue, fileStoreId };
       } else {
-        ownerDetails["documents"] = [];
-        ownerDetails.documents["proofIdentity"] = fileDetails;
+        if (!isMutation) {
+          ownerDetails["documents"] = [];
+          ownerDetails.documents["proofIdentity"] = fileDetails;
+        } else {
+          ownerDetails["documents"] = {};
+          ownerDetails.documents["proofIdentity"] = { documentType: dropdownValue, fileStoreId };
+        }
       }
 
-      onSelect(config.key, ownerDetails, "", index);
+      onSelect(config.key, isMutation ? [ownerDetails] : ownerDetails, "", index);
     }
     // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
   };

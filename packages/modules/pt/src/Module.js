@@ -46,10 +46,11 @@ import TransfererDetails from "./pageComponents/Mutate/TransfererDetails";
 import OwnerMutate from "./pageComponents/Mutate/Owner";
 import PTComments from "./pageComponents/Mutate/Comments";
 import IsMutationPending from "./pageComponents/Mutate/IsMutationPending";
-import IsPropertyUnderStateAquisition from "./pageComponents/Mutate/IsPropertyUnderStateAquisition";
+import UnderStateAquire from "./pageComponents/Mutate/underStateAquire";
 import PropertyMarketValue from "./pageComponents/Mutate/PropertyMarketValue";
 import PTReasonForTransfer from "./pageComponents/Mutate/ReasonForTransfer";
 import PTRegistrationDocument from "./pageComponents/Mutate/RegistrationDocument";
+import TransferProof from "./pageComponents/Mutate/transferReasonDocument";
 
 import EmployeeApp from "./pages/employee";
 import PTCard from "./components/PTCard";
@@ -99,10 +100,11 @@ const componentsToRegister = {
   OwnerMutate,
   PTComments,
   IsMutationPending,
-  IsPropertyUnderStateAquisition,
   PropertyMarketValue,
   PTReasonForTransfer,
   PTRegistrationDocument,
+  UnderStateAquire,
+  TransferProof,
 };
 
 const addComponentsToRegistry = () => {
@@ -157,7 +159,7 @@ export const PTLinks = ({ matchPath, userType }) => {
       i18nKey: t("PT_MY_APPLICATION"),
     },
     {
-      link: `${matchPath}/property/transfer-of-ownership`,
+      link: `${matchPath}/property/property-mutation`,
       i18nKey: t("PT_PROPERTY_MUTATION"),
     },
   ];
