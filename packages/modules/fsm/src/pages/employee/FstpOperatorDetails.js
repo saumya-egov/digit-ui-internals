@@ -176,7 +176,13 @@ const FstpOperatorDetails = () => {
               label={`${t("ES_VEHICLE_SEPTAGE_DUMPED")} * `}
               text={
                 <div>
-                  <TextInput type="number" name="wasteRecieved" value={wasteCollected} onChange={handleChange} style={{ width: "100%", maxWidth: "200px" }} />
+                  <TextInput
+                    type="number"
+                    name="wasteRecieved"
+                    value={wasteCollected}
+                    onChange={handleChange}
+                    style={{ width: "100%", maxWidth: "200px" }}
+                  />
                 </div>
               }
             />

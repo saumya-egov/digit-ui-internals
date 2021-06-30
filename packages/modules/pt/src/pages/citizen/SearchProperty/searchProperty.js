@@ -46,7 +46,14 @@ const SearchProperty = ({ config: propsConfig, onSelect }) => {
     if (!data.mobileNumber && !data.propertyId && !data.oldPropertyId) {
       alert(t("PT_ERROR_NEED_ONE_PARAM"));
     } else if (propsConfig.action === "MUTATION") {
-      onSelect(config.key, data, null, null, null, { ...data, propertyIds: data.propertyId, oldPropertyIds: data.oldPropertyId });
+      const qs = {};
+      const { propertyId, oldPropertyId, mobileNumber } = data;
+      if (propertyId) qs.propertyIds = propertyId;
+      if (oldPropertyId) qs.oldPropertyIds = oldPropertyId;
+      if (mobileNumber) qs.mobileNumber = mobileNumber;
+      onSelect(propsConfig.key, data, null, null, null, {
+        queryParams: { ...qs, locality: data.locality?.code, city: cityCode },
+      });
     } else {
       history.push(
         `/digit-ui/citizen/pt/property/search-results?mobileNumber=${data?.mobileNumber ? data?.mobileNumber : ``}&propertyIds=${

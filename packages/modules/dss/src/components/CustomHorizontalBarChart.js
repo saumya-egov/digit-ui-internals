@@ -70,7 +70,7 @@ const CustomHorizontalBarChart = ({
       return value.replace("-", ", ");
     }
     return value;
-  }
+  };
 
   if (isLoading) {
     return <Loader />;

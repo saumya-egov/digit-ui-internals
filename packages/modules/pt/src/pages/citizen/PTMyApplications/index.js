@@ -31,7 +31,7 @@ export const PTMyApplications = () => {
   return (
     <React.Fragment>
       <Header>{`${t("CS_TITLE_MY_APPLICATIONS")} ${applicationsList ? `(${applicationsList.length})` : ""}`}</Header>
-      <div >
+      <div>
         {applicationsList?.length > 0 &&
           applicationsList.map((application, index) => (
             <div key={index}>

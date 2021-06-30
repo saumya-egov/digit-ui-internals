@@ -11,6 +11,7 @@ import SearchResultsComponent from "./SearchResults";
 import { shouldHideBackButton } from "../../utils";
 import propertyOwnerHistory from "./MyProperties/propertyOwnerHistory";
 import EditProperty from "./EditProperty";
+import MutateProperty from "./Mutate";
 
 const hideBackButtonConfig = [
   { screenPath: "property/new-application/acknowledgement" },
@@ -31,6 +32,7 @@ const App = () => {
           <PrivateRoute path={`${path}/property/application/:acknowledgementIds`} component={PTApplicationDetails}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-applications`} component={PTMyApplications}></PrivateRoute>
           <PrivateRoute path={`${path}/property/my-properties`} component={MyProperties}></PrivateRoute>
+          <PrivateRoute path={`${path}/property/property-mutation`} component={MutateProperty}></PrivateRoute>
           <PrivateRoute path={`${path}/property/properties/:propertyIds`} component={PropertyInformation}></PrivateRoute>
           <PrivateRoute path={`${path}/property/owner-history/:tenantId/:propertyIds`} component={propertyOwnerHistory}></PrivateRoute>
           {/* <Redirect to={`/`}></Redirect> */}
