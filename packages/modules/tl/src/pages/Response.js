@@ -7,7 +7,6 @@ import * as func from "../utils";
 
 
 const Response = (props) => {
-  debugger;
   const location = useLocation();
   const { state } = props.location;
   const [params, setParams] = useState({});
@@ -22,7 +21,6 @@ const Response = (props) => {
   const { t } = useTranslation();
 
   const printReciept = async () => {
-    debugger;
     const Licenses = state?.data || [];
     const license = (Licenses && Licenses[0]) || {};
     const tenantInfo = tenants.find((tenant) => tenant.code === license.tenantId);

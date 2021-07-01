@@ -60,7 +60,6 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
   }, [formData?.ownershipCategory?.code]);
 
   useEffect(() => {
-    debugger;
     if (formData?.tradeUnits?.length > 0) {
       let flag = true;;
       formData?.tradeUnits.map(data => {

@@ -37,11 +37,7 @@ const NewApplication = () => {
     setSubmitValve(!Object.keys(formState.errors).length);
   };
 
-  const onSubmit = (data, a, b, c, d) => {
-    debugger;
-    // setFormData(cloneDeep(data));
-
-
+  const onSubmit = (data) => {
 
     let accessories = [];
     if (data?.accessories?.length > 0) {
@@ -131,11 +127,9 @@ const NewApplication = () => {
     console.log(formData, "formDataformDataformDataformDataformData");
    
     // setFormData(formData)
-    debugger;
 
     Digit.TLService.create({ Licenses: [formData] }, tenantId)
       .then((result, err) => {
-        debugger;
         if (result?.Licenses?.length > 0) {
           let licenses = result?.Licenses?.[0];
           licenses.tradeLicenseDetail.applicationDocuments = applicationDocuments;

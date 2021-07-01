@@ -46,7 +46,6 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     }, [accessoriesList]);
 
     useEffect(() => {
-        debugger;
         if (formData?.accessories?.length > 0) {
           let flag = true;;
           formData?.accessories.map(data => {
@@ -54,7 +53,6 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
               if (dta != "key" && data[dta] != undefined && data[data] != "" && data[data] != null) {
     
               } else {
-                  debugger;
                 formData.accessories[0].count = 1;
                 if (flag) setAccessoriesList(formData?.accessories);
                 formData.accessories[0].count = "";
