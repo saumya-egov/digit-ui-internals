@@ -224,7 +224,7 @@ export const convertToTrade = (data = {}) => {
         action: "INITIATE",
         applicationType: "NEW",
         commencementDate: Date.parse(data?.TradeDetails?.CommencementDate),
-        financialYear: Financialyear || "2021-22",
+        financialYear: Financialyear ? Financialyear : "2021-22",
         licenseType: "PERMANENT",
         tenantId: data?.address?.city?.code,
         tradeLicenseDetail: {
@@ -362,12 +362,18 @@ export const getvalidTodate = (date,fy) => {
 
 export const stringToBoolean = (value) => {
 
+  if(value){
   switch(value.toLowerCase().trim())
   {
     case "true": case "yes": case "1": return true;
     case "false" : case "no" : case "0": case null: return false;
     default: return Boolean(value);
   }
+}
+else
+{
+  return Boolean(value);
+}
 }
 
 export const convertToEditTrade = (data,fy=[]) => {
