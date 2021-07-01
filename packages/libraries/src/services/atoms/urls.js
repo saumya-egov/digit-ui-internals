@@ -90,6 +90,7 @@ const Urls = {
     fetch_payment_details: "/billing-service/bill/v2/_fetchbill",
     download_pdf: "/egov-pdf/download/TL/",
     update:"/tl-services/v1/_update",
+    billingslab: "/tl-calculator/billingslab/_search"
   },
   receipts: {
     payments: "/collection-services/payments",

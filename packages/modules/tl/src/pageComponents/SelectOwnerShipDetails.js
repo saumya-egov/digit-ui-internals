@@ -36,6 +36,21 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
   }
 
   function getDropdwonForProperty(ownerShipdropDown) {
+
+    if (userType === "employee") {
+      const arr = ownerShipdropDown
+        ?.filter((e) => e.code.split(".").length <= 2)
+        ?.splice(0, 4)
+        ?.map((ownerShipDetails) => ({
+          ...ownerShipDetails,
+          i18nKey: `COMMON_MASTERS_OWNERSHIPCATEGORY_INDIVIDUAL_${
+            ownerShipDetails.value.split(".")[1] ? ownerShipDetails.value.split(".")[1] : ownerShipDetails.value.split(".")[0]
+          }`,
+        }));
+        const finalArr = arr.filter(data => data.code.includes("INDIVIDUAL"));
+      return finalArr;
+    }
+
     return (
       ownerShipdropDown &&
       ownerShipdropDown.length &&
@@ -68,6 +83,50 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
   function goNext() {
     sessionStorage.setItem("ownershipCategory", ownershipCategory?.value);
     onSelect(config.key, ownershipCategory);
+  }
+
+  useEffect(() => {
+    if (userType === "employee") {
+      if (!ownershipCategory) setError(config.key, { type: "required", message: `${config.key.toUpperCase()}_REQUIRED` });
+      else clearErrors(config.key);
+      goNext();
+    }
+  }, [ownershipCategory]);
+
+  const dropdownData = getDropdwonForProperty(ownerShipdropDown);
+
+  useEffect(() => {
+    if (userType === "employee") {
+      setOwnershipCategory(dropdownData[0]);
+    }
+  }, []);
+
+  if (userType === "employee") {
+    
+    return (
+      <React.Fragment>
+        <LabelFieldPair>
+          <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
+            {`${t("TL_NEW_OWNER_DETAILS_OWNERSHIP_TYPE_LABEL")}:`}
+          </CardLabel>
+          <Dropdown
+            className="form-field"
+            selected={ownershipCategory ? ownershipCategory : dropdownData[0]}
+            // disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
+            option={dropdownData}
+            select={selectedValue}
+            optionKey="i18nKey"
+            onBlur={onBlur}
+            t={t}
+          />
+        </LabelFieldPair>
+        {formState.touched?.[config.key] ? (
+          <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
+            {formState.errors[config.key]?.message}
+          </CardLabelError>
+        ) : null}
+      </React.Fragment>
+    );
   }
 
   return (
