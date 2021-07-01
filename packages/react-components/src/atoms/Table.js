@@ -35,6 +35,7 @@ const Table = ({
   totalRecords,
   onNextPage,
   onPrevPage,
+  globalSearch,
   onSort = noop,
   onPageSizeChange,
   sortParams = [],
@@ -70,6 +71,7 @@ const Table = ({
       autoResetSortBy: false,
       disableSortRemove: true,
       disableGlobalFilter: onSearch === false ? true : false,
+      globalFilter: globalSearch || "text",
       useControlledState: (state) => {
         return React.useMemo(() => ({
           ...state,

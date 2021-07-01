@@ -5,7 +5,7 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
   const dropdownRef = useRef();
-  Digit.Hooks.useClickOutside(dropdownRef, () => setActive(false));
+  Digit.Hooks.useClickOutside(dropdownRef, () => setActive(false), active);
 
   function onSearch(e) {
     setSearchQuery(e.target.value);
@@ -35,7 +35,7 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
   return (
     <div className="multi-select-dropdown-wrap" ref={dropdownRef}>
       <div className={`master${active ? `-active` : ``}`}>
-        <input type="text" onFocus={() => setActive(true)} value={searchQuery} onChange={onSearch} />
+        <input className="cursorPointer" type="text" onFocus={() => setActive(true)} value={searchQuery} onChange={onSearch} />
         <div className="label">
           <p>{selected.length > 0 ? `${selected.length} ${defaultUnit}` : defaultLabel}</p>
           <ArrowDown />
