@@ -60,7 +60,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
   const { isLoading, data: fydata = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "egf-master", "FinancialYear");
   console.log("data",data)
   console.log("fydata",fydata);
-  let isDirectRenewal = stringToBoolean(sessionStorage.getItem("isDirectRenewal"));
+  let isDirectRenewal = sessionStorage.getItem("isDirectRenewal")?stringToBoolean(sessionStorage.getItem("isDirectRenewal")):null;
   
 
   useEffect(() => {
