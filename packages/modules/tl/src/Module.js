@@ -26,7 +26,15 @@ import TLAcknowledgement from "./pages/citizen/Create/TLAcknowledgement";
 import MyApplications from "./pages/citizen/Applications/Application";
 import TradeLicenseList  from "./pages/citizen/Renewal/TradeLicenseList";
 
+import TLOwnerDetailsEmployee from "./pageComponents/TLOwnerDetailsEmployee";
+import TLTradeDetailsEmployee from "./pageComponents/TLTradeDetailsEmployee";
+import TLTradeUnitsEmployee from "./pageComponents/TLTradeUnitsEmployee";
+import TLAccessoriesEmployee from "./pageComponents/TLAccessoriesEmployee";
+import TLDocumentsEmployee from "./pageComponents/TLDocumentsEmployee";
+import TLCard from "./components/TLCard"
+
 import CitizenApp from "./pages/citizen";
+import EmployeeApp from "./pages/employee";
 
 export const TLModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -72,6 +80,7 @@ export const TLLinks = ({ matchPath, userType }) => {
 const componentsToRegister = {
   TLModule,
   TLLinks,
+  TLCard,
   TradeLicense,
   SelectTradeName,
   SelectStructureType,
@@ -95,6 +104,11 @@ const componentsToRegister = {
   TLAcknowledgement,
   TradeLicenseList,
   MyApplications,
+  TLOwnerDetailsEmployee,
+  TLTradeDetailsEmployee,
+  TLTradeUnitsEmployee,
+  TLAccessoriesEmployee,
+  TLDocumentsEmployee
 };
 
 export const initTLComponents = () => {

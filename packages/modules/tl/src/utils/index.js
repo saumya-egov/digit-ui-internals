@@ -1,3 +1,7 @@
+import get from "lodash/get";
+import set from "lodash/set";
+
+
 /*   method to check not null  if not returns false*/
 export const checkForNotNull = (value = "") => {
   return value && value != null && value != undefined && value != "" ? true : false;
@@ -724,4 +728,72 @@ export const getWorkflow = (data = {}) => {
 
 export const getCreationReason = (data = {}) => {
   return data?.isUpdateProperty ? "UPDATE" : "CREATE";
+};
+
+export const getUniqueItemsFromArray = (data, identifier) => {
+  const uniqueArray = [];
+  const map = new Map();
+  for (const item of data) {
+    if (!map.has(item[identifier])) {
+      map.set(item[identifier], true); // set any value to Map
+      uniqueArray.push(item);
+    }
+  }
+  return uniqueArray;
+};
+
+export const commonTransform = (object, path) => {
+  let data = get(object, path);
+  let transformedData = {};
+  data.map(a => {
+    const splitList = a.code.split(".");
+    let ipath = "";
+    for (let i = 0; i < splitList.length; i += 1) {
+      if (i != splitList.length - 1) {
+        if (
+          !(
+            splitList[i] in
+            (ipath === "" ? transformedData : get(transformedData, ipath))
+          )
+        ) {
+          set(
+            transformedData,
+            ipath === "" ? splitList[i] : ipath + "." + splitList[i],
+            i < splitList.length - 2 ? {} : []
+          );
+        }
+      } else {
+        get(transformedData, ipath).push(a);
+      }
+      ipath = splitList.slice(0, i + 1).join(".");
+    }
+  });
+  set(object, path, transformedData);
+  return object;
+};
+
+export const convertDateToEpoch = (dateString, dayStartOrEnd = "dayend") => {
+  //example input format : "2018-10-02"
+  try {
+    const parts = dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+    const DateObj = new Date(Date.UTC(parts[1], parts[2] - 1, parts[3]));
+    DateObj.setMinutes(DateObj.getMinutes() + DateObj.getTimezoneOffset());
+    if (dayStartOrEnd === "dayend") {
+      DateObj.setHours(DateObj.getHours() + 24);
+      DateObj.setSeconds(DateObj.getSeconds() - 1);
+    }
+    return DateObj.getTime();
+  } catch (e) {
+    return dateString;
+  }
+};
+
+export const getQueryStringParams = (query) => {
+  return query
+    ? (/^[?#]/.test(query) ? query.slice(1) : query).split("&").reduce((params, param) => {
+        let [key, value] = param.split("=");
+        params[key] = value ? decodeURIComponent(value.replace(/\+/g, " ")) : "";
+        return params;
+      }, {})
+    : {};
 };

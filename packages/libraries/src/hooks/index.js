@@ -88,6 +88,7 @@ import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
 import useTradeLicenseSearch from "./tl/useTradeLicenseSearch";
 import useTLSearchApplication from "./tl/useTLsearchApplication";
 import useTLPaymentHistory from "./tl/userPaymentHistory";
+import useTradeLicenseBillingslab from "./tl/useTradeLicenseBillingslab";
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
@@ -115,6 +116,7 @@ const pgr = {
   useComplaintSubType,
   usePropertyMDMS,
   useComplaintStatusCount,
+  useTradeLicenseBillingslab
 };
 
 const fsm = {
@@ -185,6 +187,7 @@ const tl = {
   useTLSearchApplication,
   useTLPaymentHistory,
   useTradeLicenseSearch,
+  useTradeLicenseBillingslab
 };
 
 const receipts = {

@@ -11,6 +11,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
   const formValue = watch();
   const { errors } = localFormState;
+  const checkLocation = window.location.href.includes("tl/new-application");
   let inputs;
   if (window.location.href.includes("tl")) {
     inputs = config.inputs;
@@ -90,7 +91,7 @@ const SelectStreet = ({ t, config, onSelect, userType, formData, formState, setE
       return (
         <LabelFieldPair key={index}>
           <CardLabel className="card-label-smaller">
-            {t(input.label)}
+            {!checkLocation ? t(input.label) : `${t(input.label)}:`}
             {config.isMandatory ? " * " : null}
           </CardLabel>
           <div className="field">

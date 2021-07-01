@@ -173,7 +173,7 @@ export const FormComposer = (props) => {
                 </LabelFieldPair>
               );
             })}
-            {!props.noBreakLine && (array.length - 1 === index ? null : <BreakLine />)}
+            {!props.noBreakLine && (array.length - 1 === index ? null : <BreakLine style={props?.breaklineStyle ? props?.breaklineStyle : {}}/>)}
           </React.Fragment>
         );
       }),
