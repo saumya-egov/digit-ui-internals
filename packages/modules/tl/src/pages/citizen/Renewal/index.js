@@ -25,7 +25,7 @@ export const TLList = () => {
   // let filter1 = !isNaN(parseInt(filter))
   //   ? { limit: "50", sortOrder: "ASC", sortBy: "createdTime", offset: off }
   //   : { limit: "4", sortOrder: "ASC", sortBy: "createdTime", offset: "0" };
-  let filter1;
+  let filter1={};
 
   if(licenseno) filter1.applicationNumber = licenseno;
   if(mobileno) filter1.tenantId = tenantId;

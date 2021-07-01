@@ -194,7 +194,7 @@ const ApplicationDetails = () => {
                 <Link
                   to={{
                     pathname: `/digit-ui/citizen/payment/collect/${application?.businessService}/${application?.applicationNumber}`,
-                    state: { bill, tenantId: state.tenantId },
+                    state: { bill, tenantId: tenantId },
                   }}
                 >
                   <SubmitBar label={t("COMMON_MAKE_PAYMENT")} />
