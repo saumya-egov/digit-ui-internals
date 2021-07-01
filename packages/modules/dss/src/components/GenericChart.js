@@ -6,7 +6,7 @@ const SearchImg = () => {
   return <SearchIconSvg className="signature-img" />;
 };
 
-const GenericChart = ({ header, subHeader, className, caption, children, showSearch = false, showDownload = false, onChange }) => {
+const GenericChart = ({ header, subHeader, className, caption, children, showHeader = true, showSearch = false, showDownload = false, onChange }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [chartData, setChartData] = useState(null);
@@ -56,12 +56,12 @@ const GenericChart = ({ header, subHeader, className, caption, children, showSea
     <Card className={`chart-item ${className}`} ReactRef={chart}>
       <div className={`chartHeader ${showSearch && "column-direction"}`}>
         <div>
-          <CardLabel style={{ fontWeight: "bold" }}>{`${t(header)}`}</CardLabel>
+          {showHeader && <CardLabel style={{ fontWeight: "bold" }}>{`${t(header)}`}</CardLabel>}
           {subHeader && <p style={{ color: "#505A5F", fontWeight: 700 }}>{subHeader}</p>}
         </div>
         <div className="sideContent">
           {showSearch && <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />}
-          {showDownload && <DownloadIcon className="mrlg" onClick={handleExcelDownload} />}
+          {showDownload && <DownloadIcon className="mrlg cursorPointer" onClick={handleExcelDownload} />}
           <EllipsisMenu menuItems={menuItems} displayKey="i18nKey" onSelect={(data) => download(data)} />
         </div>
       </div>

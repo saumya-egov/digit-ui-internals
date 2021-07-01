@@ -15,7 +15,7 @@ const Menu = ({ menu, displayKey, onSelect }) => (
 const EllipsisMenu = ({ menuItems, displayKey, onSelect }) => {
   const menuRef = useRef();
   const [active, setActive] = useState(false);
-  Digit.Hooks.useClickOutside(menuRef, () => setActive(false));
+  Digit.Hooks.useClickOutside(menuRef, () => setActive(false), active);
 
   function onItemSelect(item) {
     setActive(false);
@@ -24,7 +24,7 @@ const EllipsisMenu = ({ menuItems, displayKey, onSelect }) => {
 
   return (
     <div className="ellipsis-menu-wrap" ref={menuRef}>
-      <Ellipsis onClick={() => setActive(true)} />
+      <Ellipsis className="cursorPointer" onClick={() => setActive(true)} />
       {active ? <Menu menu={menuItems} displayKey={displayKey} onSelect={onItemSelect} /> : null}
     </div>
   );

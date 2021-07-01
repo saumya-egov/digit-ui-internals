@@ -15,7 +15,7 @@ let index = 1;
 const Layout = ({ rowData }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
-  const [searchQuery, onSearch] = useState();
+  const [searchQuery, onSearch] = useState("");
 
   const renderChart = (chart, title) => {
     switch (chart.chartType) {
