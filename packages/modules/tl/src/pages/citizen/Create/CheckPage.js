@@ -11,6 +11,7 @@ import {
   LinkButton,
   SubmitBar,
   CardText,
+  CitizenInfoLabel,
 } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -29,6 +30,7 @@ const ActionButton = ({ jumpTo }) => {
 };
 
 const CheckPage = ({ onSubmit, value }) => {
+  let isEdit = window.location.href.includes("edit-application");
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -56,6 +58,7 @@ const CheckPage = ({ onSubmit, value }) => {
     <Card>
       <CardHeader>{t("CS_CHECK_CHECK_YOUR_ANSWERS")}</CardHeader>
       <CardText>{t("CS_CHECK_CHECK_YOUR_ANSWERS_TEXT")}</CardText>
+      {isEdit && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("TL_RENEWAL_INFO_TEXT")} />}
       <CardSubHeader>{t("TL_LOCALIZATION_TRADE_DETAILS")}</CardSubHeader>
       <StatusTable>
         <Row

@@ -107,6 +107,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
     data.then((ress) => Digit.Utils.pdf.generate(ress));
   };
 
+  
   return  (mutation2.isLoading || mutation2.isIdle) ? (
     <Loader />
   ) : (
@@ -140,8 +141,26 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
           />
         )}
       </StatusTable> */}
-      {(mutation2.isSuccess) && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
-
+      {(mutation2.isSuccess) && (
+      <LinkButton
+      label={
+        <div className="response-download-button">
+          <span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#f47738">
+              <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+            </svg>
+          </span>
+          <span className="download-button">{t("TL_DOWNLOAD_ACK_FORM")}</span>
+        </div>
+      }
+      style={{ width: "100px" }}
+      onClick={handleDownloadPdf}
+    />)}
+      {mutation2.data.Licenses[0].status === "PENDINGPAYMENT" && <Link to={{
+                pathname: `/digit-ui/citizen/payment/collect/${mutation2.data.Licenses[0].businessService}/${mutation2.data.Licenses[0].applicationNumber}`
+              }}>
+        <SubmitBar label={t("COMMON_MAKE_PAYMENT")} />
+      </Link>}
       <Link to={`/digit-ui/citizen`}>
         <LinkButton label={t("CORE_COMMON_GO_TO_HOME")} />
       </Link>
