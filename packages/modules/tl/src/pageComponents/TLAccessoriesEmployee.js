@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { useLocation } from "react-router-dom";
-import { getUniqueItemsFromArray, commonTransform, stringReplaceAll } from "../utils";
+import { getUniqueItemsFromArray, commonTransform, stringReplaceAll, getPattern } from "../utils";
 import isUndefined from "lodash/isUndefined";
 
 const createAccessoriesDetails = () => ({
@@ -25,6 +25,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     const [accessories, SetAccessories] = useState([]);
     const [isErrors, setIsErrors] = useState(false);
     const [flag, setFlag] = useState(true);
+    const [uomvalues, setUomvalues] = useState("");
 
 
     const { data: billingSlabData } = Digit.Hooks.tl.useTradeLicenseBillingslab({ tenantId, filters: {} });
@@ -83,7 +84,9 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
         isErrors,
         SetAccessories,
         accessoriesList,
-        billingSlabData
+        billingSlabData,
+        setUomvalues,
+        uomvalues
     };
 
     if (isEditScreen) {
@@ -122,7 +125,9 @@ const AccessoriersForm = (_props) => {
         isErrors,
         SetAccessories,
         accessoriesList,
-        billingSlabData
+        billingSlabData,
+        setUomvalues,
+        uomvalues
     } = _props;
 
     const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
@@ -134,6 +139,10 @@ const AccessoriersForm = (_props) => {
     useEffect(() => {
         trigger();
     }, []);
+
+    useEffect(() => {
+        trigger();
+    }, [accessor?.accessoryCategory?.uom, formData?.accessories]);
 
     useEffect(() => {
         if (billingSlabData && billingSlabData?.billingSlab && billingSlabData?.billingSlab?.length > 0) {
@@ -217,7 +226,9 @@ const AccessoriersForm = (_props) => {
                 }
               });
 
-            setAccessoriesList((prev) => prev.map((o) => (o.key && o.key === accessor.key ? { ...o, ...formValue, ..._ownerType } : { ...o })));
+            setAccessoriesList((prev) => prev.map((o) => {
+                return (o.key && o.key === accessor.key ? { ...o, ...formValue, ..._ownerType } : { ...o })
+            }));
             trigger();
         }
     }, [formValue]);
@@ -252,7 +263,10 @@ const AccessoriersForm = (_props) => {
                                 <Dropdown
                                     className="form-field"
                                     selected={props.value}
-                                    select={props.onChange}
+                                    select={(e) => {
+                                        props.onChange(e);
+                                        setUomvalues(accessor?.accessoryCategory?.uom);
+                                    }}
                                     onBlur={props.onBlur}
                                     option={accessories || []}
                                     optionKey="i18nKey"
@@ -272,7 +286,8 @@ const AccessoriersForm = (_props) => {
                                 // rules={accessor?.accessoryCategory?.uom ? { required: "Required" } : {}}
                                 render={(props) => (
                                     <TextInput
-                                        value={accessor?.accessoryCategory?.uom || ""}
+                                        value={uomvalues}
+                                        // value={accessor?.accessoryCategory?.uom || ""}
                                         autoFocus={focusIndex.index === accessor?.key && focusIndex.type === "uom"}
                                         onChange={(e) => {
                                             props.onChange(e.target.value);
@@ -293,10 +308,11 @@ const AccessoriersForm = (_props) => {
                                 control={control}
                                 name={"uomValue"}
                                 defaultValue={accessor?.uomValue}
-                                rules={accessor?.accessoryCategory?.uom ? { required: "Required" } : {}}
+                                rules={accessor?.accessoryCategory?.uom && { required: "Required", validate: (e) => ((e && getPattern("UOMValue").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
+                                // rules={accessor?.accessoryCategory?.uom ? { required: "Required" } : {}}
                                 render={(props) => (
                                     <TextInput
-                                        value={props.value}
+                                        value={accessor?.accessoryCategory?.uom ? props.value : ""}
                                         autoFocus={focusIndex.index === accessor?.key && focusIndex.type === "uomValue"}
                                         onChange={(e) => {
                                             props.onChange(e.target.value);
@@ -317,7 +333,8 @@ const AccessoriersForm = (_props) => {
                                 control={control}
                                 name={"count"}
                                 defaultValue={accessor?.count}
-                                rules={accessor?.accessoryCategory?.code ? { required: "ERR_DEFAULT_INPUT_FIELD_MSG" } : {}}
+                                rules={accessor?.accessoryCategory?.code && { required: "Required", validate: (e) => ((e && getPattern("NoOfEmp").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
+                                // rules={accessor?.accessoryCategory?.code ? { required: "ERR_DEFAULT_INPUT_FIELD_MSG" } : {}}
                                 render={(props) => (
                                     <TextInput
                                         value={props.value}
