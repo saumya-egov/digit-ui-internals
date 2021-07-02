@@ -192,10 +192,8 @@ const AccessoriersForm = (_props) => {
                 data.i18nKey = t(`TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(data?.code?.toUpperCase(), "-", "_")}`);
             });
 
-            sessionStorage.setItem("TLlicenseTypes", JSON.stringify(licenseTypes));
+            // sessionStorage.setItem("TLlicenseTypes", JSON.stringify(licenseTypes));
             SetAccessories(accessories);
-            console.log("processedDataprocessedDataprocessedData", processedData, accessories, structureTypes, licenseTypes);
-
         }
     }, [billingSlabData]);
 
