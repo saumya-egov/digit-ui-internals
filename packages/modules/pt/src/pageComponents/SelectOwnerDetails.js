@@ -30,7 +30,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let menu = [];
     Menu &&
       Menu.map((genderDetails) => {
-        menu.push({i18nKey: `PT_COMMON_GENDER_${genderDetails.code}`, code: `${genderDetails.code}`})
+        menu.push({i18nKey: `PT_COMMON_GENDER_${genderDetails.code}`, code: `${genderDetails.code}`,value: `${genderDetails.code}`})
     });
   
 
@@ -174,7 +174,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             className="form-field"
             selected={gender?.length === 1 ? gender[0] : gender}
             disable={gender?.length === 1 || editScreen}
-            option={options}
+            option={menu}
             select={setGenderName}
             optionKey="code"
             t={t}
@@ -230,7 +230,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
         <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
         <RadioButtons
           t={t}
-          options={options}
+          options={menu}
           optionsKey= "code"
           name="gender"
           value={gender}
