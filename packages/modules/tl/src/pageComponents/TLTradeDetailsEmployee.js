@@ -4,7 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { useLocation } from "react-router-dom";
-import { stringReplaceAll } from "../utils";
+import isUndefined from "lodash/isUndefined";
+import { getUniqueItemsFromArray, commonTransform, stringReplaceAll } from "../utils";
 
 
 const createTradeDetailsDetails = () => ({
@@ -30,10 +31,13 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const [isErrors, setIsErrors] = useState(false);
+  const [licenseTypeList, setLicenseTypeList] = useState([]);
 
   const { isLoading, data: Menu = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "common-masters", "StructureType");
 
   const { data: FinaceMenu = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "egf-master", ["FinancialYear"]);
+
+  const { data: billingSlabData } = Digit.Hooks.tl.useTradeLicenseBillingslab({ tenantId, filters: {} });
 
   const addNewOwner = () => {
     const newOwner = createTradeDetailsDetails();
@@ -74,7 +78,10 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
     structureSubTypeOptions,
     Menu,
     setIsErrors,
-    isErrors
+    isErrors,
+    billingSlabData,
+    licenseTypeList, 
+    setLicenseTypeList
   };
 
   if (isEditScreen) {
@@ -114,27 +121,65 @@ const OwnerForm = (_props) => {
     structureSubTypeOptions,
     Menu,
     setIsErrors,
-    isErrors
+    isErrors,
+    billingSlabData,
+    licenseTypeList, 
+    setLicenseTypeList
   } = _props;
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
   const formValue = watch();
   const { errors } = localFormState;
 
+  useEffect(() => {
+    debugger;
+    if (billingSlabData && billingSlabData?.billingSlab && billingSlabData?.billingSlab?.length > 0) {
+        const processedData =
+            billingSlabData.billingSlab &&
+            billingSlabData.billingSlab.reduce(
+                (acc, item) => {
+                    let accessory = { active: true };
+                    let tradeType = { active: true };
+                    if (item.accessoryCategory && item.tradeType === null) {
+                        accessory.code = item.accessoryCategory;
+                        accessory.uom = item.uom;
+                        accessory.rate = item.rate;
+                        item.rate && item.rate > 0 && acc.accessories.push(accessory);
+                    } else if (item.accessoryCategory === null && item.tradeType) {
+                        tradeType.code = item.tradeType;
+                        tradeType.uom = item.uom;
+                        tradeType.structureType = item.structureType;
+                        tradeType.licenseType = item.licenseType;
+                        tradeType.rate = item.rate;
+                        !isUndefined(item.rate) &&
+                            item.rate !== null &&
+                            acc.tradeTypeData.push(tradeType);
+                    }
+                    return acc;
+                },
+                { accessories: [], tradeTypeData: [] }
+            );
+        let licenseTypes = getUniqueItemsFromArray(
+            processedData.tradeTypeData,
+            "licenseType"
+        );
+        licenseTypes = licenseTypes.map(item => {
+            return { code: item.licenseType, active: true };
+        });
+        if (licenseTypes && licenseTypes.length > 0) {
+          licenseTypes.forEach(data => {
+            data.i18nKey = `TRADELICENSE_LICENSETYPE_${data.code}`
+          })
+        };
+        setLicenseTypeList(licenseTypes);
+    }
+}, [billingSlabData]);
+
+
+
   let financialYearOptions = [];
   FinaceMenu && FinaceMenu["egf-master"] &&
     FinaceMenu["egf-master"].FinancialYear.map(data => { if (data.module == "TL") financialYearOptions.push({ code: data.name, i18nKey: `FY${data.name}`, id: data.name.split('-')[0] }) });
-  console.log(financialYearOptions, "FinaceMenuFinaceMenuFinaceMenuFinaceMenu");
-
-
-  let licenseTypesList = sessionStorage.getItem("TLlicenseTypes") || [];
-  if (licenseTypesList && licenseTypesList.length > 0) {
-    licenseTypesList = JSON.parse(licenseTypesList);
-    licenseTypesList.forEach(data => {
-      data.i18nKey = `TRADELICENSE_LICENSETYPE_${data.code}`
-    })
-  };
-
 
   let structureTypeOptions = [];
   // let structureSubTypeOptions = [];
@@ -230,9 +275,9 @@ const OwnerForm = (_props) => {
               render={(props) => (
                 <Dropdown
                   className="form-field"
-                  selected={props.value}
+                  selected={licenseTypeList[0]}
                   disable={true}
-                  option={licenseTypesList}
+                  option={licenseTypeList}
                   select={props.onChange}
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
