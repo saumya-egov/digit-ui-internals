@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, CheckBox } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
+import useTLGenderMDMS from "../../../../libraries/src/hooks/tl/useTLGenderMDMS";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let validation = {};
@@ -17,6 +18,18 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let isEditProperty = formData?.isEditProperty || false;
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
+
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const {data: Menu} = Digit.Hooks.tl.useTLGenderMDMS(tenantId, "common-masters", "GenderType");
+
+  let TLmenu = [];
+    Menu &&
+      Menu.map((genders) => {
+        TLmenu.push({i18nKey: `TL_GENDER_${genders.code}`, code: `${genders.code}`})
+    });
+
+    console.log("TLMENU--->", TLmenu);
 
   function handleAdd() {
     const values = [...fields];
@@ -96,8 +109,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             <CardLabel>{`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}`}</CardLabel>
             <RadioButtons
               t={t}
-              options={options}
-              optionsKey="code"
+              options={TLmenu}
+              optionsKey="i18nKey"
               name="gender"
               value={gender}
               selectedOption={field.gender}

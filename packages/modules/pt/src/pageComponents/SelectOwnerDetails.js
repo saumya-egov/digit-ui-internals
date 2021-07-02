@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown } from "@egovernments/digit-ui-react-components";
+import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, Menu } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
+import useGenderMDMS from "../../../../libraries/src/hooks/pt/useGenderMDMS";
+
+
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
@@ -23,6 +26,18 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
 
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const { data: Menu} = Digit.Hooks.pt.useGenderMDMS(tenantId, "common-masters", "GenderType");
+
+  let menu = [];
+    Menu &&
+      Menu.map((genderDetails) => {
+        menu.push({i18nKey: `PT_COMMON_GENDER_${genderDetails.code}`, code: `${genderDetails.code}`})
+    });
+  
+
+
   function setOwnerName(e) {
     setName(e.target.value);
   }
@@ -32,6 +47,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   function setGenderName(value) {
     setGender(value);
   }
+
   function setMobileNo(e) {
     setMobileNumber(e.target.value);
   }
@@ -41,6 +57,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   function setGuardianName(value) {
     setRelationship(value);
   }
+
 
   const goNext = () => {
     let owner = formData.owners && formData.owners[index];
@@ -54,6 +71,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     }
   };
 
+
+  
   const onSkip = () => onSelect();
   // As Ticket RAIN-2619 other option in gender and gaurdian will be enhance , dont uncomment it
   const options = [
@@ -158,9 +177,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             className="form-field"
             selected={gender?.length === 1 ? gender[0] : gender}
             disable={gender?.length === 1 || editScreen}
-            option={options}
+            option={menu}
             select={setGenderName}
-            optionKey="code"
+            optionKey="i18nKey"
             t={t}
             name="gender"
           />
@@ -183,6 +202,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       </div>
     );
   }
+  
 
   return (
     <FormStep
@@ -213,8 +233,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
         <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
         <RadioButtons
           t={t}
-          options={options}
-          optionsKey="code"
+          options={menu}
+          optionsKey= "i18nKey"
           name="gender"
           value={gender}
           selectedOption={gender}

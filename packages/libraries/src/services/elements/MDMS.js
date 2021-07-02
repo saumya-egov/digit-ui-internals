@@ -562,6 +562,44 @@ const getRentalDetailsCategoryCriteria = (tenantId, moduleCode) => ({
   },
 });
 
+
+const getGenderTypeList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "GenderType",
+          },
+        ],
+      },
+    ],
+  },
+});
+
+
+const getTLGenderTypeList = (tenantId, moduleCode, type) => ({
+  type,
+  details: {
+    tenantId,
+    moduleDetails: [
+      {
+        moduleName: moduleCode,
+        masterDetails: [
+          {
+            name: "GenderType",
+          },
+        ],
+      },
+    ],
+  },
+});
+
+
+
 const getDssDashboardCriteria = (tenantId, moduleCode) => ({
   details: {
     tenantId,
@@ -854,8 +892,7 @@ const getTLAccessoriesType = (MdmsRes) =>
       ...FinancialYearList,
       //i18nKey: `TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(TLAccessoryTypeList.code, ".", "_")}`,
     };
-  });
-
+  });  
 const getFloorList = (MdmsRes) =>
   MdmsRes["PropertyTax"].Floor.filter((PTFloor) => PTFloor.active).map((PTFloorlist) => {
     return {
@@ -882,6 +919,25 @@ const getRentalDetailsCategory = (MdmsRes) => {
     return {
       ...RentalDetailsInfo,
       i18nKey: `PROPERTYTAX_BILLING_SLAB_${RentalDetailsInfo.code}`,
+    };
+  });
+};
+
+const getGenderType = (MdmsRes) => {
+  return MdmsRes["common-masters"].GenderType.filter((GenderType) => GenderType.active).map((genderDetails) => {
+    return{
+      ...genderDetails,
+      i18nKey: `PT_COMMON_GENDER_${genderDetails.code}`,
+    };
+  });
+  //return MdmsRes;
+};
+
+const TLGenderType = (MdmsRes) => {
+  MdmsRes["common-masters"].GenderType.filter((GenderType) => GenderType.active).map((genders) => {
+    return {
+      ...genders,
+      i18nKey: `TL_GENDER_${genders.code}`,
     };
   });
 };
@@ -982,6 +1038,10 @@ const transformResponse = (type, MdmsRes, moduleCode, tenantId) => {
       return GetMCollectApplicationStatus(MdmsRes);
     case "FSTPPlantInfo":
       return GetFSTPPlantInfo(MdmsRes);
+    case "GenderType":
+      return getGenderType(MdmsRes);
+    case "TLGendertype":
+      return TLGenderType(MdmsRes);
     default:
       return MdmsRes;
   }
@@ -1233,6 +1293,15 @@ export const MdmsService = {
   },
   getCancelReceiptReasonAndStatus: (tenantId,moduleCode) => {
     return MdmsService.getDataByCriteria(tenantId, getCancelReceiptReasonAndStatus(tenantId, moduleCode), moduleCode);
+  },
+
+  getGenderType: (tenantId,moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getGenderTypeList(tenantId,moduleCode, type), moduleCode);
+
+  },
+
+  TLGenderType: (tenantId, moduleCode, type) => {
+    return MdmsService.getDataByCriteria(tenantId, getTLGenderTypeList(tenantId, moduleCode, type), moduleCode);
   },
   
 };
