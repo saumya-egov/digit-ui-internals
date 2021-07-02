@@ -53,4 +53,14 @@ export const TLService = {
       params: {},
       auth: true,
     }),
+  billingslab: ({ tenantId, filters, auth }) =>
+    Request({
+      url: Urls.tl.billingslab,
+      useCache: false,
+      setTimeParam: false,
+      userService: true,
+      method: "POST",
+      params: { tenantId },
+      auth: true,
+    }),
 };

@@ -100,7 +100,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
                 isRequired: true,
                 pattern: "^[a-zA-Z-.`' ]*$",
                 type: "text",
-                title: t("PT_NAME_ERROR_MESSAGE"),
+                title: t("TL_NAME_ERROR_MESSAGE"),
               })}
             />
             <CardLabel>{`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}`}</CardLabel>
@@ -114,7 +114,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               onSelect={(e) => setGenderName(index, e)}
               isDependent={true}
               labelKey="TL_GENDER"
-              disabled={isUpdateProperty || isEditProperty}
+              //disabled={isUpdateProperty || isEditProperty}
             />
             <CardLabel>{`${t("TL_MOBILE_NUMBER_LABEL")}`}</CardLabel>
             <div className="field-container">

@@ -14,6 +14,15 @@ const CreateEmployee = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
+  const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
+  const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
+  const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
+
+  useEffect(() => {
+    setMutationHappened(false);
+    clearSuccessData();
+    clearError();
+  }, []);
 
   useEffect(() => {
     if (/^[6-9]\d{9}$/.test(mobileNumber)) {
@@ -128,7 +137,7 @@ const defaultValues = {
         tests: [],
       },
     ];
-    history.push("/digit-ui/employee/hrms/response", { Employees, key: "CREATE", action: "CREATE" });
+    history.replace("/digit-ui/employee/hrms/response", { Employees, key: "CREATE", action: "CREATE" });
   };
 
   const config = newConfig;

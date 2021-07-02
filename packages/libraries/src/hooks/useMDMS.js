@@ -17,7 +17,7 @@ const useMDMS = (tenantId, moduleCode, type, config = {}, payload = []) => {
 
   const useFSTPPlantInfo = () => {
     return useQuery("FSTP_PLANTINFO", () => MdmsService.getFSTPPlantInfo(tenantId, moduleCode, type), config);
-  }
+  };
 
   switch (type) {
     case "PaymentGateway":

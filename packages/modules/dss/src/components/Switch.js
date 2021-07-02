@@ -19,7 +19,7 @@ const Switch = ({ onSelect, t }) => {
               checked={label === value?.denomination}
               onClick={() => onSelect({ denomination: label })}
             />
-            <label htmlFor={label}>{label}</label>
+            <label className="cursorPointer" htmlFor={label}>{label}</label>
           </div>
         ))}
       </div>

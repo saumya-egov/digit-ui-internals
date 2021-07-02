@@ -11,7 +11,7 @@ import {
   EmailIcon,
   WhatsappIcon,
 } from "@egovernments/digit-ui-react-components";
-import { startOfYear, endOfYear, format, addMonths } from "date-fns";
+import { startOfYear, endOfYear, format, addMonths, endOfToday } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
@@ -22,7 +22,7 @@ const key = 'DSS_FILTERS';
 const getInitialRange = () => {
   const data = Digit.SessionStorage.get(key);
   const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : addMonths(startOfYear(new Date()), 3);
-  const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : addMonths(endOfYear(new Date()), 3);
+  const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : endOfToday();
   const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
   const denomination = data?.denomination || "Unit";
@@ -91,16 +91,20 @@ const DashBoard = ({ stateCode }) => {
     ? [
         {
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: async () => {
-            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            }, 500)
           },
         },
         {
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: async () => {
-            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            }, 500)
           },
         },
       ]
@@ -108,33 +112,41 @@ const DashBoard = ({ stateCode }) => {
         {
           icon: <EmailIcon />,
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: async () => {
-            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            }, 500)
           },
         },
         {
           icon: <WhatsappIcon />,
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: async () => {
-            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            }, 500)
           },
         },
         {
           icon: <EmailIcon />,
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: async () => {
-            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            }, 500)
           },
         },
         {
           icon: <WhatsappIcon />,
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: async () => {
-            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            }, 500)
           },
         },
       ];
@@ -170,9 +182,9 @@ const DashBoard = ({ stateCode }) => {
         {filters?.filters?.tenantId.length > 0 && (
           <div className="tag-container">
             {filters?.filters?.tenantId?.map((filter, id) => (
-              <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+              <RemoveableTag key={id} text={`${t(`DSS_HEADER_ULB`)}: ${t(filter)}`} onClick={() => removeULB(id)} />
             ))}
-            <p className="clearText" onClick={handleClear}>
+            <p className="clearText cursorPointer" onClick={handleClear}>
               {t(`DSS_FILTER_CLEAR`)}
             </p>
           </div>

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { CalendarIcon } from "../atoms/svgindex";
+import PropTypes from "prop-types";
 
 const DatePicker = (props) => {
   // const [date, setDate] = useState(() => props.initialDate || null);
@@ -51,6 +52,15 @@ const DatePicker = (props) => {
       </React.Fragment>
     </div>
   );
+};
+
+DatePicker.propTypes = {
+  disabled: PropTypes.bool,
+  date: PropTypes.any,
+  min: PropTypes.any,
+  max: PropTypes.any,
+  defaultValue: PropTypes.any,
+  onChange: PropTypes.func,
 };
 
 export default DatePicker;

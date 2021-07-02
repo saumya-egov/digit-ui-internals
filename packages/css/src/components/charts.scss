@@ -45,6 +45,10 @@
   }
 }
 
+.cursorPointer {
+  @apply cursor-pointer;
+}
+
 .options {
   @apply flex justify-between items-center;
   div {
