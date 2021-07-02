@@ -136,6 +136,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
               rangeColors={["#9E9E9E"]}
               onChange={handleSelect}
               onRangeFocusChange={handleFocusChange}
+              retainEndDateOnFirstSelection={true}
               showSelectionPreview={true}
               staticRanges={staticRanges}
               inputRanges={[]}
