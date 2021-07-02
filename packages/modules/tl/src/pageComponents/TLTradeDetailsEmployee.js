@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { useLocation } from "react-router-dom";
 import isUndefined from "lodash/isUndefined";
-import { getUniqueItemsFromArray, commonTransform, stringReplaceAll } from "../utils";
+import { getUniqueItemsFromArray, commonTransform, stringReplaceAll,getPattern } from "../utils";
 
 
 const createTradeDetailsDetails = () => ({
@@ -132,7 +132,6 @@ const OwnerForm = (_props) => {
   const { errors } = localFormState;
 
   useEffect(() => {
-    debugger;
     if (billingSlabData && billingSlabData?.billingSlab && billingSlabData?.billingSlab?.length > 0) {
         const processedData =
             billingSlabData.billingSlab &&
@@ -294,7 +293,7 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"tradeName"}
                 defaultValue={tradedetail?.name}
-                rules={{ required: "NAME_REQUIRED", validate: { pattern: (val) => (/^\w+( +\w+)*$/.test(val) ? true : t("INVALID_NAME")) } }}
+                rules={{ required: "NAME_REQUIRED", validate: { pattern: (val) => (/^[-@.\/#&+\w\s]*$/.test(val) ? true : t("INVALID_NAME")) } }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
@@ -375,7 +374,7 @@ const OwnerForm = (_props) => {
             <div className="field">
               <Controller
                 name="commencementDate"
-                rules={{ required: t("ERR_DEFAULT_INPUT_FIELD_MSG"), validate: { pattern: (val) => (/^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(val) ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")) } }}
+                rules={{ required: t("ERR_DEFAULT_INPUT_FIELD_MSG"), validate: { pattern: (val) => (/^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(val) ? t("ERR_DEFAULT_INPUT_FIELD_MSG1") : t("ERR_DEFAULT_INPUT_FIELD_MSG")) } }}
                 // defaultValue={tradedetils?.[0]?.commencementDate}
                 control={control}
                 render={(props) => (
@@ -394,36 +393,36 @@ const OwnerForm = (_props) => {
             <CardLabel className="card-label-smaller">{`${t("TL_NEW_GST_NUMBER_LABEL")}:`}</CardLabel>
             <div className="field">
               <Controller
+                control={control}
                 name="gstNo"
                 defaultValue={tradedetail?.gstNo}
-                control={control}
+                rules={{ validate: (e) => ((e && getPattern("GSTNo").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
                 render={(props) => (
                   <TextInput
-                    type="text"
-                    name="unit-area"
+                    value={props.value}
+                    autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "gstNo"}
                     onChange={(e) => {
                       props.onChange(e.target.value);
                       setFocusIndex({ index: tradedetail?.key, type: "gstNo" });
                     }}
-                    value={props.value}
-                    autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "gstNo"}
+                    labelStyle={{ marginTop: "unset" }}
                     onBlur={props.onBlur}
                   />
                 )}
               />
             </div>
           </LabelFieldPair>
+          <CardLabelError style={errorStyle}>{localFormState.touched.gstNo ? errors?.gstNo?.message : ""}</CardLabelError>
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_NEW_OPERATIONAL_SQ_FT_AREA_LABEL")}:`}</CardLabel>
             <div className="field">
               <Controller
                 name="operationalArea"
+                rules={{ validate: (e) => ((e && getPattern("OperationalArea").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
                 defaultValue={tradedetail?.operationalArea}
                 control={control}
                 render={(props) => (
                   <TextInput
-                    type="text"
-                    name="unit-area"
                     onChange={(e) => {
                       props.onChange(e.target.value);
                       setFocusIndex({ index: tradedetail?.key, type: "operationalArea" });
@@ -436,17 +435,17 @@ const OwnerForm = (_props) => {
               />
             </div>
           </LabelFieldPair>
+          <CardLabelError style={errorStyle}>{localFormState.touched.operationalArea ? errors?.operationalArea?.message : ""}</CardLabelError>
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_NEW_NUMBER_OF_EMPLOYEES_LABEL")}:`}</CardLabel>
             <div className="field">
               <Controller
                 name="noOfEmployees"
+                rules={{ validate: (e) => ((e && getPattern("NoOfEmp").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
                 defaultValue={tradedetail?.noOfEmployees}
                 control={control}
                 render={(props) => (
                   <TextInput
-                    type="text"
-                    name="unit-area"
                     onChange={(e) => {
                       props.onChange(e.target.value);
                       setFocusIndex({ index: tradedetail?.key, type: "noOfEmployees" });
@@ -459,6 +458,7 @@ const OwnerForm = (_props) => {
               />
             </div>
           </LabelFieldPair>
+          <CardLabelError style={errorStyle}>{localFormState.touched.noOfEmployees ? errors?.noOfEmployees?.message : ""}</CardLabelError>
         </div>
       </div>
     </React.Fragment>
