@@ -70,6 +70,7 @@ import usePtApplicationActions from "./pt/useApplicationActions";
 import usePtMDMS from "./pt/useMDMS";
 import usePropertyAssessment from "./pt/usePropertyAssessment";
 import usePtCalculationEstimate from "./pt/usePtCalculationEstimate";
+import useGenderMDMS from "./pt/useGenderMDMS";
 
 import useDssMdms from "./dss/useMDMS";
 import useDashboardConfig from "./dss/useDashboardConfig";
@@ -88,7 +89,11 @@ import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
 import useTradeLicenseSearch from "./tl/useTradeLicenseSearch";
 import useTLSearchApplication from "./tl/useTLsearchApplication";
 import useTLPaymentHistory from "./tl/userPaymentHistory";
+
+import useTLGenderMDMS from "./tl/useTLGenderMDMS";
+
 import useTradeLicenseBillingslab from "./tl/useTradeLicenseBillingslab";
+
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
@@ -156,6 +161,7 @@ const pt = {
   useMDMS: usePtMDMS,
   usePropertyAssessment,
   usePtCalculationEstimate,
+  useGenderMDMS,
 };
 
 const dss = {
@@ -187,6 +193,7 @@ const tl = {
   useTLSearchApplication,
   useTLPaymentHistory,
   useTradeLicenseSearch,
+  useTLGenderMDMS,
   useTradeLicenseBillingslab
 };
 
