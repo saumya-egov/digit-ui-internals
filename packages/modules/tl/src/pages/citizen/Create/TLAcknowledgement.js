@@ -99,9 +99,6 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
   },[mutation.isSuccess,mutation1.isSuccess]);
 
   const handleDownloadPdf = async () => {
-    console.log(mutation2.data);
-    console.log(mutation2.data.Licenses[0].status);
-    debugger;
     const { Licenses = [] } = mutation.data || mutation1.data || mutation2.data;
     const License = (Licenses && Licenses[0]) || {};
     const tenantInfo = tenants.find((tenant) => tenant.code === License.tenantId);
