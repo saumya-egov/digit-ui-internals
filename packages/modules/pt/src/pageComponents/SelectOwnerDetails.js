@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, Menu } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
-import useGenderMDMS from "../../../../libraries/src/hooks/pt/useGenderMDMS";
 
 
 

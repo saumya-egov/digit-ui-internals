@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, CheckBox } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import useTLGenderMDMS from "../../../../libraries/src/hooks/tl/useTLGenderMDMS";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let validation = {};
