@@ -3,8 +3,6 @@ import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown,
 import { cardBodyStyle } from "../utils";
 import { useLocation } from "react-router-dom";
 
-
-
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let index = window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
@@ -176,9 +174,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             className="form-field"
             selected={gender?.length === 1 ? gender[0] : gender}
             disable={gender?.length === 1 || editScreen}
-            option={menu}
+            option={options}
             select={setGenderName}
-            optionKey="i18nKey"
+            optionKey="code"
             t={t}
             name="gender"
           />
@@ -232,8 +230,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
         <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
         <RadioButtons
           t={t}
-          options={menu}
-          optionsKey= "i18nKey"
+          options={options}
+          optionsKey= "code"
           name="gender"
           value={gender}
           selectedOption={gender}

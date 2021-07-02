@@ -28,8 +28,6 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
         TLmenu.push({i18nKey: `TL_GENDER_${genders.code}`, code: `${genders.code}`})
     });
 
-    console.log("TLMENU--->", TLmenu);
-
   function handleAdd() {
     const values = [...fields];
     values.push({ name: "", gender: "", mobilenumber: null, isprimaryowner: false });
@@ -108,8 +106,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             <CardLabel>{`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}`}</CardLabel>
             <RadioButtons
               t={t}
-              options={TLmenu}
-              optionsKey="i18nKey"
+              options={options}
+              optionsKey="code"
               name="gender"
               value={gender}
               selectedOption={field.gender}
