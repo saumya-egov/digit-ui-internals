@@ -1,0 +1,10 @@
+h1,
+h2 {
+  font-family: Lato;
+}
+.box {
+  position: absolute;
+  border: 1px solid black;
+  padding: 25px;
+  width: 10%;
+}

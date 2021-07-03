@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
@@ -35,7 +35,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers }) => {
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers }) => {
+export const DigitUI = ({ stateCode, toastCaller, registry, enabledModules, moduleReducers }) => {
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -48,9 +48,12 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers })
 
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
+  useEffect(() => toastCaller._js(), [])
 
   return (
     <div>
+      {/* <button onClick={() => toastCaller.show() }>SHOW TOAST</button> */}
+      <div id ="applyme" style={{height: "200px", width: "200px"}}></div>
       <QueryClientProvider client={queryClient}>
         <ComponentProvider.Provider value={registry}>
           <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} />

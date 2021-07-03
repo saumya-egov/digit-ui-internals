@@ -63,6 +63,7 @@ import * as comps from "@egovernments/digit-ui-react-components";
 
 import { subFormRegistry } from "@egovernments/digit-ui-libraries";
 import IframeComponent from "./components/IframeComponent";
+import ReactWrapper from "./components/ReactWrapper";
 
 import { pgrCustomizations, pgrComponents } from "./pgr";
 
@@ -170,7 +171,7 @@ const initDigitUI = () => {
   window.location.href.includes("iframe")
     ? ReactDOM.render(<IframeComponent />, document.getElementById("root"))
     : ReactDOM.render(
-        <DigitUI stateCode={stateCode} enabledModules={enabledModules} moduleReducers={moduleReducers} />,
+        <DigitUI stateCode={stateCode} toastCaller={ReactWrapper} enabledModules={enabledModules} moduleReducers={moduleReducers} />,
         document.getElementById("root")
       );
 };
