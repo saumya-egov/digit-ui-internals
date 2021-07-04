@@ -2,6 +2,7 @@ import React from "react";
 import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
+import Inbox from "./Inbox";
 import NewApplication from "./NewApplication";
 import Response from "../Response";
 
@@ -18,8 +19,14 @@ const EmployeeApp = ({ path, url, userType }) => {
             <Link to="/digit-ui/employee" style={{ cursor: "pointer", color: "#666" }}>
               {t("ES_COMMON_HOME")}
             </Link>{" "}
-            / <span>{location.pathname === "/digit-ui/employee/pt/inbox" ? t("ES_TITLE_INBOX") : "TL"}</span>
+        / <span>{location.pathname === "/digit-ui/employee/tl/inbox" ? t("ES_TITILE_SEARCH_APPLICATION") : "MODULE_TL"}</span>
           </p>
+          <PrivateRoute
+            path={`${path}/inbox`}
+            component={() => (
+              <Inbox parentRoute={path} businessService="TL" filterComponent="TL_INBOX_FILTER" initialStates={{}} isInbox={true} />
+            )}
+          />
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
           <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
         </div>
