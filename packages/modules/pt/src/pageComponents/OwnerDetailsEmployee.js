@@ -40,6 +40,15 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
     "OwnerShipCategory",
   ]);
 
+  const { data: Menu} = Digit.Hooks.pt.usePTGenderMDMS(stateId, "common-masters", "GenderType");
+
+  let menu = [];
+  
+  Menu &&
+    Menu.map((formGender) => {
+      menu.push({i18nKey: `PT_FORM3_${formGender.code}`, code: `${formGender.code}`, value: `${formGender.code}`})
+  });
+
   const addNewOwner = () => {
     const newOwner = createOwnerDetails();
     setOwners((prev) => [...prev, newOwner]);
@@ -73,6 +82,7 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
     setError,
     clearErrors,
     config,
+    menu,
   };
 
   if (isEditScreen) {
@@ -107,6 +117,7 @@ const OwnerForm = (_props) => {
     setError,
     clearErrors,
     formState,
+    menu,
   } = _props;
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
@@ -287,12 +298,13 @@ const OwnerForm = (_props) => {
                       selected={props.value}
                       select={props.onChange}
                       onBlur={props.onBlur}
-                      option={[
+                      /*option={[
                         { i18nKey: "PT_FORM3_MALE", code: "Male" },
                         { i18nKey: "PT_FORM3_FEMALE", code: "Female" },
                         { i18nKey: "PT_FORM3_TRANSGENDER", code: "Transgender" },
                         { i18nKey: "COMMON_GENDER_OTHERS", code: "OTHERS" },
-                      ]}
+                      ]}*/
+                      option={menu}
                       optionKey="i18nKey"
                       t={t}
                     />
