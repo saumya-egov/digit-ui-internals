@@ -50,7 +50,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data }) => {
 
   useEffect(() => {
     if (response) {
-      const totalWaste = response?.responseData?.data?.[0]?.plots.reduce((acc, plot) => acc + plot?.value, 0);
+      const totalWaste = Math.round(response?.responseData?.data?.[0]?.plots[response?.responseData?.data?.[0]?.plots.length - 1]?.value);
       setTotalWaste(totalWaste);
     }
   }, [response]);

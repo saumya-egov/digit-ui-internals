@@ -88,6 +88,15 @@ const Urls = {
   },
   tl: {
     create: "/tl-services/v1/_create",
+    search: "/tl-services/v1/_search",
+    fetch_payment_details: "/billing-service/bill/v2/_fetchbill",
+    download_pdf: "/egov-pdf/download/TL/",
+    update:"/tl-services/v1/_update",
+    billingslab: "/tl-calculator/billingslab/_search"
+  },
+  receipts: {
+    payments: "/collection-services/payments",
+    count: "/egov-hrms/employees/_count"
   },
 };
 

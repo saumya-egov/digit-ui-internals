@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { FormStep, UploadFile, CardLabelDesc, Dropdown, CardLabel } from "@egovernments/digit-ui-react-components";
 import { stringReplaceAll } from "../utils";
+import { useLocation } from "react-router-dom";
 
 const Proof = ({ t, config, onSelect, userType, formData }) => {
   //let index = window.location.href.charAt(window.location.href.length - 1);
+  const { pathname: url } = useLocation();
+  const isMutation = url.includes("property-mutation");
+
   let index = window.location.href.split("/").pop();
-  const [uploadedFile, setUploadedFile] = useState(formData?.address?.documents?.ProofOfAddress?.fileStoreId || null);
+  const [uploadedFile, setUploadedFile] = useState(
+    !isMutation ? formData?.address?.documents?.ProofOfAddress?.fileStoreId || null : formData?.[config.key]?.fileStoreId
+  );
   const [file, setFile] = useState(formData?.address?.documents?.ProofOfAddress);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
 
-  const [dropdownValue, setDropdownValue] = useState(formData?.address?.documents?.ProofOfAddress?.documentType || null);
+  const [dropdownValue, setDropdownValue] = useState(
+    !isMutation ? formData?.address?.documents?.ProofOfAddress?.documentType || null : formData?.[config.key]?.documentType
+  );
   let dropdownData = [];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
@@ -33,15 +41,15 @@ const Proof = ({ t, config, onSelect, userType, formData }) => {
     let fileDetails = file;
     if (fileDetails) fileDetails.documentType = dropdownValue;
     if (fileDetails) fileDetails.fileStoreId = fileStoreId ? fileStoreId : null;
-    let address = formData?.address;
+    let address = !isMutation ? formData?.address : {};
     if (address && address.documents) {
       address.documents["ProofOfAddress"] = fileDetails;
     } else {
       address["documents"] = [];
       address.documents["ProofOfAddress"] = fileDetails;
     }
-    onSelect(config.key, address, "", index);
-    // onSelect(config.key, { specialProofIdentity: fileDetails }, "", index);
+    if (!isMutation) onSelect(config.key, address, "", index);
+    else onSelect(config.key, { documentType: dropdownValue, fileStoreId }, "", index);
   };
   const onSkip = () => onSelect();
 

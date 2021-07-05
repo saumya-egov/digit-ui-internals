@@ -17,6 +17,9 @@ const useTradeLicenseMDMS = (tenantId, moduleCode, type, filter, config = {}) =>
   const useTLAccessoriesType = () => {
     return useQuery("TL_TRADE_ACCESSORY_CATEGORY", () => MdmsService.getTLAccessoriesType(tenantId, moduleCode, type), config);
   };
+  const useTLFinancialYear = () => {
+    return useQuery("TL_TRADE_FINANCIAL_YEAR", () => MdmsService.getTLFinancialYear(tenantId, moduleCode, type), config);
+  };
   const _default = () => {
     return useQuery([tenantId, moduleCode, type], () => MdmsService.getMultipleTypes(tenantId, moduleCode, type), config);
   };
@@ -32,6 +35,8 @@ const useTradeLicenseMDMS = (tenantId, moduleCode, type, filter, config = {}) =>
       return useTradeOwnerShipCategory();
     case "AccessoryCategory":
       return useTLAccessoriesType();
+    case "FinancialYear":
+      return useTLFinancialYear();
     default:
       return _default();
   }

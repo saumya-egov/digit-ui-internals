@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { ArrowDown, CheckSvg } from "./svgindex";
 
-const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = "" }) => {
+const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = "" ,t}) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
   const dropdownRef = useRef();
-  Digit.Hooks.useClickOutside(dropdownRef, () => setActive(false));
+  Digit.Hooks.useClickOutside(dropdownRef, () => setActive(false), active);
 
   function onSearch(e) {
     setSearchQuery(e.target.value);
@@ -22,20 +22,20 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
       <div className="custom-checkbox">
         <CheckSvg />
       </div>
-      <p className="label">{option[optionsKey]}</p>
+      <p className="label">{t(option[optionsKey]&&typeof option[optionsKey]=="string" && option[optionsKey].toUpperCase())}</p>
     </div>
   );
 
   const Menu = () => {
     const filteredOptions =
-      searchQuery?.length > 0 ? options.filter((option) => option[optionsKey].toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0) : options;
+      searchQuery?.length > 0 ? options.filter((option) => t(option[optionsKey]&&typeof option[optionsKey]=="string" && option[optionsKey].toUpperCase()).toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0) : options;
     return filteredOptions.map((option, index) => <MenuItem option={option} key={index} index={index} />);
   };
 
   return (
     <div className="multi-select-dropdown-wrap" ref={dropdownRef}>
       <div className={`master${active ? `-active` : ``}`}>
-        <input type="text" onFocus={() => setActive(true)} value={searchQuery} onChange={onSearch} />
+        <input className="cursorPointer" type="text" onFocus={() => setActive(true)} value={searchQuery} onChange={onSearch} />
         <div className="label">
           <p>{selected.length > 0 ? `${selected.length} ${defaultUnit}` : defaultLabel}</p>
           <ArrowDown />

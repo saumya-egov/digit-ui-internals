@@ -8,7 +8,7 @@ import SearchApplication from "./inbox/search";
 import { Link } from "react-router-dom";
 import { getActionButton } from "../utils";
 
-const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
+const DesktopInbox = ({ tableConfig, filterComponent, columns, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
   const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
@@ -23,10 +23,10 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
     return value < 0 ? <span className="sla-cell-error">{value}</span> : <span className="sla-cell-success">{value}</span>;
   };
 
-  const convertEpochToDate = dateEpoch => {
-    if(dateEpoch == null || dateEpoch == undefined || dateEpoch == ''){
-      return "NA" ;
-    } 
+  const convertEpochToDate = (dateEpoch) => {
+    if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+      return "NA";
+    }
     const dateFromApi = new Date(dateEpoch);
     let month = dateFromApi.getMonth() + 1;
     let day = dateFromApi.getDate();
@@ -42,7 +42,7 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
     }
     return str;
   };
-  
+
   const GetMobCell = (value) => <span className="sla-cell">{value}</span>;
   const inboxColumns = () => [
     {
@@ -51,15 +51,14 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
         return (
           <div>
             <span className="link">
-              <Link to={`${props.parentRoute}/challansearch/` + row.original?.["challanNo"]}>
-                {row.original?.["challanNo"]}
-              </Link>
+              <Link to={`${props.parentRoute}/challansearch/` + row.original?.["challanNo"]}>{row.original?.["challanNo"]}</Link>
             </span>
           </div>
         );
       },
       mobileCell: (original) => GetMobCell(original?.["challanNo"]),
-    },{
+    },
+    {
       Header: t("UC_COMMON_TABLE_COL_PAYEE_NAME"),
       Cell: ({ row }) => {
         return GetCell(`${row.original?.["name"]}`);
@@ -71,9 +70,9 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
       Cell: ({ row }) => {
         let code = stringReplaceAll(`${row.original?.["businessService"]}`, ".", "_");
         code = code.toUpperCase();
-        return GetCell(t(`BILLINGSERVICE_BUSINESSSERVICE_${code}`))
+        return GetCell(t(`BILLINGSERVICE_BUSINESSSERVICE_${code}`));
       },
-      mobileCell: (original) => GetMobCell(`BILLINGSERVICE_BUSINESSSERVICE_${(original?.["businessService"])}`),
+      mobileCell: (original) => GetMobCell(`BILLINGSERVICE_BUSINESSSERVICE_${original?.["businessService"]}`),
     },
     {
       Header: t("UC_DUE_DATE"),
@@ -102,35 +101,35 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
       Header: t("UC_TABLE_COL_ACTION"),
       Cell: ({ row }) => {
         const amount = row.original?.totalAmount;
-        let action = "ACTIVE"
-        if(amount > 0)  action = "COLLECT"
+        let action = "ACTIVE";
+        if (amount > 0) action = "COLLECT";
         if (action == "COLLECT") {
           return (
             <div>
               <span className="link">
-                <Link to={{ pathname: `/digit-ui/employee/payment/collect/${row.original?.["businessService"]}/${row.original?.["challanNo"]}/tenantId=${row.original?.["tenantId"]}`}}>
+                <Link
+                  to={{
+                    pathname: `/digit-ui/employee/payment/collect/${row.original?.["businessService"]}/${row.original?.["challanNo"]}/tenantId=${row.original?.["tenantId"]}?workflow=mcollect`,
+                  }}
+                >
                   {t(`UC_${action}`)}
                 </Link>
               </span>
             </div>
           );
-        } else if(row.original?.applicationStatus == "PAID") {
+        } else if (row.original?.applicationStatus == "PAID") {
           return (
             <div>
-              <span className="link">
-                {getActionButton(row.original?.["businessService"], row.original?.["challanNo"])}
-              </span>
+              <span className="link">{getActionButton(row.original?.["businessService"], row.original?.["challanNo"])}</span>
             </div>
-          )
+          );
         } else {
           return GetCell(t(`${"NA"}`));
         }
-        
       },
       mobileCell: (original) => GetMobCell(original?.workflowData?.state?.["state"]),
-    }
+    },
   ];
-
 
   useEffect(() => {
     console.log(data, columns, "inside desktop inbox....");
@@ -164,6 +163,9 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
               minWidth: cellInfo.column.Header === t("ES_INBOX_APPLICATION_NO") ? "240px" : "",
               padding: "20px 18px",
               fontSize: "16px",
+              wordBreak:"break-word",
+              overflowWrap: 'break-word',
+              width: "250px"
             },
           };
         }}

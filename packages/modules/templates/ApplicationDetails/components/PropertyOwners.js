@@ -6,12 +6,12 @@ function PropertyOwners({ owners }) {
   const { t } = useTranslation();
 
   //   console.log(owners, "inside property Owner");
-
+  const checkLocation = window.location.href.includes("employee/tl");
   return (
     <React.Fragment>
       {owners.map((owner, index) => (
-        <div key={t(owner?.title)} style={{ marginTop: "19px" }}>
-          <CardSubHeader style={{ marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{t(owner?.title)}</CardSubHeader>
+        <div key={t(owner?.title)} style={checkLocation ? { marginTop: "19px", background: "#FAFAFA", border: "1px solid #D6D5D4", borderRadius: "4px", padding: "8px", lineHeight: "19px" } : { marginTop: "19px" }}>
+          <CardSubHeader style={{ marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{checkLocation ? `${t(owner?.title)} ${index+1}` : t(owner?.title)}</CardSubHeader>
           <React.Fragment key={index}>
             {/* <CardSectionHeader style={{ marginBottom: "16px", color: "#505A5F", fontSize: "16px", marginTop: index !== 0 ? "16px" : "revert" }}>
               {t(value.title)}

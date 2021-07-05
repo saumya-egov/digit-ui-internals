@@ -40,6 +40,9 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
     acc[i].accessory = value;
     setAccessory(value);
     setFeilds(acc);
+    acc[i].unit = null;
+    Array.from(document.querySelectorAll("input")).forEach((input) => (input.value = ""));
+    setUnitOfMeasure(null);
     Data?.TradeLicense?.AccessoriesCategory.map((ob) => {
       if (value.code === ob.code && ob.uom != null) {
         acc[i].unit = ob.uom;
@@ -125,7 +128,7 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
               name="UnitOfMeasure"
               value={field.unit}
               onChange={(e) => selectUnitOfMeasure(index, e)}
-              disable={field.unit}
+              disable={true}
               /* {...(validation = {
             isRequired: true,
             pattern: "^[a-zA-Z-.`' ]*$",
@@ -142,13 +145,14 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
               name="UomValue"
               value={field.uom}
               onChange={(e) => selectUomValue(index, e)}
+              disable={!field.unit}
               //disable={isUpdateProperty || isEditProperty}
-              /* {...(validation = {
-            isRequired: true,
-            pattern: "^[a-zA-Z-.`' ]*$",
-            type: "text",
-            title: t("PT_NAME_ERROR_MESSAGE"),
-          })} */
+              {...(validation = {
+                isRequired: true,
+                pattern: "[0-9]+",
+                type: "text",
+                title: t("TL_WRONG_UOM_VALUE_ERROR"),
+              })}
             />
           </div>
         );
@@ -156,7 +160,7 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
       <hr color="#d6d5d4" className="break-line"></hr>
       <div style={{ justifyContent: "center", display: "flex", paddingBottom: "15px", color: "#FF8C00" }}>
         <button type="button" onClick={() => handleAdd()}>
-          Add More Trade Accessories
+          {`${t("TL_ADD_MORE_TRADE_ACC")}`}
         </button>
       </div>
     </FormStep>

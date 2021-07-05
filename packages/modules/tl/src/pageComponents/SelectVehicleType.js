@@ -6,6 +6,7 @@ const SelectVehicleType = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const [VehicleType, setVehicleType] = useState(formData?.TradeDetails?.VehicleType);
+  const isEdit = window.location.href.includes("/edit-application/");
   const { isLoading, data: Menu = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "common-masters", "StructureType");
   let menu = [];
   Menu &&
@@ -41,6 +42,7 @@ const SelectVehicleType = ({ t, config, onSelect, userType, formData }) => {
         options={menu}
         selectedOption={VehicleType}
         onSelect={selectVehicleType}
+        disable={isEdit}
       />
     </FormStep>
   );

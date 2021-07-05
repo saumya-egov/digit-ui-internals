@@ -11,36 +11,44 @@ import {
   EmailIcon,
   WhatsappIcon,
 } from "@egovernments/digit-ui-react-components";
-import { startOfYear, endOfYear, format, addMonths } from "date-fns";
+import { startOfYear, endOfYear, format, addMonths, endOfToday } from "date-fns";
 import Filters from "../components/Filters";
 import Layout from "../components/Layout";
 import FilterContext from "../components/FilterContext";
 import { useParams } from "react-router-dom";
 
+const key = 'DSS_FILTERS';
+
 const getInitialRange = () => {
-  const startDate = addMonths(startOfYear(new Date()), 3);
-  const endDate = addMonths(endOfYear(new Date()), 3);
+  const data = Digit.SessionStorage.get(key);
+  const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : addMonths(startOfYear(new Date()), 3);
+  const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : endOfToday();
   const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
   const duration = Digit.Utils.dss.getDuration(startDate, endDate);
-  return { startDate, endDate, title, duration };
+  const denomination = data?.denomination || "Unit";
+  const tenantId = data?.filters?.tenantId || []
+  return { startDate, endDate, title, duration, denomination, tenantId };
 };
 
 const DashBoard = ({ stateCode }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const [filters, setFilters] = useState((data) => ({
-    denomination: data?.denomination || "Unit",
-    range: data?.range || getInitialRange(),
-    requestDate: {
-      startDate: data?.range?.startDate.getTime() || getInitialRange().startDate.getTime(),
-      endDate: data?.range?.endDate.getTime() || getInitialRange().endDate.getTime(),
-      interval: "month",
-      title: "",
-    },
-    filters: {
-      tenantId: data?.filters?.tenantId || [],
-    },
-  }));
+  const [filters, setFilters] = useState(() => {
+    const { startDate, endDate, title, duration, denomination, tenantId } = getInitialRange();
+    return {
+      denomination,
+      range: { startDate, endDate, title, duration},
+      requestDate: {
+        startDate: startDate.getTime(),
+        endDate: endDate.getTime(),
+        interval: duration,
+        title: title,
+      },
+      filters: {
+        tenantId,
+      }
+    }
+  });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const { moduleCode } = useParams();
 
@@ -50,25 +58,31 @@ const DashBoard = ({ stateCode }) => {
   const { data: screenConfig } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard");
   const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("FSM");
+  const { isLoading: isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateCode, "FSM", "FSTPPlantInfo");
   const [showOptions, setShowOptions] = useState(false);
 
+  const handleFilters = (data) => {
+    Digit.SessionStorage.set(key, data);
+    setFilters(data);
+  }
   const fullPageRef = useRef();
   const provided = useMemo(
     () => ({
       value: filters,
-      setValue: setFilters,
+      setValue: handleFilters,
       ulbTenants,
+      fstpMdmsData: mdmsData
     }),
-    [filters, isUlbLoading]
+    [filters, isUlbLoading, isMdmsLoading]
   );
   const handlePrint = () => Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
 
   const removeULB = (id) => {
-    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } });
+    handleFilters({ ...filters, filters: { ...filters?.filters, tenantId: [...filters?.filters?.tenantId].filter((tenant, index) => index !== id) } });
   };
 
   const handleClear = () => {
-    setFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
+    handleFilters({ ...filters, filters: { ...filters?.filters, tenantId: [] } });
   };
 
   const dashboardConfig = response?.responseData;
@@ -77,16 +91,20 @@ const DashBoard = ({ stateCode }) => {
     ? [
         {
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: async () => {
-            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            }, 500)
           },
         },
         {
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: async () => {
-            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+            }, 500)
           },
         },
       ]
@@ -94,38 +112,46 @@ const DashBoard = ({ stateCode }) => {
         {
           icon: <EmailIcon />,
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: async () => {
-            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            }, 500)
           },
         },
         {
           icon: <WhatsappIcon />,
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: async () => {
-            await Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            }, 500)
           },
         },
         {
           icon: <EmailIcon />,
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: async () => {
-            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+            }, 500)
           },
         },
         {
           icon: <WhatsappIcon />,
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: async () => {
-            await Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+          onClick: () => {
             setShowOptions(!showOptions);
+            setTimeout(() => {
+              Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+            }, 500)
           },
         },
       ];
 
-  if (isLoading || isUlbLoading || localizationLoading) {
+  if (isLoading || isUlbLoading || localizationLoading || isMdmsLoading) {
     return <Loader />;
   }
 
@@ -139,7 +165,9 @@ const DashBoard = ({ stateCode }) => {
               <MultiLink
                 className="multilink-block-wrapper"
                 label={t(`ES_DSS_SHARE`)}
-                onHeadClick={() => setShowOptions(!showOptions)}
+                icon={<ShareIcon className="mrsm" />}
+                showOptions={(e) => setShowOptions(e)}
+                onHeadClick={(e) => setShowOptions(e !== undefined ? e : !showOptions)}
                 displayOptions={showOptions}
                 options={shareOptions}
               />
@@ -154,9 +182,9 @@ const DashBoard = ({ stateCode }) => {
         {filters?.filters?.tenantId.length > 0 && (
           <div className="tag-container">
             {filters?.filters?.tenantId?.map((filter, id) => (
-              <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+              <RemoveableTag key={id} text={`${t(`DSS_HEADER_ULB`)}: ${t(filter)}`} onClick={() => removeULB(id)} />
             ))}
-            <p className="clearText" onClick={handleClear}>
+            <p className="clearText cursorPointer" onClick={handleClear}>
               {t(`DSS_FILTER_CLEAR`)}
             </p>
           </div>
@@ -169,11 +197,12 @@ const DashBoard = ({ stateCode }) => {
             <MultiLink
               className="multilink-block-wrapper"
               label={t(`ES_DSS_SHARE`)}
-              onHeadClick={() => setShowOptions(!showOptions)}
+              icon={<ShareIcon className="mrsm" />}
+              showOptions={(e) => setShowOptions(e)}
+              onHeadClick={(e) => setShowOptions(e !== undefined ? e : !showOptions)}
               displayOptions={showOptions}
               options={shareOptions}
             />
-            {t(`ES_DSS_SHARE`)}
           </div>
           <div>
             <DownloadIcon />

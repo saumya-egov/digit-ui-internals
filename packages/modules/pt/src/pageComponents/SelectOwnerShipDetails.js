@@ -117,7 +117,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
   function goNext() {
     let index = window.location.href.charAt(window.location.href.length - 1);
     sessionStorage.setItem("ownershipCategory", ownershipCategory?.value);
-    onSelect(config.key, ownershipCategory, "", index, null, null, { routeKey: ownershipCategory?.value });
+    onSelect(config.key, ownershipCategory, "", index, null, { routeKey: ownershipCategory?.value });
   }
 
   useEffect(() => {
@@ -137,7 +137,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
       <React.Fragment>
         <LabelFieldPair>
           <CardLabel className="card-label-smaller" style={editScreen ? { color: "#B1B4B6" } : {}}>
-            {t("PT_PROVIDE_OWNERSHIP_DETAILS")}
+            {t("PT_PROVIDE_OWNERSHIP_DETAILS") + " *"}
           </CardLabel>
           <Dropdown
             className="form-field"

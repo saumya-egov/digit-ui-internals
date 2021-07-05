@@ -1,5 +1,41 @@
 export const newConfig = [
   {
+    head: "TL_COMMON_TR_DETAILS",
+    body: [
+      {
+        type: "component",
+        component: "TLTradeDetailsEmployee",
+        key: "tradedetils",
+        withoutLabel: true,
+        hideInCitizen: true,
+      }
+    ]
+  },
+  {
+    head: "TL_TRADE_UNITS_HEADER",
+    body: [
+      {
+        type: "component",
+        component: "TLTradeUnitsEmployee",
+        key: "tradeUnits",
+        withoutLabel: true,
+        hideInCitizen: true,
+      }
+    ]
+  },
+  {
+    head: "TL_NEW_TRADE_DETAILS_HEADER_ACC",
+    body: [
+      {
+        type: "component",
+        component: "TLAccessoriesEmployee",
+        key: "accessories",
+        withoutLabel: true,
+        hideInCitizen: true,
+      }
+    ]
+  },
+  {
     head: "ES_NEW_APPLICATION_LOCATION_DETAILS",
     body: [
       // {
@@ -58,6 +94,7 @@ export const newConfig = [
         component: "SelectStreet",
         key: "address",
         withoutLabel: true,
+        hideInEmployee: true,
         texts: {
           headerCaption: "TL_LOCATION_CAPTION",
           header: "TL_ADDRESS_HEADER",
@@ -69,6 +106,7 @@ export const newConfig = [
             label: "TL_LOCALIZATION_STREET_NAME",
             type: "text",
             name: "street",
+            disable: window.location.href.includes("edit-application"),
             validation: {
               // pattern: "[a-zA-Z0-9]{1,255}",
               maxlength: 256,
@@ -79,6 +117,7 @@ export const newConfig = [
             label: "TL_LOCALIZATION_BUILDING_NO",
             type: "text",
             name: "doorNo",
+            disable: window.location.href.includes("edit-application"),
             validation: {
               // pattern: "([A-z0-9À-ž@#$&()\\-`.+,/s ]){1,63}",
               maxlength: 256,
@@ -87,6 +126,43 @@ export const newConfig = [
           },
         ],
         nextStep: "landmark",
+      },
+      {
+        type: "component",
+        // route: "street",
+        component: "SelectStreet",
+        key: "address",
+        withoutLabel: true,
+        hideInCitizen: true,
+        texts: {
+          headerCaption: "TL_LOCATION_CAPTION",
+          header: "TL_ADDRESS_HEADER",
+          cardText: "TL_STREET_TEXT",
+          submitBarLabel: "CS_COMMON_NEXT",
+        },
+        inputs: [
+          {
+            label: "TL_LOCALIZATION_BUILDING_NO",
+            type: "text",
+            name: "doorNo",
+            validation: {
+              // pattern: "([A-z0-9À-ž@#$&()\\-`.+,/s ]){1,63}",
+              maxlength: 256,
+              title: "CORE_COMMON_DOOR_INVALID",
+            },
+          },
+          {
+            label: "TL_LOCALIZATION_STREET_NAME",
+            type: "text",
+            name: "street",
+            validation: {
+              // pattern: "[a-zA-Z0-9]{1,255}",
+              maxlength: 256,
+              title: "CORE_COMMON_STREET_INVALID",
+            },
+          }
+        ],
+        // nextStep: "landmark",
       },
       {
         type: "component",
@@ -146,6 +222,7 @@ export const newConfig = [
         key: "TradeDetails",
         nextStep: "structure-type",
         type: "component",
+        hideInEmployee: true,
       },
       {
         type: "component",
@@ -363,6 +440,13 @@ export const newConfig = [
         nextStep: "proof",
         hideInEmployee: true,
       },
+      {
+        type: "component",
+        component: "TLOwnerDetailsEmployee",
+        key: "owners",
+        withoutLabel: true,
+        hideInCitizen: true,
+      },
       /* {
           type: "component",
           route: "inistitution-details",
@@ -421,14 +505,26 @@ export const newConfig = [
         }, */
     ],
   },
+  // {
+  //   head: "ES_NEW_APPLICATION_DOCUMENTS_REQUIRED",
+  //   body: [
+  //     {
+  //       component: "SelectDocuments",
+  //       withoutLabel: true,
+  //       key: "documents",
+  //       type: "component",
+  //     },
+  //   ],
+  // },
   {
-    head: "ES_NEW_APPLICATION_DOCUMENTS_REQUIRED",
+    head: "TL_NEW_APPLICATION_DOCUMENTS_REQUIRED",
     body: [
       {
-        component: "SelectDocuments",
+        component: "TLDocumentsEmployee",
         withoutLabel: true,
         key: "documents",
         type: "component",
+        hideInCitizen: true
       },
     ],
   },

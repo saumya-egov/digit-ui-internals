@@ -39,9 +39,13 @@ const Inbox = ({
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
   const [searchParams, setSearchParams] = useState(initialStates.searchParams || {});
 
-  // useState(() => {
-  //   return initialStates.searchParams || {};
-  // });
+  const [allowSearch, setAllowSearch] = useState(() => {
+    return isInbox ? {} : { enabled: false };
+  });
+
+  const [searchParams, setSearchParams] = useState(() => {
+    return initialStates.searchParams || {};
+  });
 
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParams = isMobile
@@ -69,7 +73,7 @@ const Inbox = ({
       });
 
   useEffect(() => {
-    console.log("data from the hook", hookLoading, rest, data);
+    console.log(data, "data from the hook...");
   }, [hookLoading, rest]);
 
   useEffect(() => {

@@ -1,15 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormComposer } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { newConfig } from "../../components/config/config";
 import { convertEpochToDate } from "../../components/Utils";
 
-const EditForm = ({ tenantId, data }) => {
+const EditForm = ({tenantId, data }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
-  console.log(convertEpochToDate(data?.dateOfAppointment));
+  const [mobileNumber, setMobileNumber] = useState(null);
+  const [phonecheck, setPhonecheck] = useState(false);
+  const [checkfield, setcheck]= useState(false);
+  const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
+  const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
+  const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
+
+  useEffect(() => {
+    setMutationHappened(false);
+    clearSuccessData();
+    clearError();
+  }, []);
+  
+  useEffect(() => {
+    if (/^[6-9]\d{9}$/.test(mobileNumber)) {
+      setPhonecheck(true);
+    } else {
+      setPhonecheck(false);
+    }
+  }, [mobileNumber]);
+
   const defaultValues = {
     tenantId: tenantId,
     employeeStatus: "EMPLOYED",
@@ -19,7 +39,7 @@ const EditForm = ({ tenantId, data }) => {
     SelectEmployeeName: { employeeName: data?.user?.name },
     SelectEmployeeEmailId: { emailId: data?.user?.emailId },
     SelectEmployeeCorrespondenceAddress: { correspondenceAddress: data?.user?.correspondenceAddress },
-    SelectDateofEmployment: { dateOfAppointment: convertEpochToDate(1578268800000) },
+    SelectDateofEmployment: { dateOfAppointment: convertEpochToDate(data?.dateOfAppointment) },
     SelectEmployeeType: { code: data?.employeeType, active: true },
     SelectEmployeeGender: {
       gender: {
@@ -46,6 +66,7 @@ const EditForm = ({ tenantId, data }) => {
         key: index,
         fromDate: convertEpochToDate(ele.fromDate),
         toDate: convertEpochToDate(ele.toDate),
+        isCurrentAssignment: ele.isCurrentAssignment,
         designation: {
           code: ele.designation,
           i18key: "COMMON_MASTERS_DESIGNATION_" + ele.designation,
@@ -59,14 +80,20 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const onFormValueChange = (setValue = true, formData) => {
-    let setcheck = false;
-    if (formData?.Jurisdictions?.length > 0) {
-      setcheck = formData?.Jurisdictions?.reduce((acc, key) => {
-        if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
-          acc = false;
-        }
-        return acc;
-      });
+    if (/^[6-9]\d{9}$/.test(formData?.SelectEmployeePhoneNumber?.mobileNumber)) {
+      setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    } else {
+      setPhonecheck(false);
+    }
+    for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
+      let key = formData?.Jurisdictions[i];
+      console.log(key?.roles?.length)
+      if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
+        setcheck(false);
+        break;
+      } else {
+        setcheck(true);
+      }
     }
 
     let setassigncheck = false;
@@ -90,7 +117,8 @@ const EditForm = ({ tenantId, data }) => {
       formData?.SelectEmployeeGender?.gender.code &&
       formData?.SelectEmployeeName?.employeeName &&
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
-      setcheck &&
+      checkfield &&
+      phonecheck &&
       setassigncheck
     ) {
       setSubmitValve(true);
@@ -101,11 +129,13 @@ const EditForm = ({ tenantId, data }) => {
 
   const onSubmit = (input) => {
     let roles = input?.Jurisdictions?.map((ele) => {
-      return ele.roles;
+      return ele.roles?.map((item) => {
+        item["tenantId"] = ele.boundary;
+        return item;
+      });
     });
     let requestdata = Object.assign({}, data);
     roles = [].concat.apply([], roles);
-
     requestdata.assignments = input?.Assignments;
     requestdata.dateOfAppointment = Date.parse(input?.SelectDateofEmployment?.dateOfAppointment);
     requestdata.code = input?.SelectEmployeeId?.code ? input?.SelectEmployeeId?.code : undefined;
@@ -118,25 +148,27 @@ const EditForm = ({ tenantId, data }) => {
     requestdata.user.correspondenceAddress = input?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress;
     requestdata.user.roles = roles;
     const Employees = [requestdata];
-    history.push("/digit-ui/employee/hrms/response", { Employees, key: "UPDATE", action: "UPDATE" });
+    history.replace("/digit-ui/employee/hrms/response", { Employees, key: "UPDATE", action: "UPDATE" });
   };
   const configs = newConfig;
   return (
-    <FormComposer
-      heading={t("HR_COMMON_EDIT_EMPLOYEE_HEADER")}
-      isDisabled={!canSubmit}
-      label={t("HR_COMMON_BUTTON_SUBMIT")}
-      config={configs.map((config) => {
-        return {
-          ...config,
-          body: config.body.filter((a) => !a.hideInEmployee),
-        };
-      })}
-      fieldStyle={{ marginRight: 0 }}
-      onSubmit={onSubmit}
-      defaultValues={defaultValues}
-      onFormValueChange={onFormValueChange}
-    />
+    <div>
+      <FormComposer
+        heading={t("HR_COMMON_EDIT_EMPLOYEE_HEADER")}
+        isDisabled={!canSubmit}
+        label={t("HR_COMMON_BUTTON_SUBMIT")}
+        config={configs.map((config) => {
+          return {
+            ...config,
+            body: config.body.filter((a) => !a.hideInEmployee),
+          };
+        })}
+        fieldStyle={{ marginRight: 0 }}
+        onSubmit={onSubmit}
+        defaultValues={defaultValues}
+        onFormValueChange={onFormValueChange}
+      />
+    </div>
   );
 };
 export default EditForm;

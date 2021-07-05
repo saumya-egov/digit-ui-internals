@@ -34,25 +34,33 @@ const BannerPicker = (props) => {
 
 const PTAcknowledgement = ({ data, onSuccess }) => {
   const { t } = useTranslation();
+  const isPropertyMutation = window.location.href.includes("property-mutation");
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const mutation = Digit.Hooks.pt.usePropertyAPI(
     data?.address?.city ? data.address?.city?.code : tenantId,
-    !window.location.href.includes("edit-application")
+    !window.location.href.includes("edit-application") && !isPropertyMutation
   );
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { tenants } = storeData || {};
 
   useEffect(() => {
     try {
-      let tenantId = data?.address?.city ? data.address?.city?.code : tenantId;
+      let tenantId = isPropertyMutation ? data.Property?.address.tenantId : data?.address?.city ? data.address?.city?.code : tenantId;
       data.tenantId = tenantId;
-      let formdata = !window.location.href.includes("edit-application") ? convertToProperty(data) : convertToUpdateProperty(data);
+      let formdata = !window.location.href.includes("edit-application")
+        ? isPropertyMutation
+          ? data
+          : convertToProperty(data)
+        : convertToUpdateProperty(data);
       formdata.Property.tenantId = formdata?.Property?.tenantId || tenantId;
+
+      console.log(formdata, "inside ack screen");
+
       mutation.mutate(formdata, {
         onSuccess,
       });
     } catch (err) {
-      console.log(err);
+      console.log(err, "inside ack");
     }
   }, []);
 

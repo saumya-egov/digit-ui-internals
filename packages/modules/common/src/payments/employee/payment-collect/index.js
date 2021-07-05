@@ -11,6 +11,8 @@ import { BillDetailsFormConfig } from "./Bill-details/billDetails";
 
 export const CollectPayment = (props) => {
   // const { formData, addParams } = props;
+  const { workflow: ModuleWorkflow } = Digit.Hooks.useQueryParams();
+  console.log(ModuleWorkflow);
   const { t } = useTranslation();
   const history = useHistory();
   const queryClient = useQueryClient();
@@ -65,7 +67,10 @@ export const CollectPayment = (props) => {
     bill.totalAmount = Math.round(bill.totalAmount);
     data.paidBy = data.paidBy.code;
 
-    if (BillDetailsFormConfig({ consumerCode }, t)[businessService] && !data?.amount?.paymentAllowed) {
+    if (
+      BillDetailsFormConfig({ consumerCode, businessService }, t)[ModuleWorkflow ? ModuleWorkflow : businessService] &&
+      !data?.amount?.paymentAllowed
+    ) {
       let action =
         data?.amount?.error === "CS_CANT_PAY_BELOW_MIN_AMOUNT"
           ? t(data?.amount?.error) + "- " + data?.amount?.minAmountPayable
@@ -159,7 +164,7 @@ export const CollectPayment = (props) => {
 
   const config = [
     {
-      head: t("COMMON_PAYMENT_HEAD"),
+      head: !ModuleWorkflow ? t("COMMON_PAYMENT_HEAD") : "",
       body: [
         {
           label: t("PAY_TOTAL_AMOUNT"),
@@ -264,10 +269,13 @@ export const CollectPayment = (props) => {
   });
 
   const getFormConfig = () => {
+    if (ModuleWorkflow) {
+      config.splice(0, 1);
+    }
     let conf = config.concat(formConfigMap[formState?.paymentMode?.code] || []);
     conf = conf?.concat(cashConfig);
-    return BillDetailsFormConfig({ consumerCode }, t)[businessService]
-      ? BillDetailsFormConfig({ consumerCode }, t)[businessService].concat(conf)
+    return BillDetailsFormConfig({ consumerCode, businessService }, t)[ModuleWorkflow ? ModuleWorkflow : businessService]
+      ? BillDetailsFormConfig({ consumerCode, businessService }, t)[ModuleWorkflow ? ModuleWorkflow : businessService].concat(conf)
       : conf;
   };
 

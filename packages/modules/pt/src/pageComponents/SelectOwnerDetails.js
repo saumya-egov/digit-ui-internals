@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown } from "@egovernments/digit-ui-react-components";
+import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, Menu } from "@egovernments/digit-ui-react-components";
 import { cardBodyStyle } from "../utils";
-import { useLocation } from "react-router-dom";
+import { useLocation, useRouteMatch } from "react-router-dom";
 
-const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
-  let index = window.location.href.charAt(window.location.href.length - 1);
+const SelectOwnerDetails = ({ t, config, onSelect, userType, formData, ownerIndex }) => {
+  const { pathname: url } = useLocation();
+  const editScreen = url.includes("/modify-application/");
+  const mutationScreen = url.includes("/property-mutation/");
+
+  let index = mutationScreen ? ownerIndex : window.location.href.charAt(window.location.href.length - 1);
   let validation = {};
   const [name, setName] = useState((formData.owners && formData.owners[index] && formData.owners[index].name) || formData?.owners?.name || "");
   const [email, setEmail] = useState((formData.owners && formData.owners[index] && formData.owners[index].email) || formData?.owners?.emailId || "");
@@ -20,8 +24,18 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   );
   const isUpdateProperty = formData?.isUpdateProperty || false;
   let isEditProperty = formData?.isEditProperty || false;
-  const { pathname: url } = useLocation();
-  const editScreen = url.includes("/modify-application/");
+
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const { data: Menu} = Digit.Hooks.pt.useGenderMDMS(tenantId, "common-masters", "GenderType");
+
+  let menu = [];
+    Menu &&
+      Menu.map((genderDetails) => {
+        menu.push({i18nKey: `PT_COMMON_GENDER_${genderDetails.code}`, code: `${genderDetails.code}`,value: `${genderDetails.code}`})
+    });
+  
+
 
   function setOwnerName(e) {
     setName(e.target.value);
@@ -32,6 +46,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   function setGenderName(value) {
     setGender(value);
   }
+
   function setMobileNo(e) {
     setMobileNumber(e.target.value);
   }
@@ -42,6 +57,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
     setRelationship(value);
   }
 
+
   const goNext = () => {
     let owner = formData.owners && formData.owners[index];
     let ownerStep;
@@ -49,11 +65,18 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship, emailId: email };
       onSelect(config.key, { ...formData[config.key], ...ownerStep }, false, index);
     } else {
+      if (mutationScreen) {
+        ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };
+        onSelect("", ownerStep);
+        return;
+      }
       ownerStep = { ...owner, name, gender, mobileNumber, fatherOrHusbandName, relationship };
       onSelect(config.key, ownerStep, false, index);
     }
   };
 
+
+  
   const onSkip = () => onSelect();
   // As Ticket RAIN-2619 other option in gender and gaurdian will be enhance , dont uncomment it
   const options = [
@@ -158,7 +181,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             className="form-field"
             selected={gender?.length === 1 ? gender[0] : gender}
             disable={gender?.length === 1 || editScreen}
-            option={options}
+            option={menu}
             select={setGenderName}
             optionKey="code"
             t={t}
@@ -183,6 +206,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       </div>
     );
   }
+  
 
   return (
     <FormStep
@@ -213,8 +237,8 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
         <CardLabel>{`${t("PT_FORM3_GENDER")}`}</CardLabel>
         <RadioButtons
           t={t}
-          options={options}
-          optionsKey="code"
+          options={menu}
+          optionsKey= "code"
           name="gender"
           value={gender}
           selectedOption={gender}

@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardSubHeader, CardText, Loader, SubmitBar } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React, { useEffect } from "react";
 import { cardBodyStyle, stringReplaceAll } from "../utils";
 //import { map } from "lodash-es";
 
@@ -7,19 +7,28 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
 
-  const { isLoading, data: Documentsob = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", "Documents");
-  let docs = Documentsob?.PropertyTax?.Documents;
-  docs = docs?.filter((doc) => doc["digit-citizen"]);
+  const docType = config?.isMutation ? ["MutationDocuments"] : "Documents";
+
+  const { isLoading, data: Documentsob = {} } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", docType);
+
+  // useEffect(() => {
+  //   if (Documentsob) console.log(Documentsob, "in propertyTax useEffect");
+  // }, [isLoading]);
+
+  let docs = Documentsob?.PropertyTax?.[config?.isMutation ? docType[0] : docType];
+  console.log(docs, "in propertyTax");
+  if (!config?.isMutation) docs = docs?.filter((doc) => doc["digit-citizen"]);
   function onSave() {}
 
   function goNext() {
     onSelect();
   }
+
   return (
     <React.Fragment>
       <Card>
-        <CardHeader>{t("PT_DOC_REQ_SCREEN_HEADER")}</CardHeader>
-        <div >
+        <CardHeader>{!config.isMutation ? t("PT_DOC_REQ_SCREEN_HEADER") : t("PT_REQIURED_DOC_TRANSFER_OWNERSHIP")}</CardHeader>
+        <div>
           <CardText>{t("PT_DOC_REQ_SCREEN_SUB_HEADER")}</CardText>
           <CardText>{t("PT_DOC_REQ_SCREEN_TEXT")}</CardText>
           <CardText>{t("PT_DOC_REQ_SCREEN_SUB_TEXT")}</CardText>

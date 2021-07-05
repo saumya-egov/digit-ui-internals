@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Dropdown, MultiSelectDropdown, Loader, LinkButton } from "@egovernments/digit-ui-react-components";
+import { CardLabel, LabelFieldPair, Dropdown, MultiSelectDropdown, Loader, LinkButton, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import cleanup from "../Utils/cleanup";
+import { unset } from "lodash";
 
 const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [inactiveJurisdictions, setInactiveJurisdictions] = useState([]);
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
   const [jurisdictions, setjurisdictions] = useState(
     formData?.Jurisdictions || [
@@ -26,19 +28,27 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         boundaryType: jurisdiction?.boundaryType?.label,
         boundary: jurisdiction?.boundary?.code,
         tenantId: jurisdiction?.boundary?.code,
+        auditDetails: jurisdiction?.auditDetails,
       };
       res = cleanup(res);
       if (jurisdiction?.roles) {
-        res["roles"] = jurisdiction?.roles;
+        res["roles"] = jurisdiction?.roles.map((ele) => {
+          delete ele.description;
+          return ele;
+        });
       }
       return res;
     });
 
     onSelect(
       config.key,
-      jurisdictionsData.filter((value) => Object.keys(value).length !== 0)
+      [...jurisdictionsData, ...inactiveJurisdictions].filter((value) => Object.keys(value).length !== 0)
     );
   }, [jurisdictions]);
+
+  const reviseIndexKeys = () => {
+    setjurisdictions((prev) => prev.map((unit, index) => ({ ...unit, key: index })));
+  };
 
   const handleAddUnit = () => {
     setjurisdictions((prev) => [
@@ -51,6 +61,33 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         roles: [],
       },
     ]);
+  };
+  const handleRemoveUnit = (unit) => {
+    if (unit.id) {
+      let res = {
+        id: unit?.id,
+        hierarchy: unit?.hierarchy?.code,
+        boundaryType: unit?.boundaryType?.label,
+        boundary: unit?.boundary?.code,
+        tenantId: unit?.boundary?.code,
+        auditDetails: unit?.auditDetails,
+        isdeleted: true,
+        isActive: false,
+      };
+      res = cleanup(res);
+      if (unit?.roles) {
+        res["roles"] = unit?.roles.map((ele) => {
+          delete ele.description;
+          return ele;
+        });
+      }
+      setInactiveJurisdictions([...inactiveJurisdictions, res]);
+    }
+    setjurisdictions((prev) => prev.filter((el) => el.key !== unit.key));
+    if (FormData.errors?.Jurisdictions?.type == unit.key) {
+      clearErrors("Jurisdictions");
+    }
+    reviseIndexKeys();
   };
   let hierarchylist = [];
   let boundaryTypeoption = [];
@@ -65,7 +102,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function getroledata() {
-    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles;
+    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles.map(role=>{return {code:role.code,name:'ACCESSCONTROL_ROLES_ROLES_'+role.code}});
   }
 
   if (isLoading) {
@@ -77,6 +114,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
         <Jurisdiction
           t={t}
           formData={formData}
+          jurisdictions={jurisdictions}
           key={index}
           keys={jurisdiction.key}
           data={data}
@@ -90,13 +128,28 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
           boundaryTypeoption={boundaryTypeoption}
           getboundarydata={getboundarydata}
           getroledata={getroledata}
+          handleRemoveUnit={handleRemoveUnit}
         />
       ))}
-      <LinkButton label={t("HR_ADD_JURISDICTION")} onClick={handleAddUnit} style={{ color: "orange" }}></LinkButton>
+      <label onClick={handleAddUnit} className="link-label" style={{ width: "12rem" }}>
+        {t("HR_ADD_JURISDICTION")}
+      </label>
     </div>
   );
 };
-function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylistdata, hierarchylist, getroledata, roleoption, index }) {
+function Jurisdiction({
+  t,
+  data,
+  jurisdiction,
+  jurisdictions,
+  setjurisdictions,
+  gethierarchylistdata,
+  handleRemoveUnit,
+  hierarchylist,
+  getroledata,
+  roleoption,
+  index,
+}) {
   const [BoundaryType, selectBoundaryType] = useState([]);
   const [Boundary, selectboundary] = useState([]);
   useEffect(() => {
@@ -145,14 +198,32 @@ function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylis
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
 
+
+  const onRemove = (index, key) => {
+    let afterRemove = jurisdiction?.roles.filter((value, i) => {
+      return i !== index;
+    });
+    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: afterRemove } : item)));
+
+  };
   return (
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
-      <div className="label-field-pair">
-        <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
-          {t("HR_JURISDICTION")} {index + 1}
-        </h2>
-      </div>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
+        <LabelFieldPair>
+          <div className="label-field-pair" style={{ width: "100%" }}>
+            <h2 className="card-label card-label-smaller" style={{ color: "#505A5F" }}>
+              {t("HR_JURISDICTION")} {index + 1}
+            </h2>
+          </div>
+          {jurisdictions.length > 1 ? (
+            <div
+              onClick={() => handleRemoveUnit(jurisdiction)}
+              style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}
+            >
+              X
+            </div>
+          ) : null}
+        </LabelFieldPair>
         <LabelFieldPair>
           <CardLabel isMandatory={true} className="card-label-smaller">{`${t("HR_HIERARCHY_LABEL")} * `}</CardLabel>
           <Dropdown
@@ -199,14 +270,23 @@ function Jurisdiction({ t, data, jurisdiction, setjurisdictions, gethierarchylis
             <MultiSelectDropdown
               className="form-field"
               isMandatory={true}
+              defaultUnit="Selected"
               selected={jurisdiction?.roles}
               options={getroledata(roleoption)}
               onSelect={selectrole}
               optionsKey="name"
               t={t}
             />
+               <div className="tag-container">
+          {jurisdiction?.roles.length > 0 &&
+            jurisdiction?.roles.map((value, index) => {
+              return <RemoveableTag key={index} text={`${value["name"].slice(0, 22)} ...`} onClick={() => onRemove(index, value)} />;
+            })}
+        </div>
           </div>
+
         </LabelFieldPair>
+
       </div>
     </div>
   );

@@ -7,14 +7,15 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
   const [pincode, setPincode] = useState(() => formData?.address?.pincode || "");
   const { pathname } = useLocation();
   const presentInModifyApplication = pathname.includes("modify");
-  let isEditProperty = formData?.isEditProperty || false;
-  if (formData?.isUpdateProperty) isEditProperty = true;
+  // let isEditProperty = formData?.isEditProperty || false;
+  let isEdit = window.location.href.includes("/edit-application/");
+  //if (formData?.isUpdateProperty) isEditProperty = true;
   const inputs = [
     {
       label: "CORE_COMMON_PINCODE",
       type: "text",
       name: "pincode",
-      disable: isEditProperty,
+      disable: isEdit,
       validation: {
         minlength: 6,
         maxlength: 7,
@@ -42,7 +43,7 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
         onSelect(config.key, { ...formData.address, city, pincode: e.target.value, slum: null });
       } else {
         onSelect(config.key, { ...formData.address, pincode: e.target.value });
-        setPincodeServicability("PT_COMMON_PINCODE_NOT_SERVICABLE");
+        setPincodeServicability("TL_COMMON_PINCODE_NOT_SERVICABLE");
       }
     }
   }
@@ -52,7 +53,7 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
     if (foundValue) {
       onSelect(config.key, { pincode });
     } else {
-      setPincodeServicability("PT_COMMON_PINCODE_NOT_SERVICABLE");
+      setPincodeServicability("TL_COMMON_PINCODE_NOT_SERVICABLE");
     }
   };
 
@@ -60,9 +61,15 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
     return inputs?.map((input, index) => {
       return (
         <LabelFieldPair key={index}>
-          <CardLabel className="card-label-smaller">{t(input.label)}</CardLabel>
+          <CardLabel className="card-label-smaller">{`${t(input.label)}:`}</CardLabel>
           <div className="field">
-            <TextInput key={input.name} value={pincode} onChange={onChange} {...input.validation} autoFocus={presentInModifyApplication} />
+            <TextInput 
+              key={input.name} 
+              value={pincode} 
+              onChange={onChange} 
+              {...input.validation} 
+              autoFocus={presentInModifyApplication} 
+            />
           </div>
         </LabelFieldPair>
       );
@@ -78,7 +85,7 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
       onChange={onChange}
       onSkip={onSkip}
       forcedError={t(pincodeServicability)}
-      isDisabled={!pincode || isEditProperty}
+      isDisabled={!pincode || isEdit}
     ></FormStep>
   );
 };

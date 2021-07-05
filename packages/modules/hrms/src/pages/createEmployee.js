@@ -10,9 +10,19 @@ const CreateEmployee = () => {
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
-  const [defaultValues, setDefaultValues] = useState({});
+  const [checkfield, setcheck]= useState(false)
   const { t } = useTranslation();
   const history = useHistory();
+
+  const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
+  const [errorInfo, setErrorInfo, clearError] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_ERROR_DATA", false);
+  const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
+
+  useEffect(() => {
+    setMutationHappened(false);
+    clearSuccessData();
+    clearError();
+  }, []);
 
   useEffect(() => {
     if (/^[6-9]\d{9}$/.test(mobileNumber)) {
@@ -24,21 +34,41 @@ const CreateEmployee = () => {
           setPhonecheck(true);
         }
       });
+    } else {
+      setPhonecheck(false);
     }
   }, [mobileNumber]);
+
+const defaultValues = {
+
+      Jurisdictions:
+        [{
+          id: undefined,
+          key: 1,
+          hierarchy: null,
+          boundaryType: null,
+           boundary: {
+            code: tenantId
+          },
+          roles: [],
+        }]
+      }
+
 
   const onFormValueChange = (setValue = true, formData) => {
     if (/^[6-9]\d{9}$/.test(formData?.SelectEmployeePhoneNumber?.mobileNumber)) {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
+    } else {
+      setPhonecheck(false);
     }
-    let setcheck = false;
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
+      console.log(key?.roles?.length)
       if (!(key?.boundary && key?.boundaryType && key?.hierarchy && key?.tenantId && key?.roles?.length > 0)) {
-        setcheck = false;
+        setcheck(false);
         break;
       } else {
-        setcheck = true;
+        setcheck(true);
       }
     }
 
@@ -57,7 +87,6 @@ const CreateEmployee = () => {
         setassigncheck = true;
       }
     }
-
     if (
       formData?.SelectDateofEmployment?.dateOfAppointment &&
       formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress &&
@@ -65,7 +94,7 @@ const CreateEmployee = () => {
       formData?.SelectEmployeeName?.employeeName &&
       formData?.SelectEmployeeType?.code &&
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
-      setcheck &&
+      checkfield &&
       setassigncheck &&
       phonecheck
     ) {
@@ -76,12 +105,14 @@ const CreateEmployee = () => {
   };
 
   const onSubmit = (data) => {
-    let roles = data.Jurisdictions.map((ele) => {
-      ele.roles["tenantId"] = ele.boundary;
-      return ele.roles;
+    let roles = data?.Jurisdictions?.map((ele) => {
+      return ele.roles?.map((item) => {
+        item["tenantId"] = ele.boundary;
+        return item;
+      });
     });
 
-    roles = [].concat.apply([], roles);
+    const mappedroles = [].concat.apply([], roles);
     let Employees = [
       {
         tenantId: tenantId,
@@ -98,7 +129,7 @@ const CreateEmployee = () => {
           emailId: data?.SelectEmployeeEmailId?.emailId ? data?.SelectEmployeeEmailId?.emailId : undefined,
           gender: data?.SelectEmployeeGender?.gender.code,
           dob: new Date(data?.SelectDateofBirthEmployment?.dob).getTime(),
-          roles: roles,
+          roles: mappedroles,
           tenantId: tenantId,
         },
         serviceHistory: [],
@@ -106,7 +137,7 @@ const CreateEmployee = () => {
         tests: [],
       },
     ];
-    history.push("/digit-ui/employee/hrms/response", { Employees, key: "CREATE", action: "CREATE" });
+    history.replace("/digit-ui/employee/hrms/response", { Employees, key: "CREATE", action: "CREATE" });
   };
 
   const config = newConfig;

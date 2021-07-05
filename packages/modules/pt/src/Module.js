@@ -33,6 +33,8 @@ import SelectDocuments from "./pageComponents/SelectDocuments";
 import UnOccupiedArea from "./pageComponents/UnOccupiedArea";
 import PTEmployeeOwnershipDetails from "./pageComponents/OwnerDetailsEmployee";
 import CitizenApp from "./pages/citizen";
+import SearchPropertyCitizen from "./pages/citizen/SearchProperty/searchProperty";
+import SearchResultCitizen from "./pages/citizen/SearchResults";
 
 import PropertyInformation from "./pages/citizen/MyProperties/propertyInformation";
 import PTWFCaption from "./pageComponents/PTWFCaption";
@@ -40,6 +42,15 @@ import PTWFReason from "./pageComponents/PTWFReason";
 import ProvideFloorNo from "./pageComponents/ProvideFloorNo";
 import propertyOwnerHistory from "./pages/citizen/MyProperties/propertyOwnerHistory";
 import TransferDetails from "./pages/citizen/MyProperties/propertyOwnerHistory";
+import TransfererDetails from "./pageComponents/Mutate/TransfererDetails";
+import OwnerMutate from "./pageComponents/Mutate/Owner";
+import PTComments from "./pageComponents/Mutate/Comments";
+import IsMutationPending from "./pageComponents/Mutate/IsMutationPending";
+import UnderStateAquire from "./pageComponents/Mutate/underStateAquire";
+import PropertyMarketValue from "./pageComponents/Mutate/PropertyMarketValue";
+import PTReasonForTransfer from "./pageComponents/Mutate/ReasonForTransfer";
+import PTRegistrationDocument from "./pageComponents/Mutate/RegistrationDocument";
+import TransferProof from "./pageComponents/Mutate/transferReasonDocument";
 
 import EmployeeApp from "./pages/employee";
 import PTCard from "./components/PTCard";
@@ -83,6 +94,17 @@ const componentsToRegister = {
   SelectAltContactNumber,
   SelectDocuments,
   PTEmployeeOwnershipDetails,
+  SearchPropertyCitizen,
+  SearchResultCitizen,
+  TransfererDetails,
+  OwnerMutate,
+  PTComments,
+  IsMutationPending,
+  PropertyMarketValue,
+  PTReasonForTransfer,
+  PTRegistrationDocument,
+  UnderStateAquire,
+  TransferProof,
 };
 
 const addComponentsToRegistry = () => {
@@ -135,6 +157,10 @@ export const PTLinks = ({ matchPath, userType }) => {
     {
       link: `${matchPath}/property/my-applications`,
       i18nKey: t("PT_MY_APPLICATION"),
+    },
+    {
+      link: `${matchPath}/property/property-mutation`,
+      i18nKey: t("PT_PROPERTY_MUTATION"),
     },
   ];
 

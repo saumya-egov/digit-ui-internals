@@ -25,7 +25,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         Cell: ({ row }) => {
           return (
             <span className="link">
-              <Link to={`/digit-ui/employee/hrms/details/${row.original.code}`}>{row.original.code}</Link>
+              <Link to={`/digit-ui/employee/hrms/details/${row.original.tenantId}/${row.original.code}`}>{row.original.code}</Link>
             </span>
           );
         },
@@ -44,7 +44,13 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
             <div className="tooltip">
               {" "}
               {GetCell(`${row.original?.user?.roles.length}`)}
-              <span className="tooltiptext">{row.original?.user?.roles.map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_${ele.code}`) + "\n")}</span>
+              <span className="tooltiptext" style={{whiteSpace: "nowrap"}}>
+                {row.original?.user?.roles.map((ele, index) => (
+                  <span>
+                    {`${index + 1}. ` + t(`ACCESSCONTROL_ROLES_ROLES_${ele.code}`)} <br />{" "}
+                  </span>
+                ))}
+              </span>
             </div>
           );
         },
@@ -64,10 +70,23 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         },
       },
       {
+        Header: t("HR_DEPT_LABEL"),
+        disableSortBy: true,
+        Cell: ({ row }) => {
+          return GetCell(
+            `${
+              t(
+                "COMMON_MASTERS_DEPARTMENT_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.department
+              ) || ""
+            }`
+          );
+        },
+      },
+      {
         Header: t("HR_STATUS_LABEL"),
         disableSortBy: true,
         Cell: ({ row }) => {
-          return GetSlaCell(`${row.original?.isActive ? "ACTIVE" : "INACTIVE"}`);
+          return GetSlaCell(`${row.original?.isActive ? t( "ACTIVE") :  t("INACTIVE")}`);
         },
       },
     ];
@@ -80,7 +99,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
     result = (
       <Card style={{ marginTop: 20 }}>
         {/* TODO Change localization key */}
-        {t("CS_MYAPPLICATIONS_NO_APPLICATION")
+        {t("COMMON_TABLE_NO_RECORD_FOUND")
           .split("\\n")
           .map((text, index) => (
             <p key={index} style={{ textAlign: "center" }}>
@@ -98,9 +117,10 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         getCellProps={(cellInfo) => {
           return {
             style: {
-              maxWidth: cellInfo.column.Header === t("HR_EMP_ID_LABEL") ? "140px" : "",
+              maxWidth: cellInfo.column.Header == t("HR_EMP_ID_LABEL") ? "150px" : "",
               padding: "20px 18px",
               fontSize: "16px",
+              minWidth: "150px",
             },
           };
         }}

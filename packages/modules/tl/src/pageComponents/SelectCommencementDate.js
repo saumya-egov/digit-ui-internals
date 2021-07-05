@@ -4,6 +4,7 @@ import { FormStep, RadioOrSelect, RadioButtons } from "@egovernments/digit-ui-re
 
 const SelectCommencementDate = ({ t, config, onSelect, userType, formData }) => {
   const [CommencementDate, setCommencementDate] = useState(formData?.TradeDetails?.CommencementDate);
+  const isEdit = window.location.href.includes("/edit-application/");
   /* const menu = [
     { i18nKey: "MOTOR_DRIVEN", code: "motor" },
     { i18nKey: "HAND_PULLED", code: "hand" },
@@ -24,7 +25,7 @@ const SelectCommencementDate = ({ t, config, onSelect, userType, formData }) => 
   return (
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!CommencementDate}>
       <CardLabel>{t("TL_NEW_TRADE_DETAILS_TRADE_COMM_DATE_LABEL")}</CardLabel>
-      <DatePicker date={CommencementDate} name="CommencementDate" onChange={selectCommencementDate} />
+      <DatePicker date={CommencementDate} name="CommencementDate" onChange={selectCommencementDate} disabled={isEdit} />
     </FormStep>
   );
 };

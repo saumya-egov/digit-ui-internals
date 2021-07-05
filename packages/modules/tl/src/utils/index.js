@@ -1,3 +1,7 @@
+import get from "lodash/get";
+import set from "lodash/set";
+
+
 /*   method to check not null  if not returns false*/
 export const checkForNotNull = (value = "") => {
   return value && value != null && value != undefined && value != "" ? true : false;
@@ -96,420 +100,6 @@ export const setAddressDetails = (data) => {
   return data;
 };
 
-export const setOwnerDetails = (data) => {
-  const { address, owners } = data;
-  let institution = {},
-    owner = [];
-  if (owners && owners.length > 0) {
-    if (data?.ownershipCategory?.value === "INSTITUTIONALPRIVATE" || data?.ownershipCategory?.value === "INSTITUTIONALGOVERNMENT") {
-      institution.designation = owners[0]?.designation;
-      institution.name = owners[0]?.inistitutionName;
-      institution.nameOfAuthorizedPerson = owners[0]?.name;
-      institution.tenantId = address?.city?.code;
-      institution.type = owners[0]?.inistitutetype?.value;
-      let document = [];
-      if (owners[0]?.documents["proofIdentity"]?.fileStoreId) {
-        document.push({
-          fileStoreId: owners[0]?.documents["proofIdentity"]?.fileStoreId || "",
-          documentType: owners[0]?.documents["proofIdentity"]?.documentType?.code || "",
-        });
-      }
-      owner.push({
-        altContactNumber: owners[0]?.altContactNumber,
-        correspondenceAddress: owners[0]?.permanentAddress,
-        designation: owners[0]?.designation,
-        emailId: owners[0]?.emailId,
-        isCorrespondenceAddress: owners[0]?.isCorrespondenceAddress,
-        mobileNumber: owners[0]?.mobileNumber,
-        name: owners[0]?.name,
-        ownerType: owners[0]?.ownerType?.code || "NONE",
-        documents: document,
-      });
-      data.institution = institution;
-      data.owners = owner;
-    } else {
-      owners.map((ownr) => {
-        let document = [];
-        if (ownr?.ownerType?.code != "NONE") {
-          document.push({
-            fileStoreId: ownr?.documents["specialProofIdentity"]?.fileStoreId || "",
-            documentType: ownr?.documents["specialProofIdentity"]?.documentType?.code || "",
-          });
-        }
-        if (ownr?.documents["proofIdentity"]?.fileStoreId) {
-          document.push({
-            fileStoreId: ownr?.documents["proofIdentity"]?.fileStoreId || "",
-            documentType: ownr?.documents["proofIdentity"]?.documentType?.code || "",
-          });
-        }
-        owner.push({
-          emailId: ownr?.emailId,
-          fatherOrHusbandName: ownr?.fatherOrHusbandName,
-          gender: ownr?.gender?.value,
-          isCorrespondenceAddress: ownr?.isCorrespondenceAddress,
-          mobileNumber: ownr?.mobileNumber,
-          name: ownr?.name,
-          ownerType: ownr?.ownerType?.code || "NONE",
-          permanentAddress: ownr?.permanentAddress,
-          relationship: ownr?.relationship?.code,
-          documents: document,
-        });
-      });
-      data.owners = owner;
-    }
-  }
-  return data;
-};
-
-export const setDocumentDetails = (data) => {
-  const { address, owners } = data;
-  let documents = [];
-  if (address?.documents["ProofOfAddress"]?.id) {
-    documents.push({
-      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
-      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
-      id: address?.documents["ProofOfAddress"]?.id || "",
-      status: address?.documents["ProofOfAddress"]?.status || "",
-    });
-  } else {
-    documents.push({
-      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
-      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
-    });
-  }
-
-  owners &&
-    owners.length > 0 &&
-    owners.map((owner) => {
-      if (owner.documents && owner.documents["proofIdentity"]) {
-        if (owner?.documents["proofIdentity"]?.id) {
-          documents.push({
-            fileStoreId: owner?.documents["proofIdentity"].fileStoreId || "",
-            documentType: owner?.documents["proofIdentity"].documentType?.code || "",
-            id: owner?.documents["proofIdentity"]?.id || "",
-            status: owner?.documents["proofIdentity"]?.status || "",
-          });
-        } else {
-          documents.push({
-            fileStoreId: owner?.documents["proofIdentity"].fileStoreId || "",
-            documentType: owner?.documents["proofIdentity"].documentType?.code || "",
-          });
-        }
-      }
-      if (owner.documents && owner.documents["specialProofIdentity"]) {
-        if (owner?.documents["specialProofIdentity"]?.id) {
-          documents.push({
-            fileStoreId: owner?.documents["specialProofIdentity"]?.fileStoreId || "",
-            documentType: owner?.documents["specialProofIdentity"]?.documentType?.code || "",
-            id: owner?.documents["specialProofIdentity"]?.id || "",
-            status: owner?.documents["specialProofIdentity"]?.status || "",
-          });
-        } else {
-          documents.push({
-            fileStoreId: owner?.documents["specialProofIdentity"]?.fileStoreId || "",
-            documentType: owner?.documents["specialProofIdentity"]?.documentType?.code || "",
-          });
-        }
-      }
-    });
-  data.documents = documents;
-  return data;
-};
-
-const getUsageType = (data) => {
-  if (data?.isResdential?.code == "RESIDENTIAL") {
-    return data?.isResdential?.code;
-  } else {
-    return data?.usageCategoryMajor?.code;
-  }
-};
-
-const getFloorNumber = (data) => {
-  let floorcode = data?.Floorno?.i18nKey;
-  if (floorcode.charAt(floorcode.length - 3) === "_" && floorcode.charAt(floorcode.length - 2) === "_") {
-    return "-" + floorcode.charAt(floorcode.length - 1);
-  } else {
-    if (floorcode.charAt(floorcode.length - 2) !== "_") {
-      return floorcode.charAt(floorcode.length - 2) + floorcode.charAt(floorcode.length - 1);
-    } else {
-      return floorcode.charAt(floorcode.length - 1);
-    }
-  }
-};
-
-export const getSuperBuiltUparea = (data) => {
-  let builtUpArea;
-  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
-    builtUpArea = parseInt(data?.floordetails?.builtUpArea);
-  } else {
-    if (data?.selfOccupied?.i18nKey === "PT_PARTIALLY_RENTED_OUT") {
-      builtUpArea = parseInt(data?.landarea?.floorarea) + parseInt(data?.Constructiondetails?.RentArea);
-    } else {
-      builtUpArea = parseInt(data?.Constructiondetails?.RentArea);
-    }
-    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
-      builtUpArea = builtUpArea + parseInt(data?.UnOccupiedArea?.UnOccupiedArea);
-    }
-  }
-  return builtUpArea;
-};
-
-export const getnumberoffloors = (data) => {
-  let unitlenght = data?.units?.length;
-  if (data?.noOofBasements?.i18nKey === "PT_ONE_BASEMENT_OPTION") {
-    return parseInt(unitlenght) + 1;
-  } else if (data?.noOofBasements?.i18nKey === "PT_TWO_BASEMENT_OPTION") {
-    return parseInt(unitlenght) + 2;
-  }
-  return parseInt(unitlenght);
-};
-
-export const getusageCategory = (data, i) => {
-  if (data?.isResdential?.i18nKey === "PT_COMMON_YES") {
-    return data?.isResdential?.code;
-  } else if (data?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS") {
-    return data?.isResdential?.code;
-  } else {
-    if (data?.PropertyType?.code?.includes("INDEPENDENTPROPERTY")) {
-      if (data?.units[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
-        return data?.units[i]?.subuagecode;
-      } else {
-        return data?.units[i]?.Subusagetypeofrentedareacode;
-      }
-    } else {
-      if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED") {
-        return data?.subusagetype?.subuagecode;
-      } else {
-        return data?.Subusagetypeofrentedarea?.Subusagetypeofrentedareacode;
-      }
-    }
-  }
-};
-
-export const getunits = (data) => {
-  let unit = [];
-  if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
-    unit.push({
-      occupancyType: data?.selfOccupied?.code,
-      floorNo: getFloorNumber(data),
-      constructionDetail: {
-        builtUpArea: parseInt(data?.floordetails?.builtUpArea) - parseInt(data?.UnOccupiedArea?.UnOccupiedArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data),
-    });
-    unit.push({
-      occupancyType: data?.IsAnyPartOfThisFloorUnOccupied?.code,
-      floorNo: getFloorNumber(data),
-      constructionDetail: {
-        builtUpArea: parseInt(data?.UnOccupiedArea?.UnOccupiedArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data),
-    });
-  } else if (data?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" && data?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "PT_COMMON_YES") {
-    unit.push({
-      occupancyType: data?.selfOccupied?.code,
-      floorNo: getFloorNumber(data),
-      constructionDetail: {
-        builtUpArea: parseInt(data?.floordetails?.builtUpArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data),
-    });
-  } else {
-    if (data?.selfOccupied?.i18nKey === "PT_PARTIALLY_RENTED_OUT") {
-      unit.push({
-        occupancyType: "SELFOCCUPIED",
-        floorNo: getFloorNumber(data),
-        constructionDetail: {
-          builtUpArea: parseInt(data?.landarea?.floorarea),
-        },
-        tenantId: data.tenantId,
-        usageCategory:
-          data?.isResdential?.i18nKey === "PT_COMMON_YES" || data?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS"
-            ? data?.isResdential?.code
-            : data?.subusagetype?.subuagecode,
-      });
-    }
-    unit.push({
-      occupancyType: data?.selfOccupied?.code,
-      arv: data?.Constructiondetails?.AnnualRent,
-      floorNo: getFloorNumber(data),
-      constructionDetail: {
-        builtUpArea: parseInt(data?.Constructiondetails?.RentArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data),
-    });
-    if (data?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
-      unit.push({
-        occupancyType: data?.IsAnyPartOfThisFloorUnOccupied?.code,
-        floorNo: getFloorNumber(data),
-        constructionDetail: {
-          builtUpArea: parseInt(data?.UnOccupiedArea?.UnOccupiedArea),
-        },
-        tenantId: data.tenantId,
-        usageCategory: getusageCategory(data),
-      });
-    }
-  }
-  data?.extraunitFPB ? (unit = unit.concat(data?.extraunitFPB)) : "";
-  return unit;
-};
-
-export const getunitarray = (i, unitsdata, unit, data) => {
-  if (unitsdata[i].active === true) {
-    unit.push(unitsdata[i]);
-  } else if (
-    unitsdata[i].selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
-    unitsdata[i].IsAnyPartOfThisFloorUnOccupied?.i18nKey === "PT_COMMON_YES"
-  ) {
-    unit.push({
-      occupancyType: unitsdata[i].selfOccupied?.code,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
-      constructionDetail: {
-        builtUpArea: parseInt(unitsdata[i].builtUpArea) - parseInt(unitsdata[i].UnOccupiedArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data, i),
-    });
-    unit.push({
-      occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
-      constructionDetail: {
-        builtUpArea: parseInt(unitsdata[i]?.UnOccupiedArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data, i),
-    });
-  } else if (
-    unitsdata[i]?.selfOccupied?.i18nKey === "PT_YES_IT_IS_SELFOCCUPIED" &&
-    unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey !== "PT_COMMON_YES"
-  ) {
-    unit.push({
-      occupancyType: unitsdata[i].selfOccupied?.code,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
-      constructionDetail: {
-        builtUpArea: parseInt(unitsdata[i]?.builtUpArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data, i),
-    });
-  } else {
-    if (unitsdata[i]?.selfOccupied?.i18nKey === "PT_PARTIALLY_RENTED_OUT") {
-      unit.push({
-        occupancyType: "SELFOCCUPIED",
-        floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
-        constructionDetail: {
-          builtUpArea: parseInt(unitsdata[i]?.floorarea),
-        },
-        tenantId: data.tenantId,
-        usageCategory:
-          data?.isResdential?.i18nKey === "PT_COMMON_YES" || data?.usageCategoryMajor?.code === "NONRESIDENTIAL.OTHERS"
-            ? data?.isResdential?.code
-            : unitsdata[i].subuagecode,
-      });
-    }
-    unit.push({
-      occupancyType: unitsdata[i].selfOccupied?.code,
-      arv: unitsdata[i].AnnualRent,
-      floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
-      constructionDetail: {
-        builtUpArea: parseInt(unitsdata[i]?.RentArea),
-      },
-      tenantId: data.tenantId,
-      usageCategory: getusageCategory(data, i),
-    });
-    if (unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied.i18nKey === "PT_COMMON_YES") {
-      unit.push({
-        occupancyType: unitsdata[i]?.IsAnyPartOfThisFloorUnOccupied?.code,
-        floorNo: i === "-1" ? "-1" : i === "-2" ? "-2" : i,
-        constructionDetail: {
-          builtUpArea: parseInt(unitsdata[i]?.UnOccupiedArea),
-        },
-        tenantId: data.tenantId,
-        usageCategory: getusageCategory(data, i),
-      });
-    }
-  }
-  return unit;
-};
-
-export const getunitsindependent = (data) => {
-  let unit = [];
-  let unitsdata = [];
-  unitsdata = data?.units;
-
-  let i;
-  for (i = 0; i < unitsdata.length && unitsdata.length > 0; i++) {
-    unit = getunitarray(i, unitsdata, unit, data);
-  }
-  if (isthere1Basement(data?.noOofBasements?.i18nKey) || isthere2Basement(data?.noOofBasements?.i18nKey)) {
-    unit = getunitarray("-1", unitsdata, unit, data);
-  }
-  if (isthere2Basement(data?.noOofBasements?.i18nKey)) {
-    unit = getunitarray("-2", unitsdata, unit, data);
-  }
-  return unit;
-};
-
-export const setPropertyDetails = (data) => {
-  let unitleghtvalue = getnumberoffloors(data);
-  let propertyDetails = {};
-  if (data?.PropertyType?.code?.includes("VACANT")) {
-    propertyDetails = {
-      units: [],
-      landArea: parseInt(data?.landarea?.floorarea),
-      propertyType: data?.PropertyType?.code,
-      noOfFloors: 0,
-      usageCategory: getUsageType(data),
-    };
-  } else if (data?.PropertyType?.code?.includes("SHAREDPROPERTY")) {
-    /*  update this case tulika*/
-    propertyDetails = {
-      units: getunits(data),
-      landArea: data?.floordetails?.plotSize,
-      propertyType: data?.PropertyType?.code,
-      noOfFloors: 1,
-      superBuiltUpArea: getSuperBuiltUparea(data),
-      usageCategory: getUsageType(data),
-    };
-  } else if (data?.PropertyType?.code?.includes("INDEPENDENTPROPERTY")) {
-    /*  update this case tulika*/
-    let unitleghtvalue = getnumberoffloors(data);
-    propertyDetails = {
-      units: getunitsindependent(data),
-      landArea: data?.units[0]?.plotSize,
-      propertyType: data?.PropertyType?.code,
-      noOfFloors: unitleghtvalue,
-      superBuiltUpArea: null,
-      usageCategory: getUsageType(data),
-    };
-  } else {
-    propertyDetails = {
-      units: [
-        {
-          occupancyType: "SELFOCCUPIED",
-          floorNo: "0",
-          constructionDetail: {
-            builtUpArea: 16.67,
-          },
-          tenantId: data.tenantId,
-          usageCategory: "RESIDENTIAL",
-        },
-      ],
-      landArea: "2000",
-      propertyType: data?.PropertyType?.code,
-      noOfFloors: 1,
-      superBuiltUpArea: 16.67,
-      usageCategory: getUsageType(data),
-    };
-  }
-
-  data.propertyDetails = propertyDetails;
-  return data;
-};
 
 export const getownerarray = (data) => {
   let ownerarray = [];
@@ -527,12 +117,76 @@ export const getownerarray = (data) => {
   return ownerarray;
 };
 
+export const gettradeownerarray = (data) => {
+  let tradeownerarray = [];
+  
+  data?.owners?.owners.map((ob,index) => {
+    if(data?.tradeLicenseDetail?.owners[index])
+    {
+      if(ob.name !== data?.tradeLicenseDetail?.owners[index].name)
+      {
+        data.tradeLicenseDetail.owners[index].name = ob.name;
+        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
+      }
+      else if(ob.gender.code !==data?.tradeLicenseDetail?.owners[index].gender)
+      {
+        data.tradeLicenseDetail.owners[index].gender = ob.gender.code;
+        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
+      }
+      else if(ob.mobilenumber !== data?.tradeLicenseDetail?.owners[index].mobileNumber)
+      {
+        data.tradeLicenseDetail.owners[index].mobileNumber = ob.mobilenumber;
+        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
+      }
+      else
+      {
+        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
+      }
+    }
+    else
+    {
+      tradeownerarray.push({
+        mobileNumber: ob.mobilenumber,
+        name: ob.name,
+        fatherOrHusbandName: "",
+        relationship: "",
+        dob: null,
+        gender: ob.gender.code,
+        permanentAddress: data?.owners?.permanentAddress,
+      });
+    }
+  })
+  return tradeownerarray;
+}
+
 export const gettradeunits = (data) => {
   let tradeunits = [];
   data?.TradeDetails?.units.map((ob) => {
-    tradeunits.push({ tradeType: ob.tradesubtype.code, uom: null, uomValue: null });
+    tradeunits.push({ tradeType: ob.tradesubtype.code, uom: ob.unit, uomValue: ob.uom });
   });
   return tradeunits;
+};
+
+export const gettradeupdateunits = (data) => {
+let TLunits=[];
+data?.TradeDetails?.units.map((ob,index) => {
+  if(data.tradeLicenseDetail.tradeUnits[index]){
+    if(ob.tradesubtype.code !== data.tradeLicenseDetail.tradeUnits[index].tradeType)
+    {
+      data.tradeLicenseDetail.tradeUnits[index].tradeType = ob.tradesubtype.code;
+      TLunits.push(data.tradeLicenseDetail.tradeUnits[index]);
+    }
+    else
+    {
+      TLunits.push(data.tradeLicenseDetail.tradeUnits[index]);
+    }
+  }
+  else
+  {
+      TLunits.push({ tradeType: ob.tradesubtype.code, uom: ob.unit, uomValue: ob.uom });
+  }
+})
+return TLunits;
 };
 
 export const getaccessories = (data) => {
@@ -543,15 +197,38 @@ export const getaccessories = (data) => {
   return tradeaccessories;
 };
 
+export const gettradeupdateaccessories = (data) => {
+  let TLaccessories = [];
+  data?.TradeDetails?.accessories.map((ob,index) => {
+  if(data.tradeLicenseDetail.accessories[index]){
+    if(ob.accessory.code !== data.tradeLicenseDetail.accessories[index].accessoryCategory)
+    {
+      data.tradeLicenseDetail.accessories[index].accessoryCategory = ob.accessory.code;
+      data.push(data.tradeLicenseDetail.accessories[index]);
+    }
+    else
+    {
+      TLaccessories.push(data.tradeLicenseDetail.accessories[index]);
+    }
+  }
+  else
+  {
+    TLaccessories.push({ uom: ob.unit, accessoryCategory: ob.accessory.code, uomValue: ob.uom, count: ob.accessorycount });
+  }
+  })
+  return TLaccessories;
+}
+
 export const convertToTrade = (data = {}) => {
   console.info("tradeformdata", data);
+  let Financialyear = sessionStorage.getItem("CurrentFinancialYear");
   const formdata = {
     Licenses: [
       {
         action: "INITIATE",
         applicationType: "NEW",
         commencementDate: Date.parse(data?.TradeDetails?.CommencementDate),
-        financialYear: "2020-21",
+        financialYear: Financialyear ? Financialyear : "2021-22",
         licenseType: "PERMANENT",
         tenantId: data?.address?.city?.code,
         tradeLicenseDetail: {
@@ -561,6 +238,10 @@ export const convertToTrade = (data = {}) => {
               code: data?.address?.locality?.code,
             },
             tenantId: data?.tenantId,
+            pincode: data?.address?.pincode,
+            doorNo: data?.address?.doorNo,
+            street: data?.address?.street,
+            landmark: data?.address?.landmark,
           },
           applicationDocuments: null,
           accessories: data?.TradeDetails?.accessories ? getaccessories(data) : null,
@@ -584,6 +265,7 @@ export const convertToTrade = (data = {}) => {
         },
         tradeName: data?.TradeDetails?.TradeName,
         wfDocuments: [],
+        applicationDocuments: [],
         workflowCode: "NewTL",
       },
     ],
@@ -593,178 +275,328 @@ export const convertToTrade = (data = {}) => {
   return formdata;
 };
 
-export const setUpdateOwnerDetails = (data = []) => {
-  const { institution, owners } = data;
-  if (data?.ownershipCategory?.value === "INSTITUTIONALPRIVATE" || data?.ownershipCategory?.value === "INSTITUTIONALGOVERNMENT") {
-    if (data?.ownershipCategory?.value === "INSTITUTIONALPRIVATE" || data?.ownershipCategory?.value === "INSTITUTIONALGOVERNMENT") {
-      institution.designation = owners[0]?.designation;
-      institution.name = owners[0]?.inistitutionName;
-      institution.nameOfAuthorizedPerson = owners[0]?.name;
-      institution.tenantId = data?.address?.city?.code;
-      institution.type = owners[0]?.inistitutetype?.value;
-      let document = [];
-      if (owners[0]?.documents["proofIdentity"]?.fileStoreId && owners[0].documents["proofIdentity"].id) {
-        document.push({
-          fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
-          documentType: owners[0].documents["proofIdentity"].documentType?.code || "",
-          id: owners[0].documents["proofIdentity"].id || "",
-          status: owners[0].documents["proofIdentity"].status || "",
-        });
-      } else {
-        document.push({
-          fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
-          documentType: owners[0].documents["proofIdentity"].documentType?.code || "",
-        });
-      }
-      data.owners.forEach((owner) => {
-        owner.altContactNumber = owners[0]?.altContactNumber;
-        owner.correspondenceAddress = owners[0]?.permanentAddress;
-        owner.designation = owners[0]?.designation;
-        owner.emailId = owners[0]?.emailId;
-        owner.isCorrespondenceAddress = owners[0]?.isCorrespondenceAddress;
-        owner.mobileNumber = owners[0]?.mobileNumber;
-        owner.name = owners[0]?.name;
-        owner.ownerType = owners[0]?.ownerType?.code || "NONE";
-        owner.documents = document;
-      });
-      data.institution = institution;
+export const getwfdocuments = (data) => {
+  let wfdoc = [];
+  let doc = data ? data.owners.documents : [];
+  doc["OwnerPhotoProof"] && wfdoc.push({
+    fileName:doc["OwnerPhotoProof"].name,
+    fileStoreId:doc["OwnerPhotoProof"].fileStoreId,
+    documentType:"OWNERPHOTO",
+    tenantId:data?.tenantId,
+  });
+  doc["ProofOfIdentity"] && wfdoc.push({
+    fileName:doc["ProofOfIdentity"].name,
+    fileStoreId:doc["ProofOfIdentity"].fileStoreId,
+    documentType:"OWNERIDPROOF",
+    tenantId:data?.tenantId,
+  });
+  doc["ProofOfOwnership"] && wfdoc.push({
+    fileName:doc["ProofOfOwnership"].name,
+    fileStoreId:doc["ProofOfOwnership"].fileStoreId,
+    documentType:"OWNERSHIPPROOF",
+    tenantId:data?.tenantId,
+  });
+  return wfdoc;
+}
+
+export const convertToUpdateTrade = (data = {},datafromflow, tenantId) => {
+  //datafromflow = JSON.parse(sessionStorage.getItem("TL-CREATE-FORMDATA"));
+  console.log("data from create",data);
+  console.log("datafromflow",datafromflow);
+  let formdata1 = {
+    Licenses: [
+    ]
+  }
+  formdata1.Licenses[0] = {...data.Licenses[0],
+  }
+  formdata1.Licenses[0].action = "APPLY";
+  formdata1.Licenses[0].wfDocuments =  formdata1.Licenses[0].wfDocuments ? formdata1.Licenses[0].wfDocuments : getwfdocuments(datafromflow),
+  formdata1.Licenses[0].tradeLicenseDetail.applicationDocuments = formdata1.Licenses[0].tradeLicenseDetail.applicationDocuments?formdata1.Licenses[0].tradeLicenseDetail.applicationDocuments : getwfdocuments(datafromflow),
+  // let wfdoc = [];
+  // let doc = datafromflow ? datafromflow.owners.documents : [];
+  // doc && wfdoc.push({
+  //   fileName:doc["OwnerPhotoProof"].name,
+  //   fileStoreId:doc["OwnerPhotoProof"].fileStoreId,
+  //   documentType:"OWNERPHOTO",
+  //   tenantId:data.Licenses[0].tenantId,
+  // });
+  // doc && wfdoc.push({
+  //   fileName:doc["ProofOfIdentity"].name,
+  //   fileStoreId:doc["ProofOfIdentity"].fileStoreId,
+  //   documentType:"OWNERIDPROOF",
+  //   tenantId:data.Licenses[0].tenantId,
+  // });
+  // doc && wfdoc.push({
+  //   fileName:doc["ProofOfOwnership"].name,
+  //   fileStoreId:doc["ProofOfOwnership"].fileStoreId,
+  //   documentType:"OWNERSHIPPROOF",
+  //   tenantId:data.Licenses[0].tenantId,
+  // });
+  // formdata1.wfDocuments = wfdoc;
+  console.info("formdata1",formdata1);
+  return formdata1;
+}
+
+export const getvalidfromdate = (date,fy) => {
+  let temp=parseInt(fy[0].id);
+  let object;
+  fy && fy.map((ob) => {
+    if(parseInt(ob.id)>temp)
+    {
+      object=ob;
+      temp=parseInt(ob.id);
     }
-  } else {
-    data.owners.forEach((owner) => {
-      let document = [];
-      if (owner?.ownerType?.code != "NONE") {
-        if (owner.documents["specialProofIdentity"].id) {
-          document.push({
-            fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: owner.documents["specialProofIdentity"].documentType?.code || "",
-            id: owner.documents["specialProofIdentity"].id || "",
-            status: owner.documents["specialProofIdentity"].status || "",
-          });
-        } else {
-          document.push({
-            fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
-            documentType: owner.documents["specialProofIdentity"].documentType?.code || "",
-          });
-        }
+  })
+  return object;
+}
+
+export const getvalidTodate = (date,fy) => {
+
+  let temp=parseInt(fy[0].id);
+  let object;
+  fy && fy.map((ob) => {
+    if(parseInt(ob.id)>temp)
+    {
+      object=ob;
+      temp=parseInt(ob.id);
+    }
+  })
+  return object;
+}
+
+export const stringToBoolean = (value) => {
+
+  if(value){
+  switch(value.toLowerCase().trim())
+  {
+    case "true": case "yes": case "1": return true;
+    case "false" : case "no" : case "0": case null: return false;
+    default: return Boolean(value);
+  }
+}
+else
+{
+  return Boolean(value);
+}
+}
+
+export const convertToEditTrade = (data,fy=[]) => {
+  console.log("dataforedit",data);
+  let isDirectrenewal = stringToBoolean(sessionStorage.getItem("isDirectRenewal"));
+  let formdata = {
+    Licenses:[
+      { 
+        id:data?.id,
+        tenantId:data?.tenantId,
+        businessService:data?.businessService,
+        licenseType:data?.licenseType,
+        applicationType:"RENEWAL",
+        workflowCode:isDirectrenewal?"DIRECTRENEWAL":"EDITRENEWAL",
+        licenseNumber:data?.licenseNumber,
+        applicationNumber:data?.applicationNumber,
+        tradeName:data?.tradeName,
+        applicationDate:data?.applicationDate,
+        commencementDate:data?.commencementDate,
+        issuedDate:data?.issuedDate,
+        financialYear:getvalidfromdate(data?.validFrom,fy)?getvalidfromdate(data?.validFrom,fy).finYearRange:"2020-21",
+        validFrom:getvalidfromdate(data?.validFrom,fy)?getvalidfromdate(data?.validFrom,fy).startingDate:"",
+        validTo:getvalidTodate(data?.validTo,fy)?getvalidTodate(data?.validTo,fy).endingDate:"",
+        action:"INITIATE",
+        wfDocuments:data?.wfDocuments,
+        status:data?.status,
+        tradeLicenseDetail: {
+          address: data.tradeLicenseDetail.address,
+          applicationDocuments: data.tradeLicenseDetail.applicationDocuments,
+          //accessories: data?.TradeDetails?.accessories ? getaccessories(data) : null,
+          accessories: isDirectrenewal? data.tradeLicenseDetail.accessories : gettradeupdateaccessories(data),
+          //owners: getownerarray(data),
+          owners: isDirectrenewal? data.tradeLicenseDetail.owners :gettradeownerarray(data),
+          structureType: isDirectrenewal? data.tradeLicenseDetail.structureType : (data?.TradeDetails?.VehicleType ? data?.TradeDetails?.VehicleType.code : data?.TradeDetails?.BuildingType.code),
+          subOwnerShipCategory: data?.ownershipCategory?.code,
+          //tradeUnits: gettradeunits(data),
+          tradeUnits: gettradeupdateunits(data),
+        },
+        calculation:null,
+        auditDetails:data?.auditDetails,    
       }
-      if (owner?.documents["proofIdentity"]?.fileStoreId) {
-        if (owner.documents["proofIdentity"].id) {
-          document.push({
-            fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
-            documentType: owner.documents["proofIdentity"].documentType?.code || "",
-            id: owner.documents["proofIdentity"].id || "",
-            status: owner.documents["proofIdentity"].status || "",
-          });
-        } else {
-          document.push({
-            fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
-            documentType: owner.documents["proofIdentity"].documentType?.code || "",
-          });
-        }
-      }
-      owner.gender = owner?.gender?.code;
-      owner.ownerType = owner?.ownerType?.code;
-      owner.relationship = owner?.relationship?.code;
-      owner.documents = document;
-    });
+    ]
   }
-  return data;
-};
-export const setUpdatedDocumentDetails = (data) => {
-  const { address, owners } = data;
-  let documents = [];
-  if (address?.documents["ProofOfAddress"]?.id) {
-    documents.push({
-      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
-      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
-      id: address?.documents["ProofOfAddress"]?.id || "",
-      status: address?.documents["ProofOfAddress"]?.status || "",
-    });
-  } else {
-    documents.push({
-      fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
-      documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
-    });
-  }
+  console.log("formdata",formdata);
+  return formdata;
+}
 
-  owners &&
-    owners.length > 0 &&
-    owners.map((owner) => {
-      owner.documents.map((document) => {
-        documents.push(document);
-      });
-    });
-  data.documents = documents;
-  return data;
-};
-export const convertToUpdateProperty = (data = {}) => {
-  console.info("propertyFormData", data);
-  let isResdential = data.isResdential;
-  let propertyType = data.PropertyType;
-  let selfOccupied = data.selfOccupied;
-  let Subusagetypeofrentedarea = data.Subusagetypeofrentedarea || null;
-  let subusagetype = data.subusagetype || null;
-  let IsAnyPartOfThisFloorUnOccupied = data.IsAnyPartOfThisFloorUnOccupied || null;
-  let builtUpArea = data?.floordetails?.builtUpArea || null;
-  let noOfFloors = data?.noOfFloors;
-  let noOofBasements = data?.noOofBasements;
-  let unit = data?.units;
-  let basement1 = Array.isArray(data?.units) && data?.units["-1"] ? data?.units["-1"] : null;
-  let basement2 = Array.isArray(data?.units) && data?.units["-2"] ? data?.units["-2"] : null;
-  data = setAddressDetails(data);
-  data = setUpdateOwnerDetails(data);
-  data = setUpdatedDocumentDetails(data);
-  data = setPropertyDetails(data);
+// export const setUpdateOwnerDetails = (data = []) => {
+//   const { institution, owners } = data;
+//   if (data?.ownershipCategory?.value === "INSTITUTIONALPRIVATE" || data?.ownershipCategory?.value === "INSTITUTIONALGOVERNMENT") {
+//     if (data?.ownershipCategory?.value === "INSTITUTIONALPRIVATE" || data?.ownershipCategory?.value === "INSTITUTIONALGOVERNMENT") {
+//       institution.designation = owners[0]?.designation;
+//       institution.name = owners[0]?.inistitutionName;
+//       institution.nameOfAuthorizedPerson = owners[0]?.name;
+//       institution.tenantId = data?.address?.city?.code;
+//       institution.type = owners[0]?.inistitutetype?.value;
+//       let document = [];
+//       if (owners[0]?.documents["proofIdentity"]?.fileStoreId && owners[0].documents["proofIdentity"].id) {
+//         document.push({
+//           fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
+//           documentType: owners[0].documents["proofIdentity"].documentType?.code || "",
+//           id: owners[0].documents["proofIdentity"].id || "",
+//           status: owners[0].documents["proofIdentity"].status || "",
+//         });
+//       } else {
+//         document.push({
+//           fileStoreId: owners[0].documents["proofIdentity"].fileStoreId || "",
+//           documentType: owners[0].documents["proofIdentity"].documentType?.code || "",
+//         });
+//       }
+//       data.owners.forEach((owner) => {
+//         owner.altContactNumber = owners[0]?.altContactNumber;
+//         owner.correspondenceAddress = owners[0]?.permanentAddress;
+//         owner.designation = owners[0]?.designation;
+//         owner.emailId = owners[0]?.emailId;
+//         owner.isCorrespondenceAddress = owners[0]?.isCorrespondenceAddress;
+//         owner.mobileNumber = owners[0]?.mobileNumber;
+//         owner.name = owners[0]?.name;
+//         owner.ownerType = owners[0]?.ownerType?.code || "NONE";
+//         owner.documents = document;
+//       });
+//       data.institution = institution;
+//     }
+//   } else {
+//     data.owners.forEach((owner) => {
+//       let document = [];
+//       if (owner?.ownerType?.code != "NONE") {
+//         if (owner.documents["specialProofIdentity"].id) {
+//           document.push({
+//             fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
+//             documentType: owner.documents["specialProofIdentity"].documentType?.code || "",
+//             id: owner.documents["specialProofIdentity"].id || "",
+//             status: owner.documents["specialProofIdentity"].status || "",
+//           });
+//         } else {
+//           document.push({
+//             fileStoreId: owner.documents["specialProofIdentity"].fileStoreId || "",
+//             documentType: owner.documents["specialProofIdentity"].documentType?.code || "",
+//           });
+//         }
+//       }
+//       if (owner?.documents["proofIdentity"]?.fileStoreId) {
+//         if (owner.documents["proofIdentity"].id) {
+//           document.push({
+//             fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
+//             documentType: owner.documents["proofIdentity"].documentType?.code || "",
+//             id: owner.documents["proofIdentity"].id || "",
+//             status: owner.documents["proofIdentity"].status || "",
+//           });
+//         } else {
+//           document.push({
+//             fileStoreId: owner.documents["proofIdentity"].fileStoreId || "",
+//             documentType: owner.documents["proofIdentity"].documentType?.code || "",
+//           });
+//         }
+//       }
+//       owner.gender = owner?.gender?.code;
+//       owner.ownerType = owner?.ownerType?.code;
+//       owner.relationship = owner?.relationship?.code;
+//       owner.documents = document;
+//     });
+//   }
+//   return data;
+// };
+// export const setUpdatedDocumentDetails = (data) => {
+//   const { address, owners } = data;
+//   let documents = [];
+//   if (address?.documents["ProofOfAddress"]?.id) {
+//     documents.push({
+//       fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
+//       documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
+//       id: address?.documents["ProofOfAddress"]?.id || "",
+//       status: address?.documents["ProofOfAddress"]?.status || "",
+//     });
+//   } else {
+//     documents.push({
+//       fileStoreId: address?.documents["ProofOfAddress"]?.fileStoreId || "",
+//       documentType: address?.documents["ProofOfAddress"]?.documentType?.code || "",
+//     });
+//   }
 
-  const formdata = {
-    Property: {
-      id: data.id,
-      accountId: data.accountId,
-      acknowldgementNumber: data.acknowldgementNumber,
-      propertyId: data.propertyId,
-      status: data.status || "INWORKFLOW",
-      tenantId: data.tenantId,
-      address: data.address,
+//   owners &&
+//     owners.length > 0 &&
+//     owners.map((owner) => {
+//       owner.documents.map((document) => {
+//         documents.push(document);
+//       });
+//     });
+//   data.documents = documents;
+//   return data;
+// };
+// export const convertToUpdateProperty = (data = {}) => {
+//   console.info("propertyFormData", data);
+//   let isResdential = data.isResdential;
+//   let propertyType = data.PropertyType;
+//   let selfOccupied = data.selfOccupied;
+//   let Subusagetypeofrentedarea = data.Subusagetypeofrentedarea || null;
+//   let subusagetype = data.subusagetype || null;
+//   let IsAnyPartOfThisFloorUnOccupied = data.IsAnyPartOfThisFloorUnOccupied || null;
+//   let builtUpArea = data?.floordetails?.builtUpArea || null;
+//   let noOfFloors = data?.noOfFloors;
+//   let noOofBasements = data?.noOofBasements;
+//   let unit = data?.units;
+//   let basement1 = Array.isArray(data?.units) && data?.units["-1"] ? data?.units["-1"] : null;
+//   let basement2 = Array.isArray(data?.units) && data?.units["-2"] ? data?.units["-2"] : null;
+//   data = setAddressDetails(data);
+//   data = setUpdateOwnerDetails(data);
+//   data = setUpdatedDocumentDetails(data);
+//   data = setPropertyDetails(data);
 
-      ownershipCategory: data?.ownershipCategory?.value,
-      owners: data.owners,
-      institution: data.institution || null,
+//   const formdata = {
+//     Property: {
+//       id: data.id,
+//       accountId: data.accountId,
+//       acknowldgementNumber: data.acknowldgementNumber,
+//       propertyId: data.propertyId,
+//       status: data.status || "INWORKFLOW",
+//       tenantId: data.tenantId,
+//       address: data.address,
 
-      documents: data.documents || [],
-      ...data.propertyDetails,
+//       ownershipCategory: data?.ownershipCategory?.value,
+//       owners: data.owners,
+//       institution: data.institution || null,
 
-      additionalDetails: {
-        inflammable: false,
-        heightAbove36Feet: false,
-        isResdential: isResdential,
-        propertyType: propertyType,
-        selfOccupied: selfOccupied,
-        Subusagetypeofrentedarea: Subusagetypeofrentedarea,
-        subusagetype: subusagetype,
-        IsAnyPartOfThisFloorUnOccupied: IsAnyPartOfThisFloorUnOccupied,
-        builtUpArea: builtUpArea,
-        noOfFloors: noOfFloors,
-        noOofBasements: noOofBasements,
-        unit: unit,
-        basement1: basement1,
-        basement2: basement2,
-      },
+//       documents: data.documents || [],
+//       ...data.propertyDetails,
 
-      creationReason: getCreationReason(data),
-      source: "MUNICIPAL_RECORDS",
-      channel: "CITIZEN",
-      workflow: getWorkflow(data),
-    },
-  };
+//       additionalDetails: {
+//         inflammable: false,
+//         heightAbove36Feet: false,
+//         isResdential: isResdential,
+//         propertyType: propertyType,
+//         selfOccupied: selfOccupied,
+//         Subusagetypeofrentedarea: Subusagetypeofrentedarea,
+//         subusagetype: subusagetype,
+//         IsAnyPartOfThisFloorUnOccupied: IsAnyPartOfThisFloorUnOccupied,
+//         builtUpArea: builtUpArea,
+//         noOfFloors: noOfFloors,
+//         noOofBasements: noOofBasements,
+//         unit: unit,
+//         basement1: basement1,
+//         basement2: basement2,
+//       },
 
-  let propertyInitialObject = JSON.parse(sessionStorage.getItem("propertyInitialObject"));
-  if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units) && data?.isEditProperty) {
-    propertyInitialObject.units = propertyInitialObject.units.filter((unit) => unit.active);
-    let oldUnits = propertyInitialObject.units.map((unit) => {
-      return { ...unit, active: false };
-    });
-    formdata.Property?.units.push(...oldUnits);
-  }
+//       creationReason: getCreationReason(data),
+//       source: "MUNICIPAL_RECORDS",
+//       channel: "CITIZEN",
+//       workflow: getWorkflow(data),
+//     },
+//   };
+
+  // let propertyInitialObject = JSON.parse(sessionStorage.getItem("propertyInitialObject"));
+  // if (checkArrayLength(propertyInitialObject?.units) && checkIsAnArray(formdata.Property?.units) && data?.isEditProperty) {
+  //   propertyInitialObject.units = propertyInitialObject.units.filter((unit) => unit.active);
+  //   let oldUnits = propertyInitialObject.units.map((unit) => {
+  //     return { ...unit, active: false };
+  //   });
+  //   formdata.Property?.units.push(...oldUnits);
+  // }
   /* if (
     checkArrayLength(propertyInitialObject?.owners) &&
     checkIsAnArray(formdata.Property?.owners) &&
@@ -780,19 +612,24 @@ export const convertToUpdateProperty = (data = {}) => {
     formdata.Property.owners = [...propertyInitialObject.owners];
   } */
 
-  if (checkArrayLength(propertyInitialObject?.owners) && checkIsAnArray(formdata.Property?.owners)) {
-    formdata.Property.owners = [...propertyInitialObject.owners];
-  }
-  if (propertyInitialObject?.auditDetails) {
-    formdata.Property["auditDetails"] = { ...propertyInitialObject.auditDetails };
-  }
-  console.info("propertyUpdated", formdata);
-  return formdata;
-};
+  // if (checkArrayLength(propertyInitialObject?.owners) && checkIsAnArray(formdata.Property?.owners)) {
+  //   formdata.Property.owners = [...propertyInitialObject.owners];
+  // }
+  // if (propertyInitialObject?.auditDetails) {
+  //   formdata.Property["auditDetails"] = { ...propertyInitialObject.auditDetails };
+  // }
+  // console.info("propertyUpdated", formdata);
+//   return formdata;
+// };
 
 /*   method to check value  if not returns NA*/
 export const checkForNA = (value = "") => {
   return checkForNotNull(value) ? value : "PT_NA";
+};
+
+export const getCommencementDataFormat = (date) => {
+  let newDate = new Date(date).getFullYear().toString() +"-"+ (new Date(date).getMonth() + 1).toString()+"-" + new Date(date).getDate().toString()
+  return newDate;
 };
 
 /*   method to check value  if not returns NA*/
@@ -891,4 +728,140 @@ export const getWorkflow = (data = {}) => {
 
 export const getCreationReason = (data = {}) => {
   return data?.isUpdateProperty ? "UPDATE" : "CREATE";
+};
+
+export const getUniqueItemsFromArray = (data, identifier) => {
+  const uniqueArray = [];
+  const map = new Map();
+  for (const item of data) {
+    if (!map.has(item[identifier])) {
+      map.set(item[identifier], true); // set any value to Map
+      uniqueArray.push(item);
+    }
+  }
+  return uniqueArray;
+};
+
+export const commonTransform = (object, path) => {
+  let data = get(object, path);
+  let transformedData = {};
+  data.map(a => {
+    const splitList = a.code.split(".");
+    let ipath = "";
+    for (let i = 0; i < splitList.length; i += 1) {
+      if (i != splitList.length - 1) {
+        if (
+          !(
+            splitList[i] in
+            (ipath === "" ? transformedData : get(transformedData, ipath))
+          )
+        ) {
+          set(
+            transformedData,
+            ipath === "" ? splitList[i] : ipath + "." + splitList[i],
+            i < splitList.length - 2 ? {} : []
+          );
+        }
+      } else {
+        get(transformedData, ipath).push(a);
+      }
+      ipath = splitList.slice(0, i + 1).join(".");
+    }
+  });
+  set(object, path, transformedData);
+  return object;
+};
+
+export const convertDateToEpoch = (dateString, dayStartOrEnd = "dayend") => {
+  //example input format : "2018-10-02"
+  try {
+    const parts = dateString.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+    const DateObj = new Date(Date.UTC(parts[1], parts[2] - 1, parts[3]));
+    DateObj.setMinutes(DateObj.getMinutes() + DateObj.getTimezoneOffset());
+    if (dayStartOrEnd === "dayend") {
+      DateObj.setHours(DateObj.getHours() + 24);
+      DateObj.setSeconds(DateObj.getSeconds() - 1);
+    }
+    return DateObj.getTime();
+  } catch (e) {
+    return dateString;
+  }
+};
+
+export const getQueryStringParams = (query) => {
+  return query
+    ? (/^[?#]/.test(query) ? query.slice(1) : query).split("&").reduce((params, param) => {
+        let [key, value] = param.split("=");
+        params[key] = value ? decodeURIComponent(value.replace(/\+/g, " ")) : "";
+        return params;
+      }, {})
+    : {};
+};
+
+export const getPattern = type => {
+  switch (type) {
+    case "Name":
+      return /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i;
+    case "MobileNo":
+      return /^[6789][0-9]{9}$/i;
+    case "Amount":
+      return /^[0-9]{0,8}$/i;
+    case "NonZeroAmount":
+      return /^[1-9][0-9]{0,7}$/i;  
+    case "DecimalNumber":
+      return /^\d{0,8}(\.\d{1,2})?$/i;
+      //return /(([0-9]+)((\.\d{1,2})?))$/i;
+    case "Email":
+      return /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/i;
+    case "Address":
+      return /^[^\$\"<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,500}$/i;
+    case "PAN":
+      return /^[A-Za-z]{5}\d{4}[A-Za-z]{1}$/i;
+    case "TradeName":
+      return /^[-@.\/#&+\w\s]*$/
+      //return /^[^\$\"'<>?\\\\~`!@#$%^()+={}\[\]*,.:;“”‘’]{1,100}$/i;
+    case "Date":
+      return /^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/i;
+    case "UOMValue":
+      return /^(0)*[1-9][0-9]{0,5}$/i;
+    case "OperationalArea":
+      return /^(0)*[1-9][0-9]{0,6}$/i;
+    case "NoOfEmp":
+      return /^(0)*[1-9][0-9]{0,6}$/i;
+    case "GSTNo":
+      return /^\d{2}[A-Z]{5}\d{4}[A-Z]{1}\d[Z]{1}[A-Z\d]{1}$/i;
+    case "DoorHouseNo":
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*:;“”‘’]{1,50}$/i;
+    case "BuildingStreet":
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,64}$/i;
+    case "Pincode":
+      return /^[1-9][0-9]{5}$/i;
+    case "Landline":
+        return /^[0-9]{11}$/i;
+    case "PropertyID":
+      return /^[a-zA-z0-9\s\\/\-]$/i;
+    case "ElectricityConnNo":
+      return /^.{1,15}$/i;
+    case "DocumentNo":
+      return /^[0-9]{1,15}$/i; 
+    case "eventName":
+      return /^[^\$\"<>?\\\\~`!@#$%^()+={}\[\]*,.:;“”]{1,65}$/i;
+    case "eventDescription":
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,500}$/i;
+    case "cancelChallan":
+      return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,100}$/i;
+    case "FireNOCNo":
+      return /^[a-zA-Z0-9-]*$/i;
+    case "consumerNo":
+      return /^[a-zA-Z0-9/-]*$/i;
+    case "AadharNo":
+      //return /^\d{4}\s\d{4}\s\d{4}$/;
+      return /^([0-9]){12}$/;
+    case "ChequeNo":
+        return /^(?!0{6})[0-9]{6}$/;
+    case "Comments":
+        return /^[^\$\"'<>?\\\\~`!@$%^()+={}\[\]*.:;“”‘’]{1,50}$/i;
+    case "OldLicenceNo":
+        return /^[a-zA-Z0-9-/]{0,64}$/;
+  }
 };

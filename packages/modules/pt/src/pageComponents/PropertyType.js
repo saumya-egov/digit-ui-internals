@@ -79,15 +79,17 @@ const PropertyType = ({ t, config, onSelect, userType, formData, setError, clear
       validation: {},
     },
   ];
+
   if (isLoading) {
     return <Loader />;
   }
+
   if (userType === "employee") {
     return inputs?.map((input, index) => {
       return (
         <React.Fragment key={index}>
           <LabelFieldPair>
-            <CardLabel className="card-label-smaller">{t(input.label)}</CardLabel>
+            <CardLabel className="card-label-smaller">{t(input.label) + " *"}</CardLabel>
             <Dropdown
               className="form-field"
               selected={getPropertyTypeMenu(proptype)?.length === 1 ? getPropertyTypeMenu(proptype)[0] : BuildingType}
