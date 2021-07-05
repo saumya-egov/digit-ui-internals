@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Dropdown, MultiSelectDropdown, Loader, LinkButton } from "@egovernments/digit-ui-react-components";
+import { CardLabel, LabelFieldPair, Dropdown, MultiSelectDropdown, Loader, LinkButton, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import cleanup from "../Utils/cleanup";
 import { unset } from "lodash";
 
@@ -102,7 +102,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function getroledata() {
-    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles;
+    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles.map(role=>{return {code:role.code,name:'ACCESSCONTROL_ROLES_ROLES_'+role.code}});
   }
 
   if (isLoading) {
@@ -198,6 +198,14 @@ function Jurisdiction({
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
 
+
+  const onRemove = (index, key) => {
+    let afterRemove = jurisdiction?.roles.filter((value, i) => {
+      return i !== index;
+    });
+    setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: afterRemove } : item)));
+
+  };
   return (
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
@@ -269,8 +277,16 @@ function Jurisdiction({
               optionsKey="name"
               t={t}
             />
+               <div className="tag-container">
+          {jurisdiction?.roles.length > 0 &&
+            jurisdiction?.roles.map((value, index) => {
+              return <RemoveableTag key={index} text={`${value["name"].slice(0, 22)} ...`} onClick={() => onRemove(index, value)} />;
+            })}
+        </div>
           </div>
+
         </LabelFieldPair>
+
       </div>
     </div>
   );

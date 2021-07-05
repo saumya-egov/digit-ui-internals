@@ -7,6 +7,7 @@ const SelectBuildingType = ({ t, config, onSelect, userType, formData }) => {
   const stateId = tenantId.split(".")[0];
   const [BuildingType, setBuildingType] = useState(formData?.TradeDetails?.BuildingType);
   const { isLoading, data: Menu = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "common-masters", "StructureType");
+  const isEdit = window.location.href.includes("/edit-application/");
   let menu = [];
   Menu &&
     Menu["common-masters"] &&
@@ -45,6 +46,7 @@ const SelectBuildingType = ({ t, config, onSelect, userType, formData }) => {
         />
       </FormStep>
       {<CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("TL_BUILDING_TYPE_INFO_MSG")} />}
+      {isEdit && <CitizenInfoLabel info={t("CS_FILE_APPLICATION_INFO_LABEL")} text={t("Structure type cant be modified")} />}
     </React.Fragment>
   );
 };

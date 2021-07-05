@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import XLSX from "xlsx";
 
 const Download = {
   Image: (node, fileName, share, resolve = null) => {
@@ -31,6 +32,15 @@ const Download = {
     });
   },
 
+  Excel: (data, filename) => {
+    const wb = XLSX.utils.book_new();
+    let ws = null;
+    ws = XLSX.utils.json_to_sheet(data)
+    wb.SheetNames.push(filename);
+    wb.Sheets[filename] = ws;
+    XLSX.writeFile(wb, `${filename}.xlsx`);
+  },
+
   PDF: (node, fileName, share) => {
     const getPDF = (canvas) => {
       const width = canvas.width;
@@ -55,19 +65,20 @@ const Download = {
       const imgProps = pdf.getImageProperties(jpegImage);
       const margin = 0.1;
       const pageHeight = 295;
-      const pdfWidth = pdf.internal.pageSize.width * (1 - margin);
-      const x = pdf.internal.pageSize.width * (margin / 2);
+      // const pdfWidth = pdf.internal.pageSize.width * (1 - margin);
+      const pdfWidth = (imgProps.width * pageHeight) / imgProps.height
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      let position = 10;
-      let heightLeft = pdfHeight;
+      const x = (pdf.internal.pageSize.width - pdfWidth) / 2;
+      let position = 5;
+      // let heightLeft = pdfHeight;
       pdf.addImage(jpegImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
-      heightLeft -= pageHeight;
-      while (heightLeft > 0) {
-        position += heightLeft - pdfHeight;
-        pdf.addPage();
-        pdf.addImage(jpegImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
-        heightLeft -= pageHeight;
-      }
+      // heightLeft -= pageHeight;
+      // while (heightLeft > 0) {
+      //   position += heightLeft - pdfHeight;
+      //   pdf.addPage();
+      //   pdf.addImage(jpegImage, "JPEG", x, position, pdfWidth, pdfHeight, "a", "FAST");
+      //   heightLeft -= pageHeight;
+      // }
       return share ? new File([pdf.output("blob")], `${fileName}.pdf`, { type: "application/pdf" }) : pdf.save(`${fileName}.pdf`);
     });
   },

@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, RadioButtons, ActionBar, RemoveableTag, CloseSvg, CheckBox, Localities, SubmitBar } from "@egovernments/digit-ui-react-components";
-
+import { useQueryClient } from "react-query";
 import { useTranslation } from "react-i18next";
 
 import Status from "./Status";
 import _ from "lodash";
 
-const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props }) => {
+const Filter = ({ searchParams, onFilterChange, defaultSearchParams, statusMap, businessService, ...props }) => {
   const { t } = useTranslation();
+  const client = useQueryClient();
 
   const [_searchParams, setSearchParams] = useState(() => searchParams);
 
@@ -18,6 +19,10 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props })
     delete filterParam.delete;
     setSearchParams({ ..._new });
   };
+
+  useEffect(() => {
+    console.log(_searchParams, "search params inside filter");
+  }, [_searchParams]);
 
   const clearAll = () => {
     setSearchParams(defaultSearchParams);
@@ -130,8 +135,10 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, ...props })
             </div>
             <div>
               <Status
-                _searchParams={_searchParams}
+                searchParams={_searchParams}
                 businessServices={_searchParams.services}
+                statusMap={client.getQueryData(`INBOX_STATUS_MAP_${businessService}`) || statusMap}
+                moduleCode={businessService}
                 onAssignmentChange={(e, status) => {
                   if (e.target.checked) localParamChange({ applicationStatus: [..._searchParams?.applicationStatus, status] });
                   else localParamChange({ applicationStatus: _searchParams?.applicationStatus.filter((e) => e.code !== status.code) });

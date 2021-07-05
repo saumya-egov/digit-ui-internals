@@ -3,7 +3,7 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import StatusCount from "./StatusCount";
 
-const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
+const Status = ({ onAssignmentChange, searchParams, businessServices, statusMap, moduleCode }) => {
   const { t } = useTranslation();
 
   const [moreStatus, showMoreStatus] = useState(false);
@@ -13,8 +13,10 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
   const { userRoleStates, otherRoleStates } = statusData || {};
 
   const translateState = (state) => {
-    return `ES_PT_STATUS_${state.state || "CREATED"}`;
+    return `ES_PT_COMMON_STATUS_${state.state || "CREATED"}`;
   };
+
+  console.log(statusData, "status data");
 
   if (isLoading) {
     return <Loader />;
@@ -31,8 +33,9 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
             businessServices={businessServices}
             key={index}
             onAssignmentChange={onAssignmentChange}
-            status={{ name: translateState(option), code: option.applicationStatus }}
+            status={{ name: translateState(option), code: option.applicationStatus, ...option }}
             searchParams={searchParams}
+            statusMap={statusMap}
           />
         );
       })}
@@ -41,10 +44,11 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
           return (
             <StatusCount
               businessServices={businessServices}
-              key={index}
+              key={option.uuid}
               onAssignmentChange={onAssignmentChange}
-              status={{ name: translateState(option), code: option.applicationStatus }}
+              status={{ name: translateState(option), code: option.applicationStatus, ...option }}
               searchParams={searchParams}
+              statusMap={statusMap}
             />
           );
         })}

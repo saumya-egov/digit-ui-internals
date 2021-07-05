@@ -25,7 +25,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         Cell: ({ row }) => {
           return (
             <span className="link">
-              <Link to={`/digit-ui/employee/hrms/details/${row.original.code}`}>{row.original.code}</Link>
+              <Link to={`/digit-ui/employee/hrms/details/${row.original.tenantId}/${row.original.code}`}>{row.original.code}</Link>
             </span>
           );
         },
@@ -86,7 +86,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         Header: t("HR_STATUS_LABEL"),
         disableSortBy: true,
         Cell: ({ row }) => {
-          return GetSlaCell(`${row.original?.isActive ? "ACTIVE" : "INACTIVE"}`);
+          return GetSlaCell(`${row.original?.isActive ? t( "ACTIVE") :  t("INACTIVE")}`);
         },
       },
     ];

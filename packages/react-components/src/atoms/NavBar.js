@@ -33,7 +33,7 @@ const MenuItem = ({ item }) => {
 
 const NavBar = ({ open, profileItem, menuItems, onClose, Footer }) => {
   const node = useRef();
-  Digit.Hooks.useClickOutside(node, open ? onClose : null);
+  Digit.Hooks.useClickOutside(node, open ? onClose : null, open);
 
   return (
     <React.Fragment>

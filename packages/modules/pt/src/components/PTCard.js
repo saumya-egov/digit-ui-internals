@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowRightInbox, PropertyHouse } from "@egovernments/digit-ui-react-components";
@@ -12,7 +12,22 @@ const ArrowRight = ({ to }) => (
 const PTCard = () => {
   const { t } = useTranslation();
   // TODO: should be fetch
-  const total = 1;
+  const [total, setTotal] = useState("-");
+  const { data, isFetching, isSuccess } = Digit.Hooks.useNewInboxGeneral({
+    tenantId: Digit.ULBService.getCurrentTenantId(),
+    ModuleCode: "PT",
+    filters: { limit: 10, offset: 0, services: ["PT.CREATE"] },
+    config: {
+      select: (data) => {
+        return data?.totalCount || "-";
+      },
+      enabled: Digit.Utils.ptAccess(),
+    },
+  });
+
+  useEffect(() => {
+    if (!isFetching && isSuccess) setTotal(data);
+  }, [isFetching]);
 
   if (!Digit.Utils.ptAccess()) {
     return null;

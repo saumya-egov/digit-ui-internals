@@ -24,6 +24,8 @@ const Urls = {
   UserProfileUpdate: "/user/profile/_update",
   EmployeeSearch: "/egov-hrms/employees/_search",
 
+  InboxSearch: "/inbox/v1/_search",
+
   UserSearch: "/user/_search",
 
   Shortener: "/egov-url-shortening/shortener",
@@ -89,6 +91,8 @@ const Urls = {
     search: "/tl-services/v1/_search",
     fetch_payment_details: "/billing-service/bill/v2/_fetchbill",
     download_pdf: "/egov-pdf/download/TL/",
+    update:"/tl-services/v1/_update",
+    billingslab: "/tl-calculator/billingslab/_search"
   },
   receipts: {
     payments: "/collection-services/payments",

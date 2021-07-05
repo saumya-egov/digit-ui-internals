@@ -33,4 +33,34 @@ export const TLService = {
       userService: false,
       //params: { tenantId, ...filters },
     }),
+  TLsearch: ({ tenantId, filters, auth }) =>
+    Request({
+      url: Urls.tl.search,
+      useCache: false,
+      method: "POST",
+      auth: auth === false ? auth : true,
+      userService: auth === false ? auth : true,
+      params: { tenantId, ...filters },
+    }),
+  update: (details, tenantId) =>
+    Request({
+      url: Urls.tl.update,
+      data: details,
+      useCache: false,
+      setTimeParam: false,
+      userService: true,
+      method: "POST",
+      params: {},
+      auth: true,
+    }),
+  billingslab: ({ tenantId, filters, auth }) =>
+    Request({
+      url: Urls.tl.billingslab,
+      useCache: false,
+      setTimeParam: false,
+      userService: true,
+      method: "POST",
+      params: { tenantId },
+      auth: true,
+    }),
 };

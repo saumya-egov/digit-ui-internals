@@ -20,6 +20,7 @@ import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useApplicationStatusGeneral from "./useStatusGeneral";
 import useModuleTenants from "./useModuleTenants";
 import useStore from "./useStore";
+import useNewInboxGeneral from "./useInboxGeneral/useNewInbox";
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -70,6 +71,7 @@ import usePtApplicationActions from "./pt/useApplicationActions";
 import usePtMDMS from "./pt/useMDMS";
 import usePropertyAssessment from "./pt/usePropertyAssessment";
 import usePtCalculationEstimate from "./pt/usePtCalculationEstimate";
+import useGenderMDMS from "./pt/useGenderMDMS";
 
 import useDssMdms from "./dss/useMDMS";
 import useDashboardConfig from "./dss/useDashboardConfig";
@@ -85,8 +87,16 @@ import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
 import useTLDocumentSearch from "./tl/useTLDocumentSearch";
 import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
+import useTradeLicenseSearch from "./tl/useTradeLicenseSearch";
 import useTLSearchApplication from "./tl/useTLsearchApplication";
 import useTLPaymentHistory from "./tl/userPaymentHistory";
+import useTLApplicationDetail from "./tl/useApplicationDetail";
+import useTLApplicationActions from "./tl/useApplicationActions";
+
+import useTLGenderMDMS from "./tl/useTLGenderMDMS";
+
+import useTradeLicenseBillingslab from "./tl/useTradeLicenseBillingslab";
+
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
@@ -114,6 +124,7 @@ const pgr = {
   useComplaintSubType,
   usePropertyMDMS,
   useComplaintStatusCount,
+  useTradeLicenseBillingslab
 };
 
 const fsm = {
@@ -153,6 +164,7 @@ const pt = {
   useMDMS: usePtMDMS,
   usePropertyAssessment,
   usePtCalculationEstimate,
+  useGenderMDMS,
 };
 
 const dss = {
@@ -183,6 +195,11 @@ const tl = {
   useTradeLicenseAPI,
   useTLSearchApplication,
   useTLPaymentHistory,
+  useTradeLicenseSearch,
+  useTLGenderMDMS,
+  useTradeLicenseBillingslab,
+  useApplicationDetail: useTLApplicationDetail,
+  useApplicationActions: useTLApplicationActions,
 };
 
 const receipts = {
@@ -212,6 +229,7 @@ const Hooks = {
   useApplicationStatusGeneral,
   useModuleTenants,
   useRecieptSearch,
+  useNewInboxGeneral,
   useStore,
   pgr,
   fsm,

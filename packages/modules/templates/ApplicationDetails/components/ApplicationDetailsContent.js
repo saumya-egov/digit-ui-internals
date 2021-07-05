@@ -19,6 +19,8 @@ import PropertyDocuments from "./PropertyDocuments";
 import PropertyFloors from "./PropertyFloors";
 import PropertyEstimates from "./PropertyEstimates";
 import PropertyOwners from "./PropertyOwners";
+import TLTradeUnits from "./TLTradeUnits";
+import TLTradeAccessories from "./TLTradeAccessories"
 
 function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService, timelineStatusPrefix }) {
   const { t } = useTranslation();
@@ -51,11 +53,12 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
   };
 
   // console.log(applicationDetails?.applicationDetails, "inside app details content");
-
+  const checkLocation = window.location.href.includes("employee/tl");
   return (
     <Card style={{ position: "relative" }}>
       {applicationDetails?.applicationDetails?.map((detail, index) => (
         <React.Fragment key={index}>
+          <div style={ checkLocation ? { lineHeight: "19px" } : {}}>
           {index === 0 && !detail.asSectionHeader ? (
             <CardSubHeader style={{ marginBottom: "16px" }}>{t(detail.title)}</CardSubHeader>
           ) : (
@@ -78,12 +81,16 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
               );
             })}
           </StatusTable>
+          </div>
           {detail?.additionalDetails?.floors && <PropertyFloors floors={detail?.additionalDetails?.floors} />}
           {detail?.additionalDetails?.owners && <PropertyOwners owners={detail?.additionalDetails?.owners} />}
+          {detail?.additionalDetails?.units && <TLTradeUnits units={detail?.additionalDetails?.units} />}
+          {detail?.additionalDetails?.accessories && <TLTradeAccessories units={detail?.additionalDetails?.accessories} />}
           {detail?.additionalDetails?.documents && <PropertyDocuments documents={detail?.additionalDetails?.documents} />}
           {detail?.additionalDetails?.taxHeadEstimatesCalculation && (
             <PropertyEstimates taxHeadEstimatesCalculation={detail?.additionalDetails?.taxHeadEstimatesCalculation} />
           )}
+
         </React.Fragment>
       ))}
       <BreakLine />

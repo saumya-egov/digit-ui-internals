@@ -129,7 +129,7 @@ export const FormComposer = (props) => {
                 return (
                   <React.Fragment key={index}>
                     {!field.withoutLabel && (
-                      <CardLabel style={{ marginBottom: props.inline ? "8px" : "revert" }}>
+                      <CardLabel style={{ marginBottom: props.inline ? "8px" : "revert" }} className={field?.disable?"disabled":""}>
                         {t(field.label)}
                         {field.isMandatory ? " * " : null}
                       </CardLabel>
@@ -173,7 +173,7 @@ export const FormComposer = (props) => {
                 </LabelFieldPair>
               );
             })}
-            {!props.noBreakLine && (array.length - 1 === index ? null : <BreakLine />)}
+            {!props.noBreakLine && (array.length - 1 === index ? null : <BreakLine style={props?.breaklineStyle ? props?.breaklineStyle : {}}/>)}
           </React.Fragment>
         );
       }),

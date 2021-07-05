@@ -14,17 +14,6 @@ export const newConfig = [
         key: "SelectEmployeePhoneNumber",
         withoutLabel: true,
       },
-      ,
-      {
-        type: "component",
-        component: "Banner",
-        key: "Banner0",
-        withoutLabel: true,
-        texts: {
-          headerCaption: "Info",
-          header: "HR_MOBILE_NO_CHECK",
-        },
-      },
       {
         type: "component",
         component: "SelectEmployeeGender",

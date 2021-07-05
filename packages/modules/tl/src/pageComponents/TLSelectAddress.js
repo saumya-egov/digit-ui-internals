@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import _ from "lodash";
 
-const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
+const TLSelectAddress = ({ t, config, onSelect, userType, formData, setError, formState, clearErrors }) => {
   const allCities = Digit.Hooks.tl.useTenants();
   let tenantId = Digit.ULBService.getCurrentTenantId();
-  let isEditProperty = formData?.isEditProperty || false;
-  if (formData?.isUpdateProperty) isEditProperty = true;
+  //let isEditProperty = formData?.isEditProperty || false;
+  const isEdit = window.location.href.includes("/edit-application/");
+  //if (formData?.isUpdateProperty) isEditProperty = true;
   const { pincode, city } = formData?.address || "";
   const cities =
     userType === "employee"
@@ -31,6 +32,8 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
 
   const [selectedLocality, setSelectedLocality] = useState();
 
+  const [isErrors, setIsErrors] = useState(false);
+
   useEffect(() => {
     if (cities) {
       if (cities.length === 1) {
@@ -38,6 +41,21 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
       }
     }
   }, [cities]);
+
+  useEffect(() => {
+    if (formData?.address) {
+      let flag = true;;
+        Object.keys(formData?.address).map(dta => {
+          if (dta != "key" && formData?.address[dta] != undefined && formData?.address[dta] != "" && formData?.address[dta] != null) {
+
+          } else {
+            if (flag) setSelectedCity(cities[0]);
+            flag = false;
+          }
+        });
+    }
+
+  }, [formData?.tradeUnits?.[0]?.tradeCategory?.code]);
 
   useEffect(() => {
     if (selectedCity && fetchedLocalities) {
@@ -87,18 +105,33 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     onSelect(config.key, { city: selectedCity, locality: selectedLocality });
   }
 
-  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue } = useForm();
+  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
   const formValue = watch();
   const { errors } = localFormState;
   const errorStyle = { width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" };
+
+  useEffect(() => {
+    trigger();
+  }, []);
 
   useEffect(() => {
     let keys = Object.keys(formValue);
     const part = {};
     keys.forEach((key) => (part[key] = formData[config.key]?.[key]));
 
-    if (!_.isEqual(formValue, part)) onSelect(config.key, { ...formData[config.key], ...formValue });
-
+    if (userType === "employee") {
+      if (!_.isEqual(formValue, part)) {
+        Object.keys(formValue).map(data => {
+          if (data != "key" && formValue[data] != undefined && formValue[data] != "" && formValue[data] != null && !isErrors) {
+            setIsErrors(true);
+          }
+        });
+        onSelect(config.key, { ...formData[config.key], ...formValue });
+        trigger();
+      }
+    } else {
+      if (!_.isEqual(formValue, part)) onSelect(config.key, { ...formData[config.key], ...formValue });
+    }
     for (let key in formValue) {
       if (!formValue[key] && !localFormState.errors[key]) {
         setLocalError(key, { type: `${key.toUpperCase()}_REQUIRED`, message: `${key.toUpperCase()}_REQUIRED` });
@@ -108,20 +141,33 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
     }
   }, [formValue]);
 
+  useEffect(() => {
+    if (userType === "employee") {
+      if (Object.keys(errors).length && !_.isEqual(formState.errors[config.key]?.type || {}, errors)) {
+        setError(config.key, { type: errors });
+      }
+      else if (!Object.keys(errors).length && formState.errors[config.key] && isErrors) {
+        clearErrors(config.key);
+      }
+    }
+  }, [errors]);
+
+
   if (userType === "employee") {
     return (
       <div>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{`${t("MYCITY_CODE_LABEL")}*`}</CardLabel>
+          <CardLabel className="card-label-smaller">{`${t("MYCITY_CODE_LABEL")}:`}</CardLabel>
           <Controller
             name={"city"}
             defaultValue={cities?.length === 1 ? cities[0] : selectedCity}
             control={control}
+            rules={{required: "Required"}}
             render={(props) => (
               <Dropdown
                 className="form-field"
                 selected={props.value}
-                disable={isEditProperty ? isEditProperty : cities?.length === 1}
+                // disable={isEditProperty ? isEditProperty : cities?.length === 1}
                 option={cities}
                 select={props.onChange}
                 optionKey="code"
@@ -133,11 +179,12 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
         </LabelFieldPair>
         <CardLabelError style={errorStyle}>{localFormState.touched.city ? errors?.city?.message : ""}</CardLabelError>
         <LabelFieldPair>
-          <CardLabel className="card-label-smaller">{t("TL_LOCALIZATION_LOCALITY")}</CardLabel>
+          <CardLabel className="card-label-smaller">{`${t("TL_LOCALIZATION_LOCALITY")}:`}</CardLabel>
           <Controller
             name="locality"
             defaultValue={null}
             control={control}
+            rules={{required: "Required"}}
             render={(props) => (
               <Dropdown
                 className="form-field"
@@ -147,7 +194,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
                 onBlur={props.onBlur}
                 optionKey="i18nkey"
                 t={t}
-                disable={isEditProperty ? isEditProperty : false}
+                // disable={isEditProperty ? isEditProperty : false}
               />
             )}
           />
@@ -168,7 +215,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
           t={t}
           isDependent={true}
           labelKey="TENANT_TENANTS"
-          disabled={isEditProperty}
+          disabled={isEdit}
         />
       </span>
       {selectedCity && localities && <CardLabel>{`${t("TL_LOCALIZATION_LOCALITY")} `}</CardLabel>}
@@ -184,7 +231,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData }) => {
             t={t}
             isDependent={true}
             labelKey=""
-            disabled={isEditProperty}
+            disabled={isEdit}
           />
         </span>
       )}

@@ -95,13 +95,13 @@ const SearchChallan = ({ config: propsConfig, formData }) => {
         t={t}
       >
         <CardLabel>{`${t("UC_CITY_LABEL")}*`}</CardLabel>
-        <Dropdown
+        <RadioOrSelect
             className="form-field"
             isMandatory={true}
-            selected={city}
+            value={city}
             //disable={employeeMenu?.length === 1}
-            option={allCities}
-            select={selectCity}
+            options={allCities}
+            onSelect={selectCity}
             optionKey="code"
             t={t}
           />

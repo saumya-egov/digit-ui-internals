@@ -7,7 +7,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   const [name, setName] = useState(formData?.owners?.name || "");
   const [isPrimaryOwner, setisPrimaryOwner] = useState(false);
   const [gender, setGender] = useState(formData?.owners?.gender);
-  const [mobileNumber, setMobileNumber] = useState(formData?.owners?.mobileNumber || "");
+  const [mobilenumber, setMobileNumber] = useState(formData?.owners?.mobilenumber || "");
   const [fields, setFeilds] = useState(
     (formData?.owners && formData?.owners?.owners) || [{ name: "", gender: "", mobilenumber: null, isprimaryowner: false }]
   );
@@ -17,6 +17,16 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let isEditProperty = formData?.isEditProperty || false;
   const { pathname: url } = useLocation();
   const editScreen = url.includes("/modify-application/");
+
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const {data: Menu} = Digit.Hooks.tl.useTLGenderMDMS(tenantId, "common-masters", "GenderType");
+
+  let TLmenu = [];
+    Menu &&
+      Menu.map((genders) => {
+        TLmenu.push({i18nKey: `TL_GENDER_${genders.code}`, code: `${genders.code}`})
+    });
 
   function handleAdd() {
     const values = [...fields];
@@ -90,7 +100,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
                 isRequired: true,
                 pattern: "^[a-zA-Z-.`' ]*$",
                 type: "text",
-                title: t("PT_NAME_ERROR_MESSAGE"),
+                title: t("TL_NAME_ERROR_MESSAGE"),
               })}
             />
             <CardLabel>{`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}`}</CardLabel>
@@ -104,7 +114,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               onSelect={(e) => setGenderName(index, e)}
               isDependent={true}
               labelKey="TL_GENDER"
-              disabled={isUpdateProperty || isEditProperty}
+              //disabled={isUpdateProperty || isEditProperty}
             />
             <CardLabel>{`${t("TL_MOBILE_NUMBER_LABEL")}`}</CardLabel>
             <div className="field-container">
@@ -116,7 +126,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
                 t={t}
                 isMandatory={false}
                 optionKey="i18nKey"
-                name="mobileNumber"
+                name="mobilenumber"
                 value={field.mobilenumber}
                 onChange={(e) => setMobileNo(index, e)}
                 //disable={isUpdateProperty || isEditProperty}

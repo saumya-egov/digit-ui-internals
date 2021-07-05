@@ -21,7 +21,7 @@ const getInitialRange = () => {
 };
 
 const DrillDown = () => {
-  const [searchQuery, onSearch] = useState();
+  const [searchQuery, onSearch] = useState("");
   const { ulb, chart, title } = Digit.Hooks.useQueryParams();
   const { t } = useTranslation();
   const [filters, setFilters] = useState(() => {
@@ -73,14 +73,14 @@ const DrillDown = () => {
       {filters?.filters?.tenantId.length > 0 && (
         <div className="tag-container">
           {filters?.filters?.tenantId?.map((filter, id) => (
-            <RemoveableTag key={id} text={t(filter)} onClick={() => removeULB(id)} />
+            <RemoveableTag key={id} text={`${t(`DSS_HEADER_ULB`)}: ${t(filter)}`} onClick={() => removeULB(id)} />
           ))}
-          <p className="clearText" onClick={handleClear}>
+          <p className="clearText cursorPointer" onClick={handleClear}>
             {t(`DSS_FILTER_CLEAR`)}
           </p>
         </div>
       )}
-      <GenericChart header={""} showDownload={true} showSearch={true} className={"fullWidth"} onChange={(e) => onSearch(e.target.value)}>
+      <GenericChart header={title} showDownload={true} showSearch={true} className={"fullWidth"} onChange={(e) => onSearch(e.target.value)} showHeader={false}>
         <CustomTable data={{ id: chart }} onSearch={searchQuery} />
       </GenericChart>
     </FilterContext.Provider>
