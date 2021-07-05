@@ -4,6 +4,7 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import NewApplication from "./NewApplication";
 import Response from "../Response";
+import ApplicationDetails from "./ApplicationDetails";
 
 const EmployeeApp = ({ path, url, userType }) => {
   const { t } = useTranslation();
@@ -21,6 +22,7 @@ const EmployeeApp = ({ path, url, userType }) => {
             / <span>{location.pathname === "/digit-ui/employee/pt/inbox" ? t("ES_TITLE_INBOX") : "TL"}</span>
           </p>
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
+          <PrivateRoute path={`${path}/application-details/:id`} component={() => <ApplicationDetails parentRoute={path} />} />
           <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
         </div>
       </React.Fragment>
