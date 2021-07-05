@@ -1,10 +1,12 @@
 import React, { useRef, useState } from "react";
 import { ArrowDown, CheckSvg } from "./svgindex";
+import { useTranslation } from "react-i18next";
 
-const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = "" ,t}) => {
+const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = ""}) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
   const dropdownRef = useRef();
+  const { t } = useTranslation();
   Digit.Hooks.useClickOutside(dropdownRef, () => setActive(false), active);
 
   function onSearch(e) {
