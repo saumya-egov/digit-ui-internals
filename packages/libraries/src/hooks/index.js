@@ -89,6 +89,8 @@ import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
 import useTradeLicenseSearch from "./tl/useTradeLicenseSearch";
 import useTLSearchApplication from "./tl/useTLsearchApplication";
 import useTLPaymentHistory from "./tl/userPaymentHistory";
+import useTLApplicationDetail from "./tl/useApplicationDetail";
+import useTLApplicationActions from "./tl/useApplicationActions";
 
 import useTLGenderMDMS from "./tl/useTLGenderMDMS";
 
@@ -194,7 +196,9 @@ const tl = {
   useTLPaymentHistory,
   useTradeLicenseSearch,
   useTLGenderMDMS,
-  useTradeLicenseBillingslab
+  useTradeLicenseBillingslab,
+  useApplicationDetail: useTLApplicationDetail,
+  useApplicationActions: useTLApplicationActions,
 };
 
 const receipts = {
