@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, FormStep, TextArea } from "@egovernments/digit-ui-react-components";
+import { TextInput, FormStep, TextArea, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-react-components";
 
 const Comments = (props) => {
   const { t, config, onSelect, userType, formData } = props;
@@ -10,6 +10,21 @@ const Comments = (props) => {
     onSelect(config.key, { ...formData?.[config.key], remarks });
   };
   const onSkip = () => {};
+
+  if (userType === "employee") {
+    return (
+      <React.Fragment>
+        <LabelFieldPair>
+          <CardLabel style={{ fontWeight: "bold" }} className="card-label-smaller">
+            {t("PT_MUTATION_REMARKS")}
+          </CardLabel>
+          <div className="field">
+            <TextArea onChange={(e) => setSelected(e.target.value)} value={remarks} />
+          </div>
+        </LabelFieldPair>
+      </React.Fragment>
+    );
+  }
 
   return (
     <React.Fragment>

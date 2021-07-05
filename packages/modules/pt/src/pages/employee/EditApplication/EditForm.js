@@ -21,67 +21,6 @@ const EditForm = ({ applicationData }) => {
   const defaultValues = {
     originalData: applicationData,
     address: applicationData?.address,
-    // address: {
-    //   pincode: applicationData.address.pincode || "",
-    //   locality: {
-    //     ...applicationData.address.locality,
-    //     i18nkey: `${applicationData.tenantId.toUpperCase().split(".").join("_")}_REVENUE_${applicationData.address.locality.code}`,
-    //   },
-    //   street: applicationData.address.street || "",
-    //   doorNo: applicationData.address.doorNo || "",
-    // },
-    // landarea: {
-    //   floorarea: applicationData?.landArea,
-    // },
-    // PropertyType: { i18nKey: `COMMON_PROPTYPE_${applicationData?.propertyType?.replaceAll(".", "_")}`, code: applicationData?.propertyType },
-    // usageCategoryMajor: {
-    //   i18nKey: applicationData?.usageCategoryMajor
-    //     ? `PROPERTYTAX_BILLING_SLAB_${applicationData?.usageCategoryMajor}`
-    //     : `PROPERTYTAX_BILLING_SLAB_${usageCategoryArray[1]}`,
-    //   code: applicationData?.usageCategoryMajor ? `NONRESIDENTIAL.${applicationData?.usageCategoryMajor}` : `NONRESIDENTIAL.${usageCategoryArray[1]}`,
-    // },
-    // subusagetype: {
-    //   SubUsageType: {
-    //     i18nKey: applicationData?.usageCategoryMinor
-    //       ? `COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_${applicationData?.usageCategoryMinor}`
-    //       : `COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_${usageCategoryArray[1]}_${usageCategoryArray[3]}`,
-    //   },
-    //   subuagecode: applicationData?.usageCategory,
-    // },
-    // noOfFloors: positiveFloors?.filter((floor) => floor?.code == applicationData?.noOfFloors)[0],
-    // units: applicationData?.units?.map((unit, index) => ({
-    //   key: index,
-    //   builtUpArea: unit?.constructionDetail?.builtUpArea,
-    //   floorNo: floors
-    //     ?.filter((floor) => floor?.code == unit?.floorNo)
-    //     .map((item) => ({ i18nKey: "PROPERTYTAX_FLOOR_" + item?.code.replaceAll("-", "_"), code: item?.code }))[0],
-    //   occupancyType: selfOccupiedData?.filter((item) => item?.code === unit?.occupancyType)[0],
-    //   tenantId: unit?.tenantId || tenantId,
-    //   usageCategory: "NONRESIDENTIAL.COMMERCIAL.RETAIL.SHOWROOM",
-    //   usageCategory: {
-    //     code: unit?.usageCategory,
-    //     i18nKey: `COMMON_PROPSUBUSGTYPE_NONRESIDENTIAL_${unit?.usageCategory?.split(".")[1]}_${unit?.usageCategory?.split(".")[3]}`,
-    //   },
-    // })),
-    // ownershipCategory: {
-    //   ...ownershipCategory,
-    //   i18nKey: `PT_OWNERSHIP_${ownershipCategory?.i18nKey?.split(".")[1]}`,
-    // },
-    // documents: {
-    //   documents: applicationData?.documents,
-    //   propertyTaxDocumentsLength: applicationData?.documents?.length,
-    // },
-    // owners: {
-    //   altContactNumber: applicationData?.owners[0]?.altContactNumber,
-    //   emailId: applicationData?.owners[0]?.emailId,
-    //   fatherOrHusbandName: applicationData?.owners[0]?.fatherOrHusbandName,
-    //   gender: { code: applicationData?.owners[0]?.gender },
-    //   mobileNumber: applicationData?.owners[0]?.mobileNumber,
-    //   name: applicationData?.owners[0]?.name,
-    //   ownerType: ownerTypeData?.filter((item) => item?.code === applicationData?.owners[0]?.ownerType)[0],
-    //   permanentAddress: applicationData?.owners[0]?.permanentAddress,
-    //   relationship: { code: applicationData?.owners[0]?.relationship, i18nKey: `PT_RELATION_${applicationData?.owners[0]?.relationship}` },
-    // },
   };
 
   const onFormValueChange = (setValue, formData, formState) => {

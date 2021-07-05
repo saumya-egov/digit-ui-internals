@@ -135,7 +135,7 @@ const MutationCitizen = (props) => {
           }),
           ...newDocs,
         ],
-        workflow: { action: "OPEN", businessService: "PT.MUTATION", moduleName: "PT", tenantId: "pb.amritsar" },
+        workflow: { action: "OPEN", businessService: "PT.MUTATION", moduleName: "PT", tenantId: originalProperty.tenantId },
       },
     };
 
@@ -174,7 +174,7 @@ const MutationCitizen = (props) => {
           return (
             <Route path={`${match.path}/${routeObj.route}`} key={index}>
               {Component ? (
-                <Component config={routeObj} onSelect={handleSelect} onSkip={handleSkip} t={t} formData={params} />
+                <Component config={routeObj} onSelect={handleSelect} onSkip={handleSkip} t={t} formData={params} clearParams={() => clearParams()} />
               ) : (
                 <div>Component not found</div>
               )}

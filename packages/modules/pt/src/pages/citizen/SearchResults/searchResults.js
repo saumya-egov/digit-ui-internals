@@ -23,7 +23,7 @@ const CloseBtn = (props) => {
   );
 };
 
-const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation, onSelect, config }) => {
+const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation, onSelect, config, clearParams }) => {
   const { t } = useTranslation();
   const { mobileNumber, propertyIds, oldPropertyIds, locality, city } = Digit.Hooks.useQueryParams();
   const filters = {};
@@ -40,14 +40,14 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
   if (locality) filters.locality = locality;
 
   const [owners, setOwners, clearOwners] = Digit.Hooks.useSessionStorage("PT_MUTATE_MULTIPLE_OWNERS", null);
-  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_MUTATE_PROPERTY", null);
+  // const [params, setParams, ] = Digit.Hooks.useSessionStorage("PT_MUTATE_PROPERTY");
   const [lastPath, setLastPath, clearLastPath] = Digit.Hooks.useSessionStorage("PT_MUTATE_MULTIPLE_OWNERS_LAST_PATH", null);
 
   useEffect(() => {
-    clearOwners();
+    setOwners([]);
     clearParams();
-    clearLastPath();
-    console.log("clear Params executed");
+    setLastPath("");
+    console.log(clearParams, "clear Params executed");
   }, []);
 
   // console.log({ mobileNumber, propertyIds, oldPropertyIds, locality, city }, "inside search result");
@@ -155,7 +155,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
               " " +
               t("PT_INORDER_TO_TRANSFER")}
           </p>
-          <SubmitBar onSubmit={() => proceedToPay(modalData)} style={{ marginTop: "14px" }} label={t("PROCEED_TO_PAY")} />
+          <SubmitBar submit={false} onSubmit={() => proceedToPay(modalData)} style={{ marginTop: "14px" }} label={t("PROCEED_TO_PAY")} />
           {/* </Card> */}
         </Modal>
       ) : null}

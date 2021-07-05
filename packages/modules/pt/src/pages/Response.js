@@ -24,9 +24,9 @@ const DisplayText = (action, isSuccess, isEmployee, t) => {
 const BannerPicker = (props) => {
   return (
     <Banner
-      message={GetActionMessage(props.data?.Properties?.[0].applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
-      applicationNumber={props.data?.Properties[0].acknowldgementNumber}
-      info={GetLabel(props.data?.Properties[0].applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
+      message={GetActionMessage(props?.data?.Properties?.[0]?.applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
+      applicationNumber={props?.data?.Properties?.[0]?.acknowldgementNumber}
+      info={GetLabel(props.data?.Properties?.[0]?.applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
       successful={props.isSuccess}
     />
   );
@@ -55,7 +55,8 @@ const Response = (props) => {
   const { tenants } = storeData || {};
 
   useEffect(() => {
-    if (mutation.data) setsuccessData(mutation.data);
+    console.log(mutation.isSuccess, "inside respose");
+    if (mutation.data && mutation.isSuccess) setsuccessData(mutation.data);
   }, [mutation.data]);
 
   useEffect(() => {
