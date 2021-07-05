@@ -163,6 +163,9 @@ const DesktopInbox = ({ tableConfig, filterComponent, columns, ...props }) => {
               minWidth: cellInfo.column.Header === t("ES_INBOX_APPLICATION_NO") ? "240px" : "",
               padding: "20px 18px",
               fontSize: "16px",
+              wordBreak:"break-word",
+              overflowWrap: 'break-word',
+              width: "250px"
             },
           };
         }}
