@@ -116,7 +116,7 @@ const ApplicationDetails = () => {
 
   return (
     <div>
-      <Header>{t("TL_COMMON_TR_DETAILS")}</Header>
+      <Header>{applicationDetails?.applicationData?.workflowCode == "NewTL" ? t("TL_APPLICATION_DETAILS_LABEL") : t("TL_COMMON_TR_DETAILS")}</Header>
       <ApplicationDetailsTemplate
         applicationDetails={applicationDetails}
         isLoading={isLoading}

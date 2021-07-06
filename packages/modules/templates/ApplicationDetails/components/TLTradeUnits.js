@@ -29,8 +29,8 @@ function TLTradeUnits({ units }) {
                 return (
                   <Row
                     key={t(value.title)}
-                    label={t(value.title)}
-                    text={t(value.value) || "N/A"}
+                    label={`${t(value.title)}:`}
+                    text={t(value.value) || "NA"}
                     last={index === value?.values?.length - 1}
                     caption={value.caption}
                     className="border-none"
