@@ -23,7 +23,7 @@ const CloseBtn = (props) => {
   );
 };
 
-const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation, onSelect, config, clearParams }) => {
+const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation, onSelect, config, clearParams = () => {} }) => {
   const { t } = useTranslation();
   const { mobileNumber, propertyIds, oldPropertyIds, locality, city } = Digit.Hooks.useQueryParams();
   const filters = {};

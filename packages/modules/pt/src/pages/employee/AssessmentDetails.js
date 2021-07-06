@@ -5,6 +5,7 @@ import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import { ActionBar, Header, Loader, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { useQueryClient } from "react-query";
+import _ from "lodash";
 
 const AssessmentDetails = () => {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ const AssessmentDetails = () => {
   const [showToast, setShowToast] = useState(null);
   const queryClient = useQueryClient();
   const history = useHistory();
+  const [appDetailsToShow, setAppDetailsToShow] = useState({});
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, propertyId);
   const { isLoading: assessmentLoading, mutate: assessmentMutate } = Digit.Hooks.pt.usePropertyAssessment(tenantId);
@@ -29,6 +31,10 @@ const AssessmentDetails = () => {
     ptCalculationEstimateMutate({ Assessment: AssessmentData });
   }, []);
 
+  useEffect(() => {
+    if (applicationDetails) setAppDetailsToShow(_.cloneDeep(applicationDetails));
+  }, [applicationDetails]);
+
   let workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
     id: applicationDetails?.applicationData?.acknowldgementNumber,
@@ -37,12 +43,12 @@ const AssessmentDetails = () => {
     // serviceData: applicationDetails,
   });
 
-  applicationDetails?.applicationDetails?.shift();
-  applicationDetails?.applicationDetails?.unshift({
-    title: "ES_BILL_DETAILS_PT_DETAILS_HEADING",
+  appDetailsToShow?.applicationDetails?.shift();
+  appDetailsToShow?.applicationDetails?.unshift({
+    title: "PT_APPLICATION_SUMMARY",
     values: [
       {
-        title: "PT_TITLE_UNIQUE_PROPERTY_ID",
+        title: "PT_PROPERTY_PTUID",
         value: propertyId,
       },
       {
@@ -88,12 +94,12 @@ const AssessmentDetails = () => {
 
   return (
     <div>
-      <Header>{t("ES_PT_TITLE_ASSESSMENT_DETAILS")}</Header>
+      <Header>{t("PT_ASSESS_PROPERTY")}</Header>
       <ApplicationDetailsTemplate
-        applicationDetails={applicationDetails}
+        applicationDetails={appDetailsToShow}
         isLoading={isLoading}
         isDataLoading={isLoading}
-        applicationData={applicationDetails?.applicationData}
+        applicationData={appDetailsToShow?.applicationData}
         mutate={null}
         workflowDetails={
           queryClient.getQueryData(["PT_ASSESSMENT", propertyId, location?.state?.Assessment?.financialYear])
@@ -110,11 +116,11 @@ const AssessmentDetails = () => {
       />
       {!queryClient.getQueryData(["PT_ASSESSMENT", propertyId, location?.state?.Assessment?.financialYear]) ? (
         <ActionBar>
-          <SubmitBar label={t("ES_PT_TITLE_ASSESS_PROPERTY")} onSubmit={handleAssessment} />
+          <SubmitBar label={t("PT_ASSESS")} onSubmit={handleAssessment} />
         </ActionBar>
       ) : (
         <ActionBar>
-          <SubmitBar label={t("PAYMENT_COLLECT_LABEL")} onSubmit={proceeedToPay} />
+          <SubmitBar label={t("PT_TOTALDUES_PAY")} onSubmit={proceeedToPay} />
         </ActionBar>
       )}
     </div>

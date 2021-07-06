@@ -1,30 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
 
 import { useParams, useHistory } from "react-router-dom";
 import { Header, Loader } from "@egovernments/digit-ui-react-components";
+import _ from "lodash";
 
 const PropertyDetails = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id: applicationNumber } = useParams();
   const [showToast, setShowToast] = useState(null);
+  const [appDetailsToShow, setAppDetailsToShow] = useState({});
   const history = useHistory();
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
-  const { data: fetchBillData } = Digit.Hooks.useFetchBillsForBuissnessService({
-    businessService: "PT.CREATE",
+  const { data: fetchBillData, isLoading: fetchBillLoading } = Digit.Hooks.useFetchBillsForBuissnessService({
+    businessService: "PT",
     consumerCode: applicationNumber,
   });
 
-  // const {
-  //   isLoading: updatingApplication,
-  //   isError: updateApplicationError,
-  //   data: updateResponse,
-  //   error: updateError,
-  //   mutate,
-  // } = Digit.Hooks.pt.useApplicationActions(tenantId);
+  useEffect(() => {
+    if (applicationDetails) {
+      setAppDetailsToShow(_.cloneDeep(applicationDetails));
+    }
+  }, [applicationDetails]);
 
   let workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
@@ -40,15 +40,15 @@ const PropertyDetails = () => {
 
   // applicationDetails?.applicationDetails?.shift();
 
-  if (applicationDetails?.applicationDetails?.[0]?.values?.[1].title !== "ES_PT_TITLE_TOTAL_PROPERTY_DUE") {
-    applicationDetails?.applicationDetails?.unshift({
+  if (appDetailsToShow?.applicationDetails?.[0]?.values?.[1].title !== "PT_TOTAL_DUES") {
+    appDetailsToShow?.applicationDetails?.unshift({
       values: [
         {
-          title: "ES_PT_TITLE_UNIQUE_PROPERTY_ID",
+          title: "PT_PROPERTY_PTUID",
           value: applicationNumber,
         },
         {
-          title: "ES_PT_TITLE_TOTAL_PROPERTY_DUE",
+          title: "PT_TOTAL_DUES",
           value: fetchBillData?.Bill[0]?.totalAmount ? `₹ ${fetchBillData?.Bill[0]?.totalAmount}` : "N/A",
         },
       ],
@@ -71,20 +71,35 @@ const PropertyDetails = () => {
               },
               tenantId: "pb",
             },
+            {
+              action: !fetchBillData?.Bill[0]?.totalAmount ? "MUTATE_PROPERTY" : "PT_TOTALDUES_PAY",
+              redirectionUrl: {
+                pathname: !fetchBillData?.Bill[0]?.totalAmount
+                  ? `/digit-ui/employee/pt/property-mutate-docs-required/${applicationNumber}`
+                  : `/digit-ui/employee/payment/collect/PT/${applicationNumber}`,
+                // state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+                state: null,
+              },
+              tenantId: "pb",
+            },
           ],
         },
       },
     };
   }
 
+  if (fetchBillLoading) {
+    return <Loader />;
+  }
+
   return (
     <div>
-      <Header>{t("ES_PT_TITLE_PROPERTY_DETAILS")}</Header>
+      <Header>{t("PT_PROPERTY_INFORMATION")}</Header>
       <ApplicationDetailsTemplate
-        applicationDetails={applicationDetails}
+        applicationDetails={appDetailsToShow}
         isLoading={isLoading}
         isDataLoading={isLoading}
-        applicationData={applicationDetails?.applicationData}
+        applicationData={appDetailsToShow?.applicationData}
         mutate={null}
         workflowDetails={workflowDetails}
         businessService="PT"

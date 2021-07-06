@@ -78,8 +78,8 @@ const MutationForm = ({ applicationData, tenantId }) => {
               gender,
               ownerType,
               relationship,
-              inistitutetype: owner.institution.type.code,
-              landlineNumber: owner.altContactNumber,
+              inistitutetype: owner?.institution?.type?.code,
+              landlineNumber: owner?.altContactNumber,
               ...obj,
               status: "ACTIVE",
             };

@@ -4,13 +4,14 @@ import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails
 
 import { useParams } from "react-router-dom";
 import { Header } from "@egovernments/digit-ui-react-components";
+import _ from "lodash";
 
 const ApplicationDetails = () => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id: applicationNumber } = useParams();
   const [showToast, setShowToast] = useState(null);
-  // const [callUpdateService, setCallUpdateValve] = useState(false);
+  const [appDetailsToShow, setAppDetailsToShow] = useState({});
   const [businessService, setBusinessService] = useState("PT.CREATE");
 
   const { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
@@ -35,6 +36,10 @@ const ApplicationDetails = () => {
   };
 
   useEffect(() => {
+    if (applicationDetails) setAppDetailsToShow(_.cloneDeep(applicationDetails));
+  }, [applicationDetails]);
+
+  useEffect(() => {
     if (workflowDetails?.data?.applicationBusinessService) {
       setBusinessService(workflowDetails?.data?.applicationBusinessService);
     }
@@ -42,8 +47,8 @@ const ApplicationDetails = () => {
 
   const PT_CEMP = Digit.UserService.hasAccess(["PT_CEMP"]) || false;
 
-  if (applicationDetails?.applicationData?.status === "ACTIVE" && PT_CEMP) {
-    if (businessService != "PT.UPDATE") setBusinessService("PT.UPDATE");
+  if (appDetailsToShow?.applicationData?.status === "ACTIVE" && PT_CEMP) {
+    if (businessService == "PT.CREATE") setBusinessService("PT.UPDATE");
     workflowDetails = {
       ...workflowDetails,
       data: {
@@ -90,11 +95,11 @@ const ApplicationDetails = () => {
 
   // console.log(PT_CEMP && businessService === "PT.UPDATE" && workflowDetails?.actionState?.isStateUpdatable);
 
-  if (!(applicationDetails?.applicationDetails[0]?.values?.[0].title === "PT_PROPERTY_APPLICATION_NO")) {
-    applicationDetails?.applicationDetails?.unshift({
+  if (!(appDetailsToShow?.applicationDetails?.[0]?.values?.[0].title === "PT_PROPERTY_APPLICATION_NO")) {
+    appDetailsToShow?.applicationDetails?.unshift({
       values: [
-        { title: "PT_PROPERTY_APPLICATION_NO", value: applicationDetails?.applicationData?.acknowldgementNumber },
-        { title: "ES_APPLICATION_CHANNEL", value: `ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_${applicationDetails?.applicationData?.channel}` },
+        { title: "PT_PROPERTY_APPLICATION_NO", value: appDetailsToShow?.applicationData?.acknowldgementNumber },
+        { title: "ES_APPLICATION_CHANNEL", value: `ES_APPLICATION_DETAILS_APPLICATION_CHANNEL_${appDetailsToShow?.applicationData?.channel}` },
       ],
     });
   }
@@ -107,10 +112,10 @@ const ApplicationDetails = () => {
     <div>
       <Header>{t("PT_APPLICATION_TITLE")}</Header>
       <ApplicationDetailsTemplate
-        applicationDetails={applicationDetails}
+        applicationDetails={appDetailsToShow}
         isLoading={isLoading}
         isDataLoading={isLoading}
-        applicationData={applicationDetails?.applicationData}
+        applicationData={appDetailsToShow?.applicationData}
         mutate={mutate}
         workflowDetails={workflowDetails}
         businessService={businessService}
