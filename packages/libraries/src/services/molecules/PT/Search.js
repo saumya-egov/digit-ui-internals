@@ -87,7 +87,7 @@ export const PTSearch = {
                   { title: "PT_OWNERSHIP_INFO_GENDER", value: owner?.gender },
                   { title: "PT_OWNERSHIP_INFO_MOBILE_NO", value: owner?.mobileNumber },
                   { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: `COMMON_MASTERS_OWNERTYPE_${owner?.ownerType}` || "NA" },
-                  { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.name },
+                  { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.fatherOrHusbandName },
                   { title: "PT_FORM3_OWNERSHIP_TYPE", value: response?.ownershipCategory },
                   { title: "PT_OWNERSHIP_INFO_EMAIL_ID", value: owner?.emailId },
                   { title: "PT_OWNERSHIP_INFO_CORR_ADDR", value: owner?.permanentAddress },
