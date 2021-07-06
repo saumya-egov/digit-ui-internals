@@ -7,6 +7,7 @@ import { configPTRejectApplication } from "./PTRejectApplication";
 import { configPTVerifyApplication } from "./PTVerifyApplication";
 import { configPTApproverApplication } from "./PTApproverApplication";
 import { configPTAssessProperty } from "./PTAssessProperty";
+import { configTLApproverApplication } from "./TLApproverApplication";
 
 export {
   configAssignDso,
@@ -18,4 +19,5 @@ export {
   configPTVerifyApplication,
   configPTApproverApplication,
   configPTAssessProperty,
+  configTLApproverApplication
 };
