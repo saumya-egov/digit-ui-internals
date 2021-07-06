@@ -12,7 +12,7 @@ const useMCollectMDMS = (tenantId, moduleCode, type, filter, config = {}) => {
   switch (type) {
     case "BusinessService":
       return useMCollectBillingService();
-    case "applcationStatus":
+    case "applicationStatus":
       return useMCollectApplcationStatus();
   }
 };

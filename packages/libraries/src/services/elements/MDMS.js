@@ -630,7 +630,7 @@ const getMCollectApplicationStatusCriteria = (tenantId, moduleCode, type) => ({
     moduleDetails: [
       {
         moduleName: moduleCode,
-        masterDetails: [{ name: "applcationStatus" }],
+        masterDetails: [{ name: "applicationStatus" }],
       },
     ],
   },
