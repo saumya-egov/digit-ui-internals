@@ -3,6 +3,7 @@ import { Switch, useLocation, Link } from "react-router-dom";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import NewApplication from "./NewApplication";
+import SearchApplication from "./SearchApplication";
 import Response from "../Response";
 
 const EmployeeApp = ({ path, url, userType }) => {
@@ -22,6 +23,8 @@ const EmployeeApp = ({ path, url, userType }) => {
           </p>
           <PrivateRoute path={`${path}/new-application`} component={() => <NewApplication parentUrl={url} />} />
           <PrivateRoute path={`${path}/response`} component={(props) => <Response {...props} parentRoute={path} />} />
+          <PrivateRoute path={`${path}/search/:variant`} component={(props) => <SearchApplication {...props} parentRoute={path} />} />
+          
         </div>
       </React.Fragment>
     </Switch>
