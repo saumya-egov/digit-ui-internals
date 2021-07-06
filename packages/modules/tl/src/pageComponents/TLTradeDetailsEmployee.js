@@ -242,7 +242,7 @@ const OwnerForm = (_props) => {
   return (
     <React.Fragment>
       <div style={{ marginBottom: "16px" }}>
-        <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
+        <div>
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_FINANCIAL_YEAR_LABEL")}:`}</CardLabel>
             <Controller
@@ -374,7 +374,7 @@ const OwnerForm = (_props) => {
             <div className="field">
               <Controller
                 name="commencementDate"
-                rules={{ required: t("ERR_DEFAULT_INPUT_FIELD_MSG"), validate: { pattern: (val) => (/^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(val) ? t("ERR_DEFAULT_INPUT_FIELD_MSG1") : t("ERR_DEFAULT_INPUT_FIELD_MSG")) } }}
+                rules={{ required: t("ERR_DEFAULT_INPUT_FIELD_MSG") }}
                 // defaultValue={tradedetils?.[0]?.commencementDate}
                 control={control}
                 render={(props) => (

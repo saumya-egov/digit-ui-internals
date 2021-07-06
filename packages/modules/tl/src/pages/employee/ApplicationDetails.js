@@ -14,6 +14,9 @@ const ApplicationDetails = () => {
   const [businessService, setBusinessService] = useState("NewTL"); //DIRECTRENEWAL
 
   const { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.tl.useApplicationDetail(t, tenantId, applicationNumber);
+  
+  const stateId = tenantId.split(".")[0];
+  const { data: TradeRenewalDate = {} } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "TradeLicense", ["TradeRenewal"]);
 
   const {
     isLoading: updatingApplication,
@@ -46,9 +49,74 @@ const ApplicationDetails = () => {
     workflowDetails.data.actionState.nextActions = workflowDetails?.data?.actionState?.nextActions?.filter(data => data.action !== "ADHOC")
   }
 
+
+  const userInfo = Digit.UserService.getUser();
+  const rolearray = userInfo?.info?.roles.filter(item => {
+    if (
+      (item.code == "TL_CEMP" && item.tenantId === tenantId) ||
+      item.code == "CITIZEN"
+    )
+      return true;
+  });
+
+  const rolecheck = rolearray.length > 0 ? true : false;
+  const validTo = applicationDetails?.applicationData?.validTo;
+  const currentDate = Date.now();
+  const duration = validTo - currentDate;
+  const renewalPeriod = TradeRenewalDate?.TradeLicense?.TradeRenewal?.[0]?.renewalPeriod;
+
+  if (rolecheck && (applicationDetails?.applicationData?.status === "APPROVED" || applicationDetails?.applicationData?.status === "EXPIRED") && duration <= renewalPeriod) {
+    if(workflowDetails?.data?.nextActions?.length > 0) {
+      workflowDetails = {
+        ...workflowDetails,
+        data: {
+          ...workflowDetails?.data,
+          actionState: {
+            nextActions: [
+              {
+                action: "RENEWAL_SUBMIT_BUTTON",
+                redirectionUrl: {
+                  pathname: `/digit-ui/employee/pt/property-details/${applicationNumber}`,
+                },
+                tenantId: stateId,
+              }
+            ],
+          },
+        },
+      };
+    }
+  }
+
+  if (rolearray && applicationDetails?.applicationData?.status === "PENDINGPAYMENT") {
+      workflowDetails?.data?.nextActions?.map(data => {
+        if (data.action === "PAY") {
+          workflowDetails = {
+            ...workflowDetails,
+            data: {
+              ...workflowDetails?.data,
+              actionState: {
+                nextActions: [
+                  {
+                    action: data.action,
+                    redirectionUrll: {
+                      pathname: `TL/${applicationDetails?.applicationData?.applicationNumber}/${tenantId}`,
+                      state: tenantId
+                    },
+                    tenantId: tenantId,
+                  }
+                ],
+              },
+            },
+          };
+        }
+      })
+  };
+
+
+
   return (
     <div>
-      <Header>{t("TL_COMMON_TR_DETAILS")}</Header>
+      <Header>{applicationDetails?.applicationData?.workflowCode == "NewTL" ? t("TL_APPLICATION_DETAILS_LABEL") : t("TL_COMMON_TR_DETAILS")}</Header>
       <ApplicationDetailsTemplate
         applicationDetails={applicationDetails}
         isLoading={isLoading}

@@ -11,7 +11,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const tenantIds = Digit.SessionStorage.get("HRMS_TENANTS");
   const GetCell = (value) => <span className="cell-text">{t(value)}</span>;
   const GetSlaCell = (value) => {
-    return value == "INACTIVE" ? <span className="sla-cell-error">{value || ""}</span> : <span className="sla-cell-success">{value || ""}</span>;
+    return value == "INACTIVE" ? <span className="sla-cell-error">{ t(value )|| ""}</span> : <span className="sla-cell-success">{ t(value) || ""}</span>;
   };
   const data = props?.data?.Employees;
 
@@ -86,7 +86,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         Header: t("HR_STATUS_LABEL"),
         disableSortBy: true,
         Cell: ({ row }) => {
-          return GetSlaCell(`${row.original?.isActive ? t( "ACTIVE") :  t("INACTIVE")}`);
+          return GetSlaCell(`${row.original?.isActive ? "ACTIVE" : "INACTIVE"}`);
         },
       },
     ];

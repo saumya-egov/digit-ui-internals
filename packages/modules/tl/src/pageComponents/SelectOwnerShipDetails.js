@@ -95,11 +95,11 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
 
   const dropdownData = getDropdwonForProperty(ownerShipdropDown);
 
-  useEffect(() => {
-    if (userType === "employee") {
-      setOwnershipCategory(dropdownData[0]);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (userType === "employee") {
+  //     setOwnershipCategory(dropdownData[0]);
+  //   }
+  // }, []);
 
   if (userType === "employee") {
     
@@ -111,7 +111,8 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
           </CardLabel>
           <Dropdown
             className="form-field"
-            selected={ownershipCategory ? ownershipCategory : dropdownData[0]}
+            selected={ownershipCategory}
+            // selected={ownershipCategory ? ownershipCategory : dropdownData[0]}
             // disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
             option={dropdownData}
             select={selectedValue}

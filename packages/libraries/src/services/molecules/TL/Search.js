@@ -148,6 +148,17 @@ export const TLSearch = {
       },
     };
 
+    if(response?.workflowCode == "NewTL") {
+      const details = {
+        title: "",
+        values: [
+          { title: "TL_COMMON_TABLE_COL_APP_NO", value: response?.applicationNumber || "NA" },
+          { title: "TL_APPLICATION_CHALLAN_LABEL", value: response?.tradeLicenseDetail?.channel || "NA" }
+        ],
+      };
+      response && employeeResponse.push(details);
+    }
+
     response && employeeResponse.push(tradedetails);
     response?.tradeLicenseDetail?.tradeUnits && employeeResponse.push(tradeUnits);
     response?.tradeLicenseDetail?.accessories && employeeResponse.push(accessories);

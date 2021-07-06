@@ -26,8 +26,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData, ownerInde
   let isEditProperty = formData?.isEditProperty || false;
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
 
-  const { data: Menu} = Digit.Hooks.pt.useGenderMDMS(tenantId, "common-masters", "GenderType");
+  const { data: Menu} = Digit.Hooks.pt.useGenderMDMS(stateId, "common-masters", "GenderType");
 
   let menu = [];
     Menu &&

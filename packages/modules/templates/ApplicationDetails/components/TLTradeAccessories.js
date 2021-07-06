@@ -30,7 +30,7 @@ function TLTradeAccessories({ units }) {
                 return (
                   <Row
                     key={t(value.title)}
-                    label={t(value.title)}
+                    label={`${t(value.title)}:`}
                     text={t(value.value) || "N/A"}
                     last={index === value?.values?.length - 1}
                     caption={value.caption}
