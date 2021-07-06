@@ -30,6 +30,18 @@ const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, re
     },
   ];
 
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
+
+  const { data: Menu} = Digit.Hooks.hrms.useHRMSGenderMDMS(stateId, "common-masters", "GenderType");
+
+  let HRMenu = [];
+
+  Menu &&
+    Menu.map((comGender) => {
+      HRMenu.push({name: `COMMON_GENDER_${comGender.code}`, code: `${comGender.code}`})
+    }); 
+
   function setValue(value, input) {
     onSelect(config.key, { ...formData[config.key], [input]: value });
   }

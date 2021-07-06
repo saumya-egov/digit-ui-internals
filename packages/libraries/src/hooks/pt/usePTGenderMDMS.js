@@ -3,7 +3,7 @@ import { MdmsService } from "../../services/elements/MDMS";
 
 const usePTGenderMDMS = (tenantId, moduleCode, type, config = {}) => {
   const usePTGenders = () => {
-    return useQuery("PT_FORM_GENDER_DETAILS", () => MdmsService.PTGenderType(tenantId, moduleCode, type), config)
+    return useQuery("PT_FORM_GENDER_DETAILS", () => MdmsService.PTGenderType(tenantId, moduleCode ,type), config);
   };
   
 
