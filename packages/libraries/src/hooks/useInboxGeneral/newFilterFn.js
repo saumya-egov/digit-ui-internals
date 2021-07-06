@@ -2,7 +2,7 @@ export const filterFunctions = {
   PT: (filtersArg) => {
     let { uuid } = Digit.UserService.getUser()?.info || {};
 
-    console.log(filtersArg.propertyIds);
+    console.log(filtersArg.services, "in filter fn");
     const searchFilters = {};
     const workflowFilters = {};
 
@@ -27,8 +27,6 @@ export const filterFunctions = {
       workflowFilters.assignee = uuid;
     }
 
-    searchFilters.mobileNumber = "9999999999";
-
     if (mobileNumber) {
       searchFilters.mobileNumber = mobileNumber;
     }
@@ -43,9 +41,13 @@ export const filterFunctions = {
     //   searchFilters.sortOrder = sortOrder;
     // }
     if (services) {
-      // workflowFilters.businessService = services.join();
-      workflowFilters.businessService = "PT.CREATE";
+      workflowFilters.businessService = services;
     }
+
+    searchFilters["isInboxSearch"] = true;
+    searchFilters["creationReason"] = ["CREATE", "MUTATION"];
+    workflowFilters["moduleName"] = "PT";
+
     // if (limit) {
     //   searchFilters.limit = limit;
     // }
@@ -53,7 +55,7 @@ export const filterFunctions = {
     //   searchFilters.offset = offset;
     // }
 
-    workflowFilters.businessService = "PT.CREATE";
+    // workflowFilters.businessService = "PT.CREATE";
     // searchFilters.mobileNumber = "9898568989";
     return { searchFilters, workflowFilters, limit, offset, sortBy, sortOrder };
   },

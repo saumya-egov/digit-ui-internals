@@ -58,10 +58,10 @@ const useNewInboxGeneral = ({ tenantId, ModuleCode, filters, middleware = [], co
     {
       select: (data) => {
         const { statusMap, totalCount } = data;
-        client.setQueryData(`INBOX_STATUS_MAP_${ModuleCode}`, (oldStatusMap) => {
-          if (!oldStatusMap) return statusMap;
-          else return [...oldStatusMap.filter((e) => statusMap.some((f) => f.stateId === e.stateId))];
-        });
+        // client.setQueryData(`INBOX_STATUS_MAP_${ModuleCode}`, (oldStatusMap) => {
+        //   if (!oldStatusMap) return statusMap;
+        //   else return [...oldStatusMap.filter((e) => statusMap.some((f) => f.stateId === e.stateId))];
+        // });
         if (data.items.length) {
           return data.items?.map((obj) => ({
             searchData: obj.businessObject,

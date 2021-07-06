@@ -79,7 +79,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
     <div className="inbox-container">
       {!props.isSearch && (
         <div className="filters-container">
-          <InboxLinks parentRoute={props.parentRoute} businessService={props.businessService} />
+          <InboxLinks parentRoute={props.parentRoute} businessService={props.moduleCode} />
           <div>
             {
               <FilterComponent
@@ -89,7 +89,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
                 type="desktop"
                 useNewInboxAPI={useNewInboxAPI}
                 statusMap={useNewInboxAPI ? data?.[0].statusMap : null}
-                businessService={props.businessService}
+                moduleCode={props.moduleCode}
               />
             }
           </div>

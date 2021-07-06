@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import Status from "./Status";
 import _ from "lodash";
 
-const Filter = ({ searchParams, onFilterChange, defaultSearchParams, statusMap, businessService, ...props }) => {
+const Filter = ({ searchParams, onFilterChange, defaultSearchParams, statusMap, moduleCode, ...props }) => {
   const { t } = useTranslation();
   const client = useQueryClient();
 
@@ -36,6 +36,10 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, statusMap, 
     {
       label: "ES_PT_TRANSFER_OWNERSHIP",
       value: "PT.MUTATION",
+    },
+    {
+      label: "ES_PT_UPDATE",
+      value: "PT.UPDATE",
     },
   ];
 
@@ -137,8 +141,8 @@ const Filter = ({ searchParams, onFilterChange, defaultSearchParams, statusMap, 
               <Status
                 searchParams={_searchParams}
                 businessServices={_searchParams.services}
-                statusMap={client.getQueryData(`INBOX_STATUS_MAP_${businessService}`) || statusMap}
-                moduleCode={businessService}
+                statusMap={statusMap}
+                moduleCode={moduleCode}
                 onAssignmentChange={(e, status) => {
                   if (e.target.checked) localParamChange({ applicationStatus: [..._searchParams?.applicationStatus, status] });
                   else localParamChange({ applicationStatus: _searchParams?.applicationStatus.filter((e) => e.code !== status.code) });

@@ -6,6 +6,8 @@ import StatusCount from "./StatusCount";
 const Status = ({ onAssignmentChange, searchParams, businessServices, statusMap, moduleCode }) => {
   const { t } = useTranslation();
 
+  console.log({ businessServices, moduleCode }, "inside status");
+
   const [moreStatus, showMoreStatus] = useState(false);
 
   const { data: statusData, isLoading } = Digit.Hooks.useApplicationStatusGeneral({ businessServices }, {});

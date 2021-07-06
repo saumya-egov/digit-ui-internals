@@ -8,7 +8,7 @@ import MobileInbox from "../../components/MobileInbox";
 const Inbox = ({
   useNewInboxAPI,
   parentRoute,
-  businessService = "PT",
+  moduleCode = "PT",
   initialStates = {},
   filterComponent,
   isInbox,
@@ -43,10 +43,6 @@ const Inbox = ({
     return isInbox ? {} : { enabled: false };
   });
 
-  const [searchParams, setSearchParams] = useState(() => {
-    return initialStates.searchParams || {};
-  });
-
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParams = isMobile
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
@@ -55,12 +51,12 @@ const Inbox = ({
   const { isFetching, isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = useNewInboxAPI
     ? Digit.Hooks.useNewInboxGeneral({
         tenantId,
-        ModuleCode: businessService,
+        ModuleCode: moduleCode,
         filters: { ...searchParams, ...paginationParams, sortParams },
       })
     : Digit.Hooks.useInboxGeneral({
         tenantId,
-        businessService,
+        businessService: moduleCode,
         isInbox,
         filters: { ...searchParams, ...paginationParams, sortParams },
         rawWfHandler,
@@ -134,7 +130,7 @@ const Inbox = ({
         <div>
           {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
           <DesktopInbox
-            businessService={businessService}
+            moduleCode={moduleCode}
             data={data}
             tableConfig={rest?.tableConfig}
             isLoading={hookLoading}

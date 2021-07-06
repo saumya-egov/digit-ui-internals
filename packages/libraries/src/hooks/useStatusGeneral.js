@@ -1,11 +1,5 @@
 import { useQuery } from "react-query";
 
-/**
- *
- * @param {tenantId} optional
- * @param {businessServive} neccessory
- */
-
 const useApplicationStatusGeneral = ({ businessServices = [], tenantId }, config) => {
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
 
@@ -13,7 +7,7 @@ const useApplicationStatusGeneral = ({ businessServices = [], tenantId }, config
   const userRoles = userInfo.info.roles.map((roleData) => roleData.code);
 
   const fetch = async () =>
-    await Digit.WorkflowService.init(tenantId).then((res) => {
+    await Digit.WorkflowService.init(tenantId, businessServices.join()).then((res) => {
       const { BusinessServices: data } = res;
       return data;
     });

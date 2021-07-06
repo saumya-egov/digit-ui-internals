@@ -59,7 +59,6 @@ const MutationCitizen = (props) => {
 
     console.log(params, currentPath, "inside mutation form");
     if (!activeRouteObj.nextStep) {
-      // handleSubmit();
       setSubmit(true);
     } else if (typeof activeRouteObj.nextStep === "string") {
       if (skipStep) history.replace(`${pathArray.join("/")}/${activeRouteObj.nextStep}${queryString}`);
