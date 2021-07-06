@@ -19,8 +19,9 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   const editScreen = url.includes("/modify-application/");
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
 
-  const {data: Menu} = Digit.Hooks.tl.useTLGenderMDMS(tenantId, "common-masters", "GenderType");
+  const {data: Menu} = Digit.Hooks.tl.useTLGenderMDMS(stateId, "common-masters", "GenderType");
 
   let TLmenu = [];
     Menu &&
@@ -106,7 +107,7 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
             <CardLabel>{`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}`}</CardLabel>
             <RadioButtons
               t={t}
-              options={options}
+              options={TLmenu}
               optionsKey="code"
               name="gender"
               value={gender}
