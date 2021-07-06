@@ -112,7 +112,6 @@ const ActionModal = ({ t, action, tenantId, state, id, closeModal, submitAction,
     }
 
     useEffect(() => {
-        debugger;
         if (action) {
             setConfig(
                 configTLApproverApplication({

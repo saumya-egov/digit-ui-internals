@@ -13,7 +13,6 @@ export const configTLApproverApplication = ({
   assigneeLabel,
   businessService,
 }) => {
-    debugger;
    let checkCondtions = true;
    if (action?.action == "SENDBACKTOCITIZEN") checkCondtions = false;
    if (action.isTerminateState) checkCondtions = false;
