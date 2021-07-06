@@ -60,14 +60,18 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
   }, [response]);
 
   const filterValue = useCallback((rows, id, filterValue = "") => {
+    console.log(rows, 'key original');
     return rows.filter(row => {
-      const res = Object.keys(row.original).find(key => {
-        if (typeof row.original[key] === 'object') {
-          return Object.keys(row.original[key]).find(id => {
-            return String(row.original[key][id]).toLowerCase().startsWith(filterValue?.toLowerCase());
+      const res = Object.keys(row.values).find(key => {
+        if (typeof row.values[key] === 'object') {
+          return Object.keys(row.values[key]).find(id => {
+            if (id === 'insight') {
+              return String(Math.abs(row.values[key][id]) + '%').toLowerCase().startsWith(filterValue?.toLowerCase());
+            }
+            return String(row.values[key][id]).toLowerCase().startsWith(filterValue?.toLowerCase());
           })
         }
-        return String(row.original[key]).toLowerCase().startsWith(filterValue?.toLowerCase());
+        return String(row.values[key]).toLowerCase().split(' ').some(str => str.startsWith(filterValue?.toLowerCase()));
       })
       return res;
     })
@@ -117,33 +121,48 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
     return typeof value1 === "number" ? value1 - value2 : value1.localeCompare(value2);
   }, []);
 
+  const accessData = (plot) => {
+    const name = plot?.name.replaceAll(".", " ")
+    return (originalRow, rowIndex, columns) => {
+      // console.log(originalRow, columns, 'row print');
+      const cellValue = originalRow[name];
+      if (name === "CapacityUtilization" && chartKey !== "fsmVehicleLogReportByVehicleNo") {
+        const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
+        const { range } = value;
+        const { startDate, endDate } = range;
+        const numberOfDays = Math.max(differenceInDays(endDate, startDate), 1);
+        const ulbs  = dssTenants.filter((tenant) => tenant?.city?.ddrName === originalRow?.key || tenant?.code === originalRow?.key).map(tenant => tenant.code);
+        const totalCapacity = fstpMdmsData?.filter(plant => ulbs.find(ulb => plant.ULBS.includes(ulb))).reduce((acc, plant) => acc + Number(plant.PlantOperationalCapacityKLD), 0)
+        const result = ((rowValue / (totalCapacity * numberOfDays)) * 100).toFixed(2) + "%";
+        return typeof cellValue === 'object' ? { insight: cellValue?.insight, value: result } : String(result);
+      }
+      if (name === "CapacityUtilization" && chartKey === "fsmVehicleLogReportByVehicleNo") {
+        const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
+        const result = ((rowValue / originalRow?.TankCapacity) * 100).toFixed(2) + "%";
+        return typeof cellValue === 'object' ? { insight: cellValue?.insight, value: result } : String(result);
+      }
+      if (plot?.symbol === "amount") {
+        return typeof cellValue === "object" ?
+          { value: convertDenomination(cellValue?.value), insight: cellValue?.insight } :
+          String(convertDenomination(cellValue))
+      }
+      return originalRow[name];
+    }
+  }
+
   const tableColumns = useMemo(
     () =>
-      response?.responseData?.data?.[0]?.plots?.map((plot) => ({
+      response?.responseData?.data?.[0]?.plots?.filter(plot => plot?.name !== 'TankCapacity').map((plot) => ({
         Header: renderHeader(plot),
-        accessor: plot?.name.replaceAll(".", " "),
+        accessor: accessData(plot),
+        id: plot?.name.replaceAll(".", " "),
         symbol: plot?.symbol,
         sortType: sortRows,
         Cell: (args) => {
           const { value: cellValue, column, row } = args;
-          // if (column.id === "CapacityUtilization") {
-          //   console.log(cellValue, 'cellvalue');
-          //   const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
-          //   const { range } = value;
-          //   const { startDate, endDate } = range;
-          //   const numberOfDays = Math.max(differenceInDays(endDate, startDate), 1);
-          //   const ulbs  = dssTenants.filter((tenant) => tenant?.city?.ddrName === row.original.key || tenant?.code === row.original.key).map(tenant => tenant.code);
-          //   const totalCapacity = fstpMdmsData?.filter(plant => ulbs.find(ulb => plant.ULBS.includes(ulb))).reduce((acc, plant) => acc + Number(plant.PlantOperationalCapacityKLD), 0)
-          //   const result = `${((rowValue / (totalCapacity * numberOfDays)) * 100).toFixed(2)}%`;
-          //   return typeof cellValue === 'object' ? <InsightView insight={cellValue?.insight} rowValue={result} /> : String(result);
-          // }
           if (typeof cellValue === "object") {
-            let { insight, value: rowValue } = cellValue;
-            if (column.symbol === "amount" && plot?.name !=="TotalSeptageCollected" && plot?.name !== "TotalSeptageDumped") {
-              rowValue = convertDenomination(rowValue);
-            }
             return (
-              <InsightView insight={insight} rowValue={rowValue} />
+              <InsightView insight={cellValue?.insight} rowValue={cellValue?.value} />
             );
           }
           const filter = response?.responseData?.filter.find((elem) => elem.column === column.id);
@@ -156,9 +175,6 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
           }
           if (column.id === "CitizenAverageRating") {
             return <Rating id={row.id} currentRating={Math.round(cellValue * 10) / 10} styles={{ width: "unset", marginBottom: 0 }} starStyles={{ width: "25px" }} />;
-          }
-          if (column.symbol === "amount" && plot?.name !=="TotalSeptageCollected" && plot?.name !== "TotalSeptageDumped") {
-            return String(convertDenomination(cellValue));
           }
           return String(t(cellValue));
         },
@@ -185,7 +201,7 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
       return rows?.plots?.reduce((acc, row, currentIndex) => {
         let value = row?.value !== null ? row?.value : row?.label || "";
         let insight = null;
-        if ((row.symbol === "number" || row.symbol === "percentage" || row.symbol === "amount") && row.name !== "CitizenAverageRating" && lyData !== undefined) {
+        if ((row.symbol === "number" || row.symbol === "percentage" || row.symbol === "amount") && (row.name !== "CitizenAverageRating" && row.name !== "TankCapacity") && lyData !== undefined) {
           let prevData = lyData.plots[currentIndex].value;
           if (prevData === value) insight = 0;
           else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
@@ -194,7 +210,7 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
           value = Math.round((value + Number.EPSILON) * 100) / 100;
         }
         acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : row?.name === "S.N." ? id + 1 : value;
-        acc['key'] = t(rows.headerName); 
+        acc['key'] = rows.headerName; 
         return acc;
       }, {});
     });
