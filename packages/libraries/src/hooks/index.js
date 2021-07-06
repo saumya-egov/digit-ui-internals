@@ -20,6 +20,7 @@ import useInboxGeneral from "./useInboxGeneral/useInboxGeneral";
 import useApplicationStatusGeneral from "./useStatusGeneral";
 import useModuleTenants from "./useModuleTenants";
 import useStore from "./useStore";
+import { useTenants } from "./useTenants"
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -30,7 +31,7 @@ import useEmployeeFilter from "./pgr/useEmployeeFilter";
 import useInboxData from "./pgr/useInboxData";
 import useLocalities from "./pgr/useLocalities";
 import useServiceDefs from "./pgr/useServiceDefs";
-import useTenants from "./pgr/useTenants";
+import usePGRTenants from "./pgr/useTenants";
 import useComplaintSubType from "./pgr/useComplaintSubType";
 import useComplaintStatusCount from "./pgr/useComplaintStatusWithCount";
 
@@ -117,7 +118,7 @@ const pgr = {
   useInboxData,
   useLocalities,
   useServiceDefs,
-  useTenants,
+  useTenants: usePGRTenants,
   useComplaintSubType,
   usePropertyMDMS,
   useComplaintStatusCount,
@@ -225,6 +226,7 @@ const Hooks = {
   useModuleTenants,
   useRecieptSearch,
   useStore,
+  useTenants,
   pgr,
   fsm,
   pt,
