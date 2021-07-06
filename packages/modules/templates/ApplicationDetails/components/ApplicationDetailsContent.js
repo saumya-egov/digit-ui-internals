@@ -72,7 +72,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
               return (
                 <Row
                   key={t(value.title)}
-                  label={t(value.title)}
+                  label={!checkLocation ? t(value.title) : `${t(value.title)}:`}
                   text={t(value.value) || "N/A"}
                   last={index === detail?.values?.length - 1}
                   caption={value.caption}
