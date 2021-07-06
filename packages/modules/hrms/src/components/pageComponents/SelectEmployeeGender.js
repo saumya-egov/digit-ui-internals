@@ -5,6 +5,18 @@ import { useLocation } from "react-router-dom";
 const SelectEmployeeGender = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
   // console.log("find errors here", errors)
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const stateId = tenantId.split(".")[0];
+
+  const { data: Menu} = Digit.Hooks.hrms.useHRMSGenderMDMS(stateId, "common-masters", "GenderType");
+
+  let HRMenu = [];
+
+  Menu &&
+    Menu.map((comGender) => {
+      HRMenu.push({name: `COMMON_GENDER_${comGender.code}`, code: `${comGender.code}`})
+    }); 
+
   const inputs = [
     {
       label: "HR_GENDER_LABEL",
