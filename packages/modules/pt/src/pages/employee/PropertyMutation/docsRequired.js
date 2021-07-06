@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardHeader, CardSubHeader, CardText, Loader, SubmitBar, CardSectionHeader, CardLabel } from "@egovernments/digit-ui-react-components";
+import {
+  Card,
+  CardHeader,
+  CardSubHeader,
+  CardText,
+  Loader,
+  SubmitBar,
+  CardSectionHeader,
+  CardLabel,
+  ActionBar,
+} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 
@@ -48,8 +58,10 @@ const RequiredDoc = () => {
             </React.Fragment>
           );
         })}
-        <SubmitBar style={{ display: "block", marginLeft: "auto" }} label={t("PT_TRANSFER_OWNERSHIP")} onSubmit={OnSubmit} />
       </Card>
+      <ActionBar>
+        <SubmitBar style={{ display: "block", marginLeft: "auto" }} label={t("PT_TRANSFER_OWNERSHIP")} onSubmit={OnSubmit} />
+      </ActionBar>
     </React.Fragment>
   );
 };

@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
 
-import { useParams, useHistory } from "react-router-dom";
-import { Header, Loader } from "@egovernments/digit-ui-react-components";
+import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
+import OwnerHistory from "./PropertyMutation/ownerHistory";
+
+import { useParams, useHistory, Link } from "react-router-dom";
+import { Header, Loader, LinkLabel, Modal } from "@egovernments/digit-ui-react-components";
 import _ from "lodash";
+
+const Close = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFFFFF">
+    <path d="M0 0h24v24H0V0z" fill="none" />
+    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+  </svg>
+);
+
+const CloseBtn = (props) => {
+  return (
+    <div className="icon-bg-secondary" onClick={props.onClick}>
+      <Close />
+    </div>
+  );
+};
 
 const PropertyDetails = () => {
   const { t } = useTranslation();
@@ -12,6 +29,7 @@ const PropertyDetails = () => {
   const { id: applicationNumber } = useParams();
   const [showToast, setShowToast] = useState(null);
   const [appDetailsToShow, setAppDetailsToShow] = useState({});
+  const [showModal, setShowModal] = useState(false);
   const history = useHistory();
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
@@ -40,6 +58,22 @@ const PropertyDetails = () => {
 
   // applicationDetails?.applicationDetails?.shift();
 
+  console.log(appDetailsToShow?.applicationDetails, "here in app details");
+  if (appDetailsToShow?.applicationDetails) {
+    appDetailsToShow.applicationDetails = appDetailsToShow?.applicationDetails?.map((e) => {
+      if (e.title === "PT_OWNERSHIP_INFO_SUB_HEADER") {
+        return {
+          ...e,
+          Component: () => (
+            <LinkLabel onClick={() => setShowModal((prev) => !prev)} style={{ display: "inline", marginLeft: "25px" }}>
+              {t("PT_VIEW_HISTORY")}
+            </LinkLabel>
+          ),
+        };
+      }
+      return e;
+    });
+  }
   if (appDetailsToShow?.applicationDetails?.[0]?.values?.[1].title !== "PT_TOTAL_DUES") {
     appDetailsToShow?.applicationDetails?.unshift({
       values: [
@@ -108,6 +142,16 @@ const PropertyDetails = () => {
         closeToast={closeToast}
         timelineStatusPrefix={"ES_PT_COMMON_STATUS_"}
       />
+      {showModal ? (
+        <Modal
+          headerBarEnd={<CloseBtn onClick={() => setShowModal(false)} />}
+          hideSubmit={true}
+          isDisabled={false}
+          popupStyles={{ width: "75%", marginTop: "75px" }}
+        >
+          <OwnerHistory propertyId={applicationNumber} userType={"employee"} />
+        </Modal>
+      ) : null}
     </div>
   );
 };

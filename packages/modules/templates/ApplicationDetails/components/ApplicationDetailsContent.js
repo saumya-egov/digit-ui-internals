@@ -20,7 +20,7 @@ import PropertyFloors from "./PropertyFloors";
 import PropertyEstimates from "./PropertyEstimates";
 import PropertyOwners from "./PropertyOwners";
 import TLTradeUnits from "./TLTradeUnits";
-import TLTradeAccessories from "./TLTradeAccessories"
+import TLTradeAccessories from "./TLTradeAccessories";
 
 function ApplicationDetailsContent({ applicationDetails, workflowDetails, isDataLoading, applicationData, businessService, timelineStatusPrefix }) {
   const { t } = useTranslation();
@@ -58,29 +58,34 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
     <Card style={{ position: "relative" }}>
       {applicationDetails?.applicationDetails?.map((detail, index) => (
         <React.Fragment key={index}>
-          <div style={ checkLocation ? { lineHeight: "19px" } : {}}>
-          {index === 0 && !detail.asSectionHeader ? (
-            <CardSubHeader style={{ marginBottom: "16px" }}>{t(detail.title)}</CardSubHeader>
-          ) : (
-            <CardSectionHeader style={{ marginBottom: "16px", marginTop: "32px" }}>{t(detail.title)}</CardSectionHeader>
-          )}
-          <StatusTable>
-            {detail?.values?.map((value, index) => {
-              if (value.map === true && value.value !== "N/A") {
-                return <Row key={t(value.title)} label={t(value.title)} text={<img src={t(value.value)} alt="" />} />;
-              }
-              return (
-                <Row
-                  key={t(value.title)}
-                  label={t(value.title)}
-                  text={t(value.value) || "N/A"}
-                  last={index === detail?.values?.length - 1}
-                  caption={value.caption}
-                  className="border-none"
-                />
-              );
-            })}
-          </StatusTable>
+          <div style={checkLocation ? { lineHeight: "19px" } : {}}>
+            {index === 0 && !detail.asSectionHeader ? (
+              <CardSubHeader style={{ marginBottom: "16px" }}>{t(detail.title)}</CardSubHeader>
+            ) : (
+              <React.Fragment>
+                <CardSectionHeader style={{ marginBottom: "16px", marginTop: "32px" }}>
+                  {t(detail.title)}
+                  {detail?.Component ? <detail.Component /> : null}
+                </CardSectionHeader>
+              </React.Fragment>
+            )}
+            <StatusTable>
+              {detail?.values?.map((value, index) => {
+                if (value.map === true && value.value !== "N/A") {
+                  return <Row key={t(value.title)} label={t(value.title)} text={<img src={t(value.value)} alt="" />} />;
+                }
+                return (
+                  <Row
+                    key={t(value.title)}
+                    label={t(value.title)}
+                    text={t(value.value) || "N/A"}
+                    last={index === detail?.values?.length - 1}
+                    caption={value.caption}
+                    className="border-none"
+                  />
+                );
+              })}
+            </StatusTable>
           </div>
           {detail?.additionalDetails?.floors && <PropertyFloors floors={detail?.additionalDetails?.floors} />}
           {detail?.additionalDetails?.owners && <PropertyOwners owners={detail?.additionalDetails?.owners} />}
@@ -90,7 +95,6 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
           {detail?.additionalDetails?.taxHeadEstimatesCalculation && (
             <PropertyEstimates taxHeadEstimatesCalculation={detail?.additionalDetails?.taxHeadEstimatesCalculation} />
           )}
-
         </React.Fragment>
       ))}
       <BreakLine />

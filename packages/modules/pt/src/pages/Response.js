@@ -105,7 +105,7 @@ const Response = (props) => {
           t={t}
           data={mutation?.data || successData}
           action={state?.action}
-          isSuccess={!successData ? mutation?.isSuccess : true}
+          isSuccess={!Object.keys(successData || {}).length ? mutation?.isSuccess : true}
           isLoading={(mutation.isIdle && !mutationHappened) || mutation?.isLoading}
           isEmployee={props.parentRoute.includes("employee")}
         />

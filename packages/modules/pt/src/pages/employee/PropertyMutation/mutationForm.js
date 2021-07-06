@@ -48,6 +48,9 @@ const MutationForm = ({ applicationData, tenantId }) => {
         )
       );
     }
+    if (formData?.ownershipCategory?.code?.includes?.("MULTIPLE")) {
+      if (formData?.owners?.length < 2) setSubmitValve(false);
+    }
   };
 
   const onSubmit = (data) => {
