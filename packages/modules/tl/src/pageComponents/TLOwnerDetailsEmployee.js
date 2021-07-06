@@ -15,10 +15,11 @@ const createOwnerDetails = () => ({
   ownerType: "",
   gender: "",
   isCorrespondenceAddress: "",
+  // correspondenceAddress: "",
   key: Date.now(),
 });
 
-const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setError, formState, clearErrors }) => {
+const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError, formState, clearErrors }) => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const isEditScreen = pathname.includes("/modify-application/");
@@ -55,13 +56,18 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
     onSelect(config?.key, data);
   }, [owners]);
 
-  useEffect(() => {
-    setOwners([createOwnerDetails()]);
-  }, [formData?.ownershipCategory?.code]);
+  // useEffect(() => {
+  //   setOwners([createOwnerDetails()]);
+  // }, [formData?.ownershipCategory?.code]);
 
   useEffect(() => {
     if (formData?.tradeUnits?.length > 0) {
-      let flag = true;;
+      let flag = true;
+      owners.map(data => {
+        Object.keys(data).map(dta => {
+          if(dta != "key" &&  data[dta]) flag = false;
+        });
+      });
       formData?.tradeUnits.map(data => {
         Object.keys(data).map(dta => {
           if (dta != "key" && data[dta] != undefined && data[data] != "" && data[data] != null) {
@@ -157,7 +163,7 @@ const OwnerForm = (_props) => {
     const part = {};
     keys.forEach((key) => (part[key] = owner[key]));
 
-    let _ownerType = isIndividualTypeOwner ? {} : { ownerType: { code: "NONE" } };
+    // let _ownerType = isIndividualTypeOwner ? {} : { ownerType: { code: "NONE" } };
 
     if (!_.isEqual(formValue, part)) {
       Object.keys(formValue).map(data => {
@@ -165,7 +171,9 @@ const OwnerForm = (_props) => {
           setIsErrors(true);
         }
       });
-      setOwners((prev) => prev.map((o) => (o.key && o.key === owner.key ? { ...o, ...formValue, ..._ownerType } : { ...o })));
+      setOwners((prev) => prev.map((o) => {
+        return (o.key && o.key === owner.key ? { ...o, ...formValue } : { ...o })
+      }));
       trigger();
     }
   }, [formValue]);
@@ -183,7 +191,7 @@ const OwnerForm = (_props) => {
   return (
     <React.Fragment>
       <div style={{ marginBottom: "16px" }}>
-        <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
+        <div style={formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" ? { border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px", borderRadius: "4px" } : {}}>
           {allOwners?.length > 1 ? (
             <div onClick={() => removeOwner(owner)} style={{ marginBottom: "16px", padding: "5px", cursor: "pointer", textAlign: "right" }}>
               X
@@ -364,16 +372,16 @@ const OwnerForm = (_props) => {
             <div className="field">
               <Controller
                 control={control}
-                name={"correspondenceAddress"}
-                defaultValue={owner?.correspondenceAddress}
+                name={"permanentAddress"}
+                defaultValue={owner?.permanentAddress}
                 rules={isIndividualTypeOwner ? {} : { required: "REQUIRED" }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
-                    autoFocus={focusIndex.index === owner?.key && focusIndex.type === "correspondenceAddress"}
+                    autoFocus={focusIndex.index === owner?.key && focusIndex.type === "permanentAddress"}
                     onChange={(e) => {
                       props.onChange(e.target.value);
-                      setFocusIndex({ index: owner.key, type: "correspondenceAddress" });
+                      setFocusIndex({ index: owner.key, type: "permanentAddress" });
                     }}
                     onBlur={props.onBlur}
                   />
@@ -388,4 +396,4 @@ const OwnerForm = (_props) => {
   );
 };
 
-export default PTEmployeeOwnershipDetails;
+export default TLOwnerDetailsEmployee;
