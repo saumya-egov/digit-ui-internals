@@ -43,10 +43,6 @@ const Inbox = ({
     return isInbox ? {} : { enabled: false };
   });
 
-  const [searchParams, setSearchParams] = useState(() => {
-    return initialStates.searchParams || {};
-  });
-
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParams = isMobile
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
