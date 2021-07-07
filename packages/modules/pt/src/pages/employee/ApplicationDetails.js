@@ -56,8 +56,12 @@ const ApplicationDetails = () => {
   }, [applicationDetails]);
 
   useEffect(() => {
-    if (auditData) {
-      // TransfererDetails
+    if (
+      auditData &&
+      Object.keys(appDetailsToShow).length &&
+      applicationDetails?.applicationData?.status !== "ACTIVE" &&
+      applicationDetails?.applicationData?.creationReason === "MUTATION"
+    ) {
       let applicationDetails = appDetailsToShow.applicationDetails.filter((e) => e.title === "PT_OWNERSHIP_INFO_SUB_HEADER");
       let compConfig = newConfigMutate.reduce((acc, el) => [...acc, ...el.body], []).find((e) => e.component === "TransfererDetails");
       applicationDetails.unshift({
