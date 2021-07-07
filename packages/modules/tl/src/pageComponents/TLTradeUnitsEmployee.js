@@ -215,6 +215,10 @@ const TradeUnitForm = (_props) => {
                                                 tradeTypeOptions.push(data);
                                             });
                                             const filterTradeCategoryList = getUniqueItemsFromArray(filteredTradeType, "code");
+                                            setValue("tradeType", "");
+                                            setValue("tradeSubType", "");
+                                            setValue("uom", "");
+                                            setValue("uomValue", "");
                                             setTradeTypeOptionsList(filterTradeCategoryList);
                                         }
                                         props.onChange(e);
@@ -240,7 +244,7 @@ const TradeUnitForm = (_props) => {
                             render={(props) => (
                                 <Dropdown
                                     className="form-field"
-                                    selected={props.value}
+                                    selected={getValues("tradeType")}
                                     disable={false}
                                     option={unit?.tradeCategory ? tradeTypeOptionsList : []}
                                     select={(e) => {
@@ -255,6 +259,9 @@ const TradeUnitForm = (_props) => {
                                                 tradeSubTypeOptions.push(data);
                                             });
                                             const filterTradeSubTypeList = getUniqueItemsFromArray(tradeSubTypeOptions, "code");
+                                            setValue("tradeSubType", "");
+                                            setValue("uom", "");
+                                            setValue("uomValue", "");
                                             setTradeSubTypeOptionsList(filterTradeSubTypeList);
                                         }
                                         props.onChange(e);
@@ -272,15 +279,19 @@ const TradeUnitForm = (_props) => {
                         <Controller
                             control={control}
                             name={"tradeSubType"}
-                            defaultValue={unit?.tradeSubType}
+                            defaultValue={getValues("tradeSubType")}
                             rules={{ required: "Required" }}
                             render={(props) => (
                                 <Dropdown
                                     className="form-field"
-                                    selected={props.value}
+                                    selected={getValues("tradeSubType")}
                                     disable={false}
                                     option={unit?.tradeType ? tradeSubTypeOptionsList : []}
-                                    select={props.onChange}
+                                    select={(e) => {
+                                        setValue("uom", e?.uom ? e?.uom : "");
+                                        setValue("uomValue", "");
+                                        props.onChange(e);
+                                    }}
                                     optionKey="i18nKey"
                                     onBlur={props.onBlur}
                                     t={t}
@@ -295,11 +306,12 @@ const TradeUnitForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uom"}
-                                defaultValue={unit?.tradeSubType?.uom}
-                                rules={unit?.tradeSubType?.uom ? { required: "Required", validate: (v) => (/^(0)*[1-9][0-9]{0,5}$/.test(v) ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") } : {}}
+                                defaultValue={getValues("uom")}
+                                // rules={unit?.tradeSubType?.uom ? { required: "Required", validate: (v) => (/^(0)*[1-9][0-9]{0,5}$/.test(v) ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") } : {}}
                                 render={(props) => (
                                     <TextInput
-                                        value={unit?.tradeSubType?.uom || ""}
+                                        value={getValues("uom")}
+                                        // value={unit?.tradeSubType?.uom || ""}
                                         autoFocus={focusIndex.index === unit?.key && focusIndex.type === "uom"}
                                         onChange={(e) => {
                                             props.onChange(e);
@@ -319,11 +331,11 @@ const TradeUnitForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uomValue"}
-                                defaultValue={unit?.uomValue}
-                                rules={unit?.tradeSubType?.uom ? { required: "ERR_DEFAULT_INPUT_FIELD_MSG", validate: { pattern: (val) => (/^(0)*[1-9][0-9]{0,5}$/.test(val) ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")) } } : {}}
+                                defaultValue={getValues("uomValue")}
+                                rules={getValues("uomValue") && { required: "ERR_DEFAULT_INPUT_FIELD_MSG", validate: { pattern: (val) => (/^(0)*[1-9][0-9]{0,5}$/.test(val) ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")) } } }
                                 render={(props) => (
                                     <TextInput
-                                        value={props.value}
+                                        value={getValues("uomValue")}
                                         autoFocus={focusIndex.index === unit?.key && focusIndex.type === "uomValue"}
                                         onChange={(e) => {
                                             props.onChange(e);

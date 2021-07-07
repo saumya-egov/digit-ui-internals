@@ -127,7 +127,7 @@ const OwnerForm = (_props) => {
     setLicenseTypeList
   } = _props;
 
-  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
+  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
   const formValue = watch();
   const { errors } = localFormState;
 
@@ -186,7 +186,7 @@ const OwnerForm = (_props) => {
   structureTypeOptions = Menu && Menu["common-masters"] &&
     Menu["common-masters"].StructureType.map((e) => {
       let code = e?.code.split('.')[0];
-      return ({ i18nKey: `COMMON_MASTERS_STRUCTURETYPE _${stringReplaceAll(code?.toUpperCase(), ".", "_")}`, label: code, ...e })
+      return ({ i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(code?.toUpperCase(), ".", "_")}`), label: code, ...e })
     }) || [];
 
   let selectedStructureTypeOptions = [];
@@ -197,7 +197,7 @@ const OwnerForm = (_props) => {
       flags[structureTypeOptions[i].label] = true;
       selectedStructureTypeOptions.push({
         code: structureTypeOptions[i].label,
-        i18nKey: `COMMON_MASTERS_STRUCTURETYPE _${stringReplaceAll(structureTypeOptions[i]?.label?.toUpperCase(), ".", "_")}`
+        i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(structureTypeOptions[i]?.label?.toUpperCase(), ".", "_")}`)
       });
     }
   }
@@ -332,10 +332,11 @@ const OwnerForm = (_props) => {
                       if (selectedOption === data?.code?.split('.')[0]) {
                         structureSubTypeOption.push({
                           code: data?.code,
-                          i18nKey: `COMMON_MASTERS_STRUCTURETYPE _${stringReplaceAll(data?.code?.toUpperCase(), ".", "_")}`,
+                          i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(data?.code?.toUpperCase(), ".", "_")}`),
                         })
                       }
                     });
+                    setValue("structureSubType", "");
                     setStructureSubTypeOptions(structureSubTypeOption);
                     props.onChange(e);
                   }}
@@ -357,7 +358,7 @@ const OwnerForm = (_props) => {
               render={(props) => (
                 <Dropdown
                   className="form-field"
-                  selected={props.value}
+                  selected={getValues("structureSubType")}
                   disable={false}
                   option={structureSubTypeOptions}
                   select={props.onChange}
