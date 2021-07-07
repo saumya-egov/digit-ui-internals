@@ -7,7 +7,7 @@ const getOwnerDetails = (application, t) => {
   application.owners = application?.tradeLicenseDetail?.owners?.filter((owner) => owner.active == true) || [];
   if (application?.tradeLicenseDetail?.subOwnerShipCategory == "INDIVIDUAL.SINGLEOWNER") {
     return {
-      title: t("ES_NEW_APPLICATION_OWNERSHIP_DETAILS"),
+      title: t("TL_OWNERSHIP_DETAILS_HEADER"),
       values: [
         { title: t("TL_OWNER_S_NAME_LABEL"), value: application?.tradeLicenseDetail?.owners[0]?.name || "NA" },
         { title: t("TL_OWNER_S_MOBILE_NUM_LABEL"), value: application?.tradeLicenseDetail?.owners[0]?.mobileNumber || "NA" },
@@ -35,7 +35,7 @@ const getOwnerDetails = (application, t) => {
       values.push(...indOwner);
     });
     return {
-      title: t("ES_NEW_APPLICATION_OWNERSHIP_DETAILS"),
+      title: t("TL_OWNERSHIP_DETAILS_HEADER"),
       values: values,
     };
   }
@@ -52,9 +52,9 @@ const getTradeDetails = (application, t) => {
       { title: t("TL_NEW_TRADE_DETAILS_STRUCT_TYPE_LABEL"), value: application?.tradeLicenseDetail?.structureType ? t(`COMMON_MASTERS_STRUCTURETYPE_${application?.tradeLicenseDetail?.structureType?.split('.')[0]}`) : "NA" },
       { title: t("TL_NEW_TRADE_DETAILS_STRUCT_SUB_TYPE_LABEL"), value: application?.tradeLicenseDetail?.structureType ? t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(application?.tradeLicenseDetail?.structureType, ".", "_")}`) : "NA" },
       { title: t("TL_NEW_TRADE_DETAILS_TRADE_COMM_DATE_LABEL"), value: Digit.DateUtils.ConvertTimestampToDate(application?.commencementDate, "dd/MM/yyyy") || "NA", },
-      { title: "TL_NEW_GST_NUMBER_LABEL", value: application?.tradeLicenseDetail?.additionalDetail?.gstNo || "NA" },
-      { title: "TL_NEW_OPERATIONAL_SQ_FT_AREA_LABEL", value: application?.tradeLicenseDetail?.operationalArea || "NA" },
-      { title: "TL_NEW_NUMBER_OF_EMPLOYEES_LABEL", value: application?.tradeLicenseDetail?.noOfEmployees || "NA" },
+      { title: t("TL_NEW_GST_NUMBER_LABEL"), value: application?.tradeLicenseDetail?.additionalDetail?.gstNo || "NA" },
+      { title: t("TL_NEW_OPERATIONAL_SQ_FT_AREA_LABEL"), value: application?.tradeLicenseDetail?.operationalArea || "NA" },
+      { title: t("TL_NEW_NUMBER_OF_EMPLOYEES_LABEL"), value: application?.tradeLicenseDetail?.noOfEmployees || "NA" },
     ],
   };
 };
@@ -64,13 +64,13 @@ const getAccessoriesDetails = (application, t) => {
     let accessoryCategory = "NA";
     if (accessory?.accessoryCategory) {
       accessoryCategory = stringReplaceAll(accessory?.accessoryCategory, ".", "_");
-      accessoryCategory = `TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(accessoryCategory, "-", "_")}`;
+      accessoryCategory = t(`TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(accessoryCategory, "-", "_")}`);
     }
     let value = [
-      { title: "TL_NEW_TRADE_DETAILS_ACC_LABEL", value: accessoryCategory },
-      { title: "TL_NEW_TRADE_DETAILS_UOM_UOM_PLACEHOLDER", value: accessory?.uom || "NA" },
-      { title: "TL_NEW_TRADE_DETAILS_UOM_VALUE_LABEL", value: accessory?.uomValue || "NA" },
-      { title: "TL_ACCESSORY_COUNT_LABEL", value: accessory?.count || "NA" }
+      { title: t("TL_NEW_TRADE_DETAILS_ACC_LABEL"), value: accessoryCategory },
+      { title: t("TL_NEW_TRADE_DETAILS_UOM_UOM_PLACEHOLDER"), value: accessory?.uom || "NA" },
+      { title: t("TL_NEW_TRADE_DETAILS_UOM_VALUE_LABEL"), value: accessory?.uomValue || "NA" },
+      { title: t("TL_ACCESSORY_COUNT_LABEL"), value: accessory?.count || "NA" }
     ];
     values.push(...value);
   });
@@ -87,11 +87,11 @@ const getTradeUnitsDetails = (application, t) => {
     let tradeSubType = stringReplaceAll(unit?.tradeType, ".", "_");
     tradeSubType = stringReplaceAll(tradeSubType, "-", "_");
     let value = [
-      { title: "TRADELICENSE_TRADECATEGORY_LABEL", value: unit?.tradeType ? t(`TRADELICENSE_TRADETYPE_${unit?.tradeType?.split('.')[0]}`) : "NA" },
-      { title: "TRADELICENSE_TRADETYPE_LABEL", value: unit?.tradeType ? t(`TRADELICENSE_TRADETYPE_${unit?.tradeType?.split('.')[1]}`) : "NA" },
-      { title: "TL_NEW_TRADE_SUB_TYPE_LABEL", value: tradeSubType ? t(`TRADELICENSE_TRADETYPE_${tradeSubType}`) : "NA" },
-      { title: "TL_NEW_TRADE_DETAILS_UOM_UOM_PLACEHOLDER", value: unit?.uom || "NA" },
-      { title: "TL_NEW_TRADE_DETAILS_UOM_VALUE_LABEL", value: unit?.uomValue || "NA" },
+      { title: t("TRADELICENSE_TRADECATEGORY_LABEL"), value: unit?.tradeType ? t(`TRADELICENSE_TRADETYPE_${unit?.tradeType?.split('.')[0]}`) : "NA" },
+      { title: t("TRADELICENSE_TRADETYPE_LABEL"), value: unit?.tradeType ? t(`TRADELICENSE_TRADETYPE_${unit?.tradeType?.split('.')[1]}`) : "NA" },
+      { title: t("TL_NEW_TRADE_SUB_TYPE_LABEL"), value: tradeSubType ? t(`TRADELICENSE_TRADETYPE_${tradeSubType}`) : "NA" },
+      { title: t("TL_NEW_TRADE_DETAILS_UOM_UOM_PLACEHOLDER"), value: unit?.uom || "NA" },
+      { title: t("TL_NEW_TRADE_DETAILS_UOM_VALUE_LABEL"), value: unit?.uomValue || "NA" },
     ];
     values.push(...value);
   });
@@ -106,11 +106,11 @@ const getAddressDetails = (application, t) => {
   return {
     title: "",
     values: [
-      { title: "CORE_COMMON_PINCODE", value: application?.tradeLicenseDetail?.address?.pincode || "NA" },
-      { title: "MYCITY_CODE_LABEL", value: t(application?.tradeLicenseDetail?.address?.city) || "NA" },
-      { title: "TL_LOCALIZATION_LOCALITY", value: t(application?.tradeLicenseDetail?.address?.locality?.code) || "NA" },
-      { title: "TL_LOCALIZATION_BUILDING_NO", value: application?.tradeLicenseDetail?.address?.doorNo || "NA" },
-      { title: "TL_LOCALIZATION_STREET_NAME", value: application?.tradeLicenseDetail?.address?.street || "NA" }
+      { title: t("CORE_COMMON_PINCODE"), value: application?.tradeLicenseDetail?.address?.pincode || "NA" },
+      { title: t("MYCITY_CODE_LABEL"), value: t(application?.tradeLicenseDetail?.address?.city) || "NA" },
+      { title: t("TL_LOCALIZATION_LOCALITY"), value: t(application?.tradeLicenseDetail?.address?.locality?.code) || "NA" },
+      { title: t("TL_LOCALIZATION_BUILDING_NO"), value: application?.tradeLicenseDetail?.address?.doorNo || "NA" },
+      { title: t("TL_LOCALIZATION_STREET_NAME"), value: application?.tradeLicenseDetail?.address?.street || "NA" }
     ],
   };
 };
