@@ -42,6 +42,25 @@ const ApplicationDetails = () => {
     { enabled: enableAudit, select: (data) => data.Properties.filter((e) => e.status === "ACTIVE") }
   );
 
+  const showTransfererDetails = () => {
+    if (
+      auditData &&
+      Object.keys(appDetailsToShow).length &&
+      applicationDetails?.applicationData?.status !== "ACTIVE" &&
+      applicationDetails?.applicationData?.creationReason === "MUTATION" &&
+      !appDetailsToShow.applicationDetails.find((e) => e.title === "PT_MUTATION_TRANSFEROR_DETAILS")
+    ) {
+      let applicationDetails = appDetailsToShow.applicationDetails.filter((e) => e.title === "PT_OWNERSHIP_INFO_SUB_HEADER");
+      let compConfig = newConfigMutate.reduce((acc, el) => [...acc, ...el.body], []).find((e) => e.component === "TransfererDetails");
+      applicationDetails.unshift({
+        title: "PT_MUTATION_TRANSFEROR_DETAILS",
+        belowComponent: () => <TransfererDetails userType="employee" formData={{ originalData: auditData[0] }} config={compConfig} />,
+      });
+      console.log(applicationDetails, "application details");
+      setAppDetailsToShow({ ...appDetailsToShow, applicationDetails });
+    }
+  };
+
   const closeToast = () => {
     setShowToast(null);
   };
@@ -56,22 +75,8 @@ const ApplicationDetails = () => {
   }, [applicationDetails]);
 
   useEffect(() => {
-    if (
-      auditData &&
-      Object.keys(appDetailsToShow).length &&
-      applicationDetails?.applicationData?.status !== "ACTIVE" &&
-      applicationDetails?.applicationData?.creationReason === "MUTATION"
-    ) {
-      let applicationDetails = appDetailsToShow.applicationDetails.filter((e) => e.title === "PT_OWNERSHIP_INFO_SUB_HEADER");
-      let compConfig = newConfigMutate.reduce((acc, el) => [...acc, ...el.body], []).find((e) => e.component === "TransfererDetails");
-      applicationDetails.unshift({
-        title: "PT_MUTATION_TRANSFEROR_DETAILS",
-        belowComponent: () => <TransfererDetails userType="employee" formData={{ originalData: auditData[0] }} config={compConfig} />,
-      });
-      console.log(applicationDetails, "application details");
-      setAppDetailsToShow({ ...appDetailsToShow, applicationDetails });
-    }
-  }, [auditData]);
+    showTransfererDetails();
+  }, [auditData, applicationDetails, appDetailsToShow]);
 
   useEffect(() => {
     if (workflowDetails?.data?.applicationBusinessService) {
