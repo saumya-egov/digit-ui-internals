@@ -132,7 +132,7 @@ const getPTAcknowledgementData = async (application, tenantInfo, t) => {
       {
         title: t("NOC_TASK_DETAILS_HEADER"),
         values: [
-          { title: t("TL_COMMON_TABLE_COL_LIC_NO"), value: application?.licenseNumber || "N/A" },
+          { title: t("TL_COMMON_TABLE_COL_LIC_NO"), value: application?.licenseNumber || "NA" },
           { title: t("TL_COMMON_TABLE_COL_APP_NO"), value: application?.applicationNumber },
           {
             title: t("TL_COMMON_TABLE_COL_APP_DATE"),
