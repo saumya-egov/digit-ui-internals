@@ -80,7 +80,7 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
   const renderUnits = (denomination) => {
     switch (denomination) {
       case "Unit":
-        return "(Rs)";
+        return "(₹)";
       case "Lac":
         return "(Lac)"
       case "Cr":
@@ -151,8 +151,9 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
   }
 
   const tableColumns = useMemo(
-    () =>
-      response?.responseData?.data?.[0]?.plots?.filter(plot => plot?.name !== 'TankCapacity').map((plot) => ({
+    () => {
+      const columns = response?.responseData?.data?.find(row => !!row);
+      return columns?.plots?.filter(plot => plot?.name !== 'TankCapacity').map((plot) => ({
         Header: renderHeader(plot),
         accessor: accessData(plot),
         id: plot?.name.replaceAll(".", " "),
@@ -178,7 +179,8 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
           }
           return String(t(cellValue));
         },
-      })),
+      })
+    )},
     [response, value?.denomination, value?.range]
   );
 
