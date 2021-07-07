@@ -5,12 +5,15 @@ import { propertyCardBodyStyle, convertEpochToDate } from "../../../utils";
 import TransferDetails from "./TransferDetails";
 import { useParams } from "react-router-dom";
 
-const propertyOwnerHistory = () => {
+const propertyOwnerHistory = ({ userType, propertyId: propertyIdFromProp }) => {
   const { t } = useTranslation();
   const { propertyIds } = useParams();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const audit = true;
-  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({ tenantId, filters: { propertyIds, audit } });
+  const { isLoading, isError, error, data } = Digit.Hooks.pt.usePropertySearch({
+    tenantId,
+    filters: { propertyIds: userType === "employee" ? propertyIdFromProp : propertyIds, audit },
+  });
 
   let properties = data?.Properties || " ";
   let ownershipInfo = {};

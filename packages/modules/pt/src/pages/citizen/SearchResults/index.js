@@ -4,7 +4,8 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { config as defaultConfig } from "./config";
 import SearchResultsComponent from "./searchResults";
 
-const CitizenSearchResults = ({ config: propConfig, onSelect }) => {
+const CitizenSearchResults = (props) => {
+  const { config: propConfig, onSelect, clearParams } = props;
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   let config = propConfig ? [propConfig] : defaultConfig;
@@ -19,7 +20,7 @@ const CitizenSearchResults = ({ config: propConfig, onSelect }) => {
     });
   }, [config]);
 
-  console.log(propConfig, "config changes");
+  console.log(props, "config changes");
 
   // return <p>{JSON.stringify(propConfig)}</p>;
 
@@ -34,6 +35,7 @@ const CitizenSearchResults = ({ config: propConfig, onSelect }) => {
           isMutation={propConfig?.action === "MUTATION"}
           onSelect={onSelect}
           config={propConfig}
+          clearParams={clearParams}
         />
       </Route>
     </Switch>

@@ -6,8 +6,9 @@ import DesktopInbox from "../../components/DesktopInbox";
 import MobileInbox from "../../components/MobileInbox";
 
 const Inbox = ({
+  useNewInboxAPI,
   parentRoute,
-  businessService = "PT",
+  moduleCode = "PT",
   initialStates = {},
   filterComponent,
   isInbox,
@@ -23,17 +24,23 @@ const Inbox = ({
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const { t } = useTranslation();
+  const [enableSarch, setEnableSearch] = useState(() => (isInbox ? {} : { enabled: false }));
+
+  // const [pageOffset, setPageOffset] = Digit.Hooks.useSessionStorage("PT_INBOX_PAGE_OFFSET", initialStates.pageOffset || 0);
+  // const [pageSize, setPageSize] = Digit.Hooks.useSessionStorage("PT_INBOX_PAGESIZE", initialStates.pageSize || 10);
+  // const [sortParams, setSortParams] = Digit.Hooks.useSessionStorage(
+  //   "PT_INBOX_SORTPARAMS",
+  //   initialStates.sortParams || [{ id: "createdTime", desc: false }]
+  // );
+  // const [searchParams, setSearchParams] = Digit.Hooks.useSessionStorage("PT_INBOX_SEARCHPARAMS", initialStates.searchParams || {});
+
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
   const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
-  const [enableSarch, setEnableSearch] = useState(() => (isInbox ? {} : { enabled: false }));
+  const [searchParams, setSearchParams] = useState(initialStates.searchParams || {});
 
   const [allowSearch, setAllowSearch] = useState(() => {
     return isInbox ? {} : { enabled: false };
-  });
-
-  const [searchParams, setSearchParams] = useState(() => {
-    return initialStates.searchParams || {};
   });
 
   let isMobile = window.Digit.Utils.browser.isMobile();
@@ -41,19 +48,25 @@ const Inbox = ({
     ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
     : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
 
-  const { isFetching, isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = Digit.Hooks.useInboxGeneral({
-    tenantId,
-    businessService,
-    isInbox,
-    filters: { ...searchParams, ...paginationParams, sortParams },
-    rawWfHandler,
-    rawSearchHandler,
-    combineResponse,
-    wfConfig,
-    searchConfig: { ...enableSarch, ...searchConfig },
-    middlewaresWf,
-    middlewareSearch,
-  });
+  const { isFetching, isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = useNewInboxAPI
+    ? Digit.Hooks.useNewInboxGeneral({
+        tenantId,
+        ModuleCode: moduleCode,
+        filters: { ...searchParams, ...paginationParams, sortParams },
+      })
+    : Digit.Hooks.useInboxGeneral({
+        tenantId,
+        businessService: moduleCode,
+        isInbox,
+        filters: { ...searchParams, ...paginationParams, sortParams },
+        rawWfHandler,
+        rawSearchHandler,
+        combineResponse,
+        wfConfig,
+        searchConfig: { ...enableSarch, ...searchConfig },
+        middlewaresWf,
+        middlewareSearch,
+      });
 
   useEffect(() => {
     console.log(data, "data from the hook...");
@@ -108,6 +121,7 @@ const Inbox = ({
           tableConfig={rest?.tableConfig}
           filterComponent={filterComponent}
           EmptyResultInboxComp={EmptyResultInboxComp}
+          useNewInboxAPI={useNewInboxAPI}
         />
         // <div></div>
       );
@@ -116,7 +130,7 @@ const Inbox = ({
         <div>
           {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
           <DesktopInbox
-            businessService={businessService}
+            moduleCode={moduleCode}
             data={data}
             tableConfig={rest?.tableConfig}
             isLoading={hookLoading}
@@ -138,6 +152,7 @@ const Inbox = ({
             totalRecords={Number(data?.[0]?.totalCount)}
             filterComponent={filterComponent}
             EmptyResultInboxComp={EmptyResultInboxComp}
+            useNewInboxAPI={useNewInboxAPI}
           />
         </div>
       );

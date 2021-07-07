@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Dropdown, FormStep, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { Dropdown, FormStep, RadioButtons, LabelFieldPair, CardLabel } from "@egovernments/digit-ui-react-components";
 
 const ReasonForTransfer = (props) => {
-  const { t, config, onSelect, userType, formData } = props;
+  const { t, config, onSelect, userType, formData, setError, clearErrors, errors } = props;
 
   const { data, isLoading } = Digit.Hooks.pt.useMDMS("pb", "PropertyTax", "ReasonForTransfer", {});
 
@@ -17,10 +17,36 @@ const ReasonForTransfer = (props) => {
   }, [data]);
 
   const [reasonForTransfer, setSelected] = useState(formData?.[config.key]?.reasonForTransfer);
+
   const goNext = () => {
     onSelect(config.key, { ...formData?.[config.key], reasonForTransfer });
   };
+
   const onSkip = () => {};
+
+  useEffect(() => {
+    if (userType === "employee") {
+      if (!reasonForTransfer) {
+        setError(config.key, { type: "Required" });
+      } else if (errors?.[config.key]) clearErrors(config.key);
+      goNext();
+    }
+  }, [reasonForTransfer]);
+
+  if (userType === "employee") {
+    return (
+      <React.Fragment>
+        <LabelFieldPair>
+          <CardLabel style={{ fontWeight: "bold" }} className="card-label-smaller">
+            {t("PT_MUTATION_TRANSFER_REASON") + " *"}
+          </CardLabel>
+          <div className="field">
+            <Dropdown option={menu} optionKey={"i18nKey"} select={setSelected} selected={reasonForTransfer} />
+          </div>
+        </LabelFieldPair>
+      </React.Fragment>
+    );
+  }
 
   return (
     <React.Fragment>

@@ -40,14 +40,14 @@ const PTEmployeeOwnershipDetails = ({ config, onSelect, userType, formData, setE
     "OwnerShipCategory",
   ]);
 
-  const { data: Menu} = Digit.Hooks.pt.usePTGenderMDMS(stateId, "common-masters", "GenderType");
+  const { data: Menu } = Digit.Hooks.pt.usePTGenderMDMS(stateId, "common-masters", "GenderType");
 
   let menu = [];
-  
+
   Menu &&
     Menu.map((formGender) => {
-      menu.push({i18nKey: `PT_FORM3_${formGender.code}`, code: `${formGender.code}`, value: `${formGender.code}`})
-  });
+      menu.push({ i18nKey: `PT_FORM3_${formGender.code}`, code: `${formGender.code}`, value: `${formGender.code}` });
+    });
 
   const addNewOwner = () => {
     const newOwner = createOwnerDetails();
@@ -326,6 +326,7 @@ const OwnerForm = (_props) => {
                     render={(props) => (
                       <MobileNumber
                         value={props.value}
+                        hideSpan={true}
                         autoFocus={focusIndex.index === owner?.key && focusIndex.type === "altContactNumber"}
                         onChange={(e) => {
                           props.onChange(e);
