@@ -21,7 +21,7 @@ export const configTLApproverApplication = ({
     label: {
       heading: `WF_${action?.action}_APPLICATION`,
       submit: `WF_${businessService?.toUpperCase()}_${action?.action}`,
-      cancel: "ES_PT_COMMON_CANCEL",
+      cancel: "WF_EMPLOYEE_NEWTL_CANCEL",
     },
     form: [
       {

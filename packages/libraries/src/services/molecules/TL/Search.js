@@ -106,7 +106,7 @@ export const TLSearch = {
       values: [
         { title: "CORE_COMMON_PINCODE", value: response?.tradeLicenseDetail?.address?.pincode || "NA" },
         { title: "MYCITY_CODE_LABEL", value: response?.tradeLicenseDetail?.address?.city || "NA" },
-        { title: "TL_LOCALIZATION_LOCALITY", value: response?.tradeLicenseDetail?.address?.locality?.name || "NA" },
+        { title: "TL_LOCALIZATION_LOCALITY", value: response?.tradeLicenseDetail?.address?.locality?.code || "NA" },
         { title: "TL_LOCALIZATION_BUILDING_NO", value: response?.tradeLicenseDetail?.address?.doorNo || "NA" },
         { title: "TL_LOCALIZATION_STREET_NAME", value: response?.tradeLicenseDetail?.address?.street || "NA" }
       ],
