@@ -69,7 +69,7 @@ const Response = (props) => {
       setError(error?.response?.data?.Errors[0]?.message || null);
     };
 
-    if (!mutationHappened && state?.Property?.channel === "CFC_COUNTER") {
+    if (!mutationHappened) {
       mutation.mutate(
         {
           Property: state?.Property,
