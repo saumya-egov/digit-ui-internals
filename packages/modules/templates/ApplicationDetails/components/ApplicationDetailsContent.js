@@ -87,6 +87,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
               })}
             </StatusTable>
           </div>
+          {detail?.belowComponent && <detail.belowComponent />}
           {detail?.additionalDetails?.floors && <PropertyFloors floors={detail?.additionalDetails?.floors} />}
           {detail?.additionalDetails?.owners && <PropertyOwners owners={detail?.additionalDetails?.owners} />}
           {detail?.additionalDetails?.units && <TLTradeUnits units={detail?.additionalDetails?.units} />}

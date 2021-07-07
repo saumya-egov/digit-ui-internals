@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ApplicationDetailsTemplate from "../../../../templates/ApplicationDetails";
+import TransfererDetails from "../../pageComponents/Mutate/TransfererDetails";
+import { newConfigMutate } from "../../config/Mutate/config";
 
 import { useParams } from "react-router-dom";
 import { Header } from "@egovernments/digit-ui-react-components";
@@ -12,6 +14,7 @@ const ApplicationDetails = () => {
   const { id: applicationNumber } = useParams();
   const [showToast, setShowToast] = useState(null);
   const [appDetailsToShow, setAppDetailsToShow] = useState({});
+  const [enableAudit, setEnableAudit] = useState(false);
   const [businessService, setBusinessService] = useState("PT.CREATE");
 
   const { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
@@ -31,13 +34,40 @@ const ApplicationDetails = () => {
     role: "PT_CEMP",
   });
 
+  const { isLoading: auditDataLoading, isError: isAuditError, data: auditData } = Digit.Hooks.pt.usePropertySearch(
+    {
+      tenantId,
+      filters: { propertyIds: applicationNumber, audit: true },
+    },
+    { enabled: enableAudit, select: (data) => data.Properties.filter((e) => e.status === "ACTIVE") }
+  );
+
   const closeToast = () => {
     setShowToast(null);
   };
 
   useEffect(() => {
-    if (applicationDetails) setAppDetailsToShow(_.cloneDeep(applicationDetails));
+    if (applicationDetails) {
+      setAppDetailsToShow(_.cloneDeep(applicationDetails));
+      if (applicationDetails?.applicationData?.status !== "ACTIVE" && applicationDetails?.applicationData?.creationReason === "MUTATION") {
+        setEnableAudit(true);
+      }
+    }
   }, [applicationDetails]);
+
+  useEffect(() => {
+    if (auditData) {
+      // TransfererDetails
+      let applicationDetails = appDetailsToShow.applicationDetails.filter((e) => e.title === "PT_OWNERSHIP_INFO_SUB_HEADER");
+      let compConfig = newConfigMutate.reduce((acc, el) => [...acc, ...el.body], []).find((e) => e.component === "TransfererDetails");
+      applicationDetails.unshift({
+        title: "PT_MUTATION_TRANSFEROR_DETAILS",
+        belowComponent: () => <TransfererDetails userType="employee" formData={{ originalData: auditData[0] }} config={compConfig} />,
+      });
+      console.log(applicationDetails, "application details");
+      setAppDetailsToShow({ ...appDetailsToShow, applicationDetails });
+    }
+  }, [auditData]);
 
   useEffect(() => {
     if (workflowDetails?.data?.applicationBusinessService) {
@@ -59,7 +89,6 @@ const ApplicationDetails = () => {
               action: "VIEW_DETAILS",
               redirectionUrl: {
                 pathname: `/digit-ui/employee/pt/property-details/${applicationNumber}`,
-                // state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
               },
               tenantId: "pb",
             },
@@ -93,8 +122,6 @@ const ApplicationDetails = () => {
     });
   }
 
-  // console.log(PT_CEMP && businessService === "PT.UPDATE" && workflowDetails?.actionState?.isStateUpdatable);
-
   if (!(appDetailsToShow?.applicationDetails?.[0]?.values?.[0].title === "PT_PROPERTY_APPLICATION_NO")) {
     appDetailsToShow?.applicationDetails?.unshift({
       values: [
@@ -103,10 +130,6 @@ const ApplicationDetails = () => {
       ],
     });
   }
-
-  console.log(workflowDetails?.data, "inside workflowdetails");
-
-  // applicationDetails?.applicationData?.units?.sort((a, b) => b.floorNo - a.floorNo);
 
   return (
     <div>

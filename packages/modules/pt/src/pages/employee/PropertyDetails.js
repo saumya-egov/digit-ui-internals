@@ -100,6 +100,7 @@ const PropertyDetails = () => {
         }
         return obj;
       });
+
       setAppDetailsToShow({ ...appDetailsToShow, applicationDetails });
     }
   }, [auditData]);
@@ -109,16 +110,12 @@ const PropertyDetails = () => {
     id: applicationDetails?.applicationData?.acknowldgementNumber,
     moduleCode: "PT.UPDATE",
     role: "PT_CEMP",
-    // serviceData: applicationDetails,
   });
 
   const closeToast = () => {
     setShowToast(null);
   };
 
-  // applicationDetails?.applicationDetails?.shift();
-
-  console.log(appDetailsToShow?.applicationDetails, "here in app details");
   if (appDetailsToShow?.applicationDetails) {
     appDetailsToShow.applicationDetails = appDetailsToShow?.applicationDetails?.map((e) => {
       if (e.title === "PT_OWNERSHIP_INFO_SUB_HEADER") {
