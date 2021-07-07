@@ -78,6 +78,24 @@ const PropertyDetails = () => {
               ],
             };
           });
+
+          additionalDetails.documents = [
+            {
+              title: "PT_COMMON_DOCS",
+              values: auditData[0].documents
+                .filter((e) => e.status === "ACTIVE")
+                .map((document) => {
+                  return {
+                    title: `PT_${document?.documentType.replace(".", "_")}`,
+                    documentType: document?.documentType,
+                    documentUid: document?.documentUid,
+                    fileStoreId: document?.fileStoreId,
+                    status: document.status,
+                  };
+                }),
+            },
+          ];
+
           return { ...obj, additionalDetails };
         }
         return obj;
