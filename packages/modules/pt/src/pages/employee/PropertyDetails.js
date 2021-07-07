@@ -29,6 +29,7 @@ const PropertyDetails = () => {
   const { id: applicationNumber } = useParams();
   const [showToast, setShowToast] = useState(null);
   const [appDetailsToShow, setAppDetailsToShow] = useState({});
+  const [enableAudit, setEnableAudit] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const history = useHistory();
 
@@ -38,11 +39,52 @@ const PropertyDetails = () => {
     consumerCode: applicationNumber,
   });
 
+  const { isLoading: auditDataLoading, isError: isAuditError, data: auditData } = Digit.Hooks.pt.usePropertySearch(
+    {
+      tenantId,
+      filters: { propertyIds: applicationNumber, audit: true },
+    },
+    { enabled: enableAudit, select: (data) => data.Properties.filter((e) => e.status === "ACTIVE") }
+  );
+
   useEffect(() => {
     if (applicationDetails) {
       setAppDetailsToShow(_.cloneDeep(applicationDetails));
+      if (applicationDetails?.applicationData?.status !== "ACTIVE" && applicationDetails?.applicationData?.creationReason === "MUTATION") {
+        setEnableAudit(true);
+      }
     }
   }, [applicationDetails]);
+
+  useEffect(() => {
+    if (auditData && Object.keys(appDetailsToShow).length) {
+      let owners = auditData[0].owners.filter((e) => e.status === "ACTIVE");
+      let applicationDetails = appDetailsToShow.applicationDetails.map((obj) => {
+        const { additionalDetails, title } = obj;
+        if (title === "PT_OWNERSHIP_INFO_SUB_HEADER") {
+          additionalDetails.owners = owners?.map((owner, index) => {
+            return {
+              status: owner.status,
+              title: "ES_OWNER",
+              values: [
+                { title: "PT_OWNERSHIP_INFO_NAME", value: owner?.name },
+                { title: "PT_OWNERSHIP_INFO_GENDER", value: owner?.gender },
+                { title: "PT_OWNERSHIP_INFO_MOBILE_NO", value: owner?.mobileNumber },
+                { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: `COMMON_MASTERS_OWNERTYPE_${owner?.ownerType}` || "NA" },
+                { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.fatherOrHusbandName },
+                { title: "PT_FORM3_OWNERSHIP_TYPE", value: auditData[0]?.ownershipCategory },
+                { title: "PT_OWNERSHIP_INFO_EMAIL_ID", value: owner?.emailId },
+                { title: "PT_OWNERSHIP_INFO_CORR_ADDR", value: owner?.permanentAddress },
+              ],
+            };
+          });
+          return { ...obj, additionalDetails };
+        }
+        return obj;
+      });
+      setAppDetailsToShow({ ...appDetailsToShow, applicationDetails });
+    }
+  }, [auditData]);
 
   let workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
