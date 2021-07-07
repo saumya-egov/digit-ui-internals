@@ -45,7 +45,7 @@ export const filterFunctions = {
     }
 
     searchFilters["isInboxSearch"] = true;
-    searchFilters["creationReason"] = ["CREATE", "MUTATION"];
+    searchFilters["creationReason"] = ["CREATE", "MUTATION", "UPDATE"];
     workflowFilters["moduleName"] = "PT";
 
     // if (limit) {
