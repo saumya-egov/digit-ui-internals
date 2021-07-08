@@ -7,7 +7,7 @@ import ApplicationTable from "./inbox/ApplicationTable";
 import SearchApplication from "./inbox/search";
 
 const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
-  const { data } = props;
+  const { data, useNewInboxAPI } = props;
   const { t } = useTranslation();
   const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
   const [EmptyInboxComp, setEmptyInboxComp] = useState(() => {
@@ -30,10 +30,10 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
     result = <Loader />;
   } else if (clearSearchCalled) {
     result = null;
-  } else if (!data || data?.length === 0) {
+  } else if (!data || data?.length === 0 || (useNewInboxAPI && data?.[0].dataEmpty)) {
     result =
       (EmptyInboxComp && <EmptyInboxComp data={data} />) ||
-      (data?.length === 0 ? (
+      (data?.length === 0 || (useNewInboxAPI && data?.[0].dataEmpty) ? (
         <Card style={{ marginTop: 20 }}>
           {t("CS_MYAPPLICATIONS_NO_APPLICATION")
             .split("\\n")
@@ -79,7 +79,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
     <div className="inbox-container">
       {!props.isSearch && (
         <div className="filters-container">
-          <InboxLinks parentRoute={props.parentRoute} businessService={props.businessService} />
+          <InboxLinks parentRoute={props.parentRoute} businessService={props.moduleCode} />
           <div>
             {
               <FilterComponent
@@ -87,6 +87,9 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
                 onFilterChange={props.onFilterChange}
                 searchParams={props.searchParams}
                 type="desktop"
+                useNewInboxAPI={useNewInboxAPI}
+                statusMap={useNewInboxAPI ? data?.[0].statusMap : null}
+                moduleCode={props.moduleCode}
               />
             }
           </div>

@@ -1,10 +1,12 @@
 import React, { useRef, useState } from "react";
 import { ArrowDown, CheckSvg } from "./svgindex";
+import { useTranslation } from "react-i18next";
 
-const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = "" }) => {
+const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, defaultLabel = "", defaultUnit = ""}) => {
   const [active, setActive] = useState(false);
   const [searchQuery, setSearchQuery] = useState();
   const dropdownRef = useRef();
+  const { t } = useTranslation();
   Digit.Hooks.useClickOutside(dropdownRef, () => setActive(false), active);
 
   function onSearch(e) {
@@ -22,13 +24,13 @@ const MultiSelectDropdown = ({ options, optionsKey, selected = [], onSelect, def
       <div className="custom-checkbox">
         <CheckSvg />
       </div>
-      <p className="label">{option[optionsKey]}</p>
+      <p className="label">{t(option[optionsKey]&&typeof option[optionsKey]=="string" && option[optionsKey].toUpperCase())}</p>
     </div>
   );
 
   const Menu = () => {
     const filteredOptions =
-      searchQuery?.length > 0 ? options.filter((option) => option[optionsKey].toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0) : options;
+      searchQuery?.length > 0 ? options.filter((option) => t(option[optionsKey]&&typeof option[optionsKey]=="string" && option[optionsKey].toUpperCase()).toLowerCase().indexOf(searchQuery.toLowerCase()) >= 0) : options;
     return filteredOptions.map((option, index) => <MenuItem option={option} key={index} index={index} />);
   };
 

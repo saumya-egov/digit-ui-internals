@@ -127,7 +127,7 @@ const OwnerForm = (_props) => {
     setLicenseTypeList
   } = _props;
 
-  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
+  const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
   const formValue = watch();
   const { errors } = localFormState;
 
@@ -186,7 +186,7 @@ const OwnerForm = (_props) => {
   structureTypeOptions = Menu && Menu["common-masters"] &&
     Menu["common-masters"].StructureType.map((e) => {
       let code = e?.code.split('.')[0];
-      return ({ i18nKey: `COMMON_MASTERS_STRUCTURETYPE _${stringReplaceAll(code?.toUpperCase(), ".", "_")}`, label: code, ...e })
+      return ({ i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(code?.toUpperCase(), ".", "_")}`), label: code, ...e })
     }) || [];
 
   let selectedStructureTypeOptions = [];
@@ -197,7 +197,7 @@ const OwnerForm = (_props) => {
       flags[structureTypeOptions[i].label] = true;
       selectedStructureTypeOptions.push({
         code: structureTypeOptions[i].label,
-        i18nKey: `COMMON_MASTERS_STRUCTURETYPE _${stringReplaceAll(structureTypeOptions[i]?.label?.toUpperCase(), ".", "_")}`
+        i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(structureTypeOptions[i]?.label?.toUpperCase(), ".", "_")}`)
       });
     }
   }
@@ -242,7 +242,7 @@ const OwnerForm = (_props) => {
   return (
     <React.Fragment>
       <div style={{ marginBottom: "16px" }}>
-        <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
+        <div>
           <LabelFieldPair>
             <CardLabel className="card-label-smaller">{`${t("TL_FINANCIAL_YEAR_LABEL")}:`}</CardLabel>
             <Controller
@@ -332,10 +332,11 @@ const OwnerForm = (_props) => {
                       if (selectedOption === data?.code?.split('.')[0]) {
                         structureSubTypeOption.push({
                           code: data?.code,
-                          i18nKey: `COMMON_MASTERS_STRUCTURETYPE _${stringReplaceAll(data?.code?.toUpperCase(), ".", "_")}`,
+                          i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(data?.code?.toUpperCase(), ".", "_")}`),
                         })
                       }
                     });
+                    setValue("structureSubType", "");
                     setStructureSubTypeOptions(structureSubTypeOption);
                     props.onChange(e);
                   }}
@@ -357,7 +358,7 @@ const OwnerForm = (_props) => {
               render={(props) => (
                 <Dropdown
                   className="form-field"
-                  selected={props.value}
+                  selected={getValues("structureSubType")}
                   disable={false}
                   option={structureSubTypeOptions}
                   select={props.onChange}
@@ -374,7 +375,7 @@ const OwnerForm = (_props) => {
             <div className="field">
               <Controller
                 name="commencementDate"
-                rules={{ required: t("ERR_DEFAULT_INPUT_FIELD_MSG"), validate: { pattern: (val) => (/^[12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(val) ? t("ERR_DEFAULT_INPUT_FIELD_MSG1") : t("ERR_DEFAULT_INPUT_FIELD_MSG")) } }}
+                rules={{ required: t("ERR_DEFAULT_INPUT_FIELD_MSG") }}
                 // defaultValue={tradedetils?.[0]?.commencementDate}
                 control={control}
                 render={(props) => (

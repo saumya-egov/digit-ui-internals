@@ -10,8 +10,8 @@ export const PTSearch = {
     const response = await PTService.search({ tenantId, filters });
     return response.Properties[0];
   },
-  applicationDetails: async (t, tenantId, propertyIds, userType) => {
-    const filter = { propertyIds };
+  applicationDetails: async (t, tenantId, propertyIds, userType, args) => {
+    const filter = { propertyIds, ...args };
     const response = await PTSearch.application(tenantId, filter);
     // console.log(response, "from hook");
     const employeeResponse = [
@@ -77,15 +77,15 @@ export const PTSearch = {
         title: "PT_OWNERSHIP_INFO_SUB_HEADER",
         additionalDetails: {
           owners: response?.owners?.map((owner, index) => {
-            console.log(owner, "in details");
             return {
+              status: owner.status,
               title: "ES_OWNER",
               values: [
                 { title: "PT_OWNERSHIP_INFO_NAME", value: owner?.name },
                 { title: "PT_OWNERSHIP_INFO_GENDER", value: owner?.gender },
                 { title: "PT_OWNERSHIP_INFO_MOBILE_NO", value: owner?.mobileNumber },
                 { title: "PT_OWNERSHIP_INFO_USER_CATEGORY", value: `COMMON_MASTERS_OWNERTYPE_${owner?.ownerType}` || "NA" },
-                { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.name },
+                { title: "PT_SEARCHPROPERTY_TABEL_GUARDIANNAME", value: owner?.fatherOrHusbandName },
                 { title: "PT_FORM3_OWNERSHIP_TYPE", value: response?.ownershipCategory },
                 { title: "PT_OWNERSHIP_INFO_EMAIL_ID", value: owner?.emailId },
                 { title: "PT_OWNERSHIP_INFO_CORR_ADDR", value: owner?.permanentAddress },
@@ -95,14 +95,17 @@ export const PTSearch = {
           documents: [
             {
               title: "PT_COMMON_DOCS",
-              values: response?.documents?.map((document) => {
-                return {
-                  title: `PT_${document?.documentType.replace(".", "_")}`,
-                  documentType: document?.documentType,
-                  documentUid: document?.documentUid,
-                  fileStoreId: document?.fileStoreId,
-                };
-              }),
+              values: response?.documents
+                // ?.filter((e) => e.status === "ACTIVE")
+                ?.map((document) => {
+                  return {
+                    title: `PT_${document?.documentType.replace(".", "_")}`,
+                    documentType: document?.documentType,
+                    documentUid: document?.documentUid,
+                    fileStoreId: document?.fileStoreId,
+                    status: document.status,
+                  };
+                }),
             },
           ],
         },

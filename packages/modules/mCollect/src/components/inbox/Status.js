@@ -7,8 +7,8 @@ const Status = ({ onAssignmentChange, searchParams, businessServices }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
-  const { data, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(stateId, "mCollect", "applcationStatus");
-  const applicationStatus = data?.mCollect?.applcationStatus || [];
+  const { data, isLoading } = Digit.Hooks.mcollect.useMCollectMDMS(stateId, "mCollect", "applicationStatus");
+  const applicationStatus = data?.mCollect?.applicationStatus || [];
   const translateState = (state) => {
     return `${state.code || "ACTIVE"}`;
   };

@@ -102,7 +102,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
   }
 
   function getroledata() {
-    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles;
+    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"].roles.map(role=>{return {code:role.code,name:'ACCESSCONTROL_ROLES_ROLES_'+role.code}});
   }
 
   if (isLoading) {
@@ -280,7 +280,7 @@ function Jurisdiction({
                <div className="tag-container">
           {jurisdiction?.roles.length > 0 &&
             jurisdiction?.roles.map((value, index) => {
-              return <RemoveableTag key={index} text={`${value["name"].slice(0, 22)} ...`} onClick={() => onRemove(index, value)} />;
+              return <RemoveableTag key={index} text={`${t(value["name"]).slice(0, 22)} ...`} onClick={() => onRemove(index, value)} />;
             })}
         </div>
           </div>

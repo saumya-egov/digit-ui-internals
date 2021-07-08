@@ -4,14 +4,21 @@ const usePropertySearch = ({ tenantId, filters, auth }, config = {}) => {
   const client = useQueryClient();
 
   const args = tenantId ? { tenantId, filters, auth } : { filters, auth };
-  const { isLoading, error, data } = useQuery(["propertySearchList", tenantId, filters], () => Digit.PTService.search(args), config);
-  if (!isLoading && data && data?.Properties && Array.isArray(data.Properties) && data.Properties.length > 0) {
+
+  const defaultSelect = (data) => {
     data.Properties[0].units = data.Properties[0].units || [];
     data.Properties[0].units = data.Properties[0].units.filter((unit) => unit.active);
     data.Properties[0].owners = data.Properties[0].owners || [];
     data.Properties[0].owners = data.Properties[0].owners.filter((owner) => owner.status === "ACTIVE");
-  }
-  return { isLoading, error, data, revalidate: () => client.invalidateQueries(["propertySearchList", tenantId, filters]) };
+    return data;
+  };
+
+  const { isLoading, error, data } = useQuery(["propertySearchList", tenantId, filters, auth], () => Digit.PTService.search(args), {
+    select: defaultSelect,
+    ...config,
+  });
+
+  return { isLoading, error, data, revalidate: () => client.invalidateQueries(["propertySearchList", tenantId, filters, auth]) };
 };
 
 export default usePropertySearch;

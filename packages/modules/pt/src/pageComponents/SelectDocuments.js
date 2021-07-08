@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { CardLabel, LabelFieldPair, Dropdown, UploadFile, Toast, Loader } from "@egovernments/digit-ui-react-components";
+import {
+  CardLabel,
+  LabelFieldPair,
+  Dropdown,
+  UploadFile,
+  Toast,
+  Loader,
+  CardHeader,
+  CardSectionHeader,
+} from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 
 const SelectDocuments = ({ t, config, onSelect, userType, formData, setError: setFormError, clearErrors: clearFormErrors, formState }) => {
@@ -12,6 +21,7 @@ const SelectDocuments = ({ t, config, onSelect, userType, formData, setError: se
 
   const { pathname } = useLocation();
   const isEditScreen = pathname.includes("/modify-application/");
+  const isMutation = pathname.includes("/property-mutate/");
 
   if (isEditScreen) action = "update";
 
@@ -24,11 +34,17 @@ const SelectDocuments = ({ t, config, onSelect, userType, formData, setError: se
     "Documents",
     "SubOwnerShipCategory",
     "OwnerShipCategory",
+    "MutationDocuments",
   ]);
 
   // console.log(data);
 
-  const propertyTaxDocuments = data?.PropertyTax?.Documents;
+  const mutationDocs = data?.PropertyTax?.MutationDocuments;
+  const commonDocs = data?.PropertyTax?.Documents;
+
+  const propertyTaxDocuments = isMutation
+    ? mutationDocs?.map?.((doc) => commonDocs.find((e) => doc.code === e.code) || doc)
+    : data?.PropertyTax?.Documents;
 
   const goNext = () => {
     onSelect(config.key, { documents, propertyTaxDocumentsLength: propertyTaxDocuments?.length });
@@ -44,6 +60,7 @@ const SelectDocuments = ({ t, config, onSelect, userType, formData, setError: se
 
   return (
     <div>
+      {isMutation ? <CardSectionHeader>{t("PT_MUTATION_DOCUMENTS_HEADER")} </CardSectionHeader> : null}
       {propertyTaxDocuments?.map((document, index) => {
         // if (document.code === "OWNER.SPECIALCATEGORYPROOF") {
         //   if (formData?.owners?.every((user) => user.ownerType.code === "NONE" || !user.ownerType?.code)) {
@@ -106,7 +123,7 @@ function SelectDocument({
     setFile(e.target.files[0]);
   }
   const { dropdownData } = doc;
-  const { dropdownFilter, enabledActions, filterCondition } = doc?.additionalDetails;
+  const { dropdownFilter, enabledActions, filterCondition } = doc?.additionalDetails || {};
   var dropDownData = dropdownData;
   // let hideInput = false;
   const [isHidden, setHidden] = useState(false);
@@ -244,14 +261,6 @@ function SelectDocument({
         if (onArray) {
           if (enabledActions?.[action].disableUpload) {
             hideInput = value?.every((e) => filterValue?.includes(e[arrayAttribute]));
-            if (doc?.code === "OWNER.SPECIALCATEGORYPROOF") {
-              // console.log(
-              //   hideInput,
-              //   value.map((e) => e[arrayAttribute]),
-              //   filterValue,
-              //   "here find the trueth"
-              // );
-            }
           } else {
             const valueArr = formDataValue?.map((e) => formArrayAttrPath.reduce((acc, f) => acc?.[f], e) || e);
             hideInput = valueArr?.every((e) => filterValue?.includes(e));

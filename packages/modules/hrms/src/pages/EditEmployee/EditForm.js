@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FormComposer } from "@egovernments/digit-ui-react-components";
+import { FormComposer ,Toast} from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { newConfig } from "../../components/config/config";
@@ -9,6 +9,7 @@ const EditForm = ({tenantId, data }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [canSubmit, setSubmitValve] = useState(false);
+  const [showToast, setShowToast] = useState(null);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck]= useState(false);
@@ -23,8 +24,20 @@ const EditForm = ({tenantId, data }) => {
   }, []);
   
   useEffect(() => {
-    if (/^[6-9]\d{9}$/.test(mobileNumber)) {
-      setPhonecheck(true);
+    if (mobileNumber&&mobileNumber.length==10&&mobileNumber.match(Digit.Utils.getPattern('MobileNo'))) {
+      setShowToast(null);
+      if(data.user.mobileNumber==mobileNumber){
+        setPhonecheck(true);
+      }else {
+        Digit.HRMSService.search(tenantId, null, { phone: mobileNumber }).then((result, err) => {
+          if (result.Employees.length > 0) {
+            setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOB" });
+            setPhonecheck(false);
+          } else {
+            setPhonecheck(true);
+          }
+        });
+      }
     } else {
       setPhonecheck(false);
     }
@@ -79,12 +92,23 @@ const EditForm = ({tenantId, data }) => {
     }),
   };
 
+  const checkMailNameNum=(formData)=>
+  {
+    
+    const email=formData?.SelectEmployeeEmailId?.emailId||'';
+    const name=formData?.SelectEmployeeName?.employeeName||'';
+    const address=formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress||'';
+    const validEmail=email.length==0?true:email.match(Digit.Utils.getPattern('Email'));
+   return validEmail&&name.match(Digit.Utils.getPattern('Name'))&&address.match(Digit.Utils.getPattern('Address'));
+  }
+
   const onFormValueChange = (setValue = true, formData) => {
-    if (/^[6-9]\d{9}$/.test(formData?.SelectEmployeePhoneNumber?.mobileNumber)) {
+    if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
       setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
     } else {
-      setPhonecheck(false);
+      setMobileNumber(formData?.SelectEmployeePhoneNumber?.mobileNumber);
     }
+
     for (let i = 0; i < formData?.Jurisdictions?.length; i++) {
       let key = formData?.Jurisdictions[i];
       console.log(key?.roles?.length)
@@ -118,8 +142,9 @@ const EditForm = ({tenantId, data }) => {
       formData?.SelectEmployeeName?.employeeName &&
       formData?.SelectEmployeePhoneNumber?.mobileNumber &&
       checkfield &&
-      phonecheck &&
-      setassigncheck
+      setassigncheck&&
+      phonecheck&&
+     checkMailNameNum(formData)
     ) {
       setSubmitValve(true);
     } else {
@@ -128,6 +153,11 @@ const EditForm = ({tenantId, data }) => {
   };
 
   const onSubmit = (input) => {
+
+    if(input.Jurisdictions.filter(juris=>juris.tenantId==tenantId).length==0){
+      setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
+      return;
+    }
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
         item["tenantId"] = ele.boundary;
@@ -167,7 +197,15 @@ const EditForm = ({tenantId, data }) => {
         onSubmit={onSubmit}
         defaultValues={defaultValues}
         onFormValueChange={onFormValueChange}
-      />
+      /> {showToast && (
+        <Toast
+          error={showToast.key}
+          label={t(showToast.label)}
+          onClose={() => {
+            setShowToast(null);
+          }}
+        />
+      )}
     </div>
   );
 };

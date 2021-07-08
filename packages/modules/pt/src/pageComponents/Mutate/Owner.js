@@ -135,6 +135,10 @@ const OwnerCitizen = (props) => {
   const history = useHistory();
 
   useEffect(() => {
+    if (!owners.length) setOwners([createOwnerDetails()]);
+  }, []);
+
+  useEffect(() => {
     console.log("/////////");
     if (!allowMultipleOwners && owners.length > 1) {
       setOwners([owners[0]]);
@@ -203,6 +207,10 @@ const OwnerSteps = ({ owner, addNewOwner, removeOwner, setOwners, owners, ownerI
   const { path } = useRouteMatch();
   const { pathname } = useLocation();
   const history = useHistory();
+
+  useEffect(() => {
+    console.log("rendered owner step");
+  }, []);
 
   const addOwner = (data) => {
     // handle submission of prev on click of add Owner

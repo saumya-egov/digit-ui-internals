@@ -48,7 +48,12 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
 
     useEffect(() => {
         if (formData?.accessories?.length > 0) {
-          let flag = true;;
+          let flag = true;
+          accessoriesList.map(data => {
+            Object.keys(data).map(dta => {
+              if(dta != "key" &&  data[dta]) flag = false;
+            });
+          });
           formData?.accessories.map(data => {
             Object.keys(data).map(dta => {
               if (dta != "key" && data[dta] != undefined && data[data] != "" && data[data] != null) {
@@ -130,7 +135,7 @@ const AccessoriersForm = (_props) => {
         uomvalues
     } = _props;
 
-    const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
+    const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
     const formValue = watch();
     const { errors } = localFormState;
 
@@ -264,6 +269,8 @@ const AccessoriersForm = (_props) => {
                                     className="form-field"
                                     selected={props.value}
                                     select={(e) => {
+                                        setValue("uom", e?.uom ? e?.uom : "");
+                                        if (e?.uom !== accessor?.accessoryCategory?.uom) setValue("uomValue", "");
                                         props.onChange(e);
                                         setUomvalues(accessor?.accessoryCategory?.uom);
                                     }}
@@ -282,11 +289,12 @@ const AccessoriersForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uom"}
-                                defaultValue={accessor?.accessoryCategory?.uom}
+                                defaultValue={getValues("uom")}
                                 // rules={accessor?.accessoryCategory?.uom ? { required: "Required" } : {}}
                                 render={(props) => (
                                     <TextInput
-                                        value={uomvalues}
+                                        value={getValues("uom")}
+                                        // value={uomvalues}
                                         // value={accessor?.accessoryCategory?.uom || ""}
                                         autoFocus={focusIndex.index === accessor?.key && focusIndex.type === "uom"}
                                         onChange={(e) => {
@@ -307,12 +315,12 @@ const AccessoriersForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uomValue"}
-                                defaultValue={accessor?.uomValue}
+                                defaultValue={getValues("uomValue")}
                                 rules={accessor?.accessoryCategory?.uom && { required: "Required", validate: (e) => ((e && getPattern("UOMValue").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
-                                // rules={accessor?.accessoryCategory?.uom ? { required: "Required" } : {}}
                                 render={(props) => (
                                     <TextInput
-                                        value={accessor?.accessoryCategory?.uom ? props.value : ""}
+                                        value={getValues("uomValue")}
+                                        // value={accessor?.accessoryCategory?.uom ? props.value : ""}
                                         autoFocus={focusIndex.index === accessor?.key && focusIndex.type === "uomValue"}
                                         onChange={(e) => {
                                             props.onChange(e.target.value);

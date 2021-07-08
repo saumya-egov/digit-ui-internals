@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userType, register, errors }) => {
   const { pathname: url } = useLocation();
   const [iserror, setError] = useState(false);
-
+  let isMobile = window.Digit.Utils.browser.isMobile();
   const inputs = [
     {
       label: t("HR_MOB_NO_LABEL"),
@@ -39,7 +39,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field-container" style={{ width: "50%", display: "block" }}>
+            <div className="field-container" style={{ width:isMobile? "100%":"50%", display: "block" }}>
               <div>
                 <div style={{ display: "flex" }}>
                   <div className="employee-card-input employee-card-input--front">+91</div>
@@ -47,7 +47,7 @@ const SelectEmployeePhoneNumber = ({ t, config, onSelect, formData = {}, userTyp
                     className="field desktop-w-full"
                     key={input.name}
                     value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
-                    onChange={(e) => setValue(e.target.value, input.name)}
+                    onChange={(e) =>{ setValue(e.target.value, input.name,validate(e.target.value, input))}}
                     disable={false}
                     defaultValue={undefined}
                     onBlur={(e) => validate(e.target.value, input)}

@@ -24,6 +24,8 @@ const Urls = {
   UserProfileUpdate: "/user/profile/_update",
   EmployeeSearch: "/egov-hrms/employees/_search",
 
+  InboxSearch: "/inbox/v1/_search",
+
   UserSearch: "/user/_search",
 
   Shortener: "/egov-url-shortening/shortener",

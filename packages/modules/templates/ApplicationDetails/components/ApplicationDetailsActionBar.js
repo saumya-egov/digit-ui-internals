@@ -10,7 +10,7 @@ function ApplicationDetailsActionBar({ workflowDetails, displayMenu, onActionSel
         <ActionBar>
           {displayMenu && workflowDetails?.data?.actionState?.nextActions ? (
             <Menu
-              localeKeyPrefix={`WF_EMPLOYEE_${businessService}`}
+              localeKeyPrefix={`WF_EMPLOYEE_${businessService?.toUpperCase()}`}
               // options={workflowDetails?.data?.actionState?.nextActions.map((action) => action?.action)}
               options={workflowDetails?.data?.actionState?.nextActions}
               optionKey={"action"}

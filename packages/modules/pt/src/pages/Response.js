@@ -24,9 +24,9 @@ const DisplayText = (action, isSuccess, isEmployee, t) => {
 const BannerPicker = (props) => {
   return (
     <Banner
-      message={GetActionMessage(props.data?.Properties?.[0].applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
-      applicationNumber={props.data?.Properties[0].acknowldgementNumber}
-      info={GetLabel(props.data?.Properties[0].applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
+      message={GetActionMessage(props?.data?.Properties?.[0]?.applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
+      applicationNumber={props?.data?.Properties?.[0]?.acknowldgementNumber}
+      info={GetLabel(props.data?.Properties?.[0]?.applicationStatus || props.action, props.isSuccess, props.isEmployee, props.t)}
       successful={props.isSuccess}
     />
   );
@@ -55,7 +55,8 @@ const Response = (props) => {
   const { tenants } = storeData || {};
 
   useEffect(() => {
-    if (mutation.data) setsuccessData(mutation.data);
+    console.log(mutation.isSuccess, "inside respose");
+    if (mutation.data && mutation.isSuccess) setsuccessData(mutation.data);
   }, [mutation.data]);
 
   useEffect(() => {
@@ -68,7 +69,7 @@ const Response = (props) => {
       setError(error?.response?.data?.Errors[0]?.message || null);
     };
 
-    if (!mutationHappened && state?.Property?.channel === "CFC_COUNTER") {
+    if (!mutationHappened) {
       mutation.mutate(
         {
           Property: state?.Property,
@@ -104,7 +105,7 @@ const Response = (props) => {
           t={t}
           data={mutation?.data || successData}
           action={state?.action}
-          isSuccess={!successData ? mutation?.isSuccess : true}
+          isSuccess={!Object.keys(successData || {}).length ? mutation?.isSuccess : true}
           isLoading={(mutation.isIdle && !mutationHappened) || mutation?.isLoading}
           isEmployee={props.parentRoute.includes("employee")}
         />

@@ -24,6 +24,7 @@ import { PTService } from "./services/elements/PT";
 import { TLService } from "./services/elements/TL";
 import { MCollectService } from "./services/elements/MCollect";
 import HrmsService from "./services/elements/HRMS";
+import { InboxGeneral } from "./services/elements/InboxService";
 
 import ShareFiles from "./services/molecules/ShareFiles";
 import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
@@ -75,6 +76,7 @@ const initLibraries = () => {
   setupLibraries("ComponentRegistryService", ComponentRegistryService);
   setupLibraries("StoreData", StoreData);
 
+  setupLibraries("InboxGeneral", InboxGeneral);
   setupLibraries("ShareFiles", ShareFiles);
   setupLibraries("Contexts", Contexts);
   setupLibraries("Hooks", Hooks);

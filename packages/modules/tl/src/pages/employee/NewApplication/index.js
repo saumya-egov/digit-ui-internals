@@ -70,6 +70,7 @@ const NewApplication = () => {
       address.locality = { code: data?.address?.locality?.code || null };
       if (data?.address?.doorNo) address.doorNo = data?.address?.doorNo || null;
       if (data?.address?.street) address.street = data?.address?.street || null;
+      if (data?.address?.pincode) address.pincode = data?.address?.pincode;
     }
 
     let owners = [];
@@ -81,7 +82,7 @@ const NewApplication = () => {
         if (data?.gender?.code) obj.gender = data?.gender?.code;
         if (data?.mobileNumber) obj.mobileNumber = Number(data?.mobileNumber);
         if (data?.name) obj.name = data?.name;
-        if (data?.correspondenceAddress) obj.correspondenceAddress = data?.correspondenceAddress;
+        if (data?.permanentAddress) obj.permanentAddress = data?.permanentAddress;
         if (data?.relationship) obj.relationship = data?.relationship?.code;
         if (data?.emailId) obj.emailId = data?.emailId;
         if (data?.ownerType?.code) obj.ownerType = data?.ownerType?.code;
@@ -92,7 +93,7 @@ const NewApplication = () => {
     let applicationDocuments = data?.documents?.documents || [];
     let commencementDate = convertDateToEpoch(data?.tradedetils?.["0"]?.commencementDate);
     let financialYear = data?.tradedetils?.["0"]?.financialYear?.code;
-    let gstNo = Number(data?.tradedetils?.["0"]?.gstNo) || "";
+    let gstNo = data?.tradedetils?.["0"]?.gstNo || "";
     let noOfEmployees = Number(data?.tradedetils?.["0"]?.noOfEmployees) || "";
     let operationalArea = Number(data?.tradedetils?.["0"]?.operationalArea) || "";
     let structureType = data?.tradedetils?.["0"]?.structureSubType?.code || "";
@@ -110,12 +111,14 @@ const NewApplication = () => {
       tenantId,
       tradeName,
       wfDocuments: [],
-      gstNo,
-      noOfEmployees,
-      operationalArea,
-      tradeLicenseDetail: {}
+      tradeLicenseDetail: {
+        additionalDetail: {}
+      }
     };
 
+    if (gstNo) formData.tradeLicenseDetail.additionalDetail.gstNo = gstNo;
+    if (noOfEmployees) formData.tradeLicenseDetail.noOfEmployees = noOfEmployees;
+    if (operationalArea) formData.tradeLicenseDetail.operationalArea = operationalArea;
     if (accessories?.length > 0) formData.tradeLicenseDetail.accessories = accessories;
     if (tradeUnits?.length > 0) formData.tradeLicenseDetail.tradeUnits = tradeUnits;
     if (owners?.length > 0) formData.tradeLicenseDetail.owners = owners;

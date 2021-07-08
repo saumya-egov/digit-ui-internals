@@ -1,6 +1,6 @@
 export const newConfigMutate = [
   {
-    head: "ES_NEW_APPLICATION_LOCATION_DETAILS",
+    head: "PT_MUTATION_TRANSFEROR_DETAILS",
     body: [
       {
         route: "info",
@@ -9,6 +9,7 @@ export const newConfigMutate = [
         hideInEmployee: true,
         key: "_Documents",
         isMutation: true,
+        hideInEmployee: true,
       },
       // {
       //   component: "TransfererDetails",
@@ -52,6 +53,7 @@ export const newConfigMutate = [
           },
         ],
         action: "MUTATION",
+        hideInEmployee: true,
       },
       {
         route: "search-results",
@@ -60,6 +62,7 @@ export const newConfigMutate = [
         nextStep: "transferer-details",
         nextStep: "info",
         action: "MUTATION",
+        hideInEmployee: true,
         texts: {
           header: "CS_SEARCH_RESULTS",
           actionButtonLabel: "PT_OWNERSHIP_TRANSFER",
@@ -97,6 +100,8 @@ export const newConfigMutate = [
         route: "transferer-details",
         nextStep: "owner-ship-details@0",
         key: "transfererDetails",
+        type: "component",
+        withoutLabel: true,
         component: "TransfererDetails",
         texts: {
           nextText: "PT_COMMON_NEXT",
@@ -130,7 +135,7 @@ export const newConfigMutate = [
           },
           {
             label: "PT_OWNERSHIP_INFO_NAME",
-            keyPath: ["searchResult", "data", "owner_name"],
+            keyPath: ["searchResult", "property", "owners", "_index_", "name"],
             ownershipType: "INDIVIDUAL",
           },
           {
@@ -160,6 +165,14 @@ export const newConfigMutate = [
           },
         ],
       },
+      // ownership or transferee
+
+      // mutation starts here
+    ],
+  },
+  {
+    head: "PT_MUTATION_TRANSFEREE_DETAILS_HEADER",
+    body: [
       {
         type: "component",
         route: "owner-ship-details@0",
@@ -186,6 +199,7 @@ export const newConfigMutate = [
         withoutLabel: true,
         nextStep: "is-mutatation-pending",
         key: "Owners",
+        hideInEmployee: true,
       },
       {
         type: "component",
@@ -339,7 +353,18 @@ export const newConfigMutate = [
         nextStep: "is-mutatation-pending",
         hideInEmployee: true,
       },
-      // mutation starts here
+      {
+        type: "component",
+        component: "PTEmployeeOwnershipDetails",
+        key: "owners",
+        withoutLabel: true,
+        hideInCitizen: true,
+      },
+    ],
+  },
+  {
+    head: "PT_MUTATION_DETAILS",
+    body: [
       {
         key: "additionalDetails",
         texts: {
@@ -352,6 +377,7 @@ export const newConfigMutate = [
         withoutLabel: true,
         component: "IsMutationPending",
         nextStep: "is-under-govt-aquisition",
+        type: "component",
         // nextStep: "reason",
       },
       {
@@ -366,7 +392,13 @@ export const newConfigMutate = [
         },
         component: "UnderStateAquire",
         nextStep: "reason",
+        type: "component",
       },
+    ],
+  },
+  {
+    head: "PT_MUTATION_REGISTRATION_DETAILS",
+    body: [
       {
         key: "additionalDetails",
         route: "reason",
@@ -379,6 +411,7 @@ export const newConfigMutate = [
         withoutLabel: true,
         component: "PTReasonForTransfer",
         nextStep: "market-value",
+        type: "component",
       },
       {
         key: "additionalDetails",
@@ -392,6 +425,7 @@ export const newConfigMutate = [
         withoutLabel: true,
         component: "PropertyMarketValue",
         nextStep: "registration-doc",
+        type: "component",
       },
       {
         key: "additionalDetails",
@@ -405,6 +439,7 @@ export const newConfigMutate = [
         withoutLabel: true,
         component: "PTRegistrationDocument",
         nextStep: "comments",
+        type: "component",
       },
       {
         key: "additionalDetails",
@@ -418,6 +453,7 @@ export const newConfigMutate = [
           submitBarLabel: "PT_COMMON_NEXT",
         },
         nextStep: "transfer-reason-doc",
+        type: "component",
       },
       {
         type: "component",
@@ -449,6 +485,12 @@ export const newConfigMutate = [
         },
         key: "addressProof",
         hideInEmployee: true,
+      },
+      {
+        component: "SelectDocuments",
+        withoutLabel: true,
+        key: "documents",
+        type: "component",
       },
     ],
   },
