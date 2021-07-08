@@ -3,7 +3,6 @@ import { Request } from "../atoms/Utils/Request";
 
 export const WorkflowService = {
   init: (stateCode, businessServices) => {
-    console.log("***************************************>>>>>>>>>>>>>>>>>>>>", stateCode);
     return Request({
       url: Urls.WorkFlow,
       useCache: true,
