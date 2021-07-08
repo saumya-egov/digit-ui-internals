@@ -21,6 +21,7 @@ import useApplicationStatusGeneral from "./useStatusGeneral";
 import useModuleTenants from "./useModuleTenants";
 import useStore from "./useStore";
 import { useTenants } from "./useTenants"
+import useInbox from "./useInbox"
 
 import useComplaintDetails from "./pgr/useComplaintDetails";
 import { useComplaintsList, useComplaintsListByMobile } from "./pgr/useComplaintList";
@@ -43,7 +44,7 @@ import useSearch from "./fsm/useSearch";
 import useSearchAll from "./fsm/useSearchAll";
 import useVehicleSearch from "./fsm/useVehicleSearch";
 import useVehicleUpdate from "./fsm/useVehicleUpdate";
-import useInbox from "./fsm/useInbox";
+import useFSMInbox from "./fsm/useInbox";
 import useApplicationUpdate from "./fsm/useApplicationUpdate";
 import useWorkflowData from "./fsm/useWorkflowData";
 import useRouteSubscription from "./fsm/useRouteSubscription";
@@ -90,11 +91,11 @@ import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
 import useTradeLicenseSearch from "./tl/useTradeLicenseSearch";
 import useTLSearchApplication from "./tl/useTLsearchApplication";
 import useTLPaymentHistory from "./tl/userPaymentHistory";
-
 import useTLGenderMDMS from "./tl/useTLGenderMDMS";
-
+import useTLInbox from "./tl/useInbox";
 import useTradeLicenseBillingslab from "./tl/useTradeLicenseBillingslab";
-
+import useTLMDMS from "./tl/useMDMS";
+import useTLSearch from "./tl/useSearch";
 
 import useHRMSSearch from "./hrms/useHRMSsearch";
 import useHrmsMDMS from "./hrms/useHRMSMDMS";
@@ -132,7 +133,7 @@ const fsm = {
   useSearch,
   useRouteSubscription,
   useSearchAll,
-  useInbox,
+  useInbox: useFSMInbox,
   useApplicationUpdate,
   useApplicationStatus,
   useWorkflowData,
@@ -195,7 +196,10 @@ const tl = {
   useTLPaymentHistory,
   useTradeLicenseSearch,
   useTLGenderMDMS,
-  useTradeLicenseBillingslab
+  useTradeLicenseBillingslab,
+  useInbox:useTLInbox,
+  useMDMS: useTLMDMS,
+  useSearch: useTLSearch
 };
 
 const receipts = {

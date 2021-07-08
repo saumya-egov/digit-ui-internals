@@ -32,6 +32,8 @@ import TLTradeUnitsEmployee from "./pageComponents/TLTradeUnitsEmployee";
 import TLAccessoriesEmployee from "./pageComponents/TLAccessoriesEmployee";
 import TLDocumentsEmployee from "./pageComponents/TLDocumentsEmployee";
 import TLCard from "./components/TLCard"
+import SearchApplication from "./components/SearchApplication"
+import SearchLicense from "./components/SearchLicense"
 
 import CitizenApp from "./pages/citizen";
 import EmployeeApp from "./pages/employee";
@@ -53,11 +55,11 @@ export const TLModule = ({ stateCode, userType, tenants }) => {
 
 export const TLLinks = ({ matchPath, userType }) => {
   const { t } = useTranslation();
-  const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_TRADE", {});
+  // // const [params, setParams, clearParams] = Digit.Hooks.useSessionStorage("PT_CREATE_TRADE", {});
 
-  useEffect(() => {
-    clearParams();
-  }, []);
+  // useEffect(() => {
+  //   clearParams();
+  // }, []);
 
   const links = [
     {
@@ -108,7 +110,9 @@ const componentsToRegister = {
   TLTradeDetailsEmployee,
   TLTradeUnitsEmployee,
   TLAccessoriesEmployee,
-  TLDocumentsEmployee
+  TLDocumentsEmployee,
+  SearchApplication,
+  SearchLicense,
 };
 
 export const initTLComponents = () => {
