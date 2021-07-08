@@ -134,7 +134,8 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
     <FormStep t={t} config={config} onSelect={goNext} onSkip={onSkip} isDisabled={!ownershipCategory}>
       <RadioButtons
         isMandatory={config.isMandatory}
-        options={getDropdwonForProperty(ownerShipdropDown) || []}
+        //options={getDropdwonForProperty(ownerShipdropDown) || []}
+        options={dropdownData?dropdownData:[]}
         selectedOption={ownershipCategory}
         optionsKey="i18nKey"
         onSelect={selectedValue}

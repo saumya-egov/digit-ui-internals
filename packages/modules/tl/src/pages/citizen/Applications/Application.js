@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, KeyNote, SubmitBar, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, KeyNote, SubmitBar, Loader, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -10,10 +10,12 @@ const MyApplications = () => {
     return <Loader />;
   }
   return (
-    <Card>
+    <React.Fragment>
+      <Header>{`${t("TL_MY_APPLICATIONS_HEADER")}`}</Header>
       {data?.map((application) => {
         return (
           <div>
+          <Card>
             <KeyNote keyValue={t("TL_COMMON_TABLE_COL_APP_NO")} note={application?.applicationNumber} />
             <KeyNote keyValue={t("TL_APPLICATION_CATEGORY")} note={t("ACTION_TEST_TRADE_LICENSE")} />
             <KeyNote keyValue={t("TL_COMMON_TABLE_COL_OWN_NAME")} note={application?.tradeLicenseDetail.owners.map((ele) => ele?.name)} />
@@ -23,10 +25,11 @@ const MyApplications = () => {
             <Link to={`/digit-ui/citizen/tl/tradelicence/application/${application?.applicationNumber}/${application.tenantId}`}>
               <SubmitBar label={t(application?.status != "PENDINGPAYMENT" ? "TL_VIEW_DETAILS" : "TL_VIEW_DETAILS_PAY")} />
             </Link>{" "}
+            </Card>
           </div>
         );
       })}
-    </Card>
+    </React.Fragment>
   );
 };
 export default MyApplications;
