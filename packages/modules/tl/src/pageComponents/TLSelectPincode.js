@@ -19,7 +19,7 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
       validation: {
         minlength: 6,
         maxlength: 7,
-        pattern: "[0-9]+",
+        pattern: "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$",
         max: "9999999",
         title: t("CORE_COMMON_PINCODE_INVALID"),
       },
