@@ -137,6 +137,7 @@ function SelectDocument({
             documentType: selectedDocument?.documentType,
             fileStoreId: uploadedFile,
             documentUid: uploadedFile,
+            tenantId: tenantId
           },
         ];
       });
