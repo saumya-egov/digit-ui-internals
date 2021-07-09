@@ -14,7 +14,6 @@ const createOwnerDetails = () => ({
   relationship: "",
   ownerType: "",
   gender: "",
-  isCorrespondenceAddress: "",
   // correspondenceAddress: "",
   key: Date.now(),
 });
@@ -60,8 +59,10 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
   //   setOwners([createOwnerDetails()]);
   // }, [formData?.ownershipCategory?.code]);
 
+  const ckeckingLocation = window.location.href.includes("renew-application-details");
+
   useEffect(() => {
-    if (formData?.tradeUnits?.length > 0) {
+    if (formData?.tradeUnits?.length > 0 && !ckeckingLocation) {
       let flag = true;
       owners.map(data => {
         Object.keys(data).map(dta => {
@@ -109,7 +110,7 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
   return (
     <React.Fragment>
       {owners.map((owner, index) => (
-        <OwnerForm key={owner.key} index={index} owner={owner} {...commonProps} />
+        <OwnerForm  index={index} owner={owner} {...commonProps} />
       ))}
       {formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" ? (
         <LinkButton label="Add Owner" onClick={addNewOwner} style={{ color: "orange" }} />

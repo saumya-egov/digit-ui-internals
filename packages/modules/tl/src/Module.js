@@ -31,7 +31,8 @@ import TLTradeDetailsEmployee from "./pageComponents/TLTradeDetailsEmployee";
 import TLTradeUnitsEmployee from "./pageComponents/TLTradeUnitsEmployee";
 import TLAccessoriesEmployee from "./pageComponents/TLAccessoriesEmployee";
 import TLDocumentsEmployee from "./pageComponents/TLDocumentsEmployee";
-import TLCard from "./components/TLCard"
+import TLCard from "./components/TLCard";
+import TLInfoLabel from "./pageComponents/TLInfoLabel";
 import SearchApplication from "./components/SearchApplication"
 import SearchLicense from "./components/SearchLicense"
 
@@ -113,6 +114,7 @@ const componentsToRegister = {
   TLDocumentsEmployee,
   SearchApplication,
   SearchLicense,
+  TLInfoLabel
 };
 
 export const initTLComponents = () => {

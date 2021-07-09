@@ -91,7 +91,7 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
   return (
     <React.Fragment>
       {tradedetils.map((tradedetail, index) => (
-        <OwnerForm key={tradedetail.key} index={index} tradedetail={tradedetail} {...commonProps} />
+        <OwnerForm1 key={tradedetail.key} index={index} tradedetail={tradedetail} {...commonProps} />
       ))}
       {formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" ? (
         <LinkButton label="Add Owner" onClick={addNewOwner} style={{ color: "orange" }} />
@@ -100,7 +100,7 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
   );
 };
 
-const OwnerForm = (_props) => {
+const OwnerForm1 = (_props) => {
   const {
     tradedetail,
     index,
@@ -202,6 +202,27 @@ const OwnerForm = (_props) => {
     }
   }
 
+  const ckeckingLocation = window.location.href.includes("renew-application-details");
+
+
+  useEffect(() => {
+    if (ckeckingLocation && structureTypeOptions?.length > 0) {
+      let selectedOption = tradedetail?.structureType?.label?.split('.')[0];
+      let structureSubTypeOption = [];
+      structureTypeOptions.map(data => {
+        if (selectedOption === data?.code?.split('.')[0]) {
+          structureSubTypeOption.push({
+            code: data?.code,
+            i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(data?.code?.toUpperCase(), ".", "_")}`),
+          })
+        }
+      });
+      // setValue("structureSubType", "");
+      setStructureSubTypeOptions(structureSubTypeOption);
+    }
+}, [tradedetail?.structureType]);
+
+
   const isIndividualTypeOwner = useMemo(() => formData?.ownershipCategory?.code.includes("INDIVIDUAL"), [formData?.ownershipCategory?.code]);
 
   useEffect(() => {
@@ -254,11 +275,12 @@ const OwnerForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  disable={financialYearOptions?.length === 1}
+                  // disable={financialYearOptions?.length === 1}
                   option={financialYearOptions}
                   select={props.onChange}
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
+                  disable={ckeckingLocation}
                   t={t}
                 />
               )}

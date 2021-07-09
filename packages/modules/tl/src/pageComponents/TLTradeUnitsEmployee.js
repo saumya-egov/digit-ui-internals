@@ -179,6 +179,40 @@ const TradeUnitForm = (_props) => {
         }
     }, [errors]);
 
+    const ckeckingLocation = window.location.href.includes("renew-application-details");
+
+    useEffect(() => {
+        if (tradeTypeMdmsData?.length > 0 && ckeckingLocation) {
+            let tradeType = cloneDeep(tradeTypeMdmsData);
+            let filteredTradeType = tradeType.filter(data => data?.code?.split('.')[0] === unit?.tradeCategory?.code)
+            let tradeTypeOptions = [];
+            filteredTradeType.map(data => {
+                data.code = data?.code?.split('.')[1];
+                data.code = data?.code?.split('.')[0];
+                data.i18nKey = t(`TRADELICENSE_TRADETYPE_${data?.code?.split('.')[0]}`);
+                tradeTypeOptions.push(data);
+            });
+            const filterTradeCategoryList = getUniqueItemsFromArray(filteredTradeType, "code");
+            setTradeTypeOptionsList(filterTradeCategoryList);
+        }
+    }, [tradeTypeMdmsData]);
+
+    useEffect(() => {
+        if (tradeTypeMdmsData?.length > 0 && ckeckingLocation) {
+            let tradeType = cloneDeep(tradeTypeMdmsData);
+            let filteredTradeSubType = tradeType.filter(data => data?.code?.split('.')[1] === unit?.tradeType?.code)
+            let tradeSubTypeOptions = [];
+            filteredTradeSubType.map(data => {
+                let code = stringReplaceAll(data?.code, "-", "_");
+                data.i18nKey = t(`TRADELICENSE_TRADETYPE_${stringReplaceAll(code, ".", "_")}`);
+                tradeSubTypeOptions.push(data);
+            });
+            const filterTradeSubTypeList = getUniqueItemsFromArray(tradeSubTypeOptions, "code");
+            setTradeSubTypeOptionsList(filterTradeSubTypeList);
+        }
+    }, [tradeTypeMdmsData]);
+
+
     const errorStyle = { width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" };
     return (
         <React.Fragment>
@@ -279,7 +313,7 @@ const TradeUnitForm = (_props) => {
                         <Controller
                             control={control}
                             name={"tradeSubType"}
-                            defaultValue={getValues("tradeSubType")}
+                            defaultValue={unit?.tradeSubType}
                             rules={{ required: "Required" }}
                             render={(props) => (
                                 <Dropdown
@@ -306,7 +340,7 @@ const TradeUnitForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uom"}
-                                defaultValue={getValues("uom")}
+                                defaultValue={unit?.tradeSubType?.uom}
                                 // rules={unit?.tradeSubType?.uom ? { required: "Required", validate: (v) => (/^(0)*[1-9][0-9]{0,5}$/.test(v) ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") } : {}}
                                 render={(props) => (
                                     <TextInput
@@ -331,7 +365,7 @@ const TradeUnitForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uomValue"}
-                                defaultValue={getValues("uomValue")}
+                                defaultValue={unit?.uomValue}
                                 rules={getValues("uomValue") && { required: "ERR_DEFAULT_INPUT_FIELD_MSG", validate: { pattern: (val) => (/^(0)*[1-9][0-9]{0,5}$/.test(val) ? true : t("ERR_DEFAULT_INPUT_FIELD_MSG")) } } }
                                 render={(props) => (
                                     <TextInput
