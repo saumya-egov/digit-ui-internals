@@ -380,7 +380,14 @@ else
 }
 }
 
+
+//FinancialYear
 export const convertToEditTrade = (data,fy=[]) => {
+  const currrentFYending = fy.filter(item => item.code === data?.financialYear)[0]
+    .endingDate;
+    const nextFinancialYearForRenewal= fy.filter(item => item.startingDate === currrentFYending)[0].code;
+
+
   console.log("dataforedit",data);
   let isDirectrenewal = stringToBoolean(sessionStorage.getItem("isDirectRenewal"));
   let formdata = {
@@ -398,9 +405,9 @@ export const convertToEditTrade = (data,fy=[]) => {
         applicationDate:data?.applicationDate,
         commencementDate:data?.commencementDate,
         issuedDate:data?.issuedDate,
-        financialYear:getvalidfromdate(data?.validFrom,fy)?getvalidfromdate(data?.validFrom,fy).finYearRange:"2020-21",
-        validFrom:getvalidfromdate(data?.validFrom,fy)?getvalidfromdate(data?.validFrom,fy).startingDate:"",
-        validTo:getvalidTodate(data?.validTo,fy)?getvalidTodate(data?.validTo,fy).endingDate:"",
+        financialYear:nextFinancialYearForRenewal||"2020-21",
+        validFrom:data?.validFrom,
+        validTo:data?.validTo,
         action:"INITIATE",
         wfDocuments:data?.wfDocuments,
         status:data?.status,
@@ -418,6 +425,69 @@ export const convertToEditTrade = (data,fy=[]) => {
         },
         calculation:null,
         auditDetails:data?.auditDetails,    
+      }
+    ]
+  }
+  console.log("formdata",formdata);
+  return formdata;
+}
+
+
+
+
+
+//FinancialYear
+export const convertToResubmitTrade = (data) => {
+ 
+
+
+  console.log("dataforedit",data);
+
+  let formdata = {
+    Licenses:[
+      { 
+        id:data?.id,
+        tenantId:data?.tenantId,
+        businessService:data?.businessService,
+        licenseType:data?.licenseType,
+        applicationType:data.applicationType,
+        workflowCode:data.workflowCode,
+        licenseNumber:data?.licenseNumber,
+        applicationNumber:data?.applicationNumber,
+        tradeName:data?.tradeName,
+        applicationDate:data?.applicationDate,
+        commencementDate:data?.commencementDate,
+        issuedDate:data?.issuedDate,
+        financialYear:data?.financialYear,
+        validFrom:data?.validFrom,
+        validTo:data?.validTo,
+        action:"FORWARD",
+        wfDocuments:data?.wfDocuments,
+        status:data?.status,
+        tradeLicenseDetail: {
+          address: data.tradeLicenseDetail.address,
+          applicationDocuments: data.tradeLicenseDetail.applicationDocuments,
+          //accessories: data?.TradeDetails?.accessories ? getaccessories(data) : null,
+          accessories:  gettradeupdateaccessories(data),
+          //owners: getownerarray(data),
+          owners: gettradeownerarray(data),
+          structureType: (data?.TradeDetails?.VehicleType ? data?.TradeDetails?.VehicleType.code : data?.TradeDetails?.BuildingType.code),
+          subOwnerShipCategory: data?.ownershipCategory?.code,
+          //tradeUnits: gettradeunits(data),
+          tradeUnits: gettradeupdateunits(data),
+
+
+additionalDetail: data.tradeLicenseDetail.additionalDetail,
+
+auditDetails:data.tradeLicenseDetail.auditDetails,
+channel: data.tradeLicenseDetail.channel,
+id:  data.tradeLicenseDetail.id,
+institution:  data.tradeLicenseDetail.institution,
+        },
+        calculation:null,
+        auditDetails:data?.auditDetails,
+accountId:data?.accountId,
+      
       }
     ]
   }
