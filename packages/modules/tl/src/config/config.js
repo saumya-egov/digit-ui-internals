@@ -1,5 +1,17 @@
 export const newConfig = [
   {
+    head: "",
+    body: [
+      {
+        type: "component",
+        component: "TLInfoLabel",
+        key: "tradedetils1",
+        withoutLabel: true,
+        hideInCitizen: true,
+      }
+    ]
+  },
+  {
     head: "TL_COMMON_TR_DETAILS",
     body: [
       {

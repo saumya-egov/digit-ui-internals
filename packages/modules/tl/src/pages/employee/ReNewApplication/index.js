@@ -1,25 +1,109 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FormComposer, Toast } from "@egovernments/digit-ui-react-components";
+import { FormComposer, Toast, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
 import { newConfig } from "../../../config/config";
 import { useHistory } from "react-router-dom";
-import { convertDateToEpoch } from "../../../utils";
+import { convertDateToEpoch, stringReplaceAll, convertEpochToDate } from "../../../utils";
 import cloneDeep from "lodash/cloneDeep";
 
 
-const NewApplication = () => {
+const ReNewApplication = (props) => {
+
+  console.log(props, "propspropspropspropspropspropspropsprops");
+
+  const applicationData = props?.location?.state?.applicationData || {};
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [canSubmit, setSubmitValve] = useState(false);
-  const defaultValues = {};
+
   const history = useHistory();
   // delete
-  const [_formData, setFormData,_clear] = Digit.Hooks.useSessionStorage("store-data",null);
+  const [_formData, setFormData, _clear] = Digit.Hooks.useSessionStorage("store-data", null);
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_MUTATION_HAPPENED", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_MUTATION_SUCCESS_DATA", {});
 
   const [showToast, setShowToast] = useState(null);
   const [error, setError] = useState(null);
+
+  let financialYear = applicationData?.financialYear;
+  let financialYearDate = applicationData?.financialYear?.split('-')[1];
+  let finalFinancialYear = `20${Number(financialYearDate)}-20${Number(financialYearDate)+1}`
+
+
+  const tradeDetails = [
+    {
+      tradeName: applicationData?.tradeName,
+      financialYear: { code: finalFinancialYear, i18nKey: `FY${finalFinancialYear}`, id: finalFinancialYear?.split('-')[0] },
+      licenseType: "",
+      structureType: { i18nKey: t(`COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(applicationData?.tradeLicenseDetail?.structureType?.split('.')[0]?.toUpperCase(), ".", "_")}`), code: applicationData?.tradeLicenseDetail?.structureType?.split('.')[0] },
+      structureSubType: { i18nKey: `COMMON_MASTERS_STRUCTURETYPE_${stringReplaceAll(applicationData?.tradeLicenseDetail?.structureType?.toUpperCase(), ".", "_")}`, code: applicationData?.tradeLicenseDetail?.structureType },
+      commencementDate: convertEpochToDate(applicationData?.commencementDate),
+      gstNo: applicationData?.tradeLicenseDetail?.additionalDetail?.gstNo || "",
+      operationalArea: applicationData?.tradeLicenseDetail?.operationalArea || "",
+      noOfEmployees: applicationData?.tradeLicenseDetail?.noOfEmployees || "",
+      key: Date.now()
+    }
+  ];
+
+  if (applicationData?.tradeLicenseDetail?.tradeUnits?.length > 0) {
+    applicationData?.tradeLicenseDetail?.tradeUnits?.forEach((data, index) => {
+      let tradeType1 = cloneDeep(data?.tradeType);
+      let tradeType2 = cloneDeep(data?.tradeType);
+      let tradeType3 = cloneDeep(data?.tradeType);
+
+      let code1 = typeof data?.tradeType == "string" && stringReplaceAll(tradeType3, "-", "_");
+      if (typeof data?.tradeType == "string") data.tradeCategory = { code: tradeType1?.split('.')[0], i18nKey: `TRADELICENSE_TRADETYPE_${tradeType1?.split('.')[0]}` };
+      if (typeof data?.tradeType == "string") data.tradeSubType = { code: tradeType3, i18nKey: t(`TRADELICENSE_TRADETYPE_${stringReplaceAll(code1, ".", "_")}`), uom: data?.uom || "" };
+      if (typeof data?.tradeType == "string") data.tradeType = { code: tradeType2?.split('.')[1], i18nKey: `TRADELICENSE_TRADETYPE_${tradeType2?.split('.')[1]}` };
+      data.uom = data?.uom;
+      data.uomValue = data?.uomValue;
+      data.key = (Date.now() + ((index + 1) * 20))
+    })
+  }
+
+  if (applicationData?.tradeLicenseDetail?.accessories?.length > 0) {
+    applicationData?.tradeLicenseDetail?.accessories?.forEach((data, index) => {
+      let accessory1 = cloneDeep(data?.accessoryCategory);
+      let accessory2 = cloneDeep(data?.accessoryCategory);
+
+      if (typeof data?.accessoryCategory == "string") data.accessoryCategory = { code: accessory1, i18nKey: `TRADELICENSE_ACCESSORIESCATEGORY_${stringReplaceAll(accessory1, "-", "_")}`, uom: data?.uom };
+      data.uom = data?.uom;
+      data.uomValue = data?.uomValue || "";
+      data.count= data?.count || "";
+      data.key = (Date.now() + ((index + 1) * 20))
+    })
+  }
+
+  applicationData.tradeLicenseDetail.address.locality = { ...applicationData.tradeLicenseDetail.address.locality, ...{ i18nkey: applicationData.tradeLicenseDetail.address.locality?.name } };
+
+  const ownershipCategory = {
+    code: applicationData?.tradeLicenseDetail?.subOwnerShipCategory,
+    i18nKey: `COMMON_MASTERS_OWNERSHIPCATEGORY_${stringReplaceAll(applicationData?.tradeLicenseDetail?.subOwnerShipCategory, ".", "_")}`
+  }
+
+  if (applicationData?.tradeLicenseDetail?.owners?.length > 0) {
+    applicationData?.tradeLicenseDetail?.owners?.forEach((data, index) => {
+      if (typeof data?.gender == "string") data.gender = { code: data?.gender, i18nKey: `TL_GENDER_${data?.gender}` };
+      if (typeof data?.relationship == "string") data.relationship = { code: data?.relationship, i18nKey: `COMMON_RELATION_${data?.relationship}` };
+      if (typeof data?.ownerType == "string") data.ownerType = { code: data?.ownerType, i18nKey: data?.ownerType }
+      if (!data?.fatherOrHusbandName) data.fatherOrHusbandName = "";
+      if (!data?.emailId) data.emailId = "";
+      if (!data?.permanentAddress) data.permanentAddress = "";
+      data.key = (Date.now() + ((index + 1) * 20))
+    });
+  }
+
+  const defaultValues = {
+    tradedetils1: "TL",
+    tradedetils: tradeDetails,
+    tradeUnits: applicationData?.tradeLicenseDetail?.tradeUnits,
+    accessories: applicationData?.tradeLicenseDetail?.accessories,
+    address: applicationData?.tradeLicenseDetail?.address || {},
+    ownershipCategory: ownershipCategory,
+    owners: applicationData?.tradeLicenseDetail?.owners || [],
+    documents: { documents: applicationData?.tradeLicenseDetail?.applicationDocuments || [] }
+  };
 
 
   const closeToast = () => {
@@ -49,7 +133,7 @@ const NewApplication = () => {
             count: Number(data?.count) || null,
             uomValue: Number(data?.uomValue) || null
           });
-        } 
+        }
       });
     };
 
@@ -128,7 +212,7 @@ const NewApplication = () => {
     if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
 
     console.log(formData, "formDataformDataformDataformDataformData");
-   
+
     // setFormData(formData)
 
     Digit.TLService.create({ Licenses: [formData] }, tenantId)
@@ -165,7 +249,7 @@ const NewApplication = () => {
   // let configs = newConfig;
   let configs = [];
   newConfig.map(conf => {
-    if (conf.head !== "ES_NEW_APPLICATION_PROPERTY_ASSESSMENT" && conf.head) {
+    if (conf.head !== "ES_NEW_APPLICATION_PROPERTY_ASSESSMENT") {
       configs.push(conf);
     }
   });
@@ -174,7 +258,7 @@ const NewApplication = () => {
   function checkHead(head) {
     if (head === "ES_NEW_APPLICATION_LOCATION_DETAILS") {
       return "TL_CHECK_ADDRESS"
-    } else if(head === "ES_NEW_APPLICATION_OWNERSHIP_DETAILS") {
+    } else if (head === "ES_NEW_APPLICATION_OWNERSHIP_DETAILS") {
       return "TL_OWNERSHIP_DETAILS_HEADER"
     } else {
       return head
@@ -182,9 +266,9 @@ const NewApplication = () => {
   }
 
   return (
-    <div style={{marginLeft:"30px"}}>
+    <div>
       <FormComposer
-        heading={t("ES_TITLE_NEW_TRADE_LICESE_APPLICATION")}
+        heading={t("ES_TITLE_RE_NEW_TRADE_LICESE_APPLICATION")}
         isDisabled={!canSubmit}
         label={t("ES_COMMON_APPLICATION_SUBMIT")}
         config={configs.map((config) => {
@@ -208,4 +292,4 @@ const NewApplication = () => {
   );
 };
 
-export default NewApplication;
+export default ReNewApplication;
