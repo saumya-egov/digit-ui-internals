@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { convertToEditTrade, convertToResubmitTrade, convertToTrade, convertToUpdateTrade, stringToBoolean } from "../../../utils";
 import getPDFData from "../../../utils/getTLAcknowledgementData";
-import getPDFData from "../../../utils/getTLAcknowledgementData";
+
 const GetActionMessage = (props) => {
   const { t } = useTranslation();
   if (props.isSuccess) {
