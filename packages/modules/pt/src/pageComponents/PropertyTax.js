@@ -37,16 +37,27 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
           <div>
             {isLoading && <Loader />}
             {Array.isArray(docs)
-              ? docs.map(({ code, dropdownData }, index) => (
-                  <div key={index}>
-                    <CardSubHeader>
-                      {index + 1}. {t("PROPERTYTAX_" + stringReplaceAll(code, ".", "_") + "_HEADING")}
-                    </CardSubHeader>
-                    {dropdownData.map((dropdownData) => (
-                      <CardText>{t("PROPERTYTAX_" + stringReplaceAll(dropdownData?.code, ".", "_") + "_LABEL")}</CardText>
-                    ))}
-                  </div>
-                ))
+              ? config?.isMutation ?
+                  docs.map(({ code, dropdownData }, index) => (
+                    <div key={index}>
+                      <CardSubHeader>
+                        {index + 1}. {t("PT_" + code.replace(".", "_"))}
+                      </CardSubHeader>
+                      {dropdownData.map((dropdownData) => (
+                        <CardText>{t("PT_" + dropdownData?.code.replace(".", "_"))}</CardText>
+                      ))}
+                    </div>
+                  )) :
+                  docs.map(({ code, dropdownData }, index) => (
+                    <div key={index}>
+                      <CardSubHeader>
+                        {index + 1}. {t("PROPERTYTAX_" + stringReplaceAll(code, ".", "_") + "_HEADING")}
+                      </CardSubHeader>
+                      {dropdownData.map((dropdownData) => (
+                        <CardText>{t("PROPERTYTAX_" + stringReplaceAll(dropdownData?.code, ".", "_") + "_LABEL")}</CardText>
+                      ))}
+                    </div>
+                  ))
               : console.log("error")}
           </div>
         </div>
