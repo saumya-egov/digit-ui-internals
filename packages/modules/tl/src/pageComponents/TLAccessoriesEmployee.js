@@ -26,6 +26,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     const [isErrors, setIsErrors] = useState(false);
     const [flag, setFlag] = useState(true);
     const [uomvalues, setUomvalues] = useState("");
+    const ckeckingLocation = window.location.href.includes("renew-application-details");
 
 
     const { data: billingSlabData } = Digit.Hooks.tl.useTradeLicenseBillingslab({ tenantId, filters: {} });
@@ -47,7 +48,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     }, [accessoriesList]);
 
     useEffect(() => {
-        if (formData?.accessories?.length > 0) {
+        if (formData?.accessories?.length > 0 && !ckeckingLocation) {
           let flag = true;
           accessoriesList.map(data => {
             Object.keys(data).map(dta => {
@@ -289,7 +290,7 @@ const AccessoriersForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uom"}
-                                defaultValue={getValues("uom")}
+                                defaultValue={accessor?.accessoryCategory?.uom}
                                 // rules={accessor?.accessoryCategory?.uom ? { required: "Required" } : {}}
                                 render={(props) => (
                                     <TextInput
@@ -315,7 +316,7 @@ const AccessoriersForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uomValue"}
-                                defaultValue={getValues("uomValue")}
+                                defaultValue={accessor?.uomValue}
                                 rules={accessor?.accessoryCategory?.uom && { required: "Required", validate: (e) => ((e && getPattern("UOMValue").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
                                 render={(props) => (
                                     <TextInput
