@@ -28,7 +28,6 @@ const Search = ({path}) => {
     }
 
     const {data: searchReult, isLoading , isSuccess } = Digit.Hooks.tl.useSearch({tenantId, filters: payload, config})
-    debugger
     return <Search t={t} tenantId={tenantId} onSubmit={onSubmit} data={ !isLoading && isSuccess ? searchReult : { display: "ES_COMMON_NO_DATA" } } /> 
 
 }
