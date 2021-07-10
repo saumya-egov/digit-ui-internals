@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Card, KeyNote, SubmitBar, Loader, Header } from "@egovernments/digit-ui-react-components";
+import { Card, Header, KeyNote, Loader, SubmitBar } from "@egovernments/digit-ui-react-components";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
