@@ -250,7 +250,7 @@ const OwnerForm = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "mobileNumber"}
                     onChange={(e) => {
-                      if(e.target.value != owner?.mobileNumber && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                      if(e != owner?.mobileNumber && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "mobileNumber" });
                     }}
