@@ -94,8 +94,11 @@ const ReNewApplication = (props) => {
     });
   }
 
+  let clonedData = cloneDeep(props?.location?.state?.applicationData);
+  clonedData.checkForRenewal = false;
+
   const defaultValues = {
-    tradedetils1: cloneDeep(props?.location?.state?.applicationData),
+    tradedetils1: clonedData,
     tradedetils: tradeDetails,
     tradeUnits: applicationData?.tradeLicenseDetail?.tradeUnits,
     accessories: applicationData?.tradeLicenseDetail?.accessories,
@@ -123,6 +126,8 @@ const ReNewApplication = (props) => {
   };
 
   const onSubmit = (data) => {
+
+    const EDITRENEWAL = data?.tradedetils1?.checkForRenewal;
 
     if (data?.owners?.length > 0) {
       data?.owners.forEach(data => {
@@ -167,32 +172,29 @@ const ReNewApplication = (props) => {
     let subOwnerShipCategory = data?.ownershipCategory?.code || "";
     let licenseType = data?.tradedetils?.["0"]?.licenseType?.code || "PERMANENT";
 
-    let formData = cloneDeep(data.tradedetils1);
+    if (!EDITRENEWAL) {
+      let formData = cloneDeep(data.tradedetils1);
 
-    formData.action = "INITIATE",
-    formData.applicationType = "RENEWAL",
-    formData.workflowCode = "DIRECTRENEWAL",
-    formData.commencementDate = commencementDate;
-    formData.financialYear = financialYear;
-    formData.licenseType = licenseType;
-    formData.tenantId = tenantId;
-    formData.tradeName = tradeName;
+      formData.action = "INITIATE",
+      formData.applicationType = "RENEWAL",
+      formData.workflowCode = "DIRECTRENEWAL",
+      formData.commencementDate = commencementDate;
+      formData.financialYear = financialYear;
+      formData.licenseType = licenseType;
+      formData.tenantId = tenantId;
+      formData.tradeName = tradeName;
 
-    if (gstNo) formData.tradeLicenseDetail.additionalDetail.gstNo = gstNo;
-    if (noOfEmployees) formData.tradeLicenseDetail.noOfEmployees = noOfEmployees;
-    if (operationalArea) formData.tradeLicenseDetail.operationalArea = operationalArea;
-    if (data?.accessories?.length > 0) formData.tradeLicenseDetail.accessories = data?.accessories;
-    if (data?.tradeUnits?.length > 0) formData.tradeLicenseDetail.tradeUnits = data?.tradeUnits;
-    if (data?.owners?.length > 0) formData.tradeLicenseDetail.owners = data?.owners;
-    if (data?.address) formData.tradeLicenseDetail.address = data?.address;
-    if (structureType) formData.tradeLicenseDetail.structureType = structureType;
-    if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
-
-    console.log(formData, "formDataformDataformDataformDataformData");
-
-    // setFormData(formData)
-
-    Digit.TLService.update({ Licenses: [formData] }, tenantId)
+      if (gstNo) formData.tradeLicenseDetail.additionalDetail.gstNo = gstNo;
+      if (noOfEmployees) formData.tradeLicenseDetail.noOfEmployees = noOfEmployees;
+      if (operationalArea) formData.tradeLicenseDetail.operationalArea = operationalArea;
+      if (data?.accessories?.length > 0) formData.tradeLicenseDetail.accessories = data?.accessories;
+      if (data?.tradeUnits?.length > 0) formData.tradeLicenseDetail.tradeUnits = data?.tradeUnits;
+      if (data?.owners?.length > 0) formData.tradeLicenseDetail.owners = data?.owners;
+      if (data?.address) formData.tradeLicenseDetail.address = data?.address;
+      if (structureType) formData.tradeLicenseDetail.structureType = structureType;
+      if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
+    
+      Digit.TLService.update({ Licenses: [formData] }, tenantId)
       .then((result, err) => {
         if (result?.Licenses?.length > 0) {
           if (result?.Licenses?.length > 0) {
@@ -208,13 +210,54 @@ const ReNewApplication = (props) => {
         setError(e?.response?.data?.Errors[0]?.message || null);
       });
 
+    } else {
+      let formData = cloneDeep(data.tradedetils1);
 
+      formData.action = "INITIATE",
+      formData.applicationType = "RENEWAL",
+      formData.workflowCode = "EDITRENEWAL",
+      formData.commencementDate = commencementDate;
+      formData.financialYear = financialYear;
+      formData.licenseType = licenseType;
+      formData.tenantId = tenantId;
+      formData.tradeName = tradeName;
 
-    // history.replace("/digit-ui/employee/tl/response", { Licenses: [formData], documents: applicationDocuments });
-    // history.push("/digit-ui/employee/pt/response", { Property: formData });
-    // history.push("/digit-ui/employee/pt/response", { Property: _formData });
+      if (gstNo) formData.tradeLicenseDetail.additionalDetail.gstNo = gstNo;
+      if (noOfEmployees) formData.tradeLicenseDetail.noOfEmployees = noOfEmployees;
+      if (operationalArea) formData.tradeLicenseDetail.operationalArea = operationalArea;
+      if (data?.accessories?.length > 0) formData.tradeLicenseDetail.accessories = data?.accessories;
+      if (data?.tradeUnits?.length > 0) formData.tradeLicenseDetail.tradeUnits = data?.tradeUnits;
+      if (data?.owners?.length > 0) formData.tradeLicenseDetail.owners = data?.owners;
+      if (data?.address) formData.tradeLicenseDetail.address = data?.address;
+      if (structureType) formData.tradeLicenseDetail.structureType = structureType;
+      if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
+      if (applicationDocuments) formData.tradeLicenseDetail.applicationDocuments = applicationDocuments;
+
+      Digit.TLService.update({ Licenses: [formData] }, tenantId)
+      .then((result, err) => {
+        if (result?.Licenses?.length > 0) {
+          let licenses = result?.Licenses?.[0];
+          licenses.action = "APPLY";
+          Digit.TLService.update({ Licenses: [licenses] }, tenantId).then((response) => {
+            if (response?.Licenses?.length > 0) {
+              history.replace(
+                `/digit-ui/employee/tl/response`,
+                { data: response?.Licenses }
+              );
+            }
+          }).catch((e) => {
+            setShowToast({ key: "error" });
+            setError(e?.response?.data?.Errors[0]?.message || null);
+          });
+        }
+      })
+      .catch((e) => {
+        setShowToast({ key: "error" });
+        setError(e?.response?.data?.Errors[0]?.message || null);
+      });
+    }
   };
-  // let configs = newConfig;
+
   let configs = [];
   newConfig.map(conf => {
     if (conf.head !== "ES_NEW_APPLICATION_PROPERTY_ASSESSMENT") {

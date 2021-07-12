@@ -24,7 +24,8 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const isEditScreen = pathname.includes("/modify-application/");
-  const [tradedetils, setTradedetils] = useState(formData?.tradedetils || [createTradeDetailsDetails()])
+  const [tradedetils, setTradedetils] = useState(formData?.tradedetils || [createTradeDetailsDetails()]);
+  const [previousLicenseDetails, setPreviousLicenseDetails] = useState(formData?.tradedetils1 || []);
   const [structureSubTypeOptions, setStructureSubTypeOptions] = useState([]);
   const [owners, setOwners] = useState(formData?.owners || [createTradeDetailsDetails()]);
   const [focusIndex, setFocusIndex] = useState({ index: -1, type: "" });
@@ -56,6 +57,10 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
   }, [tradedetils]);
 
   useEffect(() => {
+    onSelect("tradedetils1", previousLicenseDetails);
+  }, [previousLicenseDetails]);
+
+  useEffect(() => {
     setOwners([createTradeDetailsDetails()]);
   }, [formData?.tradedetils?.[0]?.key]);
 
@@ -81,7 +86,9 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
     isErrors,
     billingSlabData,
     licenseTypeList, 
-    setLicenseTypeList
+    setLicenseTypeList,
+    previousLicenseDetails, 
+    setPreviousLicenseDetails
   };
 
   if (isEditScreen) {
@@ -124,7 +131,9 @@ const OwnerForm1 = (_props) => {
     isErrors,
     billingSlabData,
     licenseTypeList, 
-    setLicenseTypeList
+    setLicenseTypeList,
+    previousLicenseDetails, 
+    setPreviousLicenseDetails
   } = _props;
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
@@ -384,7 +393,10 @@ const OwnerForm1 = (_props) => {
                   selected={getValues("structureSubType")}
                   disable={false}
                   option={structureSubTypeOptions}
-                  select={props.onChange}
+                  select={(e) => {
+                    if(e?.code != tradedetail?.structureSubType?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                    props.onChange(e)
+                  }}
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
                   t={t}
