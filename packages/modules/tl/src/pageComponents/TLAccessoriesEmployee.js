@@ -307,7 +307,6 @@ const AccessoriersForm = (_props) => {
                                         }}
                                         disable={true}
                                         onBlur={props.onBlur}
-                                        disable={isRenewal}
                                     />
                                 )}
                             />
@@ -331,9 +330,8 @@ const AccessoriersForm = (_props) => {
                                             props.onChange(e.target.value);
                                             setFocusIndex({ index: accessor.key, type: "uomValue" });
                                         }}
-                                        disable={!(accessor?.accessoryCategory?.uom)}
+                                        disable={!(accessor?.accessoryCategory?.uom) || isRenewal}
                                         onBlur={props.onBlur}
-                                        disable={isRenewal}
                                     />
                                 )}
                             />
