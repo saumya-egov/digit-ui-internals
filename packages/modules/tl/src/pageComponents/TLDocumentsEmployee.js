@@ -158,10 +158,13 @@ function SelectDocument({
     }
 
     if (!isHidden) {
-      if (!uploadedFile || !selectedDocument?.documentType) {
-        addError();
-      } else if (uploadedFile && selectedDocument?.documentType) {
-        removeError();
+      const isRenewal = window.location.href.includes("renew-application-details");
+      if (!isRenewal) {
+        if (!uploadedFile || !selectedDocument?.documentType) {
+          addError();
+        } else if (uploadedFile && selectedDocument?.documentType) {
+          removeError();
+        }
       }
     } else if (isHidden) {
       removeError();

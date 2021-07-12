@@ -26,7 +26,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     const [isErrors, setIsErrors] = useState(false);
     const [flag, setFlag] = useState(true);
     const [uomvalues, setUomvalues] = useState("");
-    const ckeckingLocation = window.location.href.includes("renew-application-details");
+    const isRenewal = window.location.href.includes("renew-application-details");
 
 
     const { data: billingSlabData } = Digit.Hooks.tl.useTradeLicenseBillingslab({ tenantId, filters: {} });
@@ -48,7 +48,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     }, [accessoriesList]);
 
     useEffect(() => {
-        if (formData?.accessories?.length > 0 && !ckeckingLocation) {
+        if (formData?.accessories?.length > 0 && !isRenewal) {
           let flag = true;
           accessoriesList.map(data => {
             Object.keys(data).map(dta => {
@@ -92,7 +92,8 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
         accessoriesList,
         billingSlabData,
         setUomvalues,
-        uomvalues
+        uomvalues,
+        isRenewal
     };
 
     if (isEditScreen) {
@@ -133,7 +134,8 @@ const AccessoriersForm = (_props) => {
         accessoriesList,
         billingSlabData,
         setUomvalues,
-        uomvalues
+        uomvalues,
+        isRenewal
     } = _props;
 
     const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
@@ -279,6 +281,7 @@ const AccessoriersForm = (_props) => {
                                     option={accessories || []}
                                     optionKey="i18nKey"
                                     t={t}
+                                    disable={isRenewal}
                                 />
                             )}
                         />
@@ -304,6 +307,7 @@ const AccessoriersForm = (_props) => {
                                         }}
                                         disable={true}
                                         onBlur={props.onBlur}
+                                        disable={isRenewal}
                                     />
                                 )}
                             />
@@ -329,6 +333,7 @@ const AccessoriersForm = (_props) => {
                                         }}
                                         disable={!(accessor?.accessoryCategory?.uom)}
                                         onBlur={props.onBlur}
+                                        disable={isRenewal}
                                     />
                                 )}
                             />
@@ -353,6 +358,7 @@ const AccessoriersForm = (_props) => {
                                             setFocusIndex({ index: accessor.key, type: "count" });
                                         }}
                                         onBlur={props.onBlur}
+                                        disable={isRenewal}
                                     />
                                 )}
                             />

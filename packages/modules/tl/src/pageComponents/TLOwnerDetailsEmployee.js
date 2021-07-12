@@ -27,6 +27,7 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const stateId = tenantId.split(".")[0];
   const [isErrors, setIsErrors] = useState(false);
+  const [previousLicenseDetails, setPreviousLicenseDetails] = useState(formData?.tradedetils1 || []);
 
   const { data: mdmsData, isLoading } = Digit.Hooks.pt.usePropertyMDMS(stateId, "PropertyTax", [
     "UsageCategory",
@@ -55,14 +56,18 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
     onSelect(config?.key, data);
   }, [owners]);
 
+  useEffect(() => {
+    onSelect("tradedetils1", previousLicenseDetails);
+  }, [previousLicenseDetails]);
+
   // useEffect(() => {
   //   setOwners([createOwnerDetails()]);
   // }, [formData?.ownershipCategory?.code]);
 
-  const ckeckingLocation = window.location.href.includes("renew-application-details");
-
+  const isRenewal = window.location.href.includes("tl/renew-application-details");
+  
   useEffect(() => {
-    if (formData?.tradeUnits?.length > 0 && !ckeckingLocation) {
+    if (formData?.tradeUnits?.length > 0 && !isRenewal) {
       let flag = true;
       owners.map(data => {
         Object.keys(data).map(dta => {
@@ -100,7 +105,10 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
     clearErrors,
     config,
     setIsErrors,
-    isErrors
+    isErrors,
+    isRenewal,
+    previousLicenseDetails, 
+    setPreviousLicenseDetails
   };
 
   if (isEditScreen) {
@@ -136,7 +144,10 @@ const OwnerForm = (_props) => {
     clearErrors,
     formState,
     setIsErrors,
-    isErrors
+    isErrors,
+    isRenewal,
+    previousLicenseDetails, 
+    setPreviousLicenseDetails
   } = _props;
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
@@ -211,6 +222,7 @@ const OwnerForm = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "name"}
                     onChange={(e) => {
+                      if(e.target.value != owner?.name && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);
                       // props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "name" });
@@ -238,6 +250,7 @@ const OwnerForm = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "mobileNumber"}
                     onChange={(e) => {
+                      if(e.target.value != owner?.mobileNumber && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "mobileNumber" });
                     }}
@@ -262,6 +275,7 @@ const OwnerForm = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "fatherOrHusbandName"}
                     onChange={(e) => {
+                      if(e.target.value != owner?.fatherOrHusbandName && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);
                       // props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "fatherOrHusbandName" });
@@ -284,7 +298,11 @@ const OwnerForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  select={props.onChange}
+                  select={(e) => {
+                    if (e?.code != owner?.relationship?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true });
+                    props.onChange(e)
+                    }
+                  }
                   onBlur={props.onBlur}
                   option={[
                     { i18nKey: "COMMON_RELATION_FATHER", code: "FATHER" },
@@ -308,7 +326,10 @@ const OwnerForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  select={props.onChange}
+                  select={(e) => {
+                    if(e?.code !=  owner?.gender?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                    props.onChange(e)
+                  }}
                   onBlur={props.onBlur}
                   option={[
                     { i18nKey: "TL_GENDER_MALE", code: "Male" },
@@ -336,6 +357,7 @@ const OwnerForm = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "emailId"}
                     onChange={(e) => {
+                      if(e.target.value != owner?.emailId && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);
                       setFocusIndex({ index: owner.key, type: "emailId" });
                     }}
@@ -358,7 +380,10 @@ const OwnerForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  select={props.onChange}
+                  select={(e) => {
+                    if(e?.code !=  owner?.ownerType?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                    props.onChange(e)
+                  }}
                   onBlur={props.onBlur}
                   option={ownerTypesMenu}
                   optionKey="i18nKey"
@@ -381,6 +406,7 @@ const OwnerForm = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "permanentAddress"}
                     onChange={(e) => {
+                      if(e.target.value != owner?.permanentAddress && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);
                       setFocusIndex({ index: owner.key, type: "permanentAddress" });
                     }}

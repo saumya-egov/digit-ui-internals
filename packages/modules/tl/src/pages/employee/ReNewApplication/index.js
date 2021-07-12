@@ -11,7 +11,7 @@ const ReNewApplication = (props) => {
 
   console.log(props, "propspropspropspropspropspropspropsprops");
 
-  const applicationData = props?.location?.state?.applicationData || {};
+  const applicationData = cloneDeep(props?.location?.state?.applicationData) || {};
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -28,7 +28,7 @@ const ReNewApplication = (props) => {
 
   let financialYear = applicationData?.financialYear;
   let financialYearDate = applicationData?.financialYear?.split('-')[1];
-  let finalFinancialYear = `20${Number(financialYearDate)}-20${Number(financialYearDate)+1}`
+  let finalFinancialYear = `20${Number(financialYearDate)}-${Number(financialYearDate)+1}`
 
 
   const tradeDetails = [
@@ -94,15 +94,19 @@ const ReNewApplication = (props) => {
     });
   }
 
+  let clonedData = cloneDeep(props?.location?.state?.applicationData);
+  clonedData.checkForRenewal = false;
+
   const defaultValues = {
-    tradedetils1: "TL",
+    tradedetils1: clonedData,
     tradedetils: tradeDetails,
     tradeUnits: applicationData?.tradeLicenseDetail?.tradeUnits,
     accessories: applicationData?.tradeLicenseDetail?.accessories,
     address: applicationData?.tradeLicenseDetail?.address || {},
     ownershipCategory: ownershipCategory,
     owners: applicationData?.tradeLicenseDetail?.owners || [],
-    documents: { documents: applicationData?.tradeLicenseDetail?.applicationDocuments || [] }
+    documents: { documents: applicationData?.tradeLicenseDetail?.applicationDocuments || [] },
+    // applicationData: cloneDeep(props?.location?.state?.applicationData)
   };
 
 
@@ -123,56 +127,39 @@ const ReNewApplication = (props) => {
 
   const onSubmit = (data) => {
 
-    let accessories = [];
-    if (data?.accessories?.length > 0) {
-      data?.accessories.map(data => {
-        if (data?.accessoryCategory?.code) {
-          accessories.push({
-            accessoryCategory: data?.accessoryCategory?.code || null,
-            uom: data?.accessoryCategory?.uom || null,
-            count: Number(data?.count) || null,
-            uomValue: Number(data?.uomValue) || null
-          });
-        }
-      });
-    };
+    const EDITRENEWAL = data?.tradedetils1?.checkForRenewal;
 
-    let tradeUnits = [];
-    if (data?.tradeUnits?.length > 0) {
-      data?.tradeUnits.map(data => {
-        tradeUnits.push({
-          tradeType: data?.tradeSubType?.code || null,
-          uom: data?.tradeSubType?.uom || null,
-          uomValue: Number(data?.uomValue) || null
-        });
-      });
-    };
-
-    let address = {};
-    if (data?.address) {
-      address.city = data?.address?.city?.code || null;
-      address.locality = { code: data?.address?.locality?.code || null };
-      if (data?.address?.doorNo) address.doorNo = data?.address?.doorNo || null;
-      if (data?.address?.street) address.street = data?.address?.street || null;
-      if (data?.address?.pincode) address.pincode = data?.address?.pincode;
-    }
-
-    let owners = [];
     if (data?.owners?.length > 0) {
-      data?.owners.map(data => {
-        let obj = {};
-        if (data?.dob) obj.dob = convertDateToEpoch(data?.dob);
-        if (data?.fatherOrHusbandName) obj.fatherOrHusbandName = data?.fatherOrHusbandName;
-        if (data?.gender?.code) obj.gender = data?.gender?.code;
-        if (data?.mobileNumber) obj.mobileNumber = Number(data?.mobileNumber);
-        if (data?.name) obj.name = data?.name;
-        if (data?.permanentAddress) obj.permanentAddress = data?.permanentAddress;
-        if (data?.relationship) obj.relationship = data?.relationship?.code;
-        if (data?.emailId) obj.emailId = data?.emailId;
-        if (data?.ownerType?.code) obj.ownerType = data?.ownerType?.code;
-        owners.push(obj);
+      data?.owners.forEach(data => {
+        data.gender = data?.gender?.code;
+        data.relationship = data?.relationship?.code;
+        data.ownerType = data?.ownerType?.code;
       })
     };
+
+    if (data?.tradeUnits?.length > 0) {
+      data?.tradeUnits.forEach(data => {
+        data.tradeType = data?.tradeSubType?.code || null,
+          data.uom = data?.tradeSubType?.uom || null,
+          data.uomValue = Number(data?.uomValue) || null
+      });
+    };
+
+    let accessoriesFlag = false;
+    if (data?.accessories?.length > 0) {
+      if (data?.accessories?.length === 1 && !data?.accessories?.[0]?.accessoryCategory?.code ) accessoriesFlag = true;
+      data?.accessories?.forEach(data => {
+        const accessoryCategory1 = cloneDeep(data?.accessoryCategory);
+        const accessoryCategory2 = cloneDeep(data?.accessoryCategory);
+        data.accessoryCategory = accessoryCategory1?.code || null,
+        data.uom = accessoryCategory2?.uom || null,
+        data.count = Number(data?.count) || null,
+        data.uomValue = Number(data?.uomValue) || null
+      });
+    };
+    if(accessoriesFlag) data.accessories = null;
+
+    data.address.city = data?.address?.city?.code || null;
 
     let applicationDocuments = data?.documents?.documents || [];
     let commencementDate = convertDateToEpoch(data?.tradedetils?.["0"]?.commencementDate);
@@ -185,42 +172,71 @@ const ReNewApplication = (props) => {
     let subOwnerShipCategory = data?.ownershipCategory?.code || "";
     let licenseType = data?.tradedetils?.["0"]?.licenseType?.code || "PERMANENT";
 
-    let formData = {
-      action: "INITIATE",
-      applicationType: "NEW",
-      workflowCode: "NewTL",
-      commencementDate,
-      financialYear,
-      licenseType,
-      tenantId,
-      tradeName,
-      wfDocuments: [],
-      tradeLicenseDetail: {
-        additionalDetail: {}
-      }
-    };
+    if (!EDITRENEWAL) {
+      let formData = cloneDeep(data.tradedetils1);
 
-    if (gstNo) formData.tradeLicenseDetail.additionalDetail.gstNo = gstNo;
-    if (noOfEmployees) formData.tradeLicenseDetail.noOfEmployees = noOfEmployees;
-    if (operationalArea) formData.tradeLicenseDetail.operationalArea = operationalArea;
-    if (accessories?.length > 0) formData.tradeLicenseDetail.accessories = accessories;
-    if (tradeUnits?.length > 0) formData.tradeLicenseDetail.tradeUnits = tradeUnits;
-    if (owners?.length > 0) formData.tradeLicenseDetail.owners = owners;
-    // if (applicationDocuments?.length > 0) formData.tradeLicenseDetail.applicationDocuments = applicationDocuments;
-    if (address) formData.tradeLicenseDetail.address = address;
-    if (structureType) formData.tradeLicenseDetail.structureType = structureType;
-    if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
+      formData.action = "INITIATE",
+      formData.applicationType = "RENEWAL",
+      formData.workflowCode = "DIRECTRENEWAL",
+      formData.commencementDate = commencementDate;
+      formData.financialYear = financialYear;
+      formData.licenseType = licenseType;
+      formData.tenantId = tenantId;
+      formData.tradeName = tradeName;
 
-    console.log(formData, "formDataformDataformDataformDataformData");
+      if (gstNo) formData.tradeLicenseDetail.additionalDetail.gstNo = gstNo;
+      if (noOfEmployees) formData.tradeLicenseDetail.noOfEmployees = noOfEmployees;
+      if (operationalArea) formData.tradeLicenseDetail.operationalArea = operationalArea;
+      if (data?.accessories?.length > 0) formData.tradeLicenseDetail.accessories = data?.accessories;
+      if (data?.tradeUnits?.length > 0) formData.tradeLicenseDetail.tradeUnits = data?.tradeUnits;
+      if (data?.owners?.length > 0) formData.tradeLicenseDetail.owners = data?.owners;
+      if (data?.address) formData.tradeLicenseDetail.address = data?.address;
+      if (structureType) formData.tradeLicenseDetail.structureType = structureType;
+      if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
+    
+      Digit.TLService.update({ Licenses: [formData] }, tenantId)
+      .then((result, err) => {
+        if (result?.Licenses?.length > 0) {
+          if (result?.Licenses?.length > 0) {
+            history.replace(
+              `/digit-ui/employee/tl/response`,
+              { data: result?.Licenses }
+            );
+          }
+        }
+      })
+      .catch((e) => {
+        setShowToast({ key: "error" });
+        setError(e?.response?.data?.Errors[0]?.message || null);
+      });
 
-    // setFormData(formData)
+    } else {
+      let formData = cloneDeep(data.tradedetils1);
 
-    Digit.TLService.create({ Licenses: [formData] }, tenantId)
+      formData.action = "INITIATE",
+      formData.applicationType = "RENEWAL",
+      formData.workflowCode = "EDITRENEWAL",
+      formData.commencementDate = commencementDate;
+      formData.financialYear = financialYear;
+      formData.licenseType = licenseType;
+      formData.tenantId = tenantId;
+      formData.tradeName = tradeName;
+
+      if (gstNo) formData.tradeLicenseDetail.additionalDetail.gstNo = gstNo;
+      if (noOfEmployees) formData.tradeLicenseDetail.noOfEmployees = noOfEmployees;
+      if (operationalArea) formData.tradeLicenseDetail.operationalArea = operationalArea;
+      if (data?.accessories?.length > 0) formData.tradeLicenseDetail.accessories = data?.accessories;
+      if (data?.tradeUnits?.length > 0) formData.tradeLicenseDetail.tradeUnits = data?.tradeUnits;
+      if (data?.owners?.length > 0) formData.tradeLicenseDetail.owners = data?.owners;
+      if (data?.address) formData.tradeLicenseDetail.address = data?.address;
+      if (structureType) formData.tradeLicenseDetail.structureType = structureType;
+      if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
+      if (applicationDocuments) formData.tradeLicenseDetail.applicationDocuments = applicationDocuments;
+
+      Digit.TLService.update({ Licenses: [formData] }, tenantId)
       .then((result, err) => {
         if (result?.Licenses?.length > 0) {
           let licenses = result?.Licenses?.[0];
-          licenses.tradeLicenseDetail.applicationDocuments = applicationDocuments;
-          licenses.wfDocuments = applicationDocuments
           licenses.action = "APPLY";
           Digit.TLService.update({ Licenses: [licenses] }, tenantId).then((response) => {
             if (response?.Licenses?.length > 0) {
@@ -239,14 +255,9 @@ const ReNewApplication = (props) => {
         setShowToast({ key: "error" });
         setError(e?.response?.data?.Errors[0]?.message || null);
       });
-
-
-
-    // history.replace("/digit-ui/employee/tl/response", { Licenses: [formData], documents: applicationDocuments });
-    // history.push("/digit-ui/employee/pt/response", { Property: formData });
-    // history.push("/digit-ui/employee/pt/response", { Property: _formData });
+    }
   };
-  // let configs = newConfig;
+
   let configs = [];
   newConfig.map(conf => {
     if (conf.head !== "ES_NEW_APPLICATION_PROPERTY_ASSESSMENT") {

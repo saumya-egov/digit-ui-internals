@@ -19,7 +19,6 @@ const Search = ({path}) => {
             ...(_data.fromDate ? {fromDate: new Date(_data?.fromDate).getTime()} : {})
         }
         console.log("find me",data);
-        debugger
         setPayload(Object.keys(data).filter( k => data[k] ).reduce( (acc, key) => ({...acc,  [key]: typeof data[key] === "object" ? data[key].code : data[key] }), {} ))
     }
 
@@ -28,7 +27,6 @@ const Search = ({path}) => {
     }
 
     const {data: searchReult, isLoading , isSuccess } = Digit.Hooks.tl.useSearch({tenantId, filters: payload, config})
-    debugger
     return <Search t={t} tenantId={tenantId} onSubmit={onSubmit} data={ !isLoading && isSuccess ? searchReult : { display: "ES_COMMON_NO_DATA" } } /> 
 
 }

@@ -31,6 +31,8 @@ const TLTradeUnitsEmployee = ({ config, onSelect, userType, formData, setError, 
     const [tradeTypeOptionsList, setTradeTypeOptionsList] = useState([]);
     const [tradeSubTypeOptionsList, setTradeSubTypeOptionsList] = useState([]);
     const [isErrors, setIsErrors] = useState(false);
+    const [previousLicenseDetails, setPreviousLicenseDetails] = useState(formData?.tradedetils1 || []);
+    const isRenewal = window.location.href.includes("tl/renew-application-details");
 
     const { data: tradeMdmsData,isLoading } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "TradeLicense", "TradeUnits", "[?(@.type=='TL')]");
 
@@ -50,6 +52,9 @@ const TLTradeUnitsEmployee = ({ config, onSelect, userType, formData, setError, 
         onSelect(config?.key, data);
     }, [units]);
 
+    useEffect(() => {
+        onSelect("tradedetils1", previousLicenseDetails);
+      }, [previousLicenseDetails]);
 
     // useEffect(() => {
     //   setUnits([createOwnerDetails()]);
@@ -79,7 +84,10 @@ const TLTradeUnitsEmployee = ({ config, onSelect, userType, formData, setError, 
         setTradeCategoryValues,
         tradeMdmsData,
         isErrors,
-        setIsErrors
+        setIsErrors,
+        previousLicenseDetails, 
+        setPreviousLicenseDetails,
+        isRenewal
     };
 
     if (isEditScreen) {
@@ -122,7 +130,10 @@ const TradeUnitForm = (_props) => {
         setTradeCategoryValues,
         tradeMdmsData,
         isErrors,
-        setIsErrors
+        setIsErrors,
+        previousLicenseDetails, 
+        setPreviousLicenseDetails,
+        isRenewal
     } = _props;
 
     const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
@@ -237,6 +248,8 @@ const TradeUnitForm = (_props) => {
                                     disable={false}
                                     option={tradeCategoryValues}
                                     select={(e) => {
+                                        if (props?.value?.code == e?.code) return true;
+                                        if(e?.code != props?.value?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                                         let selectedOption = e?.code;
                                         if (tradeTypeMdmsData?.length > 0) {
                                             let tradeType = cloneDeep(tradeTypeMdmsData);
@@ -282,6 +295,8 @@ const TradeUnitForm = (_props) => {
                                     disable={false}
                                     option={unit?.tradeCategory ? tradeTypeOptionsList : []}
                                     select={(e) => {
+                                        if (props?.value?.code == e?.code) return true;
+                                        if(e?.code != props?.value?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                                         let selectedOption = e?.code;
                                         if (tradeTypeMdmsData?.length > 0) {
                                             let tradeType = cloneDeep(tradeTypeMdmsData);
@@ -322,6 +337,8 @@ const TradeUnitForm = (_props) => {
                                     disable={false}
                                     option={unit?.tradeType ? tradeSubTypeOptionsList : []}
                                     select={(e) => {
+                                        if (props?.value?.code == e?.code) return true;
+                                        if(e?.code != props?.value?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                                         setValue("uom", e?.uom ? e?.uom : "");
                                         setValue("uomValue", "");
                                         props.onChange(e);
@@ -372,6 +389,7 @@ const TradeUnitForm = (_props) => {
                                         value={getValues("uomValue")}
                                         autoFocus={focusIndex.index === unit?.key && focusIndex.type === "uomValue"}
                                         onChange={(e) => {
+                                            if(e.target.value != unit?.uomValue && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                                             props.onChange(e);
                                             setFocusIndex({ index: unit.key, type: "uomValue" });
                                         }}

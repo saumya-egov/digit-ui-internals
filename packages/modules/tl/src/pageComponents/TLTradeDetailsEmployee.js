@@ -24,7 +24,8 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
   const { t } = useTranslation();
   const { pathname } = useLocation();
   const isEditScreen = pathname.includes("/modify-application/");
-  const [tradedetils, setTradedetils] = useState(formData?.tradedetils || [createTradeDetailsDetails()])
+  const [tradedetils, setTradedetils] = useState(formData?.tradedetils || [createTradeDetailsDetails()]);
+  const [previousLicenseDetails, setPreviousLicenseDetails] = useState(formData?.tradedetils1 || []);
   const [structureSubTypeOptions, setStructureSubTypeOptions] = useState([]);
   const [owners, setOwners] = useState(formData?.owners || [createTradeDetailsDetails()]);
   const [focusIndex, setFocusIndex] = useState({ index: -1, type: "" });
@@ -56,6 +57,10 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
   }, [tradedetils]);
 
   useEffect(() => {
+    onSelect("tradedetils1", previousLicenseDetails);
+  }, [previousLicenseDetails]);
+
+  useEffect(() => {
     setOwners([createTradeDetailsDetails()]);
   }, [formData?.tradedetils?.[0]?.key]);
 
@@ -81,7 +86,9 @@ const TLTradeDetailsEmployee = ({ config, onSelect, userType, formData, setError
     isErrors,
     billingSlabData,
     licenseTypeList, 
-    setLicenseTypeList
+    setLicenseTypeList,
+    previousLicenseDetails, 
+    setPreviousLicenseDetails
   };
 
   if (isEditScreen) {
@@ -124,7 +131,9 @@ const OwnerForm1 = (_props) => {
     isErrors,
     billingSlabData,
     licenseTypeList, 
-    setLicenseTypeList
+    setLicenseTypeList,
+    previousLicenseDetails, 
+    setPreviousLicenseDetails
   } = _props;
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
@@ -202,12 +211,12 @@ const OwnerForm1 = (_props) => {
     }
   }
 
-  const ckeckingLocation = window.location.href.includes("renew-application-details");
+  const isRenewal = window.location.href.includes("renew-application-details");
 
 
   useEffect(() => {
-    if (ckeckingLocation && structureTypeOptions?.length > 0) {
-      let selectedOption = tradedetail?.structureType?.label?.split('.')[0];
+    if (isRenewal && structureTypeOptions?.length > 0) {
+      let selectedOption = tradedetail?.structureType?.code?.split('.')[0];
       let structureSubTypeOption = [];
       structureTypeOptions.map(data => {
         if (selectedOption === data?.code?.split('.')[0]) {
@@ -280,7 +289,7 @@ const OwnerForm1 = (_props) => {
                   select={props.onChange}
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
-                  disable={ckeckingLocation}
+                  disable={isRenewal}
                   t={t}
                 />
               )}
@@ -328,6 +337,7 @@ const OwnerForm1 = (_props) => {
                       setFocusIndex({ index: -1 });
                       props.onBlur(e);
                     }}
+                    disable={isRenewal}
                   />
                 )}
               />
@@ -345,7 +355,7 @@ const OwnerForm1 = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  disable={false}
+                  disable={isRenewal}
                   option={selectedStructureTypeOptions}
                   select={(e) => {
                     let selectedOption = e?.code?.split('.')[0];
@@ -383,7 +393,10 @@ const OwnerForm1 = (_props) => {
                   selected={getValues("structureSubType")}
                   disable={false}
                   option={structureSubTypeOptions}
-                  select={props.onChange}
+                  select={(e) => {
+                    if(e?.code != tradedetail?.structureSubType?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
+                    props.onChange(e)
+                  }}
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
                   t={t}
@@ -406,6 +419,7 @@ const OwnerForm1 = (_props) => {
                     // date={CommencementDate} 
                     name="CommencementDate"
                     onChange={props.onChange}
+                    disabled={isRenewal}
                   />
                 )}
               />
@@ -430,6 +444,7 @@ const OwnerForm1 = (_props) => {
                     }}
                     labelStyle={{ marginTop: "unset" }}
                     onBlur={props.onBlur}
+                    disable={isRenewal}
                   />
                 )}
               />
@@ -453,6 +468,7 @@ const OwnerForm1 = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "operationalArea"}
                     onBlur={props.onBlur}
+                    disable={isRenewal}
                   />
                 )}
               />
@@ -476,6 +492,7 @@ const OwnerForm1 = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "noOfEmployees"}
                     onBlur={props.onBlur}
+                    disable={isRenewal}
                   />
                 )}
               />

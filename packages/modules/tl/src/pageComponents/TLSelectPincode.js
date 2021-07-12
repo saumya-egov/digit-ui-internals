@@ -9,6 +9,8 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
   const presentInModifyApplication = pathname.includes("modify");
   // let isEditProperty = formData?.isEditProperty || false;
   let isEdit = window.location.href.includes("/edit-application/")||window.location.href.includes("renew-trade");
+  const isRenewal = window.location.href.includes("edit-application") || window.location.href.includes("tl/renew-application-details");
+  
   //if (formData?.isUpdateProperty) isEditProperty = true;
   const inputs = [
     {
@@ -66,7 +68,8 @@ const TLSelectPincode = ({ t, config, onSelect, formData = {}, userType, registe
             <TextInput 
               key={input.name} 
               value={pincode} 
-              onChange={onChange} 
+              onChange={onChange}
+              disable={isRenewal}
               {...input.validation} 
               autoFocus={presentInModifyApplication} 
             />
