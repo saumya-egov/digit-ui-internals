@@ -202,12 +202,12 @@ const OwnerForm1 = (_props) => {
     }
   }
 
-  const ckeckingLocation = window.location.href.includes("renew-application-details");
+  const isRenewal = window.location.href.includes("renew-application-details");
 
 
   useEffect(() => {
-    if (ckeckingLocation && structureTypeOptions?.length > 0) {
-      let selectedOption = tradedetail?.structureType?.label?.split('.')[0];
+    if (isRenewal && structureTypeOptions?.length > 0) {
+      let selectedOption = tradedetail?.structureType?.code?.split('.')[0];
       let structureSubTypeOption = [];
       structureTypeOptions.map(data => {
         if (selectedOption === data?.code?.split('.')[0]) {
@@ -280,7 +280,7 @@ const OwnerForm1 = (_props) => {
                   select={props.onChange}
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
-                  disable={ckeckingLocation}
+                  disable={isRenewal}
                   t={t}
                 />
               )}
@@ -328,6 +328,7 @@ const OwnerForm1 = (_props) => {
                       setFocusIndex({ index: -1 });
                       props.onBlur(e);
                     }}
+                    disable={isRenewal}
                   />
                 )}
               />
@@ -345,7 +346,7 @@ const OwnerForm1 = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
-                  disable={false}
+                  disable={isRenewal}
                   option={selectedStructureTypeOptions}
                   select={(e) => {
                     let selectedOption = e?.code?.split('.')[0];
@@ -406,6 +407,7 @@ const OwnerForm1 = (_props) => {
                     // date={CommencementDate} 
                     name="CommencementDate"
                     onChange={props.onChange}
+                    disabled={isRenewal}
                   />
                 )}
               />
@@ -430,6 +432,7 @@ const OwnerForm1 = (_props) => {
                     }}
                     labelStyle={{ marginTop: "unset" }}
                     onBlur={props.onBlur}
+                    disable={isRenewal}
                   />
                 )}
               />
@@ -453,6 +456,7 @@ const OwnerForm1 = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "operationalArea"}
                     onBlur={props.onBlur}
+                    disable={isRenewal}
                   />
                 )}
               />
@@ -476,6 +480,7 @@ const OwnerForm1 = (_props) => {
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "noOfEmployees"}
                     onBlur={props.onBlur}
+                    disable={isRenewal}
                   />
                 )}
               />

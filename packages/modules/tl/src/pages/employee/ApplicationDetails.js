@@ -12,6 +12,7 @@ const ApplicationDetails = () => {
   const [showToast, setShowToast] = useState(null);
   // const [callUpdateService, setCallUpdateValve] = useState(false);
   const [businessService, setBusinessService] = useState("NewTL"); //DIRECTRENEWAL
+  const [numberOfApplications, setNumberOfApplications] = useState([]);
 
   const { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.tl.useApplicationDetail(t, tenantId, applicationNumber);
   
@@ -39,6 +40,14 @@ const ApplicationDetails = () => {
     setShowToast(null);
   };
 
+  useEffect(() => {
+    if (applicationDetails?.numOfApplications?.length > 0) {
+      setNumberOfApplications(applicationDetails?.numOfApplications);
+    }
+  }, [applicationDetails?.numOfApplications]);
+
+
+console.log(numberOfApplications, "numberOfApplicationsnumberOfApplicationsnumberOfApplicationsnumberOfApplications");
   useEffect(() => {
     if (workflowDetails?.data?.applicationBusinessService) {
       setBusinessService(workflowDetails?.data?.applicationBusinessService);
@@ -72,7 +81,7 @@ const ApplicationDetails = () => {
         data: {
           ...workflowDetails?.data,
           actionState: {
-            nextActions: [
+            nextActions: numberOfApplications ?[
               {
                 action: "RENEWAL_SUBMIT_BUTTON",
                 redirectionUrl: {
@@ -81,7 +90,7 @@ const ApplicationDetails = () => {
                 },
                 tenantId: stateId,
               }
-            ],
+            ] : [],
           },
         },
       };

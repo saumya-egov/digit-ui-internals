@@ -59,10 +59,10 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
   //   setOwners([createOwnerDetails()]);
   // }, [formData?.ownershipCategory?.code]);
 
-  const ckeckingLocation = window.location.href.includes("renew-application-details");
-
+  const isRenewal = window.location.href.includes("tl/renew-application-details");
+  
   useEffect(() => {
-    if (formData?.tradeUnits?.length > 0 && !ckeckingLocation) {
+    if (formData?.tradeUnits?.length > 0 && !isRenewal) {
       let flag = true;
       owners.map(data => {
         Object.keys(data).map(dta => {
@@ -100,7 +100,8 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
     clearErrors,
     config,
     setIsErrors,
-    isErrors
+    isErrors,
+    isRenewal
   };
 
   if (isEditScreen) {
@@ -136,7 +137,8 @@ const OwnerForm = (_props) => {
     clearErrors,
     formState,
     setIsErrors,
-    isErrors
+    isErrors,
+    isRenewal
   } = _props;
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();

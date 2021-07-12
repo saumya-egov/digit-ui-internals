@@ -767,7 +767,7 @@ export const convertEpochToDate = (dateEpoch) => {
     let year = dateFromApi.getFullYear();
     month = (month > 9 ? "" : "0") + month;
     day = (day > 9 ? "" : "0") + day;
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;//`${day}/${month}/${year}`;
   } else {
     return null;
   }

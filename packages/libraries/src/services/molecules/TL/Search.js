@@ -35,9 +35,20 @@ export const TLSearch = {
     return response.Licenses[0];
   },
 
+  numberOfApplications: async (tenantId, filters = {}) => {
+    const response = await TLService.TLsearch({ tenantId, filters });
+    return response.Licenses;
+  },
+
   applicationDetails: async (t, tenantId, applicationNumber, userType) => {
     const filter = { applicationNumber };
     const response = await TLSearch.application(tenantId, filter);
+    let numOfApplications = [];
+    if(response?.licenseNumber) {
+      const licenseNumbers = response?.licenseNumber;
+      const filters = { licenseNumbers, offset: 0 };
+      numOfApplications = await TLSearch.numberOfApplications(tenantId, filters);
+    }
     console.log(response, "from hookfrom hookfrom hookfrom hookfrom hookfrom hook");
 
     let employeeResponse = [];
@@ -170,6 +181,7 @@ export const TLSearch = {
       applicationDetails: employeeResponse,
       additionalDetails: response?.additionalDetails,
       applicationData: response,
+      numOfApplications: numOfApplications
     };
   },
 };

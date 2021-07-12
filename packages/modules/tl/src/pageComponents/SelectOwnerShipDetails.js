@@ -102,7 +102,8 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
   // }, []);
 
   if (userType === "employee") {
-    
+  const isRenewal = window.location.href.includes("tl/renew-application-details");
+  
     return (
       <React.Fragment>
         <LabelFieldPair>
@@ -113,7 +114,7 @@ const SelectOwnerShipDetails = ({ t, config, onSelect, userType, formData, onBlu
             className="form-field"
             selected={ownershipCategory}
             // selected={ownershipCategory ? ownershipCategory : dropdownData[0]}
-            // disable={getDropdwonForProperty(ownerShipdropDown)?.length === 1 || editScreen}
+            disable={isRenewal}
             option={dropdownData}
             select={selectedValue}
             optionKey="i18nKey"

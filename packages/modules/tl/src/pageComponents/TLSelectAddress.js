@@ -196,6 +196,7 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData, setError, fo
                 onBlur={props.onBlur}
                 optionKey="i18nkey"
                 t={t}
+                disable={checkingLocationForRenew ? true : false}
                 // disable={isEditProperty ? isEditProperty : false}
               />
             )}
