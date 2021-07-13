@@ -10,106 +10,32 @@ const Inbox = ({
   businessService = "TL",
   initialStates = {},
   filterComponent,
-  isInbox,
-  rawWfHandler,
-  rawSearchHandler,
-  combineResponse,
-  wfConfig,
-  searchConfig,
-  middlewaresWf,
-  middlewareSearch,
-  EmptyResultInboxComp,
+  isInbox
 }) => {
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [enableSarch, setEnableSearch] = useState(() => (isInbox ? {} : { enabled: false }));
-  const mutation = Digit.Hooks.tl.useTradeLicenseAPI(tenantId);
+
   const { t } = useTranslation();
   const [pageOffset, setPageOffset] = useState(initialStates.pageOffset || 0);
   const [pageSize, setPageSize] = useState(initialStates.pageSize || 10);
-  const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "createdTime", desc: false }]);
+  const [sortParams, setSortParams] = useState(initialStates.sortParams || [{ id: "applicationDate", desc: false }]);
 
   const [searchParams, setSearchParams] = useState(() => {
     return initialStates.searchParams || {};
   });
 
-  const [businessIdToOwnerMappings, setBusinessIdToOwnerMappings] = useState({});
 
   let isMobile = window.Digit.Utils.browser.isMobile();
   let paginationParams = isMobile
-    ? { limit: 100, offset: 0, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
-    : { limit: pageSize, offset: pageOffset, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
+    ? { limit: 100, offset: 0, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" }
+    : { limit: pageSize, offset: pageOffset, sortBy: sortParams?.[0]?.id, sortOrder: sortParams?.[0]?.desc ? "DESC" : "ASC" };
 
-    const { isFetching, isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = Digit.Hooks.useInboxGeneral({
-        tenantId,
-        businessService,
-        isInbox,
-        filters: { ...searchParams, ...paginationParams, sortParams },
-        rawWfHandler,
-        rawSearchHandler,
-        combineResponse,
-        wfConfig,
-        searchConfig: { ...enableSarch, ...searchConfig },
-        middlewaresWf,
-        middlewareSearch,
-      });
-
-  let formedData = [];
-  let res;
-  let businessIdToOwnerMapping = {};
-
-  useEffect(() => {
-    async function fetchMyAPI() {
-      let businessIds = [];
-      let businessServiceMap = {};
-      let challanNumbers = [];
-      let challanNums = [];
-
-      data?.challans?.forEach((item) => {
-        challanNums = businessServiceMap[item.businessService] || [];
-        challanNumbers = challanNums;
-        challanNums.push(item.challanNo);
-        businessServiceMap[item.businessService] = challanNums;
-      });
-      let processInstanceArray = [];
-
-      for (var key in businessServiceMap) {
-        let consumerCodes = businessServiceMap[key].toString();
-        res = await Digit.PaymentService.fetchBill(tenantId, { consumerCode: consumerCodes, businessService: key });
-        processInstanceArray = processInstanceArray.concat(res.Bill);
-        businessIdToOwnerMapping = {};
-        processInstanceArray
-          .filter((record) => record.businessService)
-          .forEach((item) => {
-            businessIdToOwnerMapping[item.consumerCode] = {
-              businessService: item.businessService,
-              totalAmount: item.totalAmount || 0,
-              dueDate: item?.billDetails[0]?.expiryDate,
-            };
-          });
-      }
-      setBusinessIdToOwnerMappings(businessIdToOwnerMapping);
-    }
-    if (data?.challans && data?.challans?.length > 0) {
-      fetchMyAPI();
-    }
-  }, [data]);
-
-  data?.challans?.map((data) => {
-    formedData.push({
-      challanNo: data?.challanNo,
-      name: data?.citizen?.name,
-      applicationStatus: data?.applicationStatus,
-      businessService: data?.businessService,
-      totalAmount: businessIdToOwnerMappings[data.challanNo]?.totalAmount || 0,
-      dueDate: businessIdToOwnerMappings[data.challanNo]?.dueDate || "NA",
-      tenantId: data?.tenantId,
+  const { isFetching, isLoading: hookLoading, searchResponseKey, data, searchFields, ...rest } = Digit.Hooks.tl.useInbox({
+      tenantId,
+      filters: { ...searchParams, ...paginationParams, sortParams },
+      config:{}
     });
-  });
-
-  useEffect(() => {
-    console.log("data from the hook", hookLoading, rest, data);
-  }, [hookLoading, rest]);
 
   useEffect(() => {
     setPageOffset(0);
@@ -203,7 +129,7 @@ const Inbox = ({
                 {isInbox && <Header>{t("ES_COMMON_INBOX")}</Header>}
                 <DesktopInbox
                     businessService={businessService}
-                    data={formedData}
+                    data={data}
                     tableConfig={rest?.tableConfig}
                     isLoading={hookLoading}
                     defaultSearchParams={initialStates.searchParams}
