@@ -43,9 +43,11 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
                       <CardSubHeader>
                         {index + 1}. {t(code)}
                       </CardSubHeader>
-                      {dropdownData.map((dropdownData) => (
-                        <CardText>{t(dropdownData?.code)}</CardText>
-                      ))}
+                      <CardText>
+                        {dropdownData.map((dropdownData) => (
+                          t(dropdownData?.code)
+                        )).join(', ')}
+                      </CardText>
                       <CardText>{t(`${code.split('.')[0]}.${code.split('.')[1]}.${code.split('.')[1]}_DESCRIPTION`)}</CardText>
                     </div>
                   )) :
