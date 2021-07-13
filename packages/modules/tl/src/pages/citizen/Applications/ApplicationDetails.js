@@ -192,7 +192,7 @@ const ApplicationDetails = () => {
                     state: {},
                   }}
                 >
-                  <SubmitBar label={t("COMMON_EDIT")} />
+                  <SubmitBar label={t("TL_RENEWAL_BUTTON_EDIT")} />
                 </Link>
               ) : null}
               {application?.status == "PENDINGPAYMENT" ? (
