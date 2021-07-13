@@ -155,7 +155,7 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
               " " +
               t("PT_INORDER_TO_TRANSFER")}
           </p>
-          <SubmitBar submit={false} onSubmit={() => proceedToPay(modalData)} style={{ marginTop: "14px" }} label={t("PROCEED_TO_PAY")} />
+          <SubmitBar submit={false} onSubmit={() => proceedToPay(modalData)} style={{ marginTop: "14px" }} label={t("PT_PROCEED_PAYMENT")} />
           {/* </Card> */}
         </Modal>
       ) : null}
