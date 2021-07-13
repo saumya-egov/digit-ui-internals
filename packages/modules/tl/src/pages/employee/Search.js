@@ -19,7 +19,6 @@ const Search = ({path}) => {
             ...(_data.fromDate ? {fromDate: new Date(_data?.fromDate).getTime()} : {})
         }
         console.log("find me",data);
-        debugger
         setPayload(Object.keys(data).filter( k => data[k] ).reduce( (acc, key) => ({...acc,  [key]: typeof data[key] === "object" ? data[key].code : data[key] }), {} ))
     }
 

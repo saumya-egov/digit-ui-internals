@@ -28,6 +28,10 @@ const Response = (props) => {
     Digit.Utils.pdf.generate(data);
   };
 
+  const routeToPaymentScreen = async () => {
+    window.location.assign(`${window.location.origin}/digit-ui/employee/payment/collect/TL/${state?.data?.[0]?.applicationNumber}/${state?.data?.[0]?.tenantId}`);
+  }
+
   return (
     <div>
         <Card>
@@ -46,9 +50,17 @@ const Response = (props) => {
               {t("TL_PRINT_APPLICATION_LABEL")}
           </div>
           <ActionBar style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline" }}>
+          {state?.data?.[0]?.status !== "PENDINGPAYMENT" ?
             <Link to={`/digit-ui/employee`} style={{ marginRight: "1rem" }}>
               <SubmitBar label={t("CORE_COMMON_GO_TO_HOME")} />
-            </Link>
+            </Link> :
+            // <Link to={`digit-ui/employee/payment/collect/TL/${state?.data?.[0]?.applicationNumber}/${state?.data?.[0]?.tenantId}`} style={{ marginRight: "1rem" }}>
+            <div onClick={routeToPaymentScreen}>
+                <SubmitBar label={t("TL_COLLECT_PAYMENT")} />
+            </div> 
+            
+            // </Link>
+          }
           </ActionBar>
         </Card>
     </div>

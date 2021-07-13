@@ -16,6 +16,11 @@ const InsightView = ({ rowValue, insight }) => {
   );
 }
 
+const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1) => {
+  if (value === undefined) return value;
+  return Math.round((((value / (totalCapacity * numberOfDays)) * 100) + Number.EPSILON) * 100) / 100;
+}
+
 const CustomTable = ({ data, onSearch, setChartData }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
@@ -47,20 +52,58 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
       id === chartKey ? value?.filters : { [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue },
   });
 
+  const tableData = useMemo(() => {
+    if (!response || !lastYearResponse) return;
+    return response?.responseData?.data?.map((rows, id) => {
+      const lyData = lastYearResponse?.responseData?.data?.find((lyRow) => lyRow?.headerName === rows?.headerName);
+      return rows?.plots?.reduce((acc, row, currentIndex) => {
+        let cellValue = row?.value !== null ? row?.value : row?.label || "";
+        let prevData = lyData?.plots?.[currentIndex]?.value;
+        let insight = null;
+        if (row?.name === "CapacityUtilization" && chartKey !== "fsmVehicleLogReportByVehicleNo") {
+          const { range } = value;
+          const { startDate, endDate } = range;
+          const numberOfDays = differenceInCalendarDays(endDate, startDate) + 1;
+          const ulbs  = dssTenants.filter((tenant) => tenant?.city?.ddrName === rows.headerName || tenant?.code === rows.headerName).map(tenant => tenant.code);
+          const totalCapacity = fstpMdmsData?.filter(plant => ulbs.find(ulb => plant.ULBS.includes(ulb))).reduce((acc, plant) => acc + Number(plant.PlantOperationalCapacityKLD), 0)
+          cellValue = calculateFSTPCapacityUtilization(cellValue, totalCapacity, numberOfDays);
+          prevData = calculateFSTPCapacityUtilization(prevData, totalCapacity, numberOfDays);
+        }
+        if (row?.name === "CapacityUtilization" && chartKey === "fsmVehicleLogReportByVehicleNo") {
+          const tankCapcity = rows?.plots.find(plot => plot?.name === "TankCapacity");
+          console.log(tankCapcity, 'tank capacity');
+          cellValue = calculateFSTPCapacityUtilization(cellValue, tankCapcity?.value);
+          prevData = calculateFSTPCapacityUtilization(prevData, tankCapcity?.value);
+        }
+        if ((row.symbol === "number" || row.symbol === "percentage" || row.symbol === "amount") && (row.name !== "CitizenAverageRating" && row.name !== "TankCapacity") && lyData !== undefined) {
+          if (prevData === cellValue) insight = 0;
+          else insight = prevData === 0 ? 100 : Math.round(((cellValue - prevData) / prevData) * 100);
+        }
+        if (row?.name === "CapacityUtilization") cellValue = cellValue + "%"
+        if (typeof cellValue === "number" && !Number.isInteger(cellValue)) {
+          cellValue = Math.round((cellValue + Number.EPSILON) * 100) / 100;
+        }
+        acc[t(`DSS_HEADER_${row?.name.toUpperCase()}`)] = insight !== null ? { value: cellValue, insight } : row?.name === "S.N." ? id + 1 : cellValue;
+        acc['key'] = rows.headerName; 
+        return acc;
+      }, {});
+    });
+  }, [response, lastYearResponse]);
+
   useEffect(() => {
-    if (response) {
-      const result = response?.responseData?.data?.map(rows => {
-        return rows?.plots?.reduce((acc, cell) => {
-          acc[t(`DSS_HEADER_${cell?.name.toUpperCase()}`)] = t(cell?.label) ||  Math.round((cell?.value + Number.EPSILON) * 100) / 100;
+    if (tableData) {
+      const result = tableData.map(row => {
+        return Object.keys(row).reduce((acc, key) => {
+          if (key === "key") return acc;
+          acc[key] =  typeof row[key] === 'object' ? row[key]?.value : row[key];
           return acc;
         }, {});
       })
       setChartData(result);
     }
-  }, [response]);
+  }, [tableData]);
 
   const filterValue = useCallback((rows, id, filterValue = "") => {
-    console.log(rows, 'key original');
     return rows.filter(row => {
       const res = Object.keys(row.values).find(key => {
         if (typeof row.values[key] === 'object') {
@@ -118,28 +161,13 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
     let value1, value2;
     value1 = typeof firstCell === "object" ? firstCell?.value : firstCell;
     value2 = typeof secondCell === "object" ? secondCell?.value : secondCell;
-    return typeof value1 === "number" ? value1 - value2 : value1.localeCompare(value2);
+    return String(value1).localeCompare(String(value2), undefined, { numeric: true });
   }, []);
 
   const accessData = (plot) => {
-    const name = plot?.name.replaceAll(".", " ")
+    const name = t(`DSS_HEADER_${plot?.name.toUpperCase()}`)
     return (originalRow, rowIndex, columns) => {
       const cellValue = originalRow[name];
-      if (name === "CapacityUtilization" && chartKey !== "fsmVehicleLogReportByVehicleNo") {
-        const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
-        const { range } = value;
-        const { startDate, endDate } = range;
-        const numberOfDays = differenceInCalendarDays(endDate, startDate) + 1;
-        const ulbs  = dssTenants.filter((tenant) => tenant?.city?.ddrName === originalRow?.key || tenant?.code === originalRow?.key).map(tenant => tenant.code);
-        const totalCapacity = fstpMdmsData?.filter(plant => ulbs.find(ulb => plant.ULBS.includes(ulb))).reduce((acc, plant) => acc + Number(plant.PlantOperationalCapacityKLD), 0)
-        const result = Math.round((((rowValue / (totalCapacity * numberOfDays)) * 100) + Number.EPSILON) * 100) / 100 + "%";
-        return typeof cellValue === 'object' ? { insight: cellValue?.insight, value: result } : String(result);
-      }
-      if (name === "CapacityUtilization" && chartKey === "fsmVehicleLogReportByVehicleNo") {
-        const rowValue = typeof cellValue === 'object' ? cellValue?.value : cellValue;
-        const result = Math.round((((rowValue / originalRow?.TankCapacity) * 100) + Number.EPSILON) * 100) / 100 + "%";
-        return typeof cellValue === 'object' ? { insight: cellValue?.insight, value: result } : String(result);
-      }
       if (plot?.symbol === "amount") {
         return typeof cellValue === "object" ?
           { value: convertDenomination(cellValue?.value), insight: cellValue?.insight } :
@@ -194,28 +222,6 @@ const CustomTable = ({ data, onSearch, setChartData }) => {
         return Number((val / 10000000).toFixed(2));
     }
   };
-
-  const tableData = useMemo(() => {
-    if (!response || !lastYearResponse) return;
-    return response?.responseData?.data?.map((rows, id) => {
-      const lyData = lastYearResponse?.responseData?.data?.find((lyRow) => lyRow?.headerName === rows?.headerName);
-      return rows?.plots?.reduce((acc, row, currentIndex) => {
-        let value = row?.value !== null ? row?.value : row?.label || "";
-        let insight = null;
-        if ((row.symbol === "number" || row.symbol === "percentage" || row.symbol === "amount") && (row.name !== "CitizenAverageRating" && row.name !== "TankCapacity") && lyData !== undefined) {
-          let prevData = lyData.plots[currentIndex].value;
-          if (prevData === value) insight = 0;
-          else insight = prevData === 0 ? 100 : Math.round(((value - prevData) / prevData) * 100);
-        }
-        if (typeof value === "number" && !Number.isInteger(value)) {
-          value = Math.round((value + Number.EPSILON) * 100) / 100;
-        }
-        acc[row.name.replaceAll(".", " ")] = insight !== null ? { value, insight } : row?.name === "S.N." ? id + 1 : value;
-        acc['key'] = rows.headerName; 
-        return acc;
-      }, {});
-    });
-  }, [response, lastYearResponse]);
 
   const removeULB = (id) => {
     const nextState = filterStack.filter((filter, index) => index < id);

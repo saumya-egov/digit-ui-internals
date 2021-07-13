@@ -26,6 +26,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     const [isErrors, setIsErrors] = useState(false);
     const [flag, setFlag] = useState(true);
     const [uomvalues, setUomvalues] = useState("");
+    const isRenewal = window.location.href.includes("renew-application-details");
 
 
     const { data: billingSlabData } = Digit.Hooks.tl.useTradeLicenseBillingslab({ tenantId, filters: {} });
@@ -47,7 +48,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     }, [accessoriesList]);
 
     useEffect(() => {
-        if (formData?.accessories?.length > 0) {
+        if (formData?.accessories?.length > 0 && !isRenewal) {
           let flag = true;
           accessoriesList.map(data => {
             Object.keys(data).map(dta => {
@@ -91,7 +92,8 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
         accessoriesList,
         billingSlabData,
         setUomvalues,
-        uomvalues
+        uomvalues,
+        isRenewal
     };
 
     if (isEditScreen) {
@@ -132,7 +134,8 @@ const AccessoriersForm = (_props) => {
         accessoriesList,
         billingSlabData,
         setUomvalues,
-        uomvalues
+        uomvalues,
+        isRenewal
     } = _props;
 
     const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
@@ -278,6 +281,7 @@ const AccessoriersForm = (_props) => {
                                     option={accessories || []}
                                     optionKey="i18nKey"
                                     t={t}
+                                    disable={isRenewal}
                                 />
                             )}
                         />
@@ -289,7 +293,7 @@ const AccessoriersForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uom"}
-                                defaultValue={getValues("uom")}
+                                defaultValue={accessor?.accessoryCategory?.uom}
                                 // rules={accessor?.accessoryCategory?.uom ? { required: "Required" } : {}}
                                 render={(props) => (
                                     <TextInput
@@ -315,7 +319,7 @@ const AccessoriersForm = (_props) => {
                             <Controller
                                 control={control}
                                 name={"uomValue"}
-                                defaultValue={getValues("uomValue")}
+                                defaultValue={accessor?.uomValue}
                                 rules={accessor?.accessoryCategory?.uom && { required: "Required", validate: (e) => ((e && getPattern("UOMValue").test(e)) || !e ? true : "ERR_DEFAULT_INPUT_FIELD_MSG") }}
                                 render={(props) => (
                                     <TextInput
@@ -326,7 +330,7 @@ const AccessoriersForm = (_props) => {
                                             props.onChange(e.target.value);
                                             setFocusIndex({ index: accessor.key, type: "uomValue" });
                                         }}
-                                        disable={!(accessor?.accessoryCategory?.uom)}
+                                        disable={!(accessor?.accessoryCategory?.uom) || isRenewal}
                                         onBlur={props.onBlur}
                                     />
                                 )}
@@ -352,6 +356,7 @@ const AccessoriersForm = (_props) => {
                                             setFocusIndex({ index: accessor.key, type: "count" });
                                         }}
                                         onBlur={props.onBlur}
+                                        disable={isRenewal}
                                     />
                                 )}
                             />

@@ -16,7 +16,8 @@ const TLDocumentsEmployee = ({ t, config, onSelect, userType, formData, setError
   if (isEditScreen) action = "update";
 
   const { isLoading, data: documentsData } = Digit.Hooks.pt.usePropertyMDMS(stateId, "TradeLicense", ["documentObj"]);
-
+  
+  const ckeckingLocation = window.location.href.includes("renew-application-details");
 
 
   const tlDocuments = documentsData?.TradeLicense?.documentObj;
@@ -25,7 +26,9 @@ const TLDocumentsEmployee = ({ t, config, onSelect, userType, formData, setError
   let finalTlDocumentsList = [];
   if (tlDocumentsList && tlDocumentsList.length > 0) {
     tlDocumentsList.map(data => {
-      if (data?.applicationType?.includes("NEW")) {
+      if (!ckeckingLocation && data?.applicationType?.includes("NEW")) {
+        finalTlDocumentsList.push(data);
+      } else if (ckeckingLocation && data?.applicationType?.includes("RENEWAL")) {
         finalTlDocumentsList.push(data);
       }
     })
@@ -131,22 +134,37 @@ function SelectDocument({
         }
 
         const filteredDocumentsByFileStoreId = filteredDocumentsByDocumentType?.filter((item) => item?.fileStoreId !== uploadedFile);
-        return [
-          ...filteredDocumentsByFileStoreId,
-          {
-            documentType: selectedDocument?.documentType,
-            fileStoreId: uploadedFile,
-            tenantId: tenantId
-          },
-        ];
+        if(selectedDocument?.id){
+          return [
+            ...filteredDocumentsByFileStoreId,
+            {
+              documentType: selectedDocument?.documentType,
+              fileStoreId: uploadedFile,
+              tenantId: tenantId,
+              id: selectedDocument?.id
+            },
+          ];
+        } else {
+          return [
+            ...filteredDocumentsByFileStoreId,
+            {
+              documentType: selectedDocument?.documentType,
+              fileStoreId: uploadedFile,
+              tenantId: tenantId
+            },
+          ];
+        }
       });
     }
 
     if (!isHidden) {
-      if (!uploadedFile || !selectedDocument?.documentType) {
-        addError();
-      } else if (uploadedFile && selectedDocument?.documentType) {
-        removeError();
+      const isRenewal = window.location.href.includes("renew-application-details");
+      if (!isRenewal) {
+        if (!uploadedFile || !selectedDocument?.documentType) {
+          addError();
+        } else if (uploadedFile && selectedDocument?.documentType) {
+          removeError();
+        }
       }
     } else if (isHidden) {
       removeError();
@@ -178,6 +196,16 @@ function SelectDocument({
     })();
   }, [file]);
 
+  useEffect(() => {
+    if(doc && formData?.documents?.documents?.length > 0) {
+      for(let i = 0; i < formData?.documents?.documents?.length; i++) {
+        if(doc?.documentType === formData?.documents?.documents?.[i]?.documentType) {
+          setSelectedDocument({ documentType: formData?.documents?.documents?.[i]?.documentType, id:formData?.documents?.documents?.[i]?.id});
+          setUploadedFile(formData?.documents?.documents?.[i]?.fileStoreId);
+        }
+      }
+    }
+  }, [doc])
   return (
     <div style={{ marginBottom: "24px" }}>
       <LabelFieldPair>
