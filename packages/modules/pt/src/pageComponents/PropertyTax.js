@@ -56,11 +56,9 @@ const PropertyTax = ({ t, config, onSelect, userType, formData }) => {
                       <CardSubHeader>
                         {index + 1}. {t("PROPERTYTAX_" + stringReplaceAll(code, ".", "_") + "_HEADING")}
                       </CardSubHeader>
-                      <CardText className={"primaryColor"}>
-                        {dropdownData.map((dropdownData) => (
-                          t("PROPERTYTAX_" + stringReplaceAll(dropdownData?.code, ".", "_") + "_LABEL")
-                        )).join(', ')}
-                      </CardText>
+                      {dropdownData.map((dropdownData) => (
+                        <CardText className={"primaryColor"}>{t("PROPERTYTAX_" + stringReplaceAll(dropdownData?.code, ".", "_") + "_LABEL")}</CardText>
+                      ))}
                     </div>
                   ))
               : console.log("error")}
