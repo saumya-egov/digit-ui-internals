@@ -63,11 +63,11 @@ const ApplicationDetails = () => {
 
   if (workflowDetails?.data?.processInstances?.length > 0) {
     let filteredActions = [];
-    filteredActions = get(workflowDetails?.data?.processInstances[0], "nextActions", []).filter(
+    filteredActions = get(workflowDetails?.data?.processInstances[0], "nextActions", [])?.filter(
       item => item.action != "ADHOC"
     );
     let actions = orderBy(filteredActions, ["action"], ["desc"]);
-    if (!actions || actions?.length == 0) workflowDetails.data.actionState.nextActions = [];
+    if ((!actions || actions?.length == 0) && workflowDetails?.data?.actionState) workflowDetails.data.actionState.nextActions = [];
 
     workflowDetails?.data?.actionState?.nextActions?.forEach(data => {
       if(data.action == "RESUBMIT") {
