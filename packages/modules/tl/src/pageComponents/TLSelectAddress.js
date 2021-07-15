@@ -229,11 +229,11 @@ const TLSelectAddress = ({ t, config, onSelect, userType, formData, setError, fo
             isMandatory={config.isMandatory}
             options={localities.sort((a, b) => a.name.localeCompare(b.name))}
             selectedOption={selectedLocality}
-            optionKey="i18nkey"
+            optionKey="code"
             onSelect={selectLocality}
             t={t}
             isDependent={true}
-            labelKey=""
+            labelKey="PB_AMRITSAR_REVENUE"
             disabled={isEdit}
           />
         </span>
