@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, RadioOrSelect, LinkButton } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
+import {sortDropdownNames} from "../utils/index";
 
 const SelectTradeUnits = ({ t, config, onSelect, userType, formData }) => {
   let validation = {};
@@ -198,7 +199,7 @@ const SelectTradeUnits = ({ t, config, onSelect, userType, formData }) => {
               isMandatory={config.isMandatory}
               //option={[{i18nKey : "a"},{i18nKey : "a"},{i18nKey : "a"},{i18nKey : "a"},{i18nKey : "a"},{i18nKey : "a"}]}
               //option={TradeSubTypeMenu}
-              option={getTradeSubTypeMenu(field?.tradetype)}
+              option={sortDropdownNames(getTradeSubTypeMenu(field?.tradetype),"i18nKey",t)}
               //selected={TradeSubType}
               selected={field?.tradesubtype}
               select={(e) => selectTradeSubType(index, e)}

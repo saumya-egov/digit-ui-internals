@@ -6,6 +6,7 @@ import _ from "lodash";
 import { useLocation } from "react-router-dom";
 import { getUniqueItemsFromArray, stringReplaceAll } from "../utils";
 import cloneDeep from "lodash/cloneDeep";
+import {sortDropdownNames} from "../utils/index";
 
 
 const createUnitDetails = () => ({
@@ -337,7 +338,7 @@ const TradeUnitForm = (_props) => {
                                     className="form-field"
                                     selected={getValues("tradeSubType")}
                                     disable={false}
-                                    option={unit?.tradeType ? tradeSubTypeOptionsList : []}
+                                    option={unit?.tradeType ? sortDropdownNames(tradeSubTypeOptionsList,"i18nKey",t) : []}
                                     errorStyle={(localFormState.touched.tradeSubType && errors?.tradeSubType?.message) ? true : false}
                                     select={(e) => {
                                         if (props?.value?.code == e?.code) return true;

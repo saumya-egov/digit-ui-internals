@@ -6,6 +6,7 @@ import _ from "lodash";
 import { useLocation } from "react-router-dom";
 import { getUniqueItemsFromArray, commonTransform, stringReplaceAll, getPattern } from "../utils";
 import isUndefined from "lodash/isUndefined";
+import {sortDropdownNames} from "../utils/index";
 
 const createAccessoriesDetails = () => ({
     accessoryCategory: "",
@@ -278,7 +279,7 @@ const AccessoriersForm = (_props) => {
                                         setUomvalues(accessor?.accessoryCategory?.uom);
                                     }}
                                     onBlur={props.onBlur}
-                                    option={accessories || []}
+                                    option={sortDropdownNames(accessories,"i18nKey",t) || []}
                                     optionKey="i18nKey"
                                     t={t}
                                     disable={isRenewal}
