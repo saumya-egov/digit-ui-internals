@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FormStep, TextInput, CardLabel, RadioButtons, LabelFieldPair, Dropdown, RadioOrSelect, LinkButton } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
+import {sortDropdownNames} from "../utils/index";
 
 const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) => {
   let validation = {};
@@ -121,7 +122,7 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
               optionKey="i18nKey"
               isMandatory={config.isMandatory}
               //options={[{ i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }, { i18nKey: "a" }]}
-              options={getAccessoryCategoryDropDown()}
+              options={sortDropdownNames(getAccessoryCategoryDropDown(),"i18nKey",t)}
               selectedOption={field.accessory}
               onSelect={(e) => selectAccessory(index, e)}
             />

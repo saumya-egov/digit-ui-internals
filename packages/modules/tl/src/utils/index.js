@@ -13,6 +13,10 @@ export const convertDotValues = (value = "") => {
   );
 };
 
+export const sortDropdownNames = (options, optionkey, locilizationkey) => {
+  return options.sort((a, b) => locilizationkey(a[optionkey]).localeCompare(locilizationkey(b[optionkey])));
+};
+
 export const convertToLocale = (value = "", key = "") => {
   let convertedValue = convertDotValues(value);
   if (convertedValue == "NA") {
