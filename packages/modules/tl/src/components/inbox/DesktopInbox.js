@@ -5,6 +5,7 @@ import InboxLinks from "./ApplicationLinks";
 import ApplicationTable from "./ApplicationTable";
 import SearchApplication from "./search";
 import { Link } from "react-router-dom";
+import { convertEpochToDateDMY } from "../../utils";
 // import { getActionButton } from "../../utils";
 
 const DesktopInbox = ({ tableConfig, filterComponent,columns, isLoading, ...props }) => {
@@ -42,7 +43,8 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, isLoading, ...prop
     },{
       Header: t("TL_COMMON_TABLE_COL_APP_DATE"),
       Cell: ({ row }) => {
-        return GetCell(Digit.DateUtils.ConvertTimestampToDate(row.original.date))
+        const date = convertEpochToDateDMY(row.original.date);
+        return GetCell(date)
       }
     },{
           Header: t("WF_INBOX_HEADER_LOCALITY"),

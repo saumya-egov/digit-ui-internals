@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useEffect } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { TextInput, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker, CardLabelError, SearchForm, SearchField, Dropdown, Table, Card } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
+import { convertEpochToDateDMY, stringReplaceAll } from "../utils";
 
 const SearchLicense = ({tenantId, t, onSubmit, data }) => {
     const { register, control, handleSubmit, setValue, getValues } = useForm({
@@ -47,17 +48,17 @@ const SearchLicense = ({tenantId, t, onSubmit, data }) => {
         {
             Header: t("ES_APPLICATION_SEARCH_ISSUED_DATE"),
             disableSortBy: true,
-            accessor: (row) => GetCell(row.issuedDate? Digit.DateUtils.ConvertTimestampToDate(row.issuedDate) : ""),
+            accessor: (row) => GetCell(row.issuedDate? convertEpochToDateDMY(row.issuedDate) : ""),
         },
         {
             Header: t("ES_APPLICATION_SEARCH_VALID_TO"),
             disableSortBy: true,
-            accessor: (row) => GetCell(row.validTo? Digit.DateUtils.ConvertTimestampToDate(row.validTo) : ""),
+            accessor: (row) => GetCell(row.validTo? convertEpochToDateDMY(row.validTo) : ""),
         },
         {
             Header: t("TL_HOME_SEARCH_RESULTS__LOCALITY"),
             disableSortBy: true,
-            accessor: (row) => GetCell(row.tradeLicenseDetail.address.locality.code || ""),
+            accessor: (row) => GetCell( t(`${stringReplaceAll(row.tradeLicenseDetail.address?.city?.toUpperCase(), ".", "_")}_REVENUE_${row.tradeLicenseDetail.address.locality.code}`) || ""),
         },
         {
           Header: t("TL_COMMON_TABLE_COL_STATUS"),
