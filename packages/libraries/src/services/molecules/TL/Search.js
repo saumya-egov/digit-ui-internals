@@ -1,3 +1,4 @@
+import cloneDeep from "lodash.clonedeep";
 import { TLService } from "../../elements/TL";
 
 const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
@@ -111,13 +112,14 @@ export const TLSearch = {
       },
     };
 
+    const cityOfApp = cloneDeep(response?.tradeLicenseDetail?.address?.city);
+    const localityCode = cloneDeep(response?.tradeLicenseDetail?.address?.locality?.code);
     const tradeAddress = {
       title: "TL_CHECK_ADDRESS",
-      // asSectionHeader: true,
       values: [
         { title: "CORE_COMMON_PINCODE", value: response?.tradeLicenseDetail?.address?.pincode || "NA" },
         { title: "MYCITY_CODE_LABEL", value: response?.tradeLicenseDetail?.address?.city || "NA" },
-        { title: "TL_LOCALIZATION_LOCALITY", value: response?.tradeLicenseDetail?.address?.locality?.code || "NA" },
+        { title: "TL_LOCALIZATION_LOCALITY", value: `${stringReplaceAll(cityOfApp?.toUpperCase(), ".", "_")}_REVENUE_${localityCode}` },
         { title: "TL_LOCALIZATION_BUILDING_NO", value: response?.tradeLicenseDetail?.address?.doorNo || "NA" },
         { title: "TL_LOCALIZATION_STREET_NAME", value: response?.tradeLicenseDetail?.address?.street || "NA" }
       ],
