@@ -254,7 +254,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
           </div>
         )
       )}
-      {!ModuleWorkflow && (
+      {paymentRules?.partPaymentAllowed  && (
         <div className="bill-payment-amount">
           <CardSectionHeader>{t("CS_COMMON_PAYMENT_AMOUNT")}</CardSectionHeader>
           <RadioButtons
