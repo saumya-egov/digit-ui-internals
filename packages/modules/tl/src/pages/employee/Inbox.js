@@ -87,6 +87,7 @@ const Inbox = ({
         label: t("CORE_COMMON_MOBILE_NUMBER"),
         name: "mobileNumber",
         maxlength: 10,
+        type: "mobileNumber",
         pattern: "[6-9][0-9]{9}",
         title: t("ES_SEARCH_APPLICATION_MOBILE_INVALID"),
         componentInFront: "+91",
