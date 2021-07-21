@@ -82,9 +82,31 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
           },
         },
         {
-          Header: t("TL_NEW_TRADE_DETAILS_TRADE_COMM_DATE_LABEL"),
+            Header: t("TL_COMMON_TABLE_COL_APP_DATE"),
+            disableSortBy: true,
+            accessor: (row) => GetCell(row.auditDetails.createdTime ? convertEpochToDateDMY(row.auditDetails.createdTime) : ""),
+        },
+        {
+            Header: t("TL_LICENSE_NUMBERL_LABEL"),
+            disableSortBy: true,
+            Cell: ({ row }) => {
+                return (
+                    <div>
+                        {row.original["licenseNumber"] ?
+                            <span className="link">
+                                <Link to={`/digit-ui/employee/tl/application-details/${row.original["applicationNumber"]}`}>
+                                    {row.original["licenseNumber"]}
+                                </Link>
+                            </span>
+                            : "-"}
+                    </div>
+                );
+            },
+        },
+        {
+          Header: t("TL_NEW_TRADE_DETAILS_LIC_TYPE_LABEL"),
           disableSortBy: true,
-          accessor: (row) => GetCell(row.commencementDate ? convertEpochToDateDMY(row.commencementDate) : ""),
+          accessor: (row) => GetCell(row.licenseType ? t(`TRADELICENSE_LICENSETYPE_${row.licenseType}`) : ""),
         },
         {
           Header: t("TL_COMMON_TABLE_COL_TRD_NAME"),
@@ -92,7 +114,7 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
           accessor: (row) => GetCell(row.tradeName || ""),
         },
         {
-          Header: t("TL_COMMON_TABLE_COL_OWN_NAME"),
+          Header: t("TL_LOCALIZATION_TRADE_OWNER_NAME"),
           accessor: (row) => GetCell(row.tradeLicenseDetail.owners.map( o => o.name ). join(",") || ""),
           disableSortBy: true,
         },
