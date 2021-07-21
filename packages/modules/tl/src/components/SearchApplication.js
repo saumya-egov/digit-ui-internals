@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { convertEpochToDateDMY } from  "../utils";
 
 const SearchApplication = ({tenantId, t, onSubmit, data }) => {
-    const { register, control, handleSubmit, setValue, getValues } = useForm({
+    const { register, control, handleSubmit, setValue, getValues, reset } = useForm({
         defaultValues: {
             offset: 0,
             limit: 10,
@@ -89,19 +89,7 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
         {
             Header: t("TL_LICENSE_NUMBERL_LABEL"),
             disableSortBy: true,
-            Cell: ({ row }) => {
-                return (
-                    <div>
-                        {row.original["licenseNumber"] ?
-                            <span className="link">
-                                <Link to={`/digit-ui/employee/tl/application-details/${row.original["applicationNumber"]}`}>
-                                    {row.original["licenseNumber"]}
-                                </Link>
-                            </span>
-                            : "-"}
-                    </div>
-                );
-            },
+            accessor: (row) => GetCell(row.licenseNumber || "-"),
         },
         {
           Header: t("TL_NEW_TRADE_DETAILS_LIC_TYPE_LABEL"),
@@ -195,8 +183,8 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
                     <TextInput name="tradeName" inputRef={register({})}/>
                 </SearchField>
                 <SearchField className="submit">
-                    <p>{t(`ES_COMMON_CLEAR_ALL`)}</p>
                     <SubmitBar label={t("ES_COMMON_SEARCH")} submit />
+                    <p onClick={() => reset()}>{t(`ES_COMMON_CLEAR_ALL`)}</p>
                 </SearchField>
             </SearchForm>
             {data?.display ? <Card style={{ marginTop: 20 }}>
