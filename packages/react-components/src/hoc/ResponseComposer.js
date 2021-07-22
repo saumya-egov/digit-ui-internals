@@ -18,7 +18,7 @@ const ResponseComposer = ({ data, template, actionButtonLabel, onSubmit }) => {
               return (
                 <KeyNote
                   key={i + "" + j}
-                  keyValue={t(field.label)}
+                  keyValue={t(field.label)} 
                   note={field.notePrefix ? field.notePrefix + result[field.key] : result[field.key]}
                   noteStyle={field.noteStyle}
                 />

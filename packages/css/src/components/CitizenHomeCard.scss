@@ -1,6 +1,6 @@
 .CitizenHomeCard{
 
-    @apply bg-white mx-md p-md mb-lg;
+    @apply w-2/5 bg-white mx-md p-md mb-lg;
 
     .header{
         @apply flex font-bold text-heading-l text-text-primary justify-between pb-sm;
@@ -19,12 +19,26 @@
         }
     }
 }
+@media screen and (max-width : 1199px) and (min-width : 768px){
+    .CitizenHomeCard{
+        height : 380px !important;
+        .header{
+            h2{
+                @apply text-heading-m-dt;
+            }
+            svg{
+                @apply w-10 h-10 !important;
+            }
+        }
+    }
+}
 
 @screen dt{
     .CitizenHomeCard{
         max-width: 45%;
         min-width: 40%;
         margin-left: 0;
+        height : 350px;
         @apply inline-block mr-lg p-lg align-top;
         .header{
             @apply pb-lg text-heading-l-dt;

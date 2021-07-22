@@ -56,10 +56,6 @@
     }
   }
 
-  .main {
-    padding-top: 88px;
-  }
-
   .react-time-picker {
     width: 100%;
     max-width: 200px;
@@ -162,9 +158,12 @@
       margin-bottom: 16px;
     }
     .main {
-      padding-top: 80px;
-      margin-left: 72px;
-      width: calc(100%-83px);
+      width: 100%;
+      height: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 9rem;
     }
   }
 
@@ -213,4 +212,36 @@
 
 .mb-50{
   margin-bottom: 50px;
+}
+
+.language_bg_text{
+  border: none;
+  background-color: #F47738;
+  color: #FFF;
+  border: none;
+}
+
+.new_component{
+  @apply my-xl flex justify-center items-center;
+}
+.new_component_card{
+  @apply w-2/5 h-auto bg-white;
+}
+.new_component_logo_section{
+  @apply flex .justify-between items-center my-lg mx-xl ;
+}
+.new_component_logo_section h2{
+  @apply text-heading-xl;
+}
+.new_component_logo_section h3{
+  @apply text-heading-m;
+} 
+.new_component_button_main{
+  @apply flex justify-between items-center m-lg;
+}
+.new_component_continue_btn{
+  @apply pt-lg pb-lg px-lg;
+}
+.new_component_continue_btn button{
+  @apply w-full h-10 bg-focus;
 }

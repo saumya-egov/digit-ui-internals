@@ -36,7 +36,7 @@ const useInbox = (tenantId, filters, filterFsmFn, workFlowConfig = {}) => {
 
   const workflowFilters = fetchFilters().assignee ? { assignee: uuid } : {};
   const workFlowInstances = useQuery(
-    ["WORKFLOW", workflowFilters],
+    ["WORKFLOW", workflowFilters], 
     () => Digit.WorkflowService.getAllApplication(tenantId, { ...workflowFilters, businesssService: "FSM" }),
     { ...workFlowConfig, select: (data) => data.ProcessInstances }
   );

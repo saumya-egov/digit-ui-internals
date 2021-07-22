@@ -191,6 +191,8 @@ export const FormComposer = (props) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} id={props.formId}>
       <Card style={getCardStyles()}>
+      <div style={{maxWidth: "400px", minWidth : "640px", display: "flex", flexDirection: "column", alignItems: "center"}}>
+      <div>
         {!props.childrenAtTheBottom && props.children}
         {props.heading && <CardSubHeader style={{ ...props.headingStyle }}> {props.heading} </CardSubHeader>}
         {props.description && <CardLabelDesc> {props.description} </CardLabelDesc>}
@@ -208,6 +210,8 @@ export const FormComposer = (props) => {
             <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
           </ActionBar>
         )}
+        </div>
+        </div>
       </Card>
     </form>
   );
