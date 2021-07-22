@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-
 const MyComponent = ({Image, alt, Line, State, languageData, continueBtn}) => {
     const [lanSelected, setLanSelected] = useState(false);
     const [active, setActive] = useState(null);
