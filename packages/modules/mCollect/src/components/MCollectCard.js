@@ -13,7 +13,6 @@ const MCollectCard = () => {
   const propsForModuleCard = {
     Icon: <ReceiptIcon />,
     moduleName: t("UC_COMMON_HEADER_SEARCH"),
-    reverseOrder: true,
     kpis: [
       {
         count: isLoading ? "-" : data?.ChallanCount?.totalChallan,
