@@ -188,7 +188,7 @@ const Inbox = ({
           parentRoute={parentRoute}
           searchParams={searchParams}
           sortParams={sortParams}
-          linkPrefix={`${parentRoute}/application-details/`}
+          //linkPrefix={`${parentRoute}/application-details/`}
           tableConfig={rest?.tableConfig}
           filterComponent={filterComponent}
         />
