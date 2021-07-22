@@ -95,28 +95,22 @@ const propertyOwnerHistory = ({ userType, propertyId: propertyIdFromProp }) => {
                   <div style={{ display: "flex" }}>
                     <div className="historyCheckpoint zIndex"></div>
                     <div className="rowContainerStyles">
-                      <CardSubHeader className="historyTableDateLabel bottomMargin">
-                        {" "}
-                        {t("PT_DATE_OF_TRANSFER")}{" "}
-                      </CardSubHeader>
-                      <CardSubHeader
-                        className="historyTableDate bottomMargin"
-                      >
-                        {date}
-                      </CardSubHeader>
+                      <CardSubHeader className="historyTableDateLabel bottomMargin"> {t("PT_DATE_OF_TRANSFER")} </CardSubHeader>
+                      <CardSubHeader className="historyTableDate bottomMargin">{date}</CardSubHeader>
                     </div>
                   </div>
-                  <TransferDetails data={ownershipInfo[key]}
+                  <TransferDetails
+                    data={ownershipInfo[key]}
                     wrapperStyles="wrapperStyles"
                     containerStyles="containerStyles"
                     rowContainerStyles={{
                       display: "flex",
-                      flexDirection: "column"
+                      flexDirection: "column",
                     }}
                     tableStyles={{
                       display: "grid",
                       gridTemplateRows: "100px 100px",
-                      gridTemplateColumns: "repeat(5, minmax(100px, 1fr))"
+                      gridTemplateColumns: "repeat(5, minmax(100px, 1fr))",
                     }}
                   />
                   {index !== arr.length - 1 && <div className="checkpoint-connect" style={{ marginLeft: 0, top: "4px" }}></div>}
@@ -139,19 +133,9 @@ const propertyOwnerHistory = ({ userType, propertyId: propertyIdFromProp }) => {
             return (
               <div style={{ padding: "10px" }}>
                 <div className="historyCheckpoint"></div>
-                <CardSubHeader
-                  className="historyTableDateLabel smallText"
-                >
-                  {" "}
-                  {t("PT_DATE_OF_TRANSFER")}{" "}
-                </CardSubHeader>
-                <CardSubHeader
-                  className="historyTableDate smallText"
-                >
-                  &nbsp;-&nbsp;{date}
-                </CardSubHeader>
-                <TransferDetails data={ownershipInfo[key]} wrapperStyles="wrapperStyles leftBorder"
-                showHorizontalBar={true} />
+                <CardSubHeader className="historyTableDateLabel smallText"> {t("PT_DATE_OF_TRANSFER")} </CardSubHeader>
+                <CardSubHeader className="historyTableDate smallText">&nbsp;-&nbsp;{date}</CardSubHeader>
+                <TransferDetails data={ownershipInfo[key]} wrapperStyles="wrapperStyles leftBorder" showHorizontalBar={true} />
               </div>
             );
           })}

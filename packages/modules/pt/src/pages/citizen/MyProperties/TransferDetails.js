@@ -19,7 +19,7 @@ const TransferDetails = ({ data, showHorizontalBar, wrapperStyles, tableStyles, 
       {data.map((value, index) => {
         return (
           <div className={containerStyles}>
-            {(index !== 0 && showHorizontalBar) && <div className="historyHorizontalBar"></div>}
+            {index !== 0 && showHorizontalBar && <div className="historyHorizontalBar"></div>}
             <StatusTable style={tableStyles}>{returnTransferData(value, rowContainerStyles)}</StatusTable>
           </div>
         );
