@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DashboardBox, Loader, ShippingTruck } from "@egovernments/digit-ui-react-components";
+import { EmployeeModuleCard, Loader, ShippingTruck } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 
@@ -100,12 +100,36 @@ const DsoDashboard = () => {
     }
   }, [info, inbox]);
 
+  const propsForDSOCard = {
+    Icon: <ShippingTruck />,
+    moduleName: t("ES_TITLE_FAECAL_SLUDGE_MGMT"),
+    kpis:[
+      {
+        count: pendingCompletionArray?.[0]?.totalCount,
+        label:t("ES_COMPLETION_PENDING"),
+        link:"/digit-ui/citizen/fsm/inbox"
+      },
+      {
+        count: pendingApprovalArray?.[0]?.totalCount,
+        label:t("ES_VEHICLE_ASSIGNMENT_PENDING"),
+        link:"/digit-ui/citizen/fsm/inbox"
+      },
+    ],
+    links: [
+      {
+        count: total,
+        label: t("ES_TITLE_INBOX"),
+        link: "/digit-ui/citizen/fsm/inbox"
+      },
+    ]
+  }
+
   if (loader) {
     return <Loader />;
   }
   return (
     <div>
-      <DashboardBox t={t} svgIcon={<ShippingTruck />} header={t("ES_TITLE_FAECAL_SLUDGE_MGMT")} info={info} links={links} />
+      <EmployeeModuleCard {...propsForDSOCard} />
     </div>
   );
 };

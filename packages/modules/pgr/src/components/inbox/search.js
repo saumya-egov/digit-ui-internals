@@ -62,6 +62,7 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
               </div>
             )}
             <div className="complaint-input-container">
+            <div className="input-fields">
               <span className="complaint-input">
                 <Label>{t("CS_COMMON_COMPLAINT_NO")}.</Label>
                 <TextInput
@@ -74,6 +75,8 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
                   style={{ marginBottom: "8px" }}
                 ></TextInput>
               </span>
+              </div>
+            <div className="input-fields">
               <span className="mobile-input">
                 <Label>{t("CS_COMMON_MOBILE_NO")}.</Label>
                 <TextInput
@@ -85,16 +88,19 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
                   })}
                 ></TextInput>
               </span>
-              {type === "desktop" && (
-                <SubmitBar
-                  style={{ marginTop: 32, marginLeft: "96px", maxWidth: "256px" }}
-                  label={t("ES_COMMON_SEARCH")}
-                  submit={true}
-                  disabled={Object.keys(errors).filter((i) => errors[i]).length}
-                />
-              )}
             </div>
+            <div className="search-action-wrapper">
+                {type === "desktop" && (
+                  <SubmitBar
+                    className="submit-bar-search"
+                    label={t("ES_COMMON_SEARCH")}
+                    submit={true}
+                    disabled={Object.keys(errors).filter((i) => errors[i]).length}
+                  />
+                )}
             {type === "desktop" && <span className="clear-search">{clearAll()}</span>}
+            </div>
+            </div>
           </div>
         </div>
         {type === "mobile" && (
