@@ -2,15 +2,23 @@ import React, { Fragment } from "react"
 import { ArrowRightInbox } from "./svgindex"
 import { Link } from "react-router-dom"
 
-const EmployeeModuleCard = ({Icon, moduleName, kpis = [], links = [] }) => {
+const EmployeeModuleCard = ({Icon, moduleName, kpis = [], links = [], reverseOrder = false }) => {
     return <div className="employeeCard card-home">
             <div className="complaint-links-container">
-                <div className="header">
-                    <span className="text">{moduleName}</span>
-                    <span className="logo">
-                        {Icon}
-                    </span>
-                </div>
+                {!reverseOrder ?
+                    <div className="header">
+                        <span className="text">{moduleName}</span>
+                        <span className="logo">
+                            {Icon}
+                        </span>
+                    </div> : <div className="header">
+                        <span className="logo">
+                            {Icon}
+                        </span>
+                        <span className="text" style={{paddingRight: "15px"}}>{moduleName}</span>
+
+                    </div>
+                }
                 <div className="body" style={{ margin: "0px", padding: "0px" }}>
                     <div className="flex-fit">
                         {kpis.map(({count, label, link}) => <div className="card-count">
