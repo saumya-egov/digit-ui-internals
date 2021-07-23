@@ -64,12 +64,12 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 </span>
               </div>
             )}
-            <div className="complaint-input-container" >
+            <div className="complaint-input-container" style={{textAlign: "start"}} >
               {searchFields
                 ?.filter((e) => true)
                 ?.map((input, index) => (
                   <div key={input.name} className="input-fields">
-                  <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
+                  <span key={index} className={"complaint-input"}>
                     <Label>{input.label}</Label>
                     {input.type !== "date" ? (
                       <div className="field-container">
@@ -93,7 +93,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 ))}
             </div>
             {type === "desktop" && !mobileView &&
-              <div className="search-action-wrapper">
+              <div className="search-action-wrapper" style={{width:"100%"}}>
                 <SubmitBar
                   className="submit-bar-search"
                   label={t("UC_SEARCH_LABEL")}
