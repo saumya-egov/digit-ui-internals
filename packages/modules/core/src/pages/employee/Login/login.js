@@ -125,7 +125,7 @@ export const NewComponent = () => {
   return (
     <MyComponent 
       Image ="https://s3-alpha-sig.figma.com/img/670b/d21b/e76b5e9cb68c786f9deb34c8d893da73?Expires=1627257600&Signature=ASwsZacLUZcyn3ELeJQ4bhCN6Ce5mOBUxFSu4eNidBQhKQ6BhV7GxpZgY-ibQH9nhNfgjRnFu2eDE1HBIMvg5vgraqhKMDSfhibiF4hLtf1MY78TbLSV~Rc4WLGer8YPrubhhEt~erORzEVISxdTlHU6WVA1myW3CezKYrgs5POOz1aMjiPE5btlS1X~vBPtZycYqz9E4Mo~JgEB6Npm3zgaok~TcdLIib7iMVFTmMChaQ-aSVs17mYzz~XJT8Nx62NhTTBPg1fOQKj4kYNwF~BBkO7Mb1GBwf0H5e8r~LjNVBKuhuzh~8oFaQTQ58TyujqjeAKJzsb1vMtVMkBwxA__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA"
-      alt="mGramSeva Img"
+      alt="mGramSeva"
       Line ="|"
       State = "Punjab"
       languageData ={languageData}
