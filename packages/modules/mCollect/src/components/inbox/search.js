@@ -93,7 +93,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 ))}
             </div>
             {type === "desktop" && !mobileView &&
-              <div className="search-action-wrapper" style={{width:"100%"}}>
+              <div className="search-action-wrapper" style={{marginTop:"-85px",marginLeft:"550px"}}>
                 <SubmitBar
                   className="submit-bar-search"
                   label={t("UC_SEARCH_LABEL")}
