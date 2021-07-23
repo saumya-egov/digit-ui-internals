@@ -1,29 +1,61 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { TextInput, Label, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker, MobileNumber } from "@egovernments/digit-ui-react-components";
+import {
+  TextInput,
+  Label,
+  SubmitBar,
+  LinkLabel,
+  ActionBar,
+  CloseSvg,
+  DatePicker,
+  MobileNumber,
+  Dropdown,
+  Localities,
+} from "@egovernments/digit-ui-react-components";
+
 import { useTranslation } from "react-i18next";
-// import MobileNumber from "@egovernments/digit-ui-react-components/src/atoms/MobileNumber";
-// import _ from "lodash";
 
 const fieldComponents = {
   date: DatePicker,
   mobileNumber: MobileNumber,
+  Locality: (props) => (
+    <Localities
+      tenantId={Digit.ULBService.getCurrentTenantId()}
+      selectLocality={props.onChange}
+      keepNull={false}
+      boundaryType="revenue"
+      selected={props.value}
+      disableLoader={true}
+    />
+  ),
 };
 
 const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams, isInboxPage, defaultSearchParams, clearSearch: _clearSearch }) => {
   const { t } = useTranslation();
-  const { register, handleSubmit, reset, watch, control, setError, clearErrors, formState } = useForm({
-    defaultValues: searchParams,
+  const { handleSubmit, reset, watch, control, setError, clearErrors, formState, setValue } = useForm({
+    defaultValues: isInboxPage ? searchParams : { locality: null, city: null, ...searchParams },
   });
 
   const form = watch();
 
+  const formValueEmpty = () => {
+    let isEmpty = true;
+    Object.keys(form).forEach((key) => {
+      if (!["locality", "city"].includes(key) && form[key]) isEmpty = false;
+    });
+    return isEmpty;
+  };
+
   const mobileView = innerWidth <= 640;
 
-  useEffect(() => {
-    // setError("mobileNumber", { type: "maxLength", message: "new" });
-    console.log(formState.errors, "inside form");
-  }, [formState, form]);
+  // useEffect(() => {
+  //   console.log(form, "inside form");
+  //   console.log(formValueEmpty(), "form value empty");
+  // }, [formState, form]);
+
+  // useEffect(() => {
+  //   console.log(form?.city?.code, "inside city change");
+  // }, [form?.city?.code]);
 
   useEffect(() => {
     searchFields.forEach(({ pattern, name, maxLength, minLength, errorMessages, ...el }) => {
@@ -124,7 +156,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                         <Controller
                           render={(props) => {
                             const Comp = fieldComponents?.[input.type];
-                            return <Comp onChange={props.onChange} value={props.value} />;
+                            return <Comp formValue={form} setValue={setValue} onChange={props.onChange} value={props.value} />;
                           }}
                           name={input.name}
                           control={control}
@@ -154,7 +186,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                   <SubmitBar
                     className="submit-bar-search"
                     label={t("ES_COMMON_SEARCH")}
-                    disabled={!!Object.keys(formState.errors).length || Object.keys(form).every((key) => !form?.[key])}
+                    disabled={!!Object.keys(formState.errors).length || formValueEmpty()}
                     submit
                   />
                   {/* style={{ paddingTop: "16px", textAlign: "center" }} className="clear-search" */}

@@ -55,6 +55,11 @@ const searchFieldsForSearch = {
         maxLength: "",
       },
     },
+    {
+      label: "ES_INBOX_LOCALITY",
+      name: "locality",
+      type: "Locality",
+    },
   ],
 };
 
