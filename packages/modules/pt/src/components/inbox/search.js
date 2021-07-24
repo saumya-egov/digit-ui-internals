@@ -44,7 +44,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
       if (!["locality", "city"].includes(key) && form[key]) isEmpty = false;
     });
 
-    if (!form?.locality?.code) isEmpty = true;
+    if (searchFields?.find((e) => e.name === "locality") && !form?.locality?.code) isEmpty = true;
     return isEmpty;
   };
 
