@@ -121,6 +121,7 @@ function ApplicationDetailsContent({ applicationDetails, workflowDetails, isData
                       <CheckPoint
                         keyValue={index}
                         isCompleted={index === 0}
+                        //info={checkpoint.comment}
                         label={t(`${timelineStatusPrefix}${checkpoint.state}`)}
                         customChild={getTimelineCaptions(checkpoint)}
                       />

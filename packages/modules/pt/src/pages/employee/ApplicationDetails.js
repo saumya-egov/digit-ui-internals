@@ -159,6 +159,18 @@ const ApplicationDetails = () => {
     });
   }
 
+  const wfDocs = workflowDetails.data?.timeline?.reduce((acc, { documents }) => {
+    let arr = documents?.map((e) => ({}));
+    return documents ? [...acc, ...documents] : acc;
+  }, []);
+  console.log(wfDocs, workflowDetails, appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents, "wfDcs");
+  if(appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents && wfDocs?.length){
+    appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents?.push?.({
+        title: "PT_WORKFLOW_DOCS",
+        values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType})),
+      });
+  }
+
   return (
     <div>
       <Header>{t("PT_APPLICATION_TITLE")}</Header>

@@ -25,7 +25,7 @@ function PropertyDocuments({ documents }) {
     <div style={{ marginTop: "19px" }}>
       {documents?.map((document, index) => (
         <React.Fragment key={index}>
-          <CardSubHeader style={{ marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{t(document?.title)}</CardSubHeader>
+          <CardSubHeader style={{ marginTop:"32px",marginBottom: "8px", color: "#505A5F", fontSize: "24px" }}>{t(document?.title)}</CardSubHeader>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
             {document?.values?.map((value, index) => (
               <a target="_" href={pdfFiles[value.fileStoreId]?.split(",")[0]} style={{ minWidth: "160px", marginRight: "20px" }} key={index}>
