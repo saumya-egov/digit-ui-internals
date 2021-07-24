@@ -186,8 +186,8 @@ const ApplicationDetails = () => {
                   </div>
                 );
               })}
-              <Row label={t("TL_NEW_TRADE_DETAILS_HEADER_ACC")} />
-              {application?.tradeLicenseDetail?.accessories?.map((ele, index) => {
+              {application?.tradeLicenseDetail?.accessories.length > 0 && <Row label={t("TL_NEW_TRADE_DETAILS_HEADER_ACC")} />}
+              {application?.tradeLicenseDetail?.accessories.length > 0 && application?.tradeLicenseDetail?.accessories?.map((ele, index) => {
                 return (
                   <div key={index} style={{border:"groove"}}>
                     <Row
