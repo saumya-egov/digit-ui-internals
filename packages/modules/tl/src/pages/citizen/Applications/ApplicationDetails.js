@@ -12,12 +12,18 @@ const ApplicationDetails = () => {
   const history = useHistory();
   const [bill, setBill] = useState(null);
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
+  const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("CITIZEN_TL_MUTATION_HAPPENED", false);
   const { tenants } = storeData || {};
   //todo: hook should return object to render the data
   const { isLoading, isError, error, data: application, error: errorApplication } = Digit.Hooks.tl.useTLApplicationDetails({
     tenantId: tenantId,
     applicationNumber: id,
   });
+
+
+  useEffect(() => {
+    setMutationHappened(false);
+  }, []);
 
   const { data: paymentsHistory } = Digit.Hooks.tl.useTLPaymentHistory(tenantId, id);
   useEffect(() => {
@@ -113,11 +119,24 @@ const ApplicationDetails = () => {
               <Row label={t("TL_APPLICATION_CATEGORY")} text={t("ACTION_TEST_TRADE_LICENSE")} textStyle={{ whiteSpace: "pre" }} />
               {application?.tradeLicenseDetail.owners.map((ele, index) => {
                 return (
+                  <div key = {index}>
+                  <Row label={`${t("TL_PAYMENT_PAID_BY_PLACEHOLDER")} - `+ (index+1)}/>
                   <Row
-                    label={`${t("TL_COMMON_TABLE_COL_OWN_NAME")} ${application?.raw?.tradeLicenseDetail.owners.length > 0 ? index+1 : ""}`}
+                    label={`${t("TL_COMMON_TABLE_COL_OWN_NAME")}`}
                     text={t(ele.name)}
                     textStyle={{ whiteSpace: "pre" }}
                   />
+                  <Row
+                    label={`${t("TL_NEW_OWNER_DETAILS_GENDER_LABEL")}`}
+                    text={t(ele.gender)}
+                    textStyle={{ whiteSpace: "pre" }}
+                  />
+                  <Row
+                    label={`${t("TL_MOBILE_NUMBER_LABEL")}`}
+                    text={t(ele.mobileNumber)}
+                    textStyle={{ whiteSpace: "pre" }}
+                  />
+                  </div>
                 );
               })}
               <Row
@@ -138,9 +157,10 @@ const ApplicationDetails = () => {
                 text={application?.tradeName}
                 textStyle={{ whiteSpace: "pre-wrap",width:"70%" }}
               />
+              <Row label={t("TL_TRADE_UNITS_HEADER")} />
               {application?.tradeLicenseDetail?.tradeUnits?.map((ele, index) => {
                 return (
-                  <div key={index}>
+                  <div key={index} style={{border:"groove"}}>
                     <Row
                       label={t("TL_NEW_TRADE_DETAILS_TRADE_CAT_LABEL")}
                       text={t(`TRADELICENSE_TRADETYPE_${ele?.tradeType.split(".")[0]}`)}
@@ -166,9 +186,10 @@ const ApplicationDetails = () => {
                   </div>
                 );
               })}
+              <Row label={t("TL_NEW_TRADE_DETAILS_HEADER_ACC")} />
               {application?.tradeLicenseDetail?.accessories?.map((ele, index) => {
                 return (
-                  <div key={index}>
+                  <div key={index} style={{border:"groove"}}>
                     <Row
                       style={{ border: "none" }}
                       label={t("TL_REVIEWACCESSORY_TYPE_LABEL")}
@@ -181,18 +202,12 @@ const ApplicationDetails = () => {
                   </div>
                 );
               })}
-              {application?.tradeLicenseDetail?.owners?.map((ele, index) => {
-                return (
-                  <div key={index}>
                     <Row
                       style={{ border: "none" }}
                       label={t("TL_NEW_TRADE_ADDRESS_LABEL")}
-                      text={ele?.permanentAddress}
+                      text={application?.tradeLicenseDetail.owners[0]?.permanentAddress}
                       textStyle={{ whiteSpace: "pre-wrap",width:"70%" }}
                     />
-                  </div>
-                );
-              })}
               <TLWFApplicationTimeline application={application} id={id} />
               {application?.status == "CITIZENACTIONREQUIRED" ? (
                 <Link
