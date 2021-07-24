@@ -154,13 +154,13 @@ const ApplicationDetails = () => {
   };
 
   const wfDocs = workflowDetails.data?.timeline?.reduce((acc, { documents }) => {
-    let arr = documents?.map((e) => ({}));
     return documents ? [...acc, ...documents] : acc;
   }, []);
   const ownerdetails = applicationDetails?.applicationDetails.find(e => e.title === "ES_NEW_APPLICATION_OWNERSHIP_DETAILS");
-  console.log(wfDocs, workflowDetails, ownerdetails?.additionalDetails?.documents, "wfDcs"); 
-  if(ownerdetails?.additionalDetails?.documents && wfDocs?.length){
-    ownerdetails?.additionalDetails?.documents?.push?.({
+  let appdetailsDocuments = ownerdetails?.additionalDetails?.documents;
+  console.log(wfDocs, workflowDetails, appdetailsDocuments, "wfDcs"); 
+  if(appdetailsDocuments && wfDocs?.length && !(appdetailsDocuments.find(e => e.title === "TL_WORKFLOW_DOCS"))){
+    appdetailsDocuments?.push?.({
         title: "TL_WORKFLOW_DOCS",
         values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType})),
       });

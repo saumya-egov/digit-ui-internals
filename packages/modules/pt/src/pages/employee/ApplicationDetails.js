@@ -160,12 +160,12 @@ const ApplicationDetails = () => {
   }
 
   const wfDocs = workflowDetails.data?.timeline?.reduce((acc, { documents }) => {
-    let arr = documents?.map((e) => ({}));
     return documents ? [...acc, ...documents] : acc;
   }, []);
-  console.log(wfDocs, workflowDetails, appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents, "wfDcs");
-  if(appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents && wfDocs?.length){
-    appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents?.push?.({
+  let appdetailsDocuments = appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents;
+  console.log(wfDocs, workflowDetails, appdetailsDocuments, "wfDcs");
+  if(appdetailsDocuments && wfDocs?.length && !(appdetailsDocuments?.find(e => e.title === "PT_WORKFLOW_DOCS"))){
+    appdetailsDocuments?.push?.({
         title: "PT_WORKFLOW_DOCS",
         values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType})),
       });
