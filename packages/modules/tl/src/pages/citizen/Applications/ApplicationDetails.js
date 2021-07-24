@@ -1,4 +1,4 @@
-import { Card, CardHeader, Loader, MultiLink, Row, SubmitBar, Header } from "@egovernments/digit-ui-react-components";
+import { Card, CardHeader, Loader, MultiLink, Row, SubmitBar, Header, CardSubHeader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -120,7 +120,7 @@ const ApplicationDetails = () => {
               {application?.tradeLicenseDetail.owners.map((ele, index) => {
                 return (
                   <div key = {index}>
-                  <Row label={`${t("TL_PAYMENT_PAID_BY_PLACEHOLDER")} - `+ (index+1)}/>
+                  <CardSubHeader>{`${t("TL_PAYMENT_PAID_BY_PLACEHOLDER")} - `+ (index+1)}</CardSubHeader>
                   <Row
                     label={`${t("TL_COMMON_TABLE_COL_OWN_NAME")}`}
                     text={t(ele.name)}
@@ -157,7 +157,7 @@ const ApplicationDetails = () => {
                 text={application?.tradeName}
                 textStyle={{ whiteSpace: "pre-wrap",width:"70%" }}
               />
-              <Row label={t("TL_TRADE_UNITS_HEADER")} />
+              <CardSubHeader>{t("TL_TRADE_UNITS_HEADER")}</CardSubHeader>
               {application?.tradeLicenseDetail?.tradeUnits?.map((ele, index) => {
                 return (
                   <div key={index} style={{border:"groove"}}>
@@ -186,8 +186,8 @@ const ApplicationDetails = () => {
                   </div>
                 );
               })}
-              {application?.tradeLicenseDetail?.accessories.length > 0 && <Row label={t("TL_NEW_TRADE_DETAILS_HEADER_ACC")} />}
-              {application?.tradeLicenseDetail?.accessories.length > 0 && application?.tradeLicenseDetail?.accessories?.map((ele, index) => {
+              {Array.isArray(application?.tradeLicenseDetail?.accessories) && application?.tradeLicenseDetail?.accessories.length > 0 && <CardSubHeader style={{paddingTop:"7px"}}>{t("TL_NEW_TRADE_DETAILS_HEADER_ACC")}</CardSubHeader>}
+              {Array.isArray(application?.tradeLicenseDetail?.accessories) && application?.tradeLicenseDetail?.accessories.length > 0 && application?.tradeLicenseDetail?.accessories?.map((ele, index) => {
                 return (
                   <div key={index} style={{border:"groove"}}>
                     <Row
@@ -202,10 +202,13 @@ const ApplicationDetails = () => {
                   </div>
                 );
               })}
+              <Row label="" />
                     <Row
                       style={{ border: "none" }}
                       label={t("TL_NEW_TRADE_ADDRESS_LABEL")}
-                      text={application?.tradeLicenseDetail.owners[0]?.permanentAddress}
+                      text={`${application?.tradeLicenseDetail?.address?.doorNo?.trim() ? `${application?.tradeLicenseDetail?.address?.doorNo?.trim()}, ` : ""} ${application?.tradeLicenseDetail?.address?.street?.trim() ? `${application?.tradeLicenseDetail?.address?.street?.trim()}, ` : ""}${t(
+                        application?.tradeLicenseDetail?.address?.locality?.name
+                      )}, ${t(application?.tradeLicenseDetail?.address?.city)} ${application?.tradeLicenseDetail?.address?.pincode?.trim() ? `,${application?.tradeLicenseDetail?.address?.pincode?.trim()}` : ""}`}
                       textStyle={{ whiteSpace: "pre-wrap",width:"70%" }}
                     />
               <TLWFApplicationTimeline application={application} id={id} />
