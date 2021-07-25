@@ -164,11 +164,14 @@ const ApplicationDetails = () => {
   }, []);
   let appdetailsDocuments = appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents;
   console.log(wfDocs, workflowDetails, appdetailsDocuments, "wfDcs");
-  if(appdetailsDocuments && wfDocs?.length && !(appdetailsDocuments?.find(e => e.title === "PT_WORKFLOW_DOCS"))){
-    appdetailsDocuments?.push?.({
+  if (appdetailsDocuments && wfDocs?.length && !appdetailsDocuments?.find((e) => e.title === "PT_WORKFLOW_DOCS")) {
+    appDetailsToShow.applicationDetails[3].additionalDetails.documents = [
+      ...appdetailsDocuments,
+      {
         title: "PT_WORKFLOW_DOCS",
-        values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType})),
-      });
+        values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType })),
+      },
+    ];
   }
 
   return (

@@ -119,7 +119,7 @@ const Units = ({ t, config, onSelect, userType, formData, setError, formState, c
       }
     });
 
-    if (unitsMissing.length) {
+    if (unitsMissing.length && units.some((unit) => unit?.floorNo?.code)) {
       setError(config.key, { type: "units_missing", message: `PT_FLOORS_MISSING_UNITS.${unitsMissing.map((e) => e?.code).join()}` });
     } else if (totalGroundFloorArea > Number(formData?.landarea)) {
       setError(config.key, { type: "landArea extended", message: t("PT_BUILTUPAREA_GRATER_THAN_LANDAREA") });
