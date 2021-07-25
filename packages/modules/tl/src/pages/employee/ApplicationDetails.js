@@ -67,15 +67,15 @@ const ApplicationDetails = () => {
     let actions = orderBy(filteredActions, ["action"], ["desc"]);
     if ((!actions || actions?.length == 0) && workflowDetails?.data?.actionState) workflowDetails.data.actionState.nextActions = [];
 
-    workflowDetails?.data?.actionState?.nextActions?.forEach(data => {
-      if(data.action == "RESUBMIT") {
-        data.redirectionUrl = {
-          pathname: `/digit-ui/employee/tl/renew-application-details/${applicationNumber}`,
-          state: applicationDetails
-        },
-        data.tenantId = stateId
-      }
-    })
+    // workflowDetails?.data?.actionState?.nextActions?.forEach(data => {
+    //   if(data.action == "RESUBMIT") {
+    //     data.redirectionUrl = {
+    //       pathname: `/digit-ui/employee/tl/renew-application-details/${applicationNumber}`,
+    //       state: applicationDetails
+    //     },
+    //     data.tenantId = stateId
+    //   }
+    // })
   }
 
 
