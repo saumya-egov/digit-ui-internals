@@ -160,10 +160,10 @@ const ApplicationDetails = () => {
   let appdetailsDocuments = ownerdetails?.additionalDetails?.documents;
   console.log(wfDocs, workflowDetails, appdetailsDocuments, "wfDcs"); 
   if(appdetailsDocuments && wfDocs?.length && !(appdetailsDocuments.find(e => e.title === "TL_WORKFLOW_DOCS"))){
-    appdetailsDocuments?.push?.({
-        title: "TL_WORKFLOW_DOCS",
-        values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType})),
-      });
+    ownerdetails.additionalDetails.documents = [...ownerdetails.additionalDetails.documents,{
+      title: "TL_WORKFLOW_DOCS",
+      values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType})),
+    }];
   }
 
 
