@@ -7,8 +7,9 @@ const useTLInbox = ({ tenantId, filters, config }) => {
     const _filters = {
         tenantId,
 		processSearchCriteria: {
-			businessService: ["NewTL"],
-            ...(applicationStatus?.length > 0 ? {applicationStatus: applicationStatus.map((status) => status.code).join(",")} : {})
+            moduleName: "tl-services",
+			businessService: ["NewTL", "DIRECTRENEWAL","EDITRENEWAL"],
+            ...(applicationStatus?.length > 0 ? {status: applicationStatus} : {})
         },
 		moduleSearchCriteria: {
             ...(mobileNumber ? {mobileNumber}: {}),
@@ -16,7 +17,7 @@ const useTLInbox = ({ tenantId, filters, config }) => {
             ...(sortBy ? {sortBy} : {}),
             ...(sortOrder ? {sortOrder} : {}),
             ...(locality?.length > 0 ? {locality: locality.map((item) => item.code.split("_").pop()).join(",")} : {}),
-            ...(uuid && Object.keys(uuid).length > 0 ? {assignee: uuid.code === "ASSIGNED_TO_ME" ? uuid : ""} : {}),
+            ...(uuid && Object.keys(uuid).length > 0 ? {assignedToMe: uuid.code === "ASSIGNED_TO_ME" ? true : ""} : {}),
         },
         limit,
         offset
@@ -24,7 +25,7 @@ const useTLInbox = ({ tenantId, filters, config }) => {
 
     return useInbox({tenantId, filters: _filters, config:{
         select: (data) =>({
-            statuses: data.status,
+            statuses: data.statusMap,
             table: data?.items.map( application => ({
                 applicationId: application.businessObject.applicationNumber,
                 date: application.businessObject.applicationDate,
@@ -32,7 +33,8 @@ const useTLInbox = ({ tenantId, filters, config }) => {
                 status: application.businessObject.status,
                 owner: application.ProcessInstance?.assigner?.name,
                 sla: Math.round(application.ProcessInstance?.businesssServiceSla / (24 * 60 * 60 * 1000))
-            }))
+            })),
+            totalCount: data.totalCount
         }),
         ...config
     }})

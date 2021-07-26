@@ -6,6 +6,7 @@ import _ from "lodash";
 import { useLocation } from "react-router-dom";
 import { getUniqueItemsFromArray, commonTransform, stringReplaceAll, getPattern } from "../utils";
 import isUndefined from "lodash/isUndefined";
+import {sortDropdownNames} from "../utils/index";
 
 const createAccessoriesDetails = () => ({
     accessoryCategory: "",
@@ -105,7 +106,7 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
             {accessoriesList.map((accessor, index) => (
                 <AccessoriersForm key={accessor.key} index={index} accessor={accessor} {...commonProps} />
             ))}
-            <LinkButton label={`${t("TL_NEW_TRADE_DETAILS_NEW_ACCESSORIES")}`} onClick={addAccessories} style={{ color: "orange" }} />
+            <LinkButton label={`${t("TL_NEW_TRADE_DETAILS_NEW_ACCESSORIES")}`} onClick={addAccessories} style={{ color: "orange", width: "fit-content" }} />
 
         </React.Fragment>
     );
@@ -278,7 +279,7 @@ const AccessoriersForm = (_props) => {
                                         setUomvalues(accessor?.accessoryCategory?.uom);
                                     }}
                                     onBlur={props.onBlur}
-                                    option={accessories || []}
+                                    option={sortDropdownNames(accessories,"i18nKey",t) || []}
                                     optionKey="i18nKey"
                                     t={t}
                                     disable={isRenewal}
@@ -326,6 +327,7 @@ const AccessoriersForm = (_props) => {
                                         value={getValues("uomValue")}
                                         // value={accessor?.accessoryCategory?.uom ? props.value : ""}
                                         autoFocus={focusIndex.index === accessor?.key && focusIndex.type === "uomValue"}
+                                        errorStyle={(localFormState.touched.uomValue && errors?.uomValue?.message) ? true : false}
                                         onChange={(e) => {
                                             props.onChange(e.target.value);
                                             setFocusIndex({ index: accessor.key, type: "uomValue" });
@@ -351,6 +353,7 @@ const AccessoriersForm = (_props) => {
                                     <TextInput
                                         value={props.value}
                                         autoFocus={focusIndex.index === accessor?.key && focusIndex.type === "count"}
+                                        errorStyle={(localFormState.touched.count && errors?.count?.message) ? true : false}
                                         onChange={(e) => {
                                             props.onChange(e.target.value);
                                             setFocusIndex({ index: accessor.key, type: "count" });

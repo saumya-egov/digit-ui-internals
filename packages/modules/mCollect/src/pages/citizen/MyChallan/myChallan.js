@@ -10,7 +10,7 @@ const MyChallanResult = ({ template, header, actionButtonLabel }) => {
   const history = useHistory();
   const filters = {};
   const userInfo = Digit.UserService.getUser();
-  const tenantId = userInfo?.info?.permanentCity;
+  const tenantId = userInfo?.info?.tenantId;
 
   filters.mobileNumber = userInfo?.info?.mobileNumber;
 
@@ -47,11 +47,11 @@ const MyChallanResult = ({ template, header, actionButtonLabel }) => {
   function getBillingPeriod(fromPeriod, toPeriod) {
     if (fromPeriod && toPeriod) {
       let from =
-        new Date(fromPeriod).getDate().toString() +
+        new Date(fromPeriod).getDate() +
         " " +
-        Digit.Utils.date.monthNames[new Date(fromPeriod).getMonth() + 1].toString() +
+        Digit.Utils.date.monthNames[new Date(fromPeriod).getMonth() + 1] +
         " " +
-        new Date(fromPeriod).getFullYear().toString();
+        new Date(fromPeriod).getFullYear();
       let to =
         new Date(toPeriod).getDate() + " " + Digit.Utils.date.monthNames[new Date(toPeriod).getMonth() + 1] + " " + new Date(toPeriod).getFullYear();
       return from + " - " + to;
@@ -99,7 +99,7 @@ const MyChallanResult = ({ template, header, actionButtonLabel }) => {
         </div>
       </div>
 
-      <div style={{ marginLeft: "16px", marginTop: "16px" }}>
+      <div style={{ marginLeft: "16px", marginTop: "16px", marginBottom: "46px" }}>
         <p>{t("UC_NOT_ABLE_TO_FIND_BILL_MSG")} </p>
         <p className="link">
           <Link to="/digit-ui/citizen/mcollect/search">{t("UC_CLICK_HERE_TO_SEARCH_LINK")}</Link>

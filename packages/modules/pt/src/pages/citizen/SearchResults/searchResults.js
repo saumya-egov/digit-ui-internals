@@ -87,7 +87,6 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
   const onSubmit = (data) => {
     if (isMutation) {
       let property = result?.data?.Properties?.filter?.((e) => e.propertyId === data.property_id)[0];
-      console.log(data, ">>>>>>>>>>>>>>>");
       if (Number(data.total_due) > 0) {
         setShowModal(data);
       } else onSelect(config.key, { data, property });
@@ -137,7 +136,11 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
           // headerBarEnd={<CloseBtn onClick={closeModal} />}
           hideSubmit={true}
           isDisabled={false}
+<<<<<<< HEAD
           popupStyles={{ width: "319px", height: "250px", marginTop: "75px" }}
+=======
+          popupStyles={{ width: "319px", height: "250px", margin: "auto" }}
+>>>>>>> origin/develop
           formId="modal-action"
         >
           {/* <Card> */}
@@ -158,7 +161,16 @@ const PropertySearchResults = ({ template, header, actionButtonLabel, isMutation
                 " " +
                 t("PT_INORDER_TO_TRANSFER")}
             </p>
+<<<<<<< HEAD
             <SubmitBar submit={false} onSubmit={() => proceedToPay(modalData)} style={{ marginTop: "14px", width: "100%" }} label={t("PT_PROCEED_PAYMENT")} />
+=======
+            <SubmitBar
+              submit={false}
+              onSubmit={() => proceedToPay(modalData)}
+              style={{ marginTop: "14px", width: "100%" }}
+              label={t("PT_PROCEED_PAYMENT")}
+            />
+>>>>>>> origin/develop
           </div>
           {/* </Card> */}
         </Modal>

@@ -55,9 +55,9 @@ export const WorkflowService = {
             let assignees = actionResultantState?.actions?.reduce?.((acc, act) => {
               return [...acc, ...act.roles];
             }, []);
-            return { ...actionResultantState, assigneeRoles: assignees, action: ac.action };
+            return { ...actionResultantState, assigneeRoles: assignees, action: ac.action, roles: ac.roles };
           });
-          return { ...state, nextActions: _nextActions };
+          return { ...state, nextActions: _nextActions, roles: state?.action, roles: state?.actions?.reduce((acc, el) => [...acc, ...el.roles], []) };
         })?.[0];
 
       const actionRolePair = nextActions?.map((action) => ({
@@ -76,6 +76,7 @@ export const WorkflowService = {
               assigner: instance?.assigner,
               rating: instance?.rating,
               comment: instance?.comment,
+              documents: instance?.documents,
               caption: instance.assignes ? instance.assignes.map((assignee) => ({ name: assignee.name, mobileNumber: assignee.mobileNumber })) : null,
               auditDetails: {
                 created: Digit.DateUtils.ConvertTimestampToDate(instance.auditDetails.createdTime),
@@ -101,7 +102,13 @@ export const WorkflowService = {
             status: "CREATED",
           });
 
-        const details = { timeline, nextActions, actionState, applicationBusinessService: workflow?.ProcessInstances?.[0]?.businessService, processInstances: applicationProcessInstance };
+        const details = {
+          timeline,
+          nextActions,
+          actionState,
+          applicationBusinessService: workflow?.ProcessInstances?.[0]?.businessService,
+          processInstances: applicationProcessInstance,
+        };
         return details;
       }
     } else {

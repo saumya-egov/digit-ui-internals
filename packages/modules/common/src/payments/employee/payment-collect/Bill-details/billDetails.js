@@ -47,6 +47,21 @@ export const BillDetailsFormConfig = (props, t) => ({
       ],
     },
   ],
+  TL: [
+    {
+      body: [
+        {
+          withoutLabel: true,
+          type: "custom",
+          populators: {
+            name: "amount",
+            customProps: { businessService: "TL", consumerCode: props.consumerCode },
+            component: (props, customProps) => <BillDetails onChange={props.onChange} amount={props.value} {...customProps} />,
+          },
+        },
+      ],
+    },
+  ],
 });
 
 const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
@@ -62,7 +77,7 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
   const yearWiseBills = bill?.billDetails?.sort((a, b) => b.fromPeriod - a.fromPeriod);
   const billDetails = yearWiseBills?.[0] || [];
 
-  const getTotal = () => bill?.totalAmount || 0;
+  const getTotal = () => bill?.totalAmount ? bill?.totalAmount : 0;
 
   const { isLoading: mdmsLoading, data: mdmsBillingData } = Digit.Hooks.useGetPaymentRulesForBusinessServices(tenantId);
   const [paymentRules, setPaymentRules] = useState();
@@ -172,9 +187,9 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
           ))}
 
         <hr style={{ width: "40%" }} className="underline" />
-        <Row label={t("CS_PAYMENT_TOTAL_AMOUNT")} textStyle={{ fontWeight: "bold" }} text={"₹ " + bill?.totalAmount} />
+        <Row label={t("CS_PAYMENT_TOTAL_AMOUNT")} textStyle={{ fontWeight: "bold" }} text={"₹ " +getTotal()} />
       </StatusTable>
-      {showDetails && !ModuleWorkflow ? (
+      {showDetails && !ModuleWorkflow && businessService !== "TL" ? (
         <React.Fragment>
           <div style={{ maxWidth: "95%", display: "inline-block", textAlign: "right" }}>
             <div style={{ display: "flex", padding: "10px", paddingLeft: "unset", maxWidth: "95%" }}>
@@ -248,13 +263,13 @@ const BillDetails = ({ businessService, consumerCode, _amount, onChange }) => {
           </div>{" "}
         </React.Fragment>
       ) : (
-        !ModuleWorkflow && (
+        !ModuleWorkflow && businessService !== "TL" && (
           <div style={{}} onClick={() => setShowDetails(true)} className="filter-button">
             {t("ES_COMMON_VIEW_DETAILS")}
           </div>
         )
       )}
-      {!ModuleWorkflow && (
+      {paymentRules?.partPaymentAllowed  && (
         <div className="bill-payment-amount">
           <CardSectionHeader>{t("CS_COMMON_PAYMENT_AMOUNT")}</CardSectionHeader>
           <RadioButtons

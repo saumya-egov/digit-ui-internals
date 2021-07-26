@@ -2,9 +2,10 @@ import React, { useCallback, useMemo, useEffect } from "react"
 import { useForm, Controller } from "react-hook-form";
 import { TextInput, SubmitBar, LinkLabel, ActionBar, CloseSvg, DatePicker, CardLabelError, SearchForm, SearchField, Dropdown, Table, Card } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
+import { convertEpochToDateDMY } from  "../utils";
 
 const SearchApplication = ({tenantId, t, onSubmit, data }) => {
-    const { register, control, handleSubmit, setValue, getValues } = useForm({
+    const { register, control, handleSubmit, setValue, getValues, reset } = useForm({
         defaultValues: {
             offset: 0,
             limit: 10,
@@ -23,49 +24,49 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
     const applicationStatuses = [
         {
             code: "CANCELLED",
-            i18nKey: "TLAPPLICATION_TYPE_CANCELLED"
+            i18nKey: "WF_NEWTL_CANCELLED"
         },
         {
             code: "APPROVED",
-            i18nKey: "TLAPPLICATION_TYPE_APPROVED"
+            i18nKey: "WF_NEWTL_APPROVED"
         },
         {
             code: "EXPIRED",
-            i18nKey: "TLAPPLICATION_TYPE_EXPIRED"
+            i18nKey: "WF_NEWTL_EXPIRED"
         },
         {
             code: "APPLIED",
-            i18nKey: "TLAPPLICATION_TYPE_APPLIED"
+            i18nKey: "WF_NEWTL_APPLIED"
         },
         {
             code: "REJECTED",
-            i18nKey: "TLAPPLICATION_TYPE_REJECTED"
+            i18nKey: "WF_NEWTL_REJECTED"
         },
         {
             code: "PENDINGPAYMENT",
-            i18nKey: "TLAPPLICATION_TYPE_PENDINGPAYMENT"
+            i18nKey: "WF_NEWTL_PENDINGPAYMENT"
         },
         {
             code: "FIELDINSPECTION",
-            i18nKey: "TLAPPLICATION_TYPE_FIELDINSPECTION"
+            i18nKey: "WF_NEWTL_FIELDINSPECTION"
         },
         {
             code: "CITIZENACTIONREQUIRED",
-            i18nKey: "TLAPPLICATION_TYPE_CITIZENACTIONREQUIRED"
+            i18nKey: "WF_NEWTL_CITIZENACTIONREQUIRED"
         },
         {
             code: "PENDINGAPPROVAL",
-            i18nKey: "TLAPPLICATION_TYPE_PENDINGAPPROVAL"
+            i18nKey: "WF_NEWTL_PENDINGAPPROVAL"
         },
         {
             code: "INITIATED",
-            i18nKey: "TLAPPLICATION_TYPE_INITIATED"
+            i18nKey: "WF_NEWTL_INITIATED"
         }	
     ]
     const GetCell = (value) => <span className="cell-text">{value}</span>;
     const columns = useMemo( () => ([
         {
-          Header: t("ES_INBOX_APPLICATION_NO"),
+          Header: t("TL_COMMON_TABLE_COL_APP_NO"),
           accessor: "applicationNo",
           disableSortBy: true,
           Cell: ({ row }) => {
@@ -81,23 +82,33 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
           },
         },
         {
-          Header: t("ES_APPLICATION_DETAILS_COMMENCEMENT_DATE"),
-          disableSortBy: true,
-          accessor: (row) => GetCell(row.commencementDate || ""),
+            Header: t("TL_COMMON_TABLE_COL_APP_DATE"),
+            disableSortBy: true,
+            accessor: (row) => GetCell(row.auditDetails.createdTime ? convertEpochToDateDMY(row.auditDetails.createdTime) : ""),
         },
         {
-          Header: t("ES_APPLICATION_DETAILS_TRADE_NAME"),
+            Header: t("TL_LICENSE_NUMBERL_LABEL"),
+            disableSortBy: true,
+            accessor: (row) => GetCell(row.licenseNumber || "-"),
+        },
+        {
+          Header: t("TL_NEW_TRADE_DETAILS_LIC_TYPE_LABEL"),
+          disableSortBy: true,
+          accessor: (row) => GetCell(row.licenseType ? t(`TRADELICENSE_LICENSETYPE_${row.licenseType}`) : ""),
+        },
+        {
+          Header: t("TL_COMMON_TABLE_COL_TRD_NAME"),
           disableSortBy: true,
           accessor: (row) => GetCell(row.tradeName || ""),
         },
         {
-          Header: t("ES_APPLICATION_DETAILS_TRADE_OWNER"),
+          Header: t("TL_LOCALIZATION_TRADE_OWNER_NAME"),
           accessor: (row) => GetCell(row.tradeLicenseDetail.owners.map( o => o.name ). join(",") || ""),
           disableSortBy: true,
         },
         {
-          Header: t("ES_APPLICATION_DETAILS_STATUS"),
-          accessor: (row) => GetCell(row.status || ""),
+          Header: t("TL_COMMON_TABLE_COL_STATUS"),
+          accessor: (row) => GetCell(t(row.status) || ""),
           disableSortBy: true,
         }
       ]), [] )
@@ -107,14 +118,29 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
         setValue("sortBy", args.id)
         setValue("sortOrder", args.desc ? "DESC" : "ASC")
     }, [])
+
+    function onPageSizeChange(e){
+        setValue("limit",Number(e.target.value))
+        handleSubmit(onSubmit)()
+    }
+
+    function nextPage () {
+        setValue("offset", getValues("offset") + getValues("limit"))
+        handleSubmit(onSubmit)()
+    }
+    function previousPage () {
+        setValue("offset", getValues("offset") - getValues("limit") )
+        handleSubmit(onSubmit)()
+    }
+
     return <React.Fragment>
                 <SearchForm onSubmit={onSubmit} handleSubmit={handleSubmit}>
                 <SearchField>
-                    <label>{t("TL_SEARCH_APPLICATION_NUMBER")}</label>
+                    <label>{t("TL_HOME_SEARCH_RESULTS_APP_NO_LABEL")}</label>
                     <TextInput name="applicationNumber" inputRef={register({})} />
                 </SearchField>
                 <SearchField>
-                    <label>{t("TL_SEARCH_APPLICATION_TYPE")}</label>
+                    <label>{t("TL_LOCALIZATION_APPLICATION_TYPE")}</label>
                     <Controller
                             control={control}
                             name="applicationType"
@@ -131,15 +157,7 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
                             />
                 </SearchField>
                 <SearchField>
-                    <label>{t("TL_SEARCH_FROM_DATE")}</label>
-                    <Controller
-                        render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
-                        name="toDate"
-                        control={control}
-                        />
-                </SearchField>
-                <SearchField>
-                    <label>{t("TL_SEARCH_TO_DATE")}</label>
+                    <label>{t("TL_TRADE_LICENCE_FROM_DATE")}</label>
                     <Controller
                         render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
                         name="fromDate"
@@ -147,11 +165,19 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
                         />
                 </SearchField>
                 <SearchField>
-                    <label>{t("TL_SEARCH_TRADE_LICENSE_NUMBER")}</label>
+                    <label>{t("TL_TRADE_LICENCE_TO_DATE")}</label>
+                    <Controller
+                        render={(props) => <DatePicker date={props.value} onChange={props.onChange} />}
+                        name="toDate"
+                        control={control}
+                        />
+                </SearchField>
+                <SearchField>
+                    <label>{t("TL_TRADE_LICENSE_LABEL")}</label>
                     <TextInput name="licenseNumbers" inputRef={register({})}/>
                 </SearchField>
                 <SearchField>
-                    <label>{t("TL_SEARCH_APPLICATION_STATUS")}</label>
+                    <label>{t("TL_HOME_SEARCH_RESULTS_APP_STATUS_LABEL")}</label>
                     <Controller
                             control={control}
                             name="status"
@@ -168,15 +194,15 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
                             />
                 </SearchField>
                 <SearchField>
-                    <label>{t("TL_SEARCH_TRADE_LICENSE_NUMBER")}</label>
-                    <TextInput name="licenseNumbers" inputRef={register({})}/>
+                    <label>{t("TL_LOCALIZATION_TRADE_NAME")}</label>
+                    <TextInput name="tradeName" inputRef={register({})}/>
                 </SearchField>
                 <SearchField className="submit">
-                    <p>{t(`ES_COMMON_CLEAR_ALL`)}</p>
                     <SubmitBar label={t("ES_COMMON_SEARCH")} submit />
+                    <p onClick={() => reset()}>{t(`ES_COMMON_CLEAR_ALL`)}</p>
                 </SearchField>
             </SearchForm>
-            {data?.display ?<Card style={{ marginTop: 20 }}>
+            {data?.display ? <Card style={{ marginTop: 20 }}>
                 {
                 t(data.display)
                     .split("\\n")
@@ -200,15 +226,14 @@ const SearchApplication = ({tenantId, t, onSubmit, data }) => {
                   },
                 };
                 }}
-                onPageSizeChange={(e) => setValue("limit",Number(e.target.value))}
-                currentPage={getValues("offset")}
-                onNextPage={() => setValue("offset", getValues("offset") + getValues("limit") )}
-                onPrevPage={() => setValue("offset", getValues("offset") - getValues("limit") )}
+                onPageSizeChange={onPageSizeChange}
+                currentPage={getValues("offset")/getValues("limit")}
+                onNextPage={nextPage}
+                onPrevPage={previousPage}
                 pageSizeLimit={getValues("limit")}
                 onSort={onSort}
                 disableSort={false}
                 sortParams={[{id: getValues("sortBy"), desc: getValues("sortOrder") === "DESC" ? true : false}]}
-                totalRecords={100}
             />}
         </React.Fragment>
 }

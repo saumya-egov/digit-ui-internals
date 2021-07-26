@@ -14,13 +14,14 @@ const IsMutationPending = (props) => {
   };
 
   useEffect(() => {
+    if (isMutationInCourt?.code === "NO" && caseDetails?.length) setCaseDetails("");
     if (userType === "employee") {
       if (!isMutationInCourt) {
         setError(config.key, { type: "Required" });
       } else if (errors?.[config.key]) clearErrors(config.key);
       goNext();
     }
-  }, [isMutationInCourt]);
+  }, [isMutationInCourt, caseDetails]);
 
   const onSkip = () => {};
 
@@ -76,6 +77,8 @@ const IsMutationPending = (props) => {
             labelKey="PT_MUTATION_PENDING"
             isDependent={true}
           />
+          <CardLabel>{t("PT_MUTATION_COURT_CASE_DETAILS")}</CardLabel>
+          <TextInput disable={isMutationInCourt?.code !== "YES"} value={caseDetails} onChange={(e) => setCaseDetails(e.target.value)} />
         </div>
       </FormStep>
     </React.Fragment>

@@ -43,7 +43,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
   }
 
   const clearAll = (mobileView) => {
-    const mobileViewStyles = mobileView ? { margin: 0 } : { marginRight: "80px" };
+    const mobileViewStyles = mobileView ? { margin: 0 } : {};
     return (
       <LinkLabel style={{ display: "inline", ...mobileViewStyles }} onClick={clearSearch}>
         {t("UC_CLEAR_SEARCH_LABEL")}
@@ -64,11 +64,12 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 </span>
               </div>
             )}
-            <div className="complaint-input-container" style={{ width: "100%" }}>
+            <div className="complaint-input-container" style={{textAlign: "start"}}>
               {searchFields
                 ?.filter((e) => true)
                 ?.map((input, index) => (
-                  <span key={index} className={index === 0 ? "complaint-input" : "mobile-input"}>
+                  <div key={input.name} className="input-fields">
+                  <span key={index} className={"complaint-input"}>  {/* //{index === 0 ? "complaint-input" : "mobile-input"} */}
                     <Label>{input.label}</Label>
                     {input.type !== "date" ? (
                       <div className="field-container">
@@ -88,14 +89,22 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                       />
                     )}{" "}
                   </span>
+                  </div>
                 ))}
-              {type === "desktop" && !mobileView && <SubmitBar className="submit-bar-search" label={t("UC_SEARCH_LABEL")} submit />}
+                {type === "desktop" && !mobileView &&
+              <div className="search-action-wrapper" style={{width: "100%"}}>
+                <SubmitBar
+                  className="submit-bar-search"
+                  label={t("UC_SEARCH_LABEL")}
+                  submit
+                />
+                {type === "desktop" && !mobileView && (
+                  <span style={{ paddingTop: "9px" }} className="clear-search">
+                    {clearAll()}
+                  </span>
+                )}
+              </div>}
             </div>
-            {type === "desktop" && !mobileView && (
-              <span style={{ display: "flex", justifyContent: "flex-end" }} className="clear-search">
-                {clearAll()}
-              </span>
-            )}
           </div>
         </div>
         {(type === "mobile" || mobileView) && (

@@ -48,6 +48,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
   }, [form, formState, setError, clearErrors]);
 
   const onSubmitInput = (data) => {
+    if(data.mobileNumber.length==0||data.mobileNumber.length==10){
     if (!data.mobileNumber) {
       delete data.mobileNumber;
     }
@@ -62,6 +63,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
     if (type === "mobile") {
       onClose();
     }
+  }
   };
 
   function clearSearch() {
@@ -101,12 +103,12 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                 </span>
               </div>
             )}
-            <div className="complaint-input-container" style={{ width: "100%" }}>
+            <div className="complaint-input-container" style={{textAlign: "start"}}>
               {searchFields
                 ?.filter((e) => true)
                 ?.map((input, index) => (
-                  <div key={input.name} style={{ display: "flex", flexDirection: "column" }}>
-                    <span className={index === 0 ? "complaint-input" : "mobile-input"}>
+                  <div key={input.name} className="input-fields">
+                    <span className={"complaint-input"}>
                       <Label>{t(input.label)}</Label>
                       {!input.type ? (
                         <Controller
@@ -140,7 +142,7 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                   </div>
                 ))}
               {type === "desktop" && !mobileView && !isInboxPage && (
-                <div>
+                <div className="search-action-wrapper">
                   <SubmitBar
                     className="submit-bar-search"
                     label={t("ES_COMMON_SEARCH")}
@@ -153,26 +155,23 @@ const SearchApplication = ({ onSearch, type, onClose, searchFields, searchParams
                   </div>
                 </div>
               )}
+              {isInboxPage && (
+                <div className="search-action-wrapper" style={{width: "100%"}}>
+                  {type === "desktop" && !mobileView && (
+                    <SubmitBar
+                      className="submit-bar-search"
+                      label={t("ES_COMMON_SEARCH")}
+                      submit
+                    />
+                  )}
+                  {type === "desktop" && !mobileView && (
+                    <span style={{ paddingTop: "9px" }} className="clear-search">
+                      {clearAll()}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
-
-            {isInboxPage && (
-              <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-start" }}>
-                {type === "desktop" && !mobileView && (
-                  <span style={{ paddingTop: "9px" }} className="clear-search">
-                    {clearAll()}
-                  </span>
-                )}
-                {type === "desktop" && !mobileView && (
-                  <SubmitBar
-                    disabled={!!Object.keys(formState.errors).length}
-                    style={{ marginTop: "unset" }}
-                    className="submit-bar-search"
-                    label={t("ES_COMMON_SEARCH")}
-                    submit
-                  />
-                )}
-              </div>
-            )}
           </div>
         </div>
         {(type === "mobile" || mobileView) && (

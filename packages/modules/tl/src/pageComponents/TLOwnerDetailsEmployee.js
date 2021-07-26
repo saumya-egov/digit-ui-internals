@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { useLocation } from "react-router-dom";
+import { getPattern } from "../utils";
 
 const createOwnerDetails = () => ({
   name: "",
@@ -40,6 +41,11 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
     "OwnerShipCategory",
   ]);
 
+
+  const { data: genderTypeData } = Digit.Hooks.tl.useTradeLicenseMDMS(stateId, "common-masters", [
+    "GenderType"
+  ]);
+
   const addNewOwner = () => {
     const newOwner = createOwnerDetails();
     setOwners((prev) => [...prev, newOwner]);
@@ -50,6 +56,8 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
   };
 
   useEffect(() => {
+    if (formData?.ownershipCategory?.code == "INDIVIDUAL.MULTIPLEOWNERS" && owners.length > 1) clearErrors("mulipleOwnerError");
+    if (formData?.ownershipCategory?.code == "INDIVIDUAL.MULTIPLEOWNERS" && owners.length == 1) setError("mulipleOwnerError", { type: "owner_missing", message: `TL_ERROR_MULTIPLE_OWNER` });
     const data = owners.map((e) => {
       return e;
     });
@@ -60,9 +68,12 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
     onSelect("tradedetils1", previousLicenseDetails);
   }, [previousLicenseDetails]);
 
-  // useEffect(() => {
-  //   setOwners([createOwnerDetails()]);
-  // }, [formData?.ownershipCategory?.code]);
+  useEffect(() => {
+    if (!window.location.href.includes("renew-application-details")) {
+      setOwners([createOwnerDetails()]);
+      if (formData?.ownershipCategory?.code == "INDIVIDUAL.MULTIPLEOWNERS") setError("mulipleOwnerError", { type: "owner_missing", message: `TL_ERROR_MULTIPLE_OWNER` });
+    }
+  }, [formData?.ownershipCategory?.code]);
 
   const isRenewal = window.location.href.includes("tl/renew-application-details");
   
@@ -108,7 +119,8 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
     isErrors,
     isRenewal,
     previousLicenseDetails, 
-    setPreviousLicenseDetails
+    setPreviousLicenseDetails,
+    genderTypeData
   };
 
   if (isEditScreen) {
@@ -121,7 +133,12 @@ const TLOwnerDetailsEmployee = ({ config, onSelect, userType, formData, setError
         <OwnerForm  index={index} owner={owner} {...commonProps} />
       ))}
       {formData?.ownershipCategory?.code === "INDIVIDUAL.MULTIPLEOWNERS" ? (
-        <LinkButton label="Add Owner" onClick={addNewOwner} style={{ color: "orange" }} />
+        <div>
+          <LinkButton label={t("TL_NEW_OWNER_DETAILS_ADD_OWN")} onClick={addNewOwner} style={{ color: "orange", width: "fit-content" }}/>
+          <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-24px" }}>
+            {t(formState.errors?.mulipleOwnerError?.message || "")}
+        </CardLabelError>
+        </div>
       ) : null}
     </React.Fragment>
   );
@@ -147,7 +164,8 @@ const OwnerForm = (_props) => {
     isErrors,
     isRenewal,
     previousLicenseDetails, 
-    setPreviousLicenseDetails
+    setPreviousLicenseDetails,
+    genderTypeData
   } = _props;
 
   const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger } = useForm();
@@ -161,6 +179,17 @@ const OwnerForm = (_props) => {
         code: e.code,
       })) || [],
     [mdmsData]
+  );
+
+  const genderFilterTypeMenu = genderTypeData && genderTypeData["common-masters"]?.GenderType?.filter(e => e.active);
+
+  const genderTypeMenu = useMemo(
+    () =>
+      genderFilterTypeMenu?.map?.((e) => ({
+        i18nKey: `TL_GENDER_${e.code}`,
+        code: e.code,
+      })) || [],
+    [genderFilterTypeMenu]
   );
 
   const isIndividualTypeOwner = useMemo(() => formData?.ownershipCategory?.code.includes("INDIVIDUAL"), [formData?.ownershipCategory?.code]);
@@ -221,6 +250,7 @@ const OwnerForm = (_props) => {
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "name"}
+                    errorStyle={(localFormState.touched.name && errors?.name?.message) ? true : false}
                     onChange={(e) => {
                       if(e.target.value != owner?.name && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);
@@ -254,8 +284,9 @@ const OwnerForm = (_props) => {
                       props.onChange(e);
                       setFocusIndex({ index: owner.key, type: "mobileNumber" });
                     }}
-                    labelStyle={{ marginTop: "unset" }}
+                    labelStyle={{ marginTop: "unset", border: "1px solid #464646", borderRight: "none" }}
                     onBlur={props.onBlur}
+                    errorStyle={(localFormState.touched.mobileNumber && errors?.mobileNumber?.message) ? true : false}
                   />
                 )}
               />
@@ -274,6 +305,7 @@ const OwnerForm = (_props) => {
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "fatherOrHusbandName"}
+                    errorStyle={(localFormState.touched.fatherOrHusbandName && errors?.fatherOrHusbandName?.message) ? true : false}
                     onChange={(e) => {
                       if(e.target.value != owner?.fatherOrHusbandName && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);
@@ -298,6 +330,7 @@ const OwnerForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
+                  errorStyle={(localFormState.touched.relationship && errors?.relationship?.message) ? true : false}
                   select={(e) => {
                     if (e?.code != owner?.relationship?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true });
                     props.onChange(e)
@@ -326,17 +359,13 @@ const OwnerForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
+                  errorStyle={(localFormState.touched.gender && errors?.gender?.message) ? true : false}
                   select={(e) => {
                     if(e?.code !=  owner?.gender?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                     props.onChange(e)
                   }}
                   onBlur={props.onBlur}
-                  option={[
-                    { i18nKey: "TL_GENDER_MALE", code: "Male" },
-                    { i18nKey: "TL_GENDER_FEMALE", code: "Female" },
-                    { i18nKey: "TL_GENDER_TRANSGENDER", code: "Transgender" },
-                    { i18nKey: "COMMON_GENDER_OTHERS", code: "OTHERS" },
-                  ]}
+                  option={genderTypeMenu}
                   optionKey="i18nKey"
                   t={t}
                 />
@@ -351,11 +380,12 @@ const OwnerForm = (_props) => {
                 control={control}
                 name={"emailId"}
                 defaultValue={owner?.emailId}
-                rules={{ validate: (e) => ((e && /^[^\s@]+@[^\s@]+$/.test(e)) || !e ? true : "INVALID_EMAIL") }}
+                rules={{ validate: (e) => ((e && getPattern("Email").test(e)) || !e ? true : "INVALID_EMAIL") }}
                 render={(props) => (
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "emailId"}
+                    errorStyle={(localFormState.touched.emailId && errors?.emailId?.message) ? true : false}
                     onChange={(e) => {
                       if(e.target.value != owner?.emailId && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);
@@ -380,6 +410,7 @@ const OwnerForm = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
+                  errorStyle={(localFormState.touched.ownerType && errors?.ownerType?.message) ? true : false}
                   select={(e) => {
                     if(e?.code !=  owner?.ownerType?.code && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                     props.onChange(e)
@@ -405,6 +436,7 @@ const OwnerForm = (_props) => {
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === owner?.key && focusIndex.type === "permanentAddress"}
+                    errorStyle={(localFormState.touched.permanentAddress && errors?.permanentAddress?.message) ? true : false}
                     onChange={(e) => {
                       if(e.target.value != owner?.permanentAddress && isRenewal) setPreviousLicenseDetails({ ...previousLicenseDetails, checkForRenewal: true});
                       props.onChange(e.target.value);

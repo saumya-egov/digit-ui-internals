@@ -150,12 +150,28 @@ const ApplicationDetails = () => {
       if (act.action === "PAY") {
         return {
           action: "PAY",
+          forcedName: "WF_EMPLOYEE_PT.MUTATION_PAY",
           redirectionUrl: { pathname: `/digit-ui/employee/payment/collect/PT.MUTATION/${appDetailsToShow?.applicationData?.acknowldgementNumber}` },
           // redirectionUrl: { pathname: `/digit-ui/employee/payment/collect/PT/${propertyId}` },
         };
       }
       return act;
     });
+  }
+
+  const wfDocs = workflowDetails.data?.timeline?.reduce((acc, { documents }) => {
+    return documents ? [...acc, ...documents] : acc;
+  }, []);
+  let appdetailsDocuments = appDetailsToShow?.applicationDetails?.[3].additionalDetails?.documents;
+  console.log(wfDocs, workflowDetails, appdetailsDocuments, "wfDcs");
+  if (appdetailsDocuments && wfDocs?.length && !appdetailsDocuments?.find((e) => e.title === "PT_WORKFLOW_DOCS")) {
+    appDetailsToShow.applicationDetails[3].additionalDetails.documents = [
+      ...appdetailsDocuments,
+      {
+        title: "PT_WORKFLOW_DOCS",
+        values: wfDocs?.map?.((e) => ({ ...e, title: e.documentType })),
+      },
+    ];
   }
 
   return (

@@ -4,7 +4,9 @@ import { useLocation } from "react-router-dom";
 
 const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
   let validation = {};
-  const [canmovenext, setCanmovenext] = useState(true);
+  let isedittrade = window.location.href.includes("edit-application");
+  let isrenewtrade = window.location.href.includes("renew-trade");
+  const [canmovenext, setCanmovenext] = useState(isedittrade || isrenewtrade?false:true);
   const [name, setName] = useState(formData?.owners?.name || "");
   const [isPrimaryOwner, setisPrimaryOwner] = useState(false);
   const [gender, setGender] = useState(formData?.owners?.gender);
@@ -116,14 +118,14 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
       {fields.map((field, index) => {
         return (
           <div key={`${field}-${index}`}>
-            {ismultiple && <hr color="#d6d5d4" className="break-line"></hr>}
+            <div style={ismultiple ? {border:"solid",borderRadius:"5px",padding:"10px",paddingTop:"20px",marginTop:"10px",borderColor:"#f3f3f3"}:{}}>
             <CardLabel style={ismultiple?{marginBottom:"-15px"}: {}}>{`${t("TL_NEW_OWNER_DETAILS_NAME_LABEL")}`}</CardLabel>
            {ismultiple && <LinkButton
             label={
             <div >
             <span>
-            <svg style={{float:"right", position:"relative", bottom:"5px"  }}  width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" fill="#0B0C0C"/>
+            <svg style={{float:"right", position:"relative",bottom:"5px"  }} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#494848"/>
             </svg>
             </span>
             </div>
@@ -193,13 +195,14 @@ const SelectOwnerDetails = ({ t, config, onSelect, userType, formData }) => {
               />
             )}
           </div>
+          </div>
         );
       })}
       {ismultiple && (
         <div>
-          <hr color="#d6d5d4" className="break-line"></hr>
+          {/* <hr color="#d6d5d4" className="break-line"></hr> */}
           <div style={{ justifyContent: "center", display: "flex", paddingBottom: "15px", color: "#FF8C00" }}>
-            <button type="button" onClick={() => handleAdd()}>
+            <button type="button" style={{paddingTop:"10px"}} onClick={() => handleAdd()}>
               Add Owner
             </button>
           </div>

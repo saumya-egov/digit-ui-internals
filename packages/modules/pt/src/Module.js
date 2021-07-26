@@ -1,4 +1,4 @@
-import { Header, CitizenHomeCard, RupeeIcon } from "@egovernments/digit-ui-react-components";
+import { Header, CitizenHomeCard, PTIcon } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
@@ -18,6 +18,7 @@ import ProvideSubUsageTypeOfRentedArea from "./pageComponents/ProvideSubUsageTyp
 import PTWFApplicationTimeline from "./pageComponents/PTWFApplicationTimeline";
 import PTSelectAddress from "./pageComponents/PTSelectAddress";
 import PTSelectGeolocation from "./pageComponents/PTSelectGeolocation";
+import PTSelectStreet from "./pageComponents/PTSelectStreet";
 import PTSelectPincode from "./pageComponents/PTSelectPincode";
 import RentalDetails from "./pageComponents/RentalDetails";
 import SelectInistitutionOwnerDetails from "./pageComponents/SelectInistitutionOwnerDetails";
@@ -61,6 +62,7 @@ const componentsToRegister = {
   PropertyTax,
   PTSelectPincode,
   PTSelectAddress,
+  PTSelectStreet,
   Proof,
   SelectOwnerShipDetails,
   SelectOwnerDetails,
@@ -164,7 +166,7 @@ export const PTLinks = ({ matchPath, userType }) => {
     },
   ];
 
-  return <CitizenHomeCard header={t("ACTION_TEST_PROPERTY_TAX")} links={links} Icon={RupeeIcon} />;
+  return <CitizenHomeCard header={t("ACTION_TEST_PROPERTY_TAX")} links={links} Icon={PTIcon} />;
 };
 
 export const PTComponents = {

@@ -31,6 +31,12 @@ const inboxSearchFields = {
 const searchFieldsForSearch = {
   PT: [
     {
+      label: "ES_INBOX_LOCALITY",
+      name: "locality",
+      type: "Locality",
+      isMendatory: true,
+    },
+    {
       label: "ES_INBOX_UNIQUE_PROPERTY_ID",
       name: "propertyIds",
       roles: [],

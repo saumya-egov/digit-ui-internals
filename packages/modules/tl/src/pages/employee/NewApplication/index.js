@@ -126,8 +126,6 @@ const NewApplication = () => {
     if (address) formData.tradeLicenseDetail.address = address;
     if (structureType) formData.tradeLicenseDetail.structureType = structureType;
     if (subOwnerShipCategory) formData.tradeLicenseDetail.subOwnerShipCategory = subOwnerShipCategory;
-
-    console.log(formData, "formDataformDataformDataformDataformData");
    
     // setFormData(formData)
 
@@ -136,7 +134,7 @@ const NewApplication = () => {
         if (result?.Licenses?.length > 0) {
           let licenses = result?.Licenses?.[0];
           licenses.tradeLicenseDetail.applicationDocuments = applicationDocuments;
-          licenses.wfDocuments = applicationDocuments
+          licenses.wfDocuments = [];
           licenses.action = "APPLY";
           Digit.TLService.update({ Licenses: [licenses] }, tenantId).then((response) => {
             if (response?.Licenses?.length > 0) {

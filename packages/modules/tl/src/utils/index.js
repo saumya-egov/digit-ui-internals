@@ -13,6 +13,10 @@ export const convertDotValues = (value = "") => {
   );
 };
 
+export const sortDropdownNames = (options, optionkey, locilizationkey) => {
+  return options.sort((a, b) => locilizationkey(a[optionkey]).localeCompare(locilizationkey(b[optionkey])));
+};
+
 export const convertToLocale = (value = "", key = "") => {
   let convertedValue = convertDotValues(value);
   if (convertedValue == "NA") {
@@ -120,34 +124,59 @@ export const getownerarray = (data) => {
 export const gettradeownerarray = (data) => {
   let tradeownerarray = [];
 
-  data?.owners?.owners.map((ob, index) => {
-    if (data?.tradeLicenseDetail?.owners[index]) {
-      if (ob.name !== data?.tradeLicenseDetail?.owners[index].name) {
-        data.tradeLicenseDetail.owners[index].name = ob.name;
-        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
+  data.tradeLicenseDetail.owners.map((oldowner) => {
+    data?.owners?.owners.map((newowner) => {
+      if(oldowner.id === newowner.id)
+      {
+        if (oldowner.name !== newowner.name)
+        {
+          oldowner.name = newowner.name;
+          let found = tradeownerarray.length > 0 ?tradeownerarray.some(el => el.id === oldowner.id):false;
+          if(!found)tradeownerarray.push(oldowner);
+        }
+        else if(oldowner.gender !== newowner.gender.code)
+        {
+          oldowner.gender = newowner.gender.code;
+          let found = tradeownerarray.length > 0 ?tradeownerarray.some(el => el.id === oldowner.id):false;
+          if(!found)tradeownerarray.push(oldowner);
+        }
+        else if(oldowner.mobileNumber !== newowner.mobilenumber)
+        {
+          oldowner.mobileNumber = newowner.mobilenumber;
+          let found = tradeownerarray.length > 0 ?tradeownerarray.some(el => el.id === oldowner.id):false;
+          if(!found)tradeownerarray.push(oldowner);
+        }
+        else if(oldowner.permanentAddress !== data?.owners?.permanentAddress)
+        {
+          oldowner.permanentAddress = data?.owners?.permanentAddress;
+          let found = tradeownerarray.length > 0 ?tradeownerarray.some(el => el.id === oldowner.id):false;
+          if(!found)tradeownerarray.push(oldowner);
+        }
+        else
+        {
+          let found = tradeownerarray.length > 0 ? tradeownerarray.some(el => el.id === oldowner.id):false;
+          if(!found)tradeownerarray.push(oldowner);
+        }
       }
-      else if (ob.gender.code !== data?.tradeLicenseDetail?.owners[index].gender) {
-        data.tradeLicenseDetail.owners[index].gender = ob.gender.code;
-        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
+      else
+      {
+        let found = tradeownerarray.length > 0 ? tradeownerarray.some(el => el.id === oldowner.id):false;
+        if(!found)tradeownerarray.push({...oldowner,active:false});   
       }
-      else if (ob.mobilenumber !== data?.tradeLicenseDetail?.owners[index].mobileNumber) {
-        data.tradeLicenseDetail.owners[index].mobileNumber = ob.mobilenumber;
-        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
-      }
-      else {
-        tradeownerarray.push(data?.tradeLicenseDetail?.owners[index]);
-      }
-    }
-    else {
+    })
+  })
+  data?.owners?.owners.map((ob) => {
+    if(!ob.id)
+    {
       tradeownerarray.push({
-        mobileNumber: ob.mobilenumber,
-        name: ob.name,
-        fatherOrHusbandName: "",
-        relationship: "",
-        dob: null,
-        gender: ob.gender.code,
-        permanentAddress: data?.owners?.permanentAddress,
-      });
+              mobileNumber: ob.mobilenumber,
+              name: ob.name,
+              fatherOrHusbandName: "",
+              relationship: "",
+              dob: null,
+              gender: ob.gender.code,
+              permanentAddress: data?.owners?.permanentAddress,
+            });
     }
   })
   return tradeownerarray;
@@ -163,17 +192,31 @@ export const gettradeunits = (data) => {
 
 export const gettradeupdateunits = (data) => {
   let TLunits = [];
-  data?.TradeDetails?.units.map((ob, index) => {
-    if (data.tradeLicenseDetail.tradeUnits[index]) {
-      if (ob.tradesubtype.code !== data.tradeLicenseDetail.tradeUnits[index].tradeType) {
-        data.tradeLicenseDetail.tradeUnits[index].tradeType = ob.tradesubtype.code;
-        TLunits.push(data.tradeLicenseDetail.tradeUnits[index]);
+
+  data.tradeLicenseDetail.tradeUnits.map((oldunit) => {
+    data.TradeDetails.units.map((newunit) => {
+      if(oldunit.id === newunit.id)
+      {
+        if (oldunit.tradeType !== newunit.tradesubtype.code)
+        {
+          oldunit.tradeType = newunit.tradesubtype.code;
+          TLunits.push(oldunit);
+        }
+        else
+        {
+          TLunits.push(oldunit);
+        }
+
       }
-      else {
-        TLunits.push(data.tradeLicenseDetail.tradeUnits[index]);
+      else
+      {
+        TLunits.push({...oldunit,active:false});   
       }
-    }
-    else {
+    })
+  })
+  data.TradeDetails.units.map((ob) => {
+    if(!ob.id)
+    {
       TLunits.push({ tradeType: ob.tradesubtype.code, uom: ob.unit, uomValue: ob.uom });
     }
   })
@@ -190,20 +233,42 @@ export const getaccessories = (data) => {
 
 export const gettradeupdateaccessories = (data) => {
   let TLaccessories = [];
-  data?.TradeDetails?.accessories.map((ob, index) => {
-    if (data.tradeLicenseDetail.accessories[index]) {
-      if (ob.accessory.code !== data.tradeLicenseDetail.accessories[index].accessoryCategory) {
-        data.tradeLicenseDetail.accessories[index].accessoryCategory = ob.accessory.code;
-        data.push(data.tradeLicenseDetail.accessories[index]);
+  if(data?.TradeDetails?.isAccessories?.i18nKey.includes("NO"))
+  {
+    data?.tradeLicenseDetail?.accessories && data.tradeLicenseDetail.accessories.map((oldunit) => {
+      TLaccessories.push({...oldunit,active:false});
+    })
+  }
+  else{
+  data?.tradeLicenseDetail?.accessories && data.tradeLicenseDetail.accessories.map((oldunit) => {
+    data.TradeDetails.accessories.map((newunit) => {
+      if(oldunit.id === newunit.id)
+      {
+        if (oldunit.accessoryCategory !== newunit.accessory.code)
+        {
+          oldunit.accessoryCategory = newunit.accessory.code;
+          TLaccessories.push(oldunit);
+        }
+        else
+        {
+          TLaccessories.push(oldunit);
+        }
+
       }
-      else {
-        TLaccessories.push(data.tradeLicenseDetail.accessories[index]);
+      else
+      {
+          TLaccessories.push({...oldunit,active:false});
+        
       }
-    }
-    else {
+    })
+  })
+  data.TradeDetails.accessories.map((ob) => {
+    if(!ob.id)
+    {
       TLaccessories.push({ uom: ob.unit, accessoryCategory: ob.accessory.code, uomValue: ob.uom, count: ob.accessorycount });
     }
   })
+}
   return TLaccessories;
 }
 
@@ -685,6 +750,22 @@ export const convertToResubmitTrade = (data) => {
 // };
 
 /*   method to check value  if not returns NA*/
+
+export const convertEpochToDateCitizen = (dateEpoch) => {
+  // Returning null in else case because new Date(null) returns initial date from calender
+  if (dateEpoch) {
+    const dateFromApi = new Date(dateEpoch);
+    let month = dateFromApi.getMonth() + 1;
+    let day = dateFromApi.getDate();
+    let year = dateFromApi.getFullYear();
+    month = (month > 9 ? "" : "0") + month;
+    day = (day > 9 ? "" : "0") + day;
+    return `${day}/${month}/${year}`;
+  } else {
+    return null;
+  }
+};
+
 export const checkForNA = (value = "") => {
   return checkForNotNull(value) ? value : "PT_NA";
 };
@@ -934,3 +1015,16 @@ export const checkForEmployee = (role) => {
   const rolearray = userInfo?.info?.roles.filter(item => { if (item.code == role && item.tenantId === tenantId) return true; });
   return rolearray?.length;
 }
+
+export const convertEpochToDateDMY = (dateEpoch) => {
+  if (dateEpoch == null || dateEpoch == undefined || dateEpoch == "") {
+    return "NA";
+  }
+  const dateFromApi = new Date(dateEpoch);
+  let month = dateFromApi.getMonth() + 1;
+  let day = dateFromApi.getDate();
+  let year = dateFromApi.getFullYear();
+  month = (month > 9 ? "" : "0") + month;
+  day = (day > 9 ? "" : "0") + day;
+  return `${day}/${month}/${year}`;
+};

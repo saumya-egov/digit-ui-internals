@@ -1,16 +1,19 @@
 .search-form-wrapper{
-    @apply inline-block bg-white mx-lg mb-lg py-lg pl-lg;
+    @apply flex flex-wrap justify-between bg-white mb-lg py-lg pl-lg;
     .form-field{
-        width: 300px;
+        width: calc( 25% - 16px );
         @apply inline-block mr-md align-middle;
     }
     .submit{
-        @apply inline-flex align-middle !important;
+        right: 36px;
+        margin-top: 22px;
+        @apply inline align-middle text-center !important;
         button{
             margin: 0;
+            @apply inline-block w-full !important;
         }
         p{
-            @apply cursor-pointer text-link text-focus ;
+            @apply cursor-pointer text-link text-focus w-full inline-block ;
         }
     }
 }

@@ -34,6 +34,7 @@ const BannerPicker = (props) => {
 
 const TLAcknowledgement = ({ data, onSuccess }) => {
   const { t } = useTranslation();
+  const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("CITIZEN_TL_MUTATION_HAPPENED", false);
   const resubmit = window.location.href.includes("edit-application");
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const mutation = Digit.Hooks.tl.useTradeLicenseAPI(
@@ -57,6 +58,9 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
 
 
   useEffect(() => {
+    const onSuccessedit = () => {
+      setMutationHappened(true);
+    };
     try {
       if (!resubmit) {
         let tenantId = data?.address?.city ? data.address?.city?.code : tenantId;
@@ -76,8 +80,8 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
         data.tenantId = tenantId;
         let formdata = convertToResubmitTrade(data);
         formdata.Licenses[0].tenantId = formdata?.Licenses[0]?.tenantId || tenantId;
-        !mutation2.isLoading && mutation2.mutate(formdata, {
-          onSuccess,
+        !mutation2.isLoading && !mutation2.isSuccess &&!mutationHappened && mutation2.mutate(formdata, {
+          onSuccessedit,
         })
 
       }
@@ -117,7 +121,7 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
       <BannerPicker t={t} data={mutation2.data} isSuccess={mutation2.isSuccess} isLoading={(mutation2.isIdle || mutation2.isLoading)} />
       {(mutation2.isSuccess) && <CardText>{t("TL_FILE_TRADE_RESPONSE")}</CardText>}
       {(!mutation2.isSuccess) && <CardText>{t("TL_FILE_TRADE_FAILED_RESPONSE")}</CardText>}
-      {mutation2.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
+      {!isEdit && mutation2.isSuccess && <SubmitBar label={t("TL_DOWNLOAD_ACK_FORM")} onSubmit={handleDownloadPdf} />}
       {(mutation2.isSuccess) && isEdit && (
         <LinkButton
           label={
@@ -130,11 +134,12 @@ const TLAcknowledgement = ({ data, onSuccess }) => {
               <span className="download-button">{t("TL_DOWNLOAD_ACK_FORM")}</span>
             </div>
           }
-          style={{ width: "100px" }}
+          //style={{ width: "100px" }}
           onClick={handleDownloadPdf}
         />)}
       {mutation2?.data?.Licenses[0]?.status === "PENDINGPAYMENT" && <Link to={{
-        pathname: `/digit-ui/citizen/payment/collect/${mutation2.data.Licenses[0].businessService}/${mutation2.data.Licenses[0].applicationNumber}`
+        pathname: `/digit-ui/citizen/payment/collect/${mutation2.data.Licenses[0].businessService}/${mutation2.data.Licenses[0].applicationNumber}`,
+        state: { tenantId: mutation2.data.Licenses[0].tenantId },
       }}>
         <SubmitBar label={t("COMMON_MAKE_PAYMENT")} />
       </Link>}

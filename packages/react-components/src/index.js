@@ -86,6 +86,11 @@ import {
   WhatsappIcon,
   EmailIcon,
   DocumentSVG,
+  CaseIcon,
+  PersonIcon,
+  ReceiptIcon,
+  AnnouncementIcon,
+  PTIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -99,6 +104,7 @@ import MobileNumber from "./atoms/MobileNumber";
 import MultiSelectDropdown from "./atoms/MultiSelectDropdown";
 import EllipsisMenu from "./atoms/EllipsisMenu";
 import CitizenHomeCard from "./atoms/CitizenHomeCard";
+import EmployeeModuleCard from "./atoms/EmployeeModuleCard";
 
 import RemoveableTag from "./molecules/RemoveableTag";
 import TypeSelectCard from "./molecules/TypeSelectCard";
@@ -194,6 +200,7 @@ export {
   MobileNumber,
   EllipsisMenu,
   CitizenHomeCard,
+  EmployeeModuleCard,
   // Icons
   GetApp,
   ArrowLeft,
@@ -214,6 +221,8 @@ export {
   PropertyHouse,
   MultiLink,
   MultiSelectDropdown,
+  CaseIcon,
+  PTIcon,
   // Molecule
   InputCard,
   FormStep,
@@ -250,4 +259,7 @@ export {
   WhatsappIcon,
   EmailIcon,
   DocumentSVG,
+  PersonIcon,
+  ReceiptIcon,
+  AnnouncementIcon
 };

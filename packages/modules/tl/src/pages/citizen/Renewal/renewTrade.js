@@ -23,6 +23,7 @@ const getTradeEditDetails = (data) => {
         accessorycount: ob.count,
         unit: `${ob.uom}`,
         uom: `${ob.uomValue}`,
+        id : ob.id,
       })
     })
     return acc;
@@ -37,6 +38,7 @@ const getTradeEditDetails = (data) => {
         tradetype: { i18nKey: `TRADELICENSE_TRADETYPE_${ob.tradeType.split(".")[1]}`, code: `${ob.tradeType.split(".")[1]}` },
         unit: ob.uom,
         uom: ob.uomValue,
+        id : ob.id,
       });
     })
     return units;
@@ -67,6 +69,7 @@ const getTradeEditDetails = (data) => {
         name: ob.name,
         mobilenumber: ob.mobileNumber,
         permanentAddress: ob.permanentAddress,
+        id: ob.id,
       })
     })
     return ownerarray;
@@ -77,7 +80,7 @@ const getTradeEditDetails = (data) => {
     StructureType: { code: `${data.tradeLicenseDetail?.structureType.split(".")[0]}`, i18nKey: `${data.tradeLicenseDetail?.structureType.includes("IMMOVABLE") ? "TL_COMMON_NO" : "TL_COMMON_YES"}` },
     TradeName: data?.tradeName,
     accessories: gettradeaccessories(data?.tradeLicenseDetail?.accessories),
-    isAccessories: gettradeaccessories(data?.tradeLicenseDetail?.accessories) ? { code: `RESIDENTIAL`, i18nKey: "TL_COMMON_YES" } : { code: `NONRESIDENTIAL`, i18nKey: "TL_COMMON_NO" },
+    isAccessories: gettradeaccessories(data?.tradeLicenseDetail?.accessories).length > 0 ? { code: `ACCESSORY`, i18nKey: "TL_COMMON_YES" } : { code: `NONACCESSORY`, i18nKey: "TL_COMMON_NO" },
     units: gettradeunits(data?.tradeLicenseDetail?.tradeUnits),
   }
   data.address = {};
@@ -102,7 +105,7 @@ const getTradeEditDetails = (data) => {
     documents: gettradedocuments(data?.tradeLicenseDetail?.applicationDocuments),
     owners: gettradeowners(data?.tradeLicenseDetail?.owners),
     permanentAddress: data?.tradeLicenseDetail?.owners[0].permanentAddress,
-    isCorrespondenceAddress: true,
+    isCorrespondenceAddress: false,
   }
   data.ownershipCategory = { code: `${data?.tradeLicenseDetail?.subOwnerShipCategory}`, i18nKey: `PT_OWNERSHIP_${data?.tradeLicenseDetail?.subOwnerShipCategory.split(".")[1]}`, value: `${data?.tradeLicenseDetail?.subOwnerShipCategory}` };
   return data;

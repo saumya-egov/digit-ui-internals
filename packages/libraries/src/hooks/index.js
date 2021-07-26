@@ -85,13 +85,14 @@ import useMCollectMDMS from "./mcollect/useMCollectMDMS";
 import useMCollectSearch from "./mcollect/useMCollectSearch";
 import useMcollectSearchBill from "./mcollect/useMcollectSearchBill";
 import usemcollectTenants from "./mcollect/useTenants";
+import useMCollectCount from "./mcollect/useMCollectCount";
 
 import useTenantsTL from "./tl/useTenants";
 import useTradeLicenseMDMS from "./tl/useTradeLicenseMDMS";
 import useTLDocumentSearch from "./tl/useTLDocumentSearch";
 import useTradeLicenseAPI from "./tl/useTradeLicenseAPI";
 import useTradeLicenseSearch from "./tl/useTradeLicenseSearch";
-import useTLSearchApplication from "./tl/useTLsearchApplication";
+import { useTLSearchApplication, useTLApplicationDetails } from "./tl/useTLsearchApplication";
 import useTLPaymentHistory from "./tl/userPaymentHistory";
 import useTLApplicationDetail from "./tl/useApplicationDetail";
 import useTLApplicationActions from "./tl/useApplicationActions";
@@ -186,6 +187,7 @@ const mcollect = {
   useMCollectSearch,
   useMcollectSearchBill,
   usemcollectTenants,
+  useMCollectCount
 };
 
 const hrms = {
@@ -212,6 +214,7 @@ const tl = {
   useApplicationDetail: useTLApplicationDetail,
   useApplicationActions: useTLApplicationActions,
   useFetchBill: useTLFetchBill,
+  useTLApplicationDetails
 };
 
 const receipts = {

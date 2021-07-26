@@ -1,4 +1,4 @@
-import { Header, CitizenHomeCard, RupeeIcon, HomeLink } from "@egovernments/digit-ui-react-components";
+import { Header, CitizenHomeCard, CaseIcon, HomeLink } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
@@ -25,6 +25,7 @@ import TLDocument from "./pageComponents/TLDocumets";
 import TLAcknowledgement from "./pages/citizen/Create/TLAcknowledgement";
 import MyApplications from "./pages/citizen/Applications/Application";
 import TradeLicenseList  from "./pages/citizen/Renewal/TradeLicenseList";
+import TLWFApplicationTimeline from "./pageComponents/TLWFApplicationTimeline";
 
 import TLOwnerDetailsEmployee from "./pageComponents/TLOwnerDetailsEmployee";
 import TLTradeDetailsEmployee from "./pageComponents/TLTradeDetailsEmployee";
@@ -78,7 +79,7 @@ export const TLLinks = ({ matchPath, userType }) => {
     },
   ];
 
-  return <CitizenHomeCard header={t("ACTION_TEST_TRADE_LICENSE")} links={links} Icon={RupeeIcon} />;
+  return <CitizenHomeCard header={t("ACTION_TEST_TRADE_LICENSE")} links={links} Icon={() => <CaseIcon className="fill-path-primary-main" />} />;
 };
 
 const componentsToRegister = {
@@ -116,7 +117,8 @@ const componentsToRegister = {
   SearchApplication,
   SearchLicense,
   TL_INBOX_FILTER,
-  TLInfoLabel
+  TLInfoLabel,
+  TLWFApplicationTimeline,
 };
 
 export const initTLComponents = () => {

@@ -6,6 +6,7 @@ import {
   CardText,
   Loader,
   SubmitBar,
+  Header,
   CardSectionHeader,
   CardLabel,
   ActionBar,
@@ -39,22 +40,22 @@ const RequiredDoc = () => {
 
   return (
     <React.Fragment>
+      <Header>{t("PT_REQIURED_DOC_TRANSFER_OWNERSHIP")}</Header>
       <Card>
-        <CardHeader>{t("PT_REQIURED_DOC_TRANSFER_OWNERSHIP")}</CardHeader>
         {docs.map((doc, index) => {
           const splitValues = doc.code.split(".");
           const dd = doc.dropdownData;
           return (
             <React.Fragment key={index}>
-              <CardSectionHeader style={{ marginTop: "38px" }}>{t(`${splitValues[0]}.${splitValues[1]}`)}</CardSectionHeader>
+              <CardSectionHeader style={{ marginTop: "38px", marginBottom: "16px" }}>{t(`${splitValues[0]}.${splitValues[1]}`)}</CardSectionHeader>
               {dd.map((e, ind) => {
                 return (
                   <React.Fragment key={ind}>
-                    <CardLabel>{ind + 1 + ". " + t(e.code)}</CardLabel>
+                    <CardLabel style={{ fontWeight: 700 }}>{ind + 1 + ". " + t(e.code)}</CardLabel>
                   </React.Fragment>
                 );
               })}
-              <CardText>{t(`${splitValues[0]}.${splitValues[1]}.${splitValues[1]}_DESCRIPTION`)}</CardText>
+              <CardText className="docsDescription">{t(`${splitValues[0]}.${splitValues[1]}.${splitValues[1]}_DESCRIPTION`)}</CardText>
             </React.Fragment>
           );
         })}

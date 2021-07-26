@@ -22,6 +22,7 @@ const ArrowDown = ({ className, onClick, styles, disable }) => (
   </svg>
 );
 
+
 const ArrowBack = ({ className, onClick }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className={className} onClick={onClick} width="18px" height="18px">
     <path d="M0 0h24v24H0z" fill="none" />
@@ -135,7 +136,7 @@ const StarEmpty = ({ className, onClick, styles }) => (
     />
   </svg>
 );
-
+//TODO: URGENT REMOVE THIS!!!!!!!!!!
 const DocumentSVG = ({ className }) => (
   <svg width="196" height="196" viewBox="0 0 196 196" className={className} fill="none" xmlns="http://www.w3.org/2000/svg">
     <g filter="url(#filter0_d)">
@@ -284,16 +285,8 @@ const SortUp = (style) => (
 );
 
 const ArrowRightInbox = ({ style }) => (
-  <svg
-    style={{ display: "inline", height: "24px", ...style }}
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-  >
-    <path d="M0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16C32 24.8366 24.8366 32 16 32C7.16344 32 0 24.8366 0 16Z" fill="#F47738" />
-    <path d="M16 5.33325L14.12 7.21325L21.56 14.6666H5.33337V17.3333H21.56L14.12 24.7866L16 26.6666L26.6667 15.9999L16 5.33325Z" fill="white" />
+  <svg width="20" height="14" viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={style}>
+    <path d="M13 0L11.59 1.41L16.17 6H0V8H16.17L11.58 12.59L13 14L20 7L13 0Z" fill="#F47738"/>
   </svg>
 );
 
@@ -316,41 +309,21 @@ function CloseSvg({ onClick }) {
   );
 }
 
-const UpwardArrow = () => (
+const UpwardArrow = ({ color = "#00703C", rotate = 0, marginRight = 0 }) => (
   <svg
-    style={{ display: "inline-block", verticalAlign: "baseline" }}
+    style={{ display: "inline-block", verticalAlign: "baseline", transform: `rotate(${rotate}deg)`, marginRight: `${marginRight}px` }}
     width="11"
     height="16"
     viewBox="0 0 11 16"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <path d="M0 5.6L1.10786 6.728L4.71429 3.064V16H6.28571V3.064L9.89214 6.736L11 5.6L5.5 0L0 5.6Z" fill="#00703C" />
+    <path d="M0 5.6L1.10786 6.728L4.71429 3.064V16H6.28571V3.064L9.89214 6.736L11 5.6L5.5 0L0 5.6Z" fill={color} />
   </svg>
 );
 
-const DownwardArrow = () => (
-  <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" style={{ display: "inline-block", verticalAlign: "baseline" }}>
-    <title>Arrow Downward</title>
-    <desc>Created with Sketch.</desc>
-    <g id="All-Screens-(Iteration-5)" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-      <g id="01-Landing" transform="translate(-401.000000, -510.000000)">
-        <g id="Metrix:-Total-Collections,-Etc" transform="translate(256.000000, 228.000000)">
-          <g id="Icon_Arrow-Downward" transform="translate(141.000000, 278.000000)">
-            <g id="Arrow-Downward" transform="translate(12.000000, 12.000000) rotate(-180.000000) translate(-12.000000, -12.000000) ">
-              <polygon id="Path" points="0 0 24 0 24 24 0 24"></polygon>
-              <polygon
-                id="Path"
-                fill="#E54D42"
-                fill-rule="nonzero"
-                points="4 12 5.41 13.41 11 7.83 11 20 13 20 13 7.83 18.58 13.42 20 12 12 4"
-              ></polygon>
-            </g>
-          </g>
-        </g>
-      </g>
-    </g>
-  </svg>
+const DownwardArrow = (props) => (
+  <UpwardArrow {...props} color="#e54d42" rotate={180} />
 );
 
 const DownloadIcon = ({ styles, className, onClick }) => (
@@ -528,7 +501,35 @@ const EmailIcon = () => (
   </svg>
 );
 
+const CaseIcon = ({className}) =>  <svg className={className} width="24" height="24" viewBox="0 0 34 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M30.3333 6.99967H23.6667V3.66634C23.6667 1.81634 22.1833 0.333008 20.3333 0.333008H13.6667C11.8167 0.333008 10.3333 1.81634 10.3333 3.66634V6.99967H3.66667C1.81667 6.99967 0.350001 8.48301 0.350001 10.333L0.333334 28.6663C0.333334 30.5163 1.81667 31.9997 3.66667 31.9997H30.3333C32.1833 31.9997 33.6667 30.5163 33.6667 28.6663V10.333C33.6667 8.48301 32.1833 6.99967 30.3333 6.99967ZM20.3333 6.99967H13.6667V3.66634H20.3333V6.99967Z" fill="white" />
+  </svg>
+
+const PersonIcon = () =>  <svg width="24" height="24" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path
+  d="M25.6667 10.3333C28.4334 10.3333 30.65 8.1 30.65 5.33333C30.65 2.56666 28.4334 0.333328 25.6667 0.333328C22.9 0.333328 20.6667 2.56666 20.6667 5.33333C20.6667 8.1 22.9 10.3333 25.6667 10.3333ZM12.3334 10.3333C15.1 10.3333 17.3167 8.1 17.3167 5.33333C17.3167 2.56666 15.1 0.333328 12.3334 0.333328C9.56669 0.333328 7.33335 2.56666 7.33335 5.33333C7.33335 8.1 9.56669 10.3333 12.3334 10.3333ZM12.3334 13.6667C8.45002 13.6667 0.666687 15.6167 0.666687 19.5V23.6667H24V19.5C24 15.6167 16.2167 13.6667 12.3334 13.6667ZM25.6667 13.6667C25.1834 13.6667 24.6334 13.7 24.05 13.75C25.9834 15.15 27.3334 17.0333 27.3334 19.5V23.6667H37.3334V19.5C37.3334 15.6167 29.55 13.6667 25.6667 13.6667Z"
+  fill="white"
+/>
+</svg>
+
+const ReceiptIcon = () => <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+<path d="M0 0h24v24H0z" fill="none"></path>
+<path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z" fill="white"></path>
+</svg>
+
+const AnnouncementIcon = () => <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M24.6665 0.666016H3.33317C1.8665 0.666016 0.679837 1.86602 0.679837 3.33268L0.666504 27.3327L5.99984 21.9993H24.6665C26.1332 21.9993 27.3332 20.7993 27.3332 19.3327V3.33268C27.3332 1.86602 26.1332 0.666016 24.6665 0.666016ZM15.3332 12.666H12.6665V4.66602H15.3332V12.666ZM15.3332 17.9993H12.6665V15.3327H15.3332V17.9993Z" fill="#F47738"/>
+</svg>
+
+const PTIcon = () => <svg width="34" height="30" viewBox="0 0 34 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M16.9999 6.66667V0H0.333252V30H33.6666V6.66667H16.9999ZM6.99992 26.6667H3.66659V23.3333H6.99992V26.6667ZM6.99992 20H3.66659V16.6667H6.99992V20ZM6.99992 13.3333H3.66659V10H6.99992V13.3333ZM6.99992 6.66667H3.66659V3.33333H6.99992V6.66667ZM13.6666 26.6667H10.3333V23.3333H13.6666V26.6667ZM13.6666 20H10.3333V16.6667H13.6666V20ZM13.6666 13.3333H10.3333V10H13.6666V13.3333ZM13.6666 6.66667H10.3333V3.33333H13.6666V6.66667ZM30.3333 26.6667H16.9999V23.3333H20.3333V20H16.9999V16.6667H20.3333V13.3333H16.9999V10H30.3333V26.6667ZM26.9999 13.3333H23.6666V16.6667H26.9999V13.3333ZM26.9999 20H23.6666V23.3333H26.9999V20Z" fill="#F47738"/>
+</svg>
+
+
+
 export {
+  AnnouncementIcon,
+  ReceiptIcon,
   ArrowLeft,
   ArrowDown,
   CameraSvg,
@@ -576,5 +577,8 @@ export {
   EmailIcon,
   DocumentSVG,
   ArrowToFirst,
-  ArrowToLast
+  ArrowToLast,
+  CaseIcon,
+  PersonIcon,
+  PTIcon
 };

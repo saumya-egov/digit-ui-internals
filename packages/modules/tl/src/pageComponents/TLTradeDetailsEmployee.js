@@ -188,6 +188,8 @@ const OwnerForm1 = (_props) => {
   let financialYearOptions = [];
   FinaceMenu && FinaceMenu["egf-master"] &&
     FinaceMenu["egf-master"].FinancialYear.map(data => { if (data.module == "TL") financialYearOptions.push({ code: data.name, i18nKey: `FY${data.name}`, id: data.name.split('-')[0] }) });
+    
+  if (financialYearOptions && financialYearOptions.length > 0) { financialYearOptions.sort(function (a, b) { return Number(a.id) - Number(b.id);});}
 
   let structureTypeOptions = [];
   // let structureSubTypeOptions = [];
@@ -284,6 +286,7 @@ const OwnerForm1 = (_props) => {
                 <Dropdown
                   className="form-field"
                   selected={props.value}
+                  errorStyle={(localFormState.touched.financialYear && errors?.financialYear?.message) ? true : false}
                   // disable={financialYearOptions?.length === 1}
                   option={financialYearOptions}
                   select={props.onChange}
@@ -312,6 +315,7 @@ const OwnerForm1 = (_props) => {
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
                   t={t}
+                  errorStyle={(localFormState.touched.licenseType && errors?.licenseType?.message) ? true : false}
                 />
               )}
             />
@@ -329,6 +333,7 @@ const OwnerForm1 = (_props) => {
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "name"}
+                    errorStyle={(localFormState.touched.tradeName && errors?.tradeName?.message) ? true : false}
                     onChange={(e) => {
                       props.onChange(e.target.value);
                       setFocusIndex({ index: tradedetail.key, type: "tradeName" });
@@ -357,6 +362,7 @@ const OwnerForm1 = (_props) => {
                   selected={props.value}
                   disable={isRenewal}
                   option={selectedStructureTypeOptions}
+                  errorStyle={(localFormState.touched.structureType && errors?.structureType?.message) ? true : false}
                   select={(e) => {
                     let selectedOption = e?.code?.split('.')[0];
                     let structureSubTypeOption = [];
@@ -400,6 +406,7 @@ const OwnerForm1 = (_props) => {
                   optionKey="i18nKey"
                   onBlur={props.onBlur}
                   t={t}
+                  errorStyle={(localFormState.touched.structureSubType && errors?.structureSubType?.message) ? true : false}
                 />
               )}
             />
@@ -438,6 +445,7 @@ const OwnerForm1 = (_props) => {
                   <TextInput
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "gstNo"}
+                    errorStyle={(localFormState.touched.gstNo && errors?.gstNo?.message) ? true : false}
                     onChange={(e) => {
                       props.onChange(e.target.value);
                       setFocusIndex({ index: tradedetail?.key, type: "gstNo" });
@@ -467,6 +475,7 @@ const OwnerForm1 = (_props) => {
                     }}
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "operationalArea"}
+                    errorStyle={(localFormState.touched.operationalArea && errors?.operationalArea?.message) ? true : false}
                     onBlur={props.onBlur}
                     disable={isRenewal}
                   />
@@ -491,6 +500,7 @@ const OwnerForm1 = (_props) => {
                     }}
                     value={props.value}
                     autoFocus={focusIndex.index === tradedetail?.key && focusIndex.type === "noOfEmployees"}
+                    errorStyle={(localFormState.touched.noOfEmployees && errors?.noOfEmployees?.message) ? true : false}
                     onBlur={props.onBlur}
                     disable={isRenewal}
                   />

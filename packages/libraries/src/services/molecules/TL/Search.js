@@ -1,3 +1,4 @@
+import cloneDeep from "lodash/cloneDeep";
 import { TLService } from "../../elements/TL";
 
 const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
@@ -111,25 +112,27 @@ export const TLSearch = {
       },
     };
 
+    const cityOfApp = cloneDeep(response?.tradeLicenseDetail?.address?.city);
+    const localityCode = cloneDeep(response?.tradeLicenseDetail?.address?.locality?.code);
     const tradeAddress = {
       title: "TL_CHECK_ADDRESS",
-      // asSectionHeader: true,
       values: [
         { title: "CORE_COMMON_PINCODE", value: response?.tradeLicenseDetail?.address?.pincode || "NA" },
         { title: "MYCITY_CODE_LABEL", value: response?.tradeLicenseDetail?.address?.city || "NA" },
-        { title: "TL_LOCALIZATION_LOCALITY", value: response?.tradeLicenseDetail?.address?.locality?.code || "NA" },
+        { title: "TL_LOCALIZATION_LOCALITY", value: `${stringReplaceAll(cityOfApp?.toUpperCase(), ".", "_")}_REVENUE_${localityCode}` },
         { title: "TL_LOCALIZATION_BUILDING_NO", value: response?.tradeLicenseDetail?.address?.doorNo || "NA" },
         { title: "TL_LOCALIZATION_STREET_NAME", value: response?.tradeLicenseDetail?.address?.street || "NA" }
       ],
     };
 
+    const checkOwnerLength = response?.tradeLicenseDetail?.owners?.length || 1;
     const owners = {
       title: "ES_NEW_APPLICATION_OWNERSHIP_DETAILS",
       additionalDetails: {
         owners: response?.tradeLicenseDetail?.owners?.map((owner, index) => {
           let subOwnerShipCategory = response?.tradeLicenseDetail?.subOwnerShipCategory ? `COMMON_MASTERS_OWNERSHIPCATEGORY_${stringReplaceAll(response?.tradeLicenseDetail?.subOwnerShipCategory, ".", "_")}` : "NA";
           return {
-            title: "TL_PAYMENT_PAID_BY_PLACEHOLDER",
+            title: (Number(checkOwnerLength) > 1)  ? "TL_PAYMENT_PAID_BY_PLACEHOLDER" : "",
             values: [
               { title: "TL_NEW_OWNER_DETAILS_OWNERSHIP_TYPE_LABEL", value: subOwnerShipCategory },
               { title: "TL_OWNER_S_NAME_LABEL", value: owner?.name || "NA" },

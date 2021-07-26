@@ -5,9 +5,10 @@ import InboxLinks from "./ApplicationLinks";
 import ApplicationTable from "./ApplicationTable";
 import SearchApplication from "./search";
 import { Link } from "react-router-dom";
+import { convertEpochToDateDMY } from "../../utils";
 // import { getActionButton } from "../../utils";
 
-const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
+const DesktopInbox = ({ tableConfig, filterComponent,columns, isLoading, ...props }) => {
   const { data } = props;
   const { t } = useTranslation();
   const [FilterComponent, setComp] = useState(() => Digit.ComponentRegistryService?.getComponent(filterComponent));
@@ -34,7 +35,7 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
         return (
           <div>
             <span className="link">
-            <Link to={"/digit-ui/employee/tl/tl-details/" + row.original["applicationNo"]}>{row.original["applicationNo"]}</Link>
+            <Link to={"/digit-ui/employee/tl/application-details/" + row.original["applicationId"]}>{row.original["applicationId"]}</Link>
             </span>
           </div>
         );
@@ -42,7 +43,8 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
     },{
       Header: t("TL_COMMON_TABLE_COL_APP_DATE"),
       Cell: ({ row }) => {
-        return GetCell(`${row.original?.["name"]}`);
+        const date = convertEpochToDateDMY(row.original.date);
+        return GetCell(date)
       }
     },{
           Header: t("WF_INBOX_HEADER_LOCALITY"),
@@ -53,14 +55,13 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
     {
       Header: t("WF_INBOX_HEADER_STATUS"),
       Cell: ({ row }) => {
-        const dueDate = row.original?.dueDate === "NA" ? "NA" : Digit.DateUtils.ConvertEpochToDate(row.original?.dueDate);
-        return GetCell(t(`${dueDate}`));
+        return GetCell(t(`${row.original?.["status"]}`));
       },
     },
     {
       Header: t("WF_INBOX_HEADER_CURRENT_OWNER"),
       Cell: ({ row }) => {
-        return GetCell(t(`${row.original?.totalAmount}`));
+        return GetCell(t(`${row.original?.owner}`));
       }
     },{
     Header: t("WF_INBOX_HEADER_SLA_DAYS_REMAINING"),
@@ -73,7 +74,7 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
   let result;
   if (props.isLoading) {
     result = <Loader />;
-  } else if (data?.length === 0) {
+  } else if (data?.table?.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
         {t("CS_MYAPPLICATIONS_NO_APPLICATION")
@@ -85,11 +86,11 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
           ))}
       </Card>
     );
-  } else if (data?.length > 0) {
+  } else if (data?.table?.length > 0) {
     result = (
       <ApplicationTable
         t={t}
-        data={data}
+        data={data?.table}
         columns={inboxColumns(data)}
         getCellProps={(cellInfo) => {
           return {
@@ -122,45 +123,41 @@ const DesktopInbox = ({ tableConfig, filterComponent,columns, ...props }) => {
             allLinks={[
               {
                 text: "TL_NEW_APPLICATION",
-                link: "/digit-ui/employee/hrms/create",
+                link: "/digit-ui/employee/tl/new-application",
                 businessService: "TL",
-                roles: [],
-
-              },
-              {
-                text: "TL_COMMON_APPL_RENEWAL_LICENSE_YEAR",
-                link: "/digit-ui/employee/hrms/create",
-                businessService: "TL",
-                roles: [],
-
-              },
-              {
-                text: "ACTION_TEST_REPORTS",
-                link: "/digit-ui/employee/hrms/create",
-                businessService: "TL",
-                roles: [],
-
+                roles: ["TL_CEMP"],
               },
               {
                 text: "TL_SEARCH_APPLICATIONS",
-                link: "/digit-ui/employee/hrms/create",
+                link: "/digit-ui/employee/tl/search/application",
                 businessService: "TL",
-                roles: [],
-
+                roles: ["TL_FIELD_INSPECTOR","TL_APPROVER", "TL_DOC_VERIFIER","TL_CEMP"],
+              },
+              {
+                text: "TL_SEARCH_LICENSE",
+                link: "/digit-ui/employee/tl/search/license",
+                businessService: "TL",
+                roles: ["TL_APPROVER", "TL_DOC_VERIFIER","TL_FIELD_INSPECTOR"],
+              },
+              {
+                text: "TL_RENEWAL_HEADER",
+                link: "/digit-ui/employee/tl/search/license",
+                businessService: "TL",
+                roles: ["TL_CEMP"],
               },
               {
                 text: "ACTION_TEST_DASHBOARD",
-                link: "/digit-ui/employee/hrms/create",
+                link: "/digit-ui/employee/dss/dashboard/tradelicence",
                 businessService: "TL",
-                roles: [],
-
+                roles: ["STADMIN"],
               },
             ]}
             headerText={t("ACTION_TEST_TRADELICENSE")} businessService={props.businessService} />
           <div>
-            {
+            {isLoading ? <Loader /> : 
               <FilterComponent
                 defaultSearchParams={props.defaultSearchParams}
+                statuses={data.statuses}
                 onFilterChange={props.onFilterChange}
                 searchParams={props.searchParams}
                 type="desktop"

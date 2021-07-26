@@ -1,62 +1,42 @@
-import { Card, PropertyHouse } from "@egovernments/digit-ui-react-components";
+import { Card, AnnouncementIcon } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const InboxLinks = ({ parentRoute, businessService }) => {
   const { t } = useTranslation();
-
+  const [links, setLinks] = useState([]);
   const allLinks = [
     {
       text: t("UC_GENERATE_NEW_CHALLAN"),
       link: "/digit-ui/employee/mcollect/new-application",
-      // businessService: "PT",
       roles: [],
     },
-    // {
-    //   text: t("UC_REPORT"),
-    //   link: "/digit-ui/employee/pt/new-application",
-    //   businessService: "PT",
-    //   roles: ["PT_CEMP"],
-    // },
-    // {
-    //   text: t("UC_DASHBOARD"),
-    //   link: `/digit-ui/employee/pt/search`,
-    //   // businessService: "PT",
-    //   roles: [],
-    // },
   ];
-
-  const [links, setLinks] = useState([]);
-
-  const { roles: userRoles } = Digit.UserService.getUser().info;
 
   useEffect(() => {
     let linksToShow = allLinks;
-    // .filter((e) => e.businessService === businessService)
-    // .filter(({ roles }) => roles.some((e) => userRoles.map(({ code }) => code).includes(e)) || !roles.length);
-    // console.log(linksToShow, "inside the links");
     setLinks(linksToShow);
   }, []);
 
   const GetLogo = () => (
-    <div className="header">
+    <div className="header" style={{ justifyContent: "flex-start" }}>
       <span className="logo">
-        <PropertyHouse />
+        <AnnouncementIcon />
       </span>{" "}
       <span className="text">{t("mCollect")}</span>
     </div>
   );
 
   return (
-    <Card style={{ paddingRight: 0, marginTop: 0 }} className="employeeCard filter">
+    <Card style={{ paddingRight: 0, marginTop: 0 }} className="employeeCard filter inboxLinks">
       <div className="complaint-links-container">
         {GetLogo()}
         <div className="body">
           {links.map(({ link, text, hyperlink = false, accessTo = [] }, index) => {
             return (
               <span className="link" key={index}>
-                {hyperlink ? <a href={link}>{text}</a> : <Link to={link}>{text}</Link>}
+                {hyperlink ? <a href={link}>{t(text)}</a> : <Link to={link}>{t(text)}</Link>}
               </span>
             );
           })}

@@ -31,6 +31,8 @@ const PropertyDetails = () => {
   const [appDetailsToShow, setAppDetailsToShow] = useState({});
   const [enableAudit, setEnableAudit] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const PT_CEMP = Digit.UserService.hasAccess(["PT_CEMP"]) || false;
+  const [businessService, setBusinessService] = useState("PT.CREATE");
   const history = useHistory();
 
   let { isLoading, isError, data: applicationDetails, error } = Digit.Hooks.pt.useApplicationDetail(t, tenantId, applicationNumber);
@@ -48,7 +50,7 @@ const PropertyDetails = () => {
   );
 
   useEffect(() => {
-    if (applicationDetails) {
+    if (applicationDetails && !enableAudit) {
       setAppDetailsToShow(_.cloneDeep(applicationDetails));
       if (applicationDetails?.applicationData?.status !== "ACTIVE" && applicationDetails?.applicationData?.creationReason === "MUTATION") {
         setEnableAudit(true);
@@ -57,7 +59,7 @@ const PropertyDetails = () => {
   }, [applicationDetails]);
 
   useEffect(() => {
-    if (auditData && Object.keys(appDetailsToShow).length) {
+    if (enableAudit && auditData?.length && Object.keys(appDetailsToShow).length) {
       let owners = auditData[0].owners.filter((e) => e.status === "ACTIVE");
       let applicationDetails = appDetailsToShow.applicationDetails.map((obj) => {
         const { additionalDetails, title } = obj;
@@ -103,7 +105,7 @@ const PropertyDetails = () => {
 
       setAppDetailsToShow({ ...appDetailsToShow, applicationDetails });
     }
-  }, [auditData]);
+  }, [auditData, enableAudit]);
 
   let workflowDetails = Digit.Hooks.useWorkflowDetails({
     tenantId: applicationDetails?.tenantId || tenantId,
@@ -115,6 +117,13 @@ const PropertyDetails = () => {
   const closeToast = () => {
     setShowToast(null);
   };
+
+  useEffect(() => {
+    if (workflowDetails?.data?.applicationBusinessService) {
+      console.log(workflowDetails?.data, "workflowDetaisl");
+      setBusinessService(workflowDetails?.data?.applicationBusinessService);
+    }
+  }, [workflowDetails.data]);
 
   if (appDetailsToShow?.applicationDetails) {
     appDetailsToShow.applicationDetails = appDetailsToShow?.applicationDetails?.map((e) => {
@@ -155,6 +164,7 @@ const PropertyDetails = () => {
           nextActions: [
             {
               action: "ASSESS_PROPERTY",
+              forcedName: "PT_ASSESS",
               showFinancialYearsModal: true,
               customFunctionToExecute: (data) => {
                 delete data.customFunctionToExecute;
@@ -164,6 +174,7 @@ const PropertyDetails = () => {
             },
             {
               action: !fetchBillData?.Bill[0]?.totalAmount ? "MUTATE_PROPERTY" : "PT_TOTALDUES_PAY",
+              forcedName: "PT_OWNERSHIP_TRANSFER",
               redirectionUrl: {
                 pathname: !fetchBillData?.Bill[0]?.totalAmount
                   ? `/digit-ui/employee/pt/property-mutate-docs-required/${applicationNumber}`
@@ -177,6 +188,20 @@ const PropertyDetails = () => {
         },
       },
     };
+  }
+
+  if (appDetailsToShow?.applicationData?.status === "ACTIVE" && PT_CEMP) {
+    if (businessService == "PT.CREATE") setBusinessService("PT.UPDATE");
+    if (!workflowDetails?.data?.actionState?.nextActions?.find((e) => e.action === "UPDATE")) {
+      workflowDetails?.data?.actionState?.nextActions?.push({
+        action: "UPDATE",
+        redirectionUrl: {
+          pathname: `/digit-ui/employee/pt/modify-application/${applicationNumber}`,
+          state: { workflow: { action: "OPEN", moduleName: "PT", businessService } },
+        },
+        tenantId: "pb",
+      });
+    }
   }
 
   if (fetchBillLoading) {
@@ -202,6 +227,7 @@ const PropertyDetails = () => {
       />
       {showModal ? (
         <Modal
+          headerBarMain={<h1 className="heading-m">{t("PT_OWNER_HISTORY")}</h1>}
           headerBarEnd={<CloseBtn onClick={() => setShowModal(false)} />}
           hideSubmit={true}
           isDisabled={false}

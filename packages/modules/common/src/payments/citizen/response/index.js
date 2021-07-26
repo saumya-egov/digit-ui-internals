@@ -34,7 +34,7 @@ export const SuccessfulPayment = (props) => {
     {
       tenantId,
       businessService: business_service,
-      receiptNumbers: data?.payments?.Payments[0].paymentDetails[0].receiptNumber,
+      receiptNumbers: data?.payments?.Payments?.[0]?.paymentDetails[0].receiptNumber,
       // receiptNumbers: "PT/107/2021-22/224890",
       // receiptNumbers: "PT/107/2021-22/224891",
     },
@@ -113,8 +113,8 @@ export const SuccessfulPayment = (props) => {
   const amount = reciept_data?.paymentDetails?.[0]?.totalAmountPaid;
   const transactionDate = paymentData.transactionDate;
   const printCertificate = async () => {
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-    const state = tenantId?.split(".")[0];
+    //const tenantId = Digit.ULBService.getCurrentTenantId();
+    const state = tenantId;
     const applicationDetails = await Digit.TLService.search({ applicationNumber: consumerCode, tenantId });
     const generatePdfKeyForTL = "tlcertificate"
 
@@ -148,9 +148,25 @@ export const SuccessfulPayment = (props) => {
       let to = new Date(taxPeriodTo).getFullYear().toString();
       return "FY " + from + "-" + to;
     } else if (fromPeriod && toPeriod) {
+      if (workflw === "mcollect") {
+        from =
+          new Date(fromPeriod).getDate().toString() +
+          " " +
+          Digit.Utils.date.monthNames[new Date(fromPeriod).getMonth() + 1].toString() +
+          " " +
+          new Date(fromPeriod).getFullYear().toString();
+        to =
+          new Date(toPeriod).getDate() +
+          " " +
+          Digit.Utils.date.monthNames[new Date(toPeriod).getMonth() + 1] +
+          " " +
+          new Date(toPeriod).getFullYear();
+        return from + " - " + to;
+      }
       let from = new Date(fromPeriod).getFullYear().toString();
       let to = new Date(toPeriod).getFullYear().toString();
       return "FY " + from + "-" + to;
+
     } else return "N/A";
   };
 
