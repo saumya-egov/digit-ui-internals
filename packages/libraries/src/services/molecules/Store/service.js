@@ -114,6 +114,12 @@ export const StoreService = {
       tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
     });
 
+    initData.modules.push({
+      module: "OBPS",
+      code: "OBPS",
+      tenants: initData.tenants.map((tenant) => ({ code: tenant.code })),
+    });
+
 
     initData.modules.push({
       module: "DSS",
