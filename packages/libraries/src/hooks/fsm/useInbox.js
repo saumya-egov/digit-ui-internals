@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useQuery, useQueryClient } from "react-query";
 import { Search } from "../../services/molecules/FSM/Search";
 
@@ -108,7 +107,6 @@ const combineResponses = (applicationDetails, workflowInstances) => {
 };
 
 export default useInbox;
-=======
 import React from "react"
 import useInbox from "../useInbox"
 
@@ -167,4 +165,3 @@ const useFSMInbox = (tenantId, filters, config = {}) => {
 }
 
 export default useFSMInbox
->>>>>>> origin/develop

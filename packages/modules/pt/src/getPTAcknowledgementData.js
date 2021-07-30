@@ -154,11 +154,8 @@ const getMutationDetails = (application, t) => {
           : "N/A",
       },
       { title: t("PT_MUTATION_COURT_CASE_DETAILS"), value: application?.additionalDetails?.caseDetails || "N/A" },
-<<<<<<< HEAD
       { title: t("PT_MUTATION_STATE_ACQUISITION"), value: application?.additionalDetails?.isPropertyUnderGovtPossession || "N/A" },
-=======
       { title: t("PT_MUTATION_STATE_ACQUISITION"), value: application?.additionalDetails?.isPropertyUnderGovtPossession ? t(`PT_MUTATION_STATE_ACQUISITION_${application?.additionalDetails?.isPropertyUnderGovtPossession}`) : "N/A" },
->>>>>>> origin/develop
       { title: t("PT_MUTATION_GOVT_ACQUISITION_DETAILS"), value: application?.additionalDetails?.govtAcquisitionDetails || "N/A" },
     ],
   };
@@ -170,11 +167,8 @@ const mutationRegistrationDetails = (application, t) => {
     values: [
       {
         title: t("PT_MUTATION_TRANSFER_REASON"),
-<<<<<<< HEAD
         value: application?.additionalDetails?.reasonForTransfer.replaceAll(".", "_"),
-=======
         value: t(`PROPERTYTAX_REASONFORTRANSFER_${application?.additionalDetails?.reasonForTransfer.replaceAll(".", "_")}`),
->>>>>>> origin/develop
       },
       { title: t("PT_MUTATION_MARKET_VALUE"), value: application?.additionalDetails?.marketValue || "N/A" },
       { title: t("PT_MUTATION_DOCUMENT_NO"), value: application?.additionalDetails?.documentNumber || "N/A" },
@@ -206,8 +200,6 @@ const getPTAcknowledgementData = async (application, tenantInfo, t) => {
       heading: t("PT_ACKNOWLEDGEMENT"),
       details: [
         {
-<<<<<<< HEAD
-=======
           title: t("CS_TITLE_APPLICATION_DETAILS"),
           values: [
             { title: t("PT_APPLICATION_NO"), value: application?.acknowldgementNumber },
@@ -219,7 +211,6 @@ const getPTAcknowledgementData = async (application, tenantInfo, t) => {
           ],
         },
         {
->>>>>>> origin/develop
           title: t("PT_PROPERTY_ADDRESS_SUB_HEADER"),
           values: [
             { title: t("PT_PROPERTY_ADDRESS_PINCODE"), value: application?.address?.pincode || "N/A" },
