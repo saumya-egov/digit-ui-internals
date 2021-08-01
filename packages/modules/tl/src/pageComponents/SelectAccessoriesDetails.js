@@ -132,7 +132,7 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
   function selectAccessoryCount(i, e) {
     setAccCountError(null);
     if(isNaN(e.target.value))
-    setAccCountError("Only Numeric data allowed");
+    setAccCountError("TL_ONLY_NUM_ALLOWED");
     let acc = [...fields];
     acc[i].accessorycount = e.target.value;
     setAccessoryCount(e.target.value);
@@ -147,7 +147,7 @@ const SelectAccessoriesDetails = ({ t, config, onSelect, userType, formData }) =
   function selectUomValue(i, e) {
     setAccCountError(null);
     if(isNaN(e.target.value))
-    setAccCountError("Only Numeric data allowed");
+    setAccCountError("TL_ONLY_NUM_ALLOWED");
     let acc = [...fields];
     acc[i].uom = e.target.value;
     setUomValue(e.target.value);
