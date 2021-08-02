@@ -1,11 +1,13 @@
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouteMatch } from "react-router-dom";
 import { Loader, CitizenHomeCard, PTIcon } from "@egovernments/digit-ui-react-components";
 import CitizenApp from "./pages/citizen";
 
 
 const OBPSModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = "OBPS";
+  const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
 
