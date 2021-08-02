@@ -20,6 +20,7 @@ const ReceiptsService = {
             params: { bussinessService, consumerCode, tenantId,pdfKey },
             auth: true,
             userService: true,
+            locale: true,
             userDownload: true,
         }),
     update: (data, tenantId, businessService) =>
