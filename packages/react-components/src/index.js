@@ -91,6 +91,7 @@ import {
   ReceiptIcon,
   AnnouncementIcon,
   PTIcon,
+  OBPSIcon,
 } from "./atoms/svgindex";
 import CustomButton from "./atoms/CustomButton";
 import CitizenInfoLabel from "./atoms/CitizenInfoLabel";
@@ -261,5 +262,6 @@ export {
   DocumentSVG,
   PersonIcon,
   ReceiptIcon,
-  AnnouncementIcon
+  AnnouncementIcon,
+  OBPSIcon
 };
