@@ -23,32 +23,7 @@ const OBPSModule = ({ stateCode, userType, tenants }) => {
 const OBPSLinks = ({ matchPath, userType }) => {
   const { t } = useTranslation();
 
-  const links = [
-    {
-      link: `${matchPath}/property/citizen-search`,
-      i18nKey: t("PT_SEARCH_AND_PAY"),
-    },
-    {
-      link: `/digit-ui/citizen/payment/my-bills/PT`,
-      i18nKey: t("CS_TITLE_MY_BILLS"),
-    },
-    {
-      link: `${matchPath}/property/new-application`,
-      i18nKey: t("PT_CREATE_PROPERTY"),
-    },
-    {
-      link: `${matchPath}/property/my-properties`,
-      i18nKey: t("PT_MY_PROPERTIES"),
-    },
-    {
-      link: `${matchPath}/property/my-applications`,
-      i18nKey: t("PT_MY_APPLICATION"),
-    },
-    {
-      link: `${matchPath}/property/property-mutation`,
-      i18nKey: t("PT_PROPERTY_MUTATION"),
-    },
-  ];
+  const links = [];
 
   return <CitizenHomeCard header={t("ACTION_TEST_BUILDING_PLAN_APPROVAL")} links={links} Icon={() => <OBPSIcon />} />;
 } 
