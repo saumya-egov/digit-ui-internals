@@ -1,7 +1,7 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useRouteMatch } from "react-router-dom";
-import { Loader, CitizenHomeCard, PTIcon } from "@egovernments/digit-ui-react-components";
+import { Loader, CitizenHomeCard, OBPSIcon } from "@egovernments/digit-ui-react-components";
 import CitizenApp from "./pages/citizen";
 
 
@@ -50,7 +50,7 @@ const OBPSLinks = ({ matchPath, userType }) => {
     },
   ];
 
-  return <CitizenHomeCard header={t("ACTION_TEST_PROPERTY_TAX")} links={links} Icon={() => <PTIcon className="fill-path-primary-main" />} />;
+  return <CitizenHomeCard header={t("ACTION_TEST_BUILDING_PLAN_APPROVAL")} links={links} Icon={() => <OBPSIcon />} />;
 } 
 
 const componentsToRegister = {
