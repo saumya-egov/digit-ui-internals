@@ -28,8 +28,8 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
     const [flag, setFlag] = useState(true);
     const [uomvalues, setUomvalues] = useState("");
     let isRenewal = window.location.href.includes("renew-application-details");
-    if(window.location.href.includes("edit-application-details")) isRenewal = true;
-
+    let isResubmit = window.location.href.includes("edit-application-details");
+    //if(window.location.href.includes("edit-application-details")) isRenewal = true;
 
     const { data: billingSlabData } = Digit.Hooks.tl.useTradeLicenseBillingslab({ tenantId, filters: {} });
 
@@ -94,7 +94,9 @@ const TLAccessoriesEmployee = ({ config, onSelect, userType, formData, setError,
         accessoriesList,
         billingSlabData,
         setUomvalues,
-        uomvalues
+        uomvalues,
+        isRenewal,
+        isResubmit,
     };
 
 
@@ -134,7 +136,8 @@ const AccessoriersForm = (_props) => {
         billingSlabData,
         setUomvalues,
         uomvalues,
-        isRenewal
+        isRenewal,
+        isResubmit,
     } = _props;
 
     const { control, formState: localFormState, watch, setError: setLocalError, clearErrors: clearLocalErrors, setValue, trigger, getValues } = useForm();
@@ -285,7 +288,7 @@ const AccessoriersForm = (_props) => {
                                     option={sortDropdownNames(accessories,"i18nKey",t) || []}
                                     optionKey="i18nKey"
                                     t={t}
-                                    disable={isRenewal}
+                                    //disable={isRenewal}
                                 />
                             )}
                         />
@@ -336,7 +339,7 @@ const AccessoriersForm = (_props) => {
                                             props.onChange(e.target.value);
                                             setFocusIndex({ index: accessor.key, type: "uomValue" });
                                         }}
-                                        disable={!(accessor?.accessoryCategory?.uom) || isRenewal}
+                                        disable={!(accessor?.accessoryCategory?.uom) || (isRenewal || isResubmit ) && (!accessor?.id ?false:getValues("uomValue"))}
                                         onBlur={props.onBlur}
                                         style={{ background: "#FAFAFA" }}
                                     />
@@ -364,7 +367,8 @@ const AccessoriersForm = (_props) => {
                                             setFocusIndex({ index: accessor.key, type: "count" });
                                         }}
                                         onBlur={props.onBlur}
-                                        disable={isRenewal}
+                                        //disable={isRenewal}
+                                        disable={(isRenewal || isResubmit ) && (!accessor?.id ?false:getValues("uomValue"))}
                                         style={{ background: "#FAFAFA" }}
                                     />
                                 )}
