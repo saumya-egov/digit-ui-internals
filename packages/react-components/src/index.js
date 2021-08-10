@@ -67,7 +67,10 @@ import {
   RefreshIcon, RupeeIcon, SearchIconSvg, ShareIcon, ShippingTruck, SortDown,
   SortUp, 
   UpwardArrow, 
-  WhatsappIcon
+  WhatsappIcon,
+  EDCRIcon,
+  BPAIcon,
+  BPAHomeIcon
 } from "./atoms/svgindex";
 import Table from "./atoms/Table";
 import TelePhone from "./atoms/TelePhone";
@@ -234,5 +237,8 @@ export {
   ReceiptIcon,
   AnnouncementIcon,
   OBPSIcon,
-  CitizenTruck
+  CitizenTruck,
+  EDCRIcon,
+  BPAIcon,
+  BPAHomeIcon
 };

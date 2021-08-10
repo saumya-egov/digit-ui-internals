@@ -25,6 +25,7 @@ import { TLService } from "./services/elements/TL";
 import { MCollectService } from "./services/elements/MCollect";
 import HrmsService from "./services/elements/HRMS";
 import { InboxGeneral } from "./services/elements/InboxService";
+import { EDCRService } from "./services/elements/EDCR";
 
 import ShareFiles from "./services/molecules/ShareFiles";
 import { GetServiceDefinitions } from "./services/molecules/ServiceDefinitions";
@@ -62,6 +63,7 @@ const initLibraries = () => {
   setupLibraries("FSMService", FSMService);
   setupLibraries("PTService", PTService);
   setupLibraries("TLService", TLService);
+  setupLibraries("EDCRService", EDCRService);
   setupLibraries("HRMSService", HrmsService);
   setupLibraries("ReceiptsService", ReceiptsService);
   setupLibraries("MCollectService", MCollectService);

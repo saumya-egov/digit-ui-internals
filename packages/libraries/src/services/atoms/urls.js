@@ -102,6 +102,9 @@ const Urls = {
   },
   obps: {
     scrutinyDetails: "/edcr/rest/dcr/scrutinydetails"
+  },
+  edcr: {
+    create: "/edcr/rest/dcr/scrutinize",
   }
 };
 

@@ -43,7 +43,7 @@ module.exports = function (app) {
     "/inbox/v1/_search",
     "/tl-services",
     "/tl-calculator",
-    "/edcr/rest/dcr/scrutinydetails"
+    "/edcr"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
 };
