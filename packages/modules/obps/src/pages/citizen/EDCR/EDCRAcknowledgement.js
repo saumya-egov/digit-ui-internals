@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 
 
 const EDCRAcknowledgement = (props) => {
-  debugger;
   const edcrData = props?.data?.[0];
   const { t } = useTranslation();
 

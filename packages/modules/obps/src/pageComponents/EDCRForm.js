@@ -28,7 +28,6 @@ const EDCRForm = ({ t, config, onSelect, userType, formData, ownerIndex = 0, add
     }
 
     function selectfile(e) {
-        debugger;
         setUploadedFile(e.target.files[0]);
         setFile(e.target.files[0]);
     }
@@ -75,7 +74,6 @@ const EDCRForm = ({ t, config, onSelect, userType, formData, ownerIndex = 0, add
     if (isLoading) {
         return <Loader />;
     }
-    debugger;
     return (
         <FormStep
             t={t}

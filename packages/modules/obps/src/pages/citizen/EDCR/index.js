@@ -57,7 +57,6 @@ const CreateEDCR = ({ parentRoute }) => {
 
     Digit.EDCRService.create({ data: bodyFormData }, tenantId)
       .then((result, err) => {
-        debugger;
         if (result?.data?.edcrDetail) {
           setParams(result?.data?.edcrDetail);
           history.replace(
