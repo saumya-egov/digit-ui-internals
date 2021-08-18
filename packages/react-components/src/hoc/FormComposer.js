@@ -66,14 +66,14 @@ export const FormComposer = (props) => {
       case "textarea":
         // if (populators.defaultValue) setTimeout(setValue(populators.name, populators.defaultValue));
         return (
-          <TextArea className="field" name={populators.name || ""} {...populators} inputRef={register(populators.validation)} disable={disable} />
+          <TextArea className="field" name={populators?.name || ""} {...populators} inputRef={register(populators.validation)} disable={disable} />
         );
       case "mobileNumber":
         return (
           <Controller
             render={(props) => <MobileNumber className="field" onChange={props.onChange} value={props.value} disable={disable} />}
             defaultValue={populators.defaultValue}
-            name={populators.name}
+            name={populators?.name}
             control={control}
           />
         );
@@ -82,7 +82,7 @@ export const FormComposer = (props) => {
           <Controller
             render={(props) => populators.component({ ...props, setValue }, populators.customProps)}
             defaultValue={populators.defaultValue}
-            name={populators.name}
+            name={populators?.name}
             control={control}
           />
         );
@@ -142,7 +142,7 @@ export const FormComposer = (props) => {
                         {t(field.description)}
                       </CardLabel>
                     )}
-                    {errors && errors[field.populators.name] && Object.keys(errors[field.populators.name]).length ? (
+                    {errors && errors[field.populators?.name] && Object.keys(errors[field.populators?.name]).length ? (
                       <CardLabelError>{field.populators.error}</CardLabelError>
                     ) : null}
                     <div style={field.withoutLabel ? { width: "100%" } : {}} className="field">
